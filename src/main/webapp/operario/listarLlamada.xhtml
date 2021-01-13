@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/flags/flags.css" library="demo" />
+    </ui:define>
+
+    <ui:define name="title">Mi Llamada</ui:define>
+
+    <ui:define name="viewname">
+        <li>Gestiones</li>
+        <li>/</li>
+        <li><p:link outcome="deudor">Mi Cartera</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarLlamada">Mi Llamada</p:link></li>
+    </ui:define>
+
+    <ui:param name="viewname" value="Mi Llamada" />
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="p-grid table-demo">
+                <div class="p-col-12">
+                    <div class="card">
+                        <h4>Mi Llamada</h4>
+                        <p:dataTable widgetVar="customersDT2" var="llamada" value="#{listarLlamadaController.llamadaList}"
+                                     paginator="true" rows="20" paginatorPosition="top"
+                                     reflow="true" scrollable="true" scrollHeight="1050"
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines">
+
+                            <p:column headerText="Código Cartera" filterBy="#{llamada.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{llamada.idGestion.codigoCartera}" >
+                                <h:outputText value="#{llamada.idGestion.codigoCartera}" />
+                            </p:column>
+                            <p:column headerText="Nombre" filterBy="#{llamada.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{llamada.idGestion.nombreCliente}" >
+                                <h:outputText value="#{llamada.idGestion.nombreCliente}" />
+                            </p:column>
+                            <p:column headerText="Identificación" filterBy="#{llamada.idGestion.documento}" filterMatchMode="contains" sortBy="#{llamada.idGestion.documento}" >
+                                <h:outputText value="#{llamada.idGestion.documento}" />
+                            </p:column>
+                            <p:column headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >
+                                <h:outputText value="#{llamada.callToNumber}" />
+                            </p:column>
+                            <p:column headerText="Tipo Teléfono" filterBy="#{llamada.idTipotelefono.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idTipotelefono.descripcion}" >
+                                <h:outputText value="#{llamada.idTipotelefono.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Tipificación" filterBy="#{llamada.idTipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idTipificacion.descripcion}" >
+                                <h:outputText value="#{llamada.idTipificacion.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Sub-Tipificación" filterBy="#{llamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idSubtipificacion.descripcion}" >
+                                <h:outputText value="#{llamada.idSubtipificacion.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
+                                <h:outputText value="#{llamada.idrazonmora.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Tiempo Llamada" filterBy="#{llamada.callLength}" sortBy="#{llamada.callLength}" >
+                                <h:outputText value="#{llamada.callLength}" >
+                                    <f:convertDateTime pattern="mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Tiempo Conversación" filterBy="#{llamada.conversationLength}" sortBy="#{llamada.conversationLength}" >
+                                <h:outputText value="#{llamada.conversationLength}" />
+                            </p:column>
+                            <p:column headerText="Dial_Status" filterBy="#{llamada.dialstatus}" filterMatchMode="contains" sortBy="#{llamada.dialstatus}" >
+                                <h:outputText value="#{llamada.dialstatus}" />
+                            </p:column> 
+                            <p:column headerText="Call_Log_Id" filterBy="#{llamada.callLogId}" filterMatchMode="contains" sortBy="#{llamada.callLogId}" >
+                                <h:outputText value="#{llamada.callLogId}" />
+                            </p:column>
+                            <p:column headerText="Call_From_Number" filterBy="#{llamada.callFromNumber}" filterMatchMode="contains" sortBy="#{llamada.callFromNumber}" >
+                                <h:outputText value="#{llamada.callFromNumber}" />
+                            </p:column>                            
+                            <p:column headerText="Date_Ini" filterBy="#{llamada.dateIni}" sortBy="#{llamada.dateIni}" >
+                                <h:outputText value="#{llamada.dateIni}" >
+                                    <f:convertDateTime dateStyle="full" pattern="yyyy/MM/dd HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>                    
+                            <p:column headerText="Date_End" filterBy="#{llamada.dateEnd}" sortBy="#{llamada.dateEnd}" >
+                                <h:outputText value="#{llamada.dateEnd}" >
+                                    <f:convertDateTime dateStyle="full" pattern="yyyy/MM/dd HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>                                                                                                               
+                            <p:column headerText="Fecha Ingreso" filterBy="#{llamada.fechaingreso}" sortBy="#{llamada.fechaingreso}" >
+                                <h:outputText value="#{llamada.fechaingreso}" >
+                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

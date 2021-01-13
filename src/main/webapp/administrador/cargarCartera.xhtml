@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Cargar Cartera</ui:define>
+
+    <ui:define name="viewname">
+        <li>Mantenimiento</li>
+        <li>/</li>
+        <li>
+            <p:link outcome="/file">Cargar Cartera</p:link>
+        </li>
+    </ui:define>
+
+    <ui:param name="viewname" value="FILE" />
+
+    <ui:define name="content">
+        <div class="p-grid">
+            <div class="p-col-12">
+                <div class="card">
+                    <p:growl id="messages" showDetail="true" />
+                    <h5>Buscar archivo!</h5>
+                    <h:form enctype="multipart/form-data">
+                        <p:fileUpload value="#{carteraController.file}" mode="simple" skinSimple="true"/>
+                        <br />
+                        <p:commandButton value="Submit" ajax="false" action="#{carteraController.upload()}" disabled="false" />
+                    </h:form>
+                </div>
+                <div class="card">
+                    <h4>Cartera</h4>
+                    <h:form id="form">
+                        <p:dataTable widgetVar="customersDT2" id="cartera" var="cartera" value="#{carteraController.cartera}"
+                                     paginator="true" rows="20" paginatorPosition="top"
+                                     reflow="true" scrollable="true" scrollHeight="1050"
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines">
+
+                            <p:column headerText="TOPERADOR" >
+                                <h:outputText value="#{cartera.get(key)}" />
+                            </p:column>
+                            <!-- 
+                            <p:column headerText="TOPERADOR" filterBy="#{cartera.get(TOPERADOR)}" filterMatchMode="contains" sortBy="#{cartera.get(TOPERADOR)}" >
+                                <h:outputText value="#{cartera.get(TOPERADOR)}" />
+                            </p:column>
+                            
+                            <p:column headerText="TCUENTA" filterBy="#{cartera.get(TCUENTA)}" filterMatchMode="contains" sortBy="#{cartera.get(TCUENTA)}" >
+                                <h:outputText value="#{cartera.get(TCUENTA)}" />
+                            </p:column>
+                            <p:column headerText="TNOMBRE" filterBy="#{cartera.get(TNOMBRE)}" filterMatchMode="contains" sortBy="#{cartera.get(TNOMBRE)}" >
+                                <h:outputText value="#{cartera.get(TNOMBRE)}" />
+                            </p:column>
+                            <p:column headerText="FFecha_Asignación" filterBy="#{cartera.get(FFecha_Asignación)}" filterMatchMode="contains" sortBy="#{cartera.get(FFecha_Asignación)}" >
+                                <h:outputText value="#{cartera.get(FFecha_Asignación)}" />
+                            </p:column>
+                            <p:column headerText="TTIPO_CARTERA" filterBy="#{cartera.get(TTIPO_CARTERA)}" filterMatchMode="contains" sortBy="#{cartera.get(TTIPO_CARTERA)}" >
+                                <h:outputText value="#{cartera.get(TTIPO_CARTERA)}" />
+                            </p:column>
+                            <p:column headerText="TCEDULA" filterBy="#{cartera.get(TCEDULA)}" filterMatchMode="contains" sortBy="#{cartera.get(TCEDULA)}" >
+                                <h:outputText value="#{cartera.get(TCEDULA)}" />
+                            </p:column>
+                            <p:column headerText="DSaldo_Incobrable_Colones" filterBy="#{cartera.get(DSaldo_Incobrable_Colones)}" filterMatchMode="contains" sortBy="#{cartera.get(DSaldo_Incobrable_Colones)}" >
+                                <h:outputText value="#{cartera.get(DSaldo_Incobrable_Colones)}" />
+                            </p:column>                            
+                            
+                            <p:column headerText="DSaldo_Incobrable_Dolares" filterBy="#{cartera.get(DSaldo_Incobrable_Dolares)}" filterMatchMode="contains" sortBy="#{cartera.get(DSaldo_Incobrable_Dolares)}" >
+                                <h:outputText value="#{cartera.get(DSaldo_Incobrable_Dolares)}" />
+                            </p:column>
+                            <p:column headerText="DSaldo_Actual_Colones" filterBy="#{cartera.get(DSaldo_Actual_Colones)}" filterMatchMode="contains" sortBy="#{cartera.get(DSaldo_Actual_Colones)}" >
+                                <h:outputText value="#{cartera.get(DSaldo_Actual_Colones)}" />
+                            </p:column>
+                            <p:column headerText="DSaldo_Actual_Dolares" filterBy="#{cartera.get(DSaldo_Actual_Dolares)}" filterMatchMode="contains" sortBy="#{cartera.get(DSaldo_Actual_Dolares)}" >
+                                <h:outputText value="#{cartera.get(DSaldo_Actual_Dolares)}" />
+                            </p:column>                            
+                            <p:column headerText="DTotal_Colonizado" filterBy="#{cartera.get(DTotal_Colonizado)}" filterMatchMode="contains" sortBy="#{cartera.get(DTotal_Colonizado)}" >
+                                <h:outputText value="#{cartera.get(DTotal_Colonizado)}" />
+                            </p:column>
+                            <p:column headerText="DTotal_Dolarizado" filterBy="#{cartera.get(DTotal_Dolarizado)}" filterMatchMode="contains" sortBy="#{cartera.get(DTotal_Dolarizado)}" >
+                                <h:outputText value="#{cartera.get(DTotal_Dolarizado)}" />
+                            </p:column>                            
+                            <p:column headerText="TProbabilidad" filterBy="#{cartera.get(TProbabilidad)}" filterMatchMode="contains" sortBy="#{cartera.get(TProbabilidad)}" >
+                                <h:outputText value="#{cartera.get(TProbabilidad)}" />
+                            </p:column>
+                            <p:column headerText="TPRODUCTO" filterBy="#{cartera.get(TPRODUCTO)}" filterMatchMode="contains" sortBy="#{cartera.get(TPRODUCTO)}" >
+                                <h:outputText value="#{cartera.get(TPRODUCTO)}" />
+                            </p:column>
+                            <p:column headerText="TDireccion_Edo1" filterBy="#{cartera.get(TDireccion_Edo1)}" filterMatchMode="contains" sortBy="#{cartera.get(TDireccion_Edo1)}" >
+                                <h:outputText value="#{cartera.get(TDireccion_Edo1)}" />
+                            </p:column>
+                            <p:column headerText="TDireccion_Edo2" filterBy="#{cartera.get(TDireccion_Edo2)}" filterMatchMode="contains" sortBy="#{cartera.get(TDireccion_Edo2)}" >
+                                <h:outputText value="#{cartera.get(TDireccion_Edo2)}" />
+                            </p:column>
+                            
+                            <p:column headerText="TDireccion_Edo3" filterBy="#{cartera.get(TDireccion_Edo3)}" filterMatchMode="contains" sortBy="#{cartera.get(TDireccion_Edo3)}" >
+                                <h:outputText value="#{cartera.get(TDireccion_Edo3)}" />
+                            </p:column>
+                            <p:column headerText="TDireccion_Edo4" filterBy="#{cartera.get(TDireccion_Edo4)}" filterMatchMode="contains" sortBy="#{cartera.get(TDireccion_Edo4)}" >
+                                <h:outputText value="#{cartera.get(TDireccion_Edo4)}" />
+                            </p:column>
+                            <p:column headerText="TTel_1" filterBy="#{cartera.get(TTel_1)}" filterMatchMode="contains" sortBy="#{cartera.get(TTel_1)}" >
+                                <h:outputText value="#{cartera.get(TTel_1)}" />
+                            </p:column>
+                            <p:column headerText="TTel_2" filterBy="#{cartera.get(TTel_2)}" filterMatchMode="contains" sortBy="#{cartera.get(TTel_2)}" >
+                                <h:outputText value="#{cartera.get(TTel_2)}" />
+                            </p:column>
+                            <p:column headerText="TTel_3" filterBy="#{cartera.get(TTel_3)}" filterMatchMode="contains" sortBy="#{cartera.get(TTel_3)}" >
+                                <h:outputText value="#{cartera.get(TTel_3)}" />
+                            </p:column>
+                            <p:column headerText="TTel_4" filterBy="#{cartera.get(TTel_4)}" filterMatchMode="contains" sortBy="#{cartera.get(TTel_4)}" >
+                                <h:outputText value="#{cartera.get(TTel_4)}" />
+                            </p:column>                            
+                            <p:column headerText="FFecha_ult_pago_col" filterBy="#{cartera.get(FFecha_ult_pago_col)}" filterMatchMode="contains" sortBy="#{cartera.get(FFecha_ult_pago_col)}" >
+                                <h:outputText value="#{cartera.get(FFecha_ult_pago_col)}" />
+                            </p:column>                            
+                            
+                            <p:column headerText="DMonto_ult_pago_col" filterBy="#{cartera.get(DMonto_ult_pago_col)}" filterMatchMode="contains" sortBy="#{cartera.get(DMonto_ult_pago_col)}" >
+                                <h:outputText value="#{cartera.get(DMonto_ult_pago_col)}" />
+                            </p:column>                         
+                            <p:column headerText="FFecha_ult_pago_dol" filterBy="#{cartera.get(FFecha_ult_pago_dol)}" filterMatchMode="contains" sortBy="#{cartera.get(FFecha_ult_pago_dol)}" >
+                                <h:outputText value="#{cartera.get(FFecha_ult_pago_dol)}" />
+                            </p:column>
+                            <p:column headerText="DMonto_ult_pago_doL" filterBy="#{cartera.get(DMonto_ult_pago_doL)}" filterMatchMode="contains" sortBy="#{cartera.get(DMonto_ult_pago_doL)}" >
+                                <h:outputText value="#{cartera.get(DMonto_ult_pago_doL)}" />
+                            </p:column>
+                            
+                            <p:column headerText="FFecha_Asignacion_Resuelva" filterBy="#{cartera.get(FFecha_Asignacion_Resuelva)}" filterMatchMode="contains" sortBy="#{cartera.get(FFecha_Asignacion_Resuelva)}" >
+                                <h:outputText value="#{cartera.get(FFecha_Asignacion_Resuelva)}" />
+                            </p:column>
+                            <p:column headerText="TTipo_de_Fase" filterBy="#{cartera.get(TTipo_de_Fase)}" filterMatchMode="contains" sortBy="#{cartera.get(TTipo_de_Fase)}" >
+                                <h:outputText value="#{cartera.get(TTipo_de_Fase)}" />
+                            </p:column>
+                             comment -->
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

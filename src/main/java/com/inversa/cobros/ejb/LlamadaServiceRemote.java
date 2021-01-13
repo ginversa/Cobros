@@ -1,0 +1,51 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.inversa.cobros.ejb;
+
+import com.inversa.cobros.model.TblLlamada;
+import java.util.List;
+import javax.ejb.Remote;
+
+/**
+ *
+ * @author Z420WK
+ */
+@Remote
+public interface LlamadaServiceRemote {
+
+    public List<TblLlamada> findAll();
+
+    public TblLlamada findById(TblLlamada obj);
+
+    public TblLlamada findByCallLogId(TblLlamada obj);
+
+    public List<TblLlamada> findByDateIni(TblLlamada obj);
+
+    public List<TblLlamada> findByDateEnd(TblLlamada obj);
+
+    public List<TblLlamada> findByCallFromNumber(TblLlamada obj);
+
+    public List<TblLlamada> findByCallToNumber(TblLlamada obj);
+
+    public List<TblLlamada> findByDialstatus(TblLlamada obj);
+
+    public List<TblLlamada> findByEstado(TblLlamada obj);
+
+    public List<TblLlamada> findByUsuarioingreso(TblLlamada obj);
+
+    public List<TblLlamada> findByFechaingreso(TblLlamada obj);
+
+    public List<TblLlamada> findByUsuariomodifico(TblLlamada obj);
+
+    public List<TblLlamada> findByFechamodifico(TblLlamada obj);
+
+    public void insert(TblLlamada obj);
+
+    public void update(TblLlamada obj);
+
+    public void delete(TblLlamada obj);
+
+}

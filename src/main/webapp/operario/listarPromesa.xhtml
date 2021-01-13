@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/flags/flags.css" library="demo" />
+    </ui:define>
+
+    <ui:define name="title">Mi Promesa</ui:define>
+
+    <ui:define name="viewname">
+        <li>Gestiones</li>
+        <li>/</li>
+        <li><p:link outcome="deudor">Mi Cartera</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarLlamada">Mi Llamada</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarPromesa">Mi Promesa</p:link></li>
+    </ui:define>
+
+    <ui:param name="viewname" value="Mi Promesa" />
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="p-grid table-demo">
+                <div class="p-col-12">
+                    <div class="card">
+                        <h4>Mi Promesa</h4>
+                        <p:dataTable widgetVar="customersDT2" var="promesa" value="#{listarPromesaController.promesasList}"
+                                     paginator="true" rows="20" paginatorPosition="top"
+                                     reflow="true" scrollable="true" scrollHeight="1050"
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines">
+                            
+                            <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
+                                <h:outputText value="#{promesa.idGestion.codigoCartera}" />
+                            </p:column>
+                            <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
+                                <h:outputText value="#{promesa.idGestion.nombreCliente}" />
+                            </p:column>
+                            <p:column headerText="Identificación" filterBy="#{promesa.idGestion.documento}" filterMatchMode="contains" sortBy="#{promesa.idGestion.documento}" >
+                                <h:outputText value="#{promesa.idGestion.documento}" />
+                            </p:column>                    
+                            <p:column headerText="#Cuenta" filterBy="#{promesa.operacion}" filterMatchMode="contains" sortBy="#{promesa.operacion}" >
+                                <h:outputText value="#{promesa.operacion}" />
+                            </p:column>
+                            <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
+                                <h:outputText value="#{promesa.telefono}" />                                    
+                            </p:column>                    
+                            <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
+                                <h:outputText value="#{promesa.fechaPago}" >
+                                    <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
+                                <h:outputText value="#{promesa.mtopago}" >
+                                    <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
+                                </h:outputText>
+                            </p:column>                            
+                            <p:column headerText="Fecha Ingreso" filterBy="#{promesa.fechaingreso}" sortBy="#{promesa.fechaingreso}" >
+                                <h:outputText value="#{promesa.fechaingreso}" >
+                                    <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/flags/flags.css" library="demo" />
+    </ui:define>
+
+    <ui:define name="title">Mi Gestión</ui:define>
+
+    <ui:define name="viewname">
+        <li>Gestiones</li>
+        <li>/</li>
+        <li><p:link outcome="deudor">Mi Cartera</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+    </ui:define>
+
+    <ui:param name="viewname" value="Mi Gestión" />
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="p-grid table-demo">
+                <div class="p-col-12">
+                    <div class="card">
+                        <h4>Mi Gestión</h4>                        
+                        <p:dataTable widgetVar="customersDT2" var="gestion" value="#{listarGestionController.gestionList}"
+                                     paginator="true" rows="20" paginatorPosition="top"
+                                     reflow="true" scrollable="true" scrollHeight="1050"
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines">
+                            
+                            <p:column headerText="Código Cartera" filterBy="#{gestion.codigoCartera}" filterMatchMode="contains" sortBy="#{gestion.codigoCartera}" >                                    
+                                <h:outputText value="#{gestion.codigoCartera}" />                                    
+                            </p:column>
+                            <p:column headerText="Nombre" filterBy="#{gestion.nombreCliente}" filterMatchMode="contains" sortBy="#{gestion.nombreCliente}" >
+                                <h:outputText value="#{gestion.nombreCliente}" />
+                            </p:column>
+                            <p:column headerText="Identificación" filterBy="#{gestion.documento}" filterMatchMode="contains" sortBy="#{gestion.documento}" >
+                                <h:outputText value="#{gestion.documento}" />
+                            </p:column>                    
+                            <p:column headerText="Código Gestor" filterBy="#{gestion.codigoGestor}" filterMatchMode="contains" sortBy="#{gestion.codigoGestor}" >
+                                <h:outputText value="#{gestion.codigoGestor}" />
+                            </p:column>
+                            <p:column headerText="Saldo" filterBy="#{gestion.saldo}" sortBy="#{gestion.saldo}" >
+                                <h:outputText value="#{gestion.saldo}" >
+                                    <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
+                                </h:outputText>                                    
+                            </p:column>                    
+                            <p:column headerText="Moneda" filterBy="#{gestion.moneda}" filterMatchMode="contains" sortBy="#{gestion.moneda}" >
+                                <h:outputText value="#{gestion.moneda}" />
+                            </p:column>
+                            <p:column headerText="Fecha Gestión" filterBy="#{gestion.fechaGestion}" sortBy="#{gestion.fechaGestion}" >
+                                <h:outputText value="#{gestion.fechaGestion}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Descripción" filterBy="#{gestion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.descripcion}" >
+                                <h:outputText value="#{deudor.fecIngreso}" />
+                            </p:column>
+                            <p:column headerText="Estado" filterBy="#{gestion.estado}" filterMatchMode="contains" sortBy="#{gestion.estado}" >
+                                <h:outputText value="#{gestion.estado}" />
+                            </p:column> 
+                            <p:column headerText="Fecha Ingreso" filterBy="#{gestion.fechaingreso}" sortBy="#{gestion.fechaingreso}" >
+                                <h:outputText value="#{gestion.fechaingreso}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Usuario Ingreso" filterBy="#{gestion.usuarioingreso}" filterMatchMode="contains" sortBy="#{gestion.usuarioingreso}" >
+                                <h:outputText value="#{gestion.usuarioingreso}" />
+                            </p:column>
+                            
+                            <p:column headerText="Fecha Modifico" filterBy="#{gestion.fechamodifico}" sortBy="#{gestion.fechamodifico}" >
+                                <h:outputText value="#{gestion.fechamodifico}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Usuario Modifico" filterBy="#{gestion.usuariomodifico}" filterMatchMode="contains" sortBy="#{gestion.usuariomodifico}" >
+                                <h:outputText value="#{gestion.usuariomodifico}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>Sistema de Cobros</title>
+    </h:head>
+
+    <h:body styleClass="login-body">
+        <div class="body-container">
+            <div class="p-grid">
+                <div class="p-col-12 p-lg-6 left-side">
+                    <p:graphicImage name="#{guestPreferences.darkMode != 'light'? 'images/logo-white.png' : 'images/logo-dark.png'}" library="apollo-layout" width="110" height="110" />
+                    <h1>Bienvenido</h1>
+                    <p>
+                        Regístrese para iniciar su sesión
+                    </p>
+                </div>
+                <h:form>
+                    <p:growl id="messages" showDetail="true" showSummary="true" severity="warn,fatal" >
+                        <p:autoUpdate/>
+                    </p:growl>
+
+                    <div class="p-col-12 p-lg-6 right-side">
+                        <div class="login-wrapper">
+                            <div class="login-container">
+                                <span class="title">Login</span>
+                                  <div class="p-grid ui-fluid">
+                                      <h:panelGrid id="gridLoggin" columns="2" class="p-col-12">
+                                        <p:inputText id="textUsuario" placeholder="Username" autocomplete="off" value="#{loginController.usuario.usuario}" required="true" requiredMessage="Campo requerido!" />
+                                        <p:message for="textUsuario"/>
+                                        
+                                        <p:password id="textClave" placeholder="Password" autocomplete="off" feedback="false" value="#{loginController.usuario.clave}" required="true" requiredMessage="Campo requerido!" />
+                                        <p:message for="textUsuario"/>
+                                        
+                                        <p:commandButton action="#{loginController.iniciarSesion}" value="Login" icon="pi pi-check" update="gridLoggin, messages" />
+                                        <p:link></p:link>
+                                    </h:panelGrid>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+        <h:outputStylesheet name="css/primeicons.css" library="apollo-layout" />
+        <h:outputStylesheet name="css/primeflex.min.css" library="apollo-layout" />
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="apollo-layout" />
+    </h:body>
+
+</html>
