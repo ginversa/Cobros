@@ -17,12 +17,11 @@
 
     <ui:define name="content">        
         <div class="p-grid">
-            <div class="p-col-12">
-                <h1>Gestión</h1>
-                <p>Sistema de Cobros.</p>
-                <div class="card">
-
-                    <h:form id="form">
+            <h:form id="form">
+                <div class="p-col-12">                
+                    <div class="card">
+                        <h1>Gestión</h1>
+                        <p>Sistema de Cobros.</p>                    
                         <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
                             <p:autoUpdate/>
                         </p:growl>                        
@@ -68,7 +67,7 @@
                                         </p:commandButton>
                                     </p:column>                                    
                                     <p:column headerText="Teléfono" >                                        
-                                        <p:commandLink value="#{llamada.callToNumber}" actionListener="#{gestionController.generarLlamada()}" process="@this" immediate="true" >
+                                        <p:commandLink value="#{llamada.callToNumber}" actionListener="#{gestionController.generarLlamada(llamada)}" process="@this" >
                                             <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}" />
                                         </p:commandLink>                                        
                                     </p:column>
@@ -102,7 +101,7 @@
                                             <f:facet name="output"><h:outputText value="#{llamada.idSubtipificacion}" /></f:facet>
                                             <f:facet name="input">
                                                 <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
-                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="false" />
                                                     <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
                                                 </h:selectOneMenu>
                                             </f:facet>
@@ -294,14 +293,13 @@
                                 </p:outputPanel>
                             </p:outputPanel>
                             <f:facet name="footer">    
-                                <p:commandButton value="Save" icon="pi pi-check" actionListener="#{gestionController.addTelefono()}" update="manage-Telefono-content, form:tblTelefono" process="manage-Telefono-content @this" ajax="true" />
+                                <p:commandButton value="Save" icon="pi pi-check" actionListener="#{gestionController.addTelefono()}" update="manage-Telefono-content, form:tblTelefono" process="manage-Telefono-content @this form:tblTelefono" ajax="true" />
                                 <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageTelefonoDialog').hide()" class="secondary-button" />
                             </f:facet>
                         </p:dialog>
-                    </h:form>
-
+                    </div>
                 </div>
-            </div>
+            </h:form>
         </div>                
     </ui:define>
 </ui:composition>
