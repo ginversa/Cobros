@@ -7,22 +7,17 @@ package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.ContactoService;
 import com.inversa.cobros.ejb.TelefonoService;
-import com.inversa.cobros.ejb.TipoTelefonoService;
 import com.inversa.cobros.model.TblContacto;
-import com.inversa.cobros.model.TblDeudor;
 import com.inversa.cobros.model.TblTelefono;
 import com.inversa.cobros.model.TblUsuario;
-import com.inversa.cobros.model.Tipotelefono;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.primefaces.PrimeFaces;
 
 /**
  *
