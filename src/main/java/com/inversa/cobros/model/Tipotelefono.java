@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,6 +44,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Tipotelefono.findByFechamodifico", query = "SELECT t FROM Tipotelefono t WHERE t.fechamodifico = :fechamodifico")})
 public class Tipotelefono implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id_tipotelefono")
+    private Integer idTipotelefono;
     @Size(max = 50)
     @Column(name = "descripcion")
     private String descripcion;
@@ -57,29 +62,18 @@ public class Tipotelefono implements Serializable {
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    @Size(max = 50)
-    @Column(name = "usuariomodifico")
-    private String usuariomodifico;
-    @OneToMany(mappedBy = "idTipotelefono", fetch = FetchType.EAGER)
-    private List<TblTelefono> tblTelefonoList;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_tipotelefono")
-    private Integer idTipotelefono;
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+    @Size(max = 50)
+    @Column(name = "usuariomodifico")
+    private String usuariomodifico;
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    
-/*    
-    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "idTipotelefono", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idTipotelefono", fetch = FetchType.EAGER)
     private List<TblLlamada> tblLlamadaList;
-*/
+
     public Tipotelefono() {
     }
 
@@ -93,58 +87,6 @@ public class Tipotelefono implements Serializable {
 
     public void setIdTipotelefono(Integer idTipotelefono) {
         this.idTipotelefono = idTipotelefono;
-    }
-
-
-    public Date getFechaingreso() {
-        return fechaingreso;
-    }
-
-    public void setFechaingreso(Date fechaingreso) {
-        this.fechaingreso = fechaingreso;
-    }
-
-
-    public Date getFechamodifico() {
-        return fechamodifico;
-    }
-
-    public void setFechamodifico(Date fechamodifico) {
-        this.fechamodifico = fechamodifico;
-    }
-/*
-    @XmlTransient
-    public List<TblLlamada> getTblLlamadaList() {
-        return tblLlamadaList;
-    }
-
-    public void setTblLlamadaList(List<TblLlamada> tblLlamadaList) {
-        this.tblLlamadaList = tblLlamadaList;
-    }
-*/
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idTipotelefono != null ? idTipotelefono.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tipotelefono)) {
-            return false;
-        }
-        Tipotelefono other = (Tipotelefono) object;
-        if ((this.idTipotelefono == null && other.idTipotelefono != null) || (this.idTipotelefono != null && !this.idTipotelefono.equals(other.idTipotelefono))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return this.descripcion;
     }
 
     public String getDescripcion() {
@@ -179,6 +121,14 @@ public class Tipotelefono implements Serializable {
         this.usuarioingreso = usuarioingreso;
     }
 
+    public Date getFechaingreso() {
+        return fechaingreso;
+    }
+
+    public void setFechaingreso(Date fechaingreso) {
+        this.fechaingreso = fechaingreso;
+    }
+
     public String getUsuariomodifico() {
         return usuariomodifico;
     }
@@ -187,13 +137,46 @@ public class Tipotelefono implements Serializable {
         this.usuariomodifico = usuariomodifico;
     }
 
-    @XmlTransient
-    public List<TblTelefono> getTblTelefonoList() {
-        return tblTelefonoList;
+    public Date getFechamodifico() {
+        return fechamodifico;
     }
 
-    public void setTblTelefonoList(List<TblTelefono> tblTelefonoList) {
-        this.tblTelefonoList = tblTelefonoList;
+    public void setFechamodifico(Date fechamodifico) {
+        this.fechamodifico = fechamodifico;
+    }
+
+    @XmlTransient
+    public List<TblLlamada> getTblLlamadaList() {
+        return tblLlamadaList;
+    }
+
+    public void setTblLlamadaList(List<TblLlamada> tblLlamadaList) {
+        this.tblLlamadaList = tblLlamadaList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idTipotelefono != null ? idTipotelefono.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Tipotelefono)) {
+            return false;
+        }
+        Tipotelefono other = (Tipotelefono) object;
+        if ((this.idTipotelefono == null && other.idTipotelefono != null) || (this.idTipotelefono != null && !this.idTipotelefono.equals(other.idTipotelefono))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return this.descripcion + " - " + this.codigo;
     }
 
 

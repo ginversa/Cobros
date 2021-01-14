@@ -55,7 +55,8 @@ public class TblLlamada implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//@Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id_llamada")
     private Long idLlamada;
     @Size(max = 2147483647)
@@ -76,11 +77,9 @@ public class TblLlamada implements Serializable {
     @Size(max = 50)
     @Column(name = "dialstatus")
     private String dialstatus;
-    
     @Column(name = "call_length")
     @Temporal(TemporalType.TIMESTAMP)
     private Date callLength;
-    
     @Column(name = "conversation_length")
     private Integer conversationLength;
     @Size(max = 3)
@@ -89,39 +88,30 @@ public class TblLlamada implements Serializable {
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
-    
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
-    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-
-    @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private TblGestion idGestion;
-
-    @JoinColumn(name = "id_tipotelefono", referencedColumnName = "id_tipotelefono")
+    @JoinColumn(name = "idrazonmora", referencedColumnName = "idrazonmora")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Razonmora idrazonmora;
+    @JoinColumn(name = "id_subtipificacion", referencedColumnName = "id_subtipificacion")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Tipotelefono idTipotelefono;
-    
+    private Subtipificacion idSubtipificacion;
+    @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private TblGestion idGestion;
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Tipificacion idTipificacion;
-    
-    @JoinColumn(name = "id_subtipificacion", referencedColumnName = "id_subtipificacion")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Subtipificacion idSubtipificacion;    
-
-    @JoinColumn(name = "idrazonmora", referencedColumnName = "idrazonmora")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Razonmora idrazonmora;
-
+    @JoinColumn(name = "id_tipotelefono", referencedColumnName = "id_tipotelefono")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Tipotelefono idTipotelefono;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLlamada", fetch = FetchType.EAGER)
     private List<TblPromesa> tblPromesaList;
 
@@ -317,5 +307,5 @@ public class TblLlamada implements Serializable {
     public String toString() {
         return "com.inversa.cobros.model.TblLlamada[ idLlamada=" + idLlamada + " ]";
     }
-
+    
 }

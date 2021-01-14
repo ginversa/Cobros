@@ -37,10 +37,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "TblGestion.findAll", query = "SELECT t FROM TblGestion t"),
     @NamedQuery(name = "TblGestion.findByIdGestion", query = "SELECT t FROM TblGestion t WHERE t.idGestion = :idGestion"),
-    @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera"),
+    @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera order by t.fechaingreso desc"),
     @NamedQuery(name = "TblGestion.findByNombreCliente", query = "SELECT t FROM TblGestion t WHERE t.nombreCliente = :nombreCliente"),
     @NamedQuery(name = "TblGestion.findByDocumento", query = "SELECT t FROM TblGestion t WHERE t.documento = :documento"),
-    @NamedQuery(name = "TblGestion.findByCodigoGestor", query = "SELECT t FROM TblGestion t WHERE t.codigoGestor = :codigoGestor ORDER BY t.fechaingreso DESC"),
+    @NamedQuery(name = "TblGestion.findByCodigoGestor", query = "SELECT t FROM TblGestion t WHERE t.codigoGestor = :codigoGestor order by t.fechaingreso desc"),
     @NamedQuery(name = "TblGestion.findBySaldo", query = "SELECT t FROM TblGestion t WHERE t.saldo = :saldo"),
     @NamedQuery(name = "TblGestion.findByMoneda", query = "SELECT t FROM TblGestion t WHERE t.moneda = :moneda"),
     @NamedQuery(name = "TblGestion.findByFechaGestion", query = "SELECT t FROM TblGestion t WHERE t.fechaGestion = :fechaGestion"),
@@ -53,12 +53,11 @@ import javax.xml.bind.annotation.XmlTransient;
 public class TblGestion implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//@Basic(optional = false)    
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id_gestion")
     private Long idGestion;
-    
     @Size(max = 5)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
@@ -98,9 +97,10 @@ public class TblGestion implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.EAGER)
-    private List<TblLlamada> tblLlamadaList;    
+    private List<TblLlamada> tblLlamadaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.EAGER)
+    private List<TblPromesa> tblPromesaList;
 
     public TblGestion() {
     }
@@ -228,6 +228,15 @@ public class TblGestion implements Serializable {
 
     public void setTblLlamadaList(List<TblLlamada> tblLlamadaList) {
         this.tblLlamadaList = tblLlamadaList;
+    }
+
+    @XmlTransient
+    public List<TblPromesa> getTblPromesaList() {
+        return tblPromesaList;
+    }
+
+    public void setTblPromesaList(List<TblPromesa> tblPromesaList) {
+        this.tblPromesaList = tblPromesaList;
     }
 
     @Override

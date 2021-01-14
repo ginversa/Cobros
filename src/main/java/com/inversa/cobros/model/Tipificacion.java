@@ -72,12 +72,8 @@ public class Tipificacion implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    
-    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.EAGER)
     private List<TblLlamada> tblLlamadaList;
-    */
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.EAGER)
     private List<Subtipificacion> subtipificacionList;
 
@@ -152,7 +148,6 @@ public class Tipificacion implements Serializable {
         this.fechamodifico = fechamodifico;
     }
 
-    /*
     @XmlTransient
     public List<TblLlamada> getTblLlamadaList() {
         return tblLlamadaList;
@@ -161,7 +156,6 @@ public class Tipificacion implements Serializable {
     public void setTblLlamadaList(List<TblLlamada> tblLlamadaList) {
         this.tblLlamadaList = tblLlamadaList;
     }
-    */
 
     @XmlTransient
     public List<Subtipificacion> getSubtipificacionList() {
@@ -196,5 +190,7 @@ public class Tipificacion implements Serializable {
     public String toString() {
         return this.descripcion;
     }
+
+
     
 }

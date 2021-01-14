@@ -7,7 +7,9 @@ package com.inversa.cobros.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,11 +20,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -70,12 +74,8 @@ public class Subtipificacion implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    
-    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubtipificacion", fetch = FetchType.EAGER)
     private List<TblLlamada> tblLlamadaList;
-    */
-    
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Tipificacion idTipificacion;
@@ -150,7 +150,7 @@ public class Subtipificacion implements Serializable {
     public void setFechamodifico(Date fechamodifico) {
         this.fechamodifico = fechamodifico;
     }
-/*
+
     @XmlTransient
     public List<TblLlamada> getTblLlamadaList() {
         return tblLlamadaList;
@@ -159,7 +159,7 @@ public class Subtipificacion implements Serializable {
     public void setTblLlamadaList(List<TblLlamada> tblLlamadaList) {
         this.tblLlamadaList = tblLlamadaList;
     }
-*/
+
     public Tipificacion getIdTipificacion() {
         return idTipificacion;
     }
@@ -192,5 +192,7 @@ public class Subtipificacion implements Serializable {
     public String toString() {
         return this.descripcion;
     }
+
+   
     
 }
