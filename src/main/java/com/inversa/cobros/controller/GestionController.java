@@ -65,6 +65,9 @@ public class GestionController implements Serializable {
 
     @Inject
     private TelefonoService ejbTelefonoLocal;
+    
+    @Inject
+    private TipificacionController tipificacionController;
 
     private TblDeudor deudor;
     private List<TblTelefono> telefonos;
@@ -80,13 +83,12 @@ public class GestionController implements Serializable {
     private Calendar fechaHoy;
 
     private TblUsuario usuario;
-       
 
     @PostConstruct
     public void init() {
-            
+
         this.llamadaList = new ArrayList<TblLlamada>();
-        
+
         // Usuario de session...
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         this.fechaHoy = Calendar.getInstance();
@@ -120,9 +122,11 @@ public class GestionController implements Serializable {
             this.deudorList = this.ejbDeudorLocal.findByCarteraGestorDocumento(objDeudor);
 
         }
-        
+
         this.promesaList = new ArrayList<TblPromesa>();
         this.telefono = new TblTelefono();
+        
+        this.tipificacionController.setIsDisabledPromesa(true);
 
     }
 
@@ -277,9 +281,12 @@ public class GestionController implements Serializable {
     /**
      *
      */
-    public void generarLlamada() {
-
+    public void generarLlamada(TblLlamada callToNumber) {
+        callToNumber.setIdLlamada(null);
+        System.out.println("Numero seleccionadocallToNumber: "+callToNumber.getCallToNumber());
+        
         if (this.selectedLlamada != null && this.selectedLlamada.getCallToNumber() != null && !this.selectedLlamada.getCallToNumber().trim().equals("")) {
+            this.selectedLlamada.setIdLlamada(null);
             String telefono = this.selectedLlamada.getCallToNumber();
 
             String URL_LLAMAR = "http://192.168.7.201/PBXPortal/llamar.php?ext=118&numero=987356220";
@@ -304,34 +311,34 @@ public class GestionController implements Serializable {
 
                 switch (errorCentral.trim()) {
                     case "0":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "0 No está configurado el servicio!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "0 - No está configurado el servicio!"));
                         break;
                     case "1":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "1 El IP no está autorizado!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "1 - El IP no está autorizado!"));
                         break;
                     case "001":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "001 si no indica la extensión!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "001 - No indica la extensión!"));
                         break;
                     case "002":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "002 si el número a marcar no es correcto!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "002 - El número a marcar no es correcto!"));
                         break;
                     case "004":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "004 si la extensión no es numérica!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "004 - La extensión no es numérica!"));
                         break;
                     case "008":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "008 si la extensión no existe ni está como activa!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "008 - La extensión no existe ni está como activa!"));
                         break;
                     case "016":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "016 si falla en generar la llamada local inicial!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "016 - Falla en generar la llamada local inicial!"));
                         break;
                     case "032":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "032 si no logra recuperar el ID de la llamada!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "032 - No logra recuperar el ID de la llamada!"));
                         break;
                     case "064":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "064 si se envía un ID de llamada que no sea numérico para el caso de escucharla!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "064 - si se envía un ID de llamada que no sea numérico para el caso de escucharla!"));
                         break;
                     case "128":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "128 si no se especifica una extensión activa ni existe el contexto: context_qrm!"));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "128 - si no se especifica una extensión activa ni existe el contexto: context_qrm!"));
                         break;
                     default:
                         break;
@@ -348,6 +355,8 @@ public class GestionController implements Serializable {
             }
 
         }// if
+
+        this.selectedLlamada = null;
     }
 
     /**
@@ -378,34 +387,34 @@ public class GestionController implements Serializable {
 
                         switch (errorCentral.trim()) {
                             case "0":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "0 No está configurado el servicio!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "0 - No está configurado el servicio!"));
                                 break;
                             case "1":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "1 El IP no está autorizado!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "1 - El IP no está autorizado!"));
                                 break;
                             case "001":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "001 si no indica la extensión!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "001 - No indica la extensión!"));
                                 break;
                             case "002":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "002 si el número a marcar no es correcto!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "002 - El número a marcar no es correcto!"));
                                 break;
                             case "004":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "004 si la extensión no es numérica!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "004 - La extensión no es numérica!"));
                                 break;
                             case "008":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "008 si la extensión no existe ni está como activa!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "008 - La extensión no existe ni está como activa!"));
                                 break;
                             case "016":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "016 si falla en generar la llamada local inicial!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "016 - Falla en generar la llamada local inicial!"));
                                 break;
                             case "032":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "032 si no logra recuperar el ID de la llamada!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "032 - No logra recuperar el ID de la llamada!"));
                                 break;
                             case "064":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "064 si se envía un ID de llamada que no sea numérico para el caso de escucharla!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "064 - si se envía un ID de llamada que no sea numérico para el caso de escucharla!"));
                                 break;
                             case "128":
-                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "128 si no se especifica una extensión activa ni existe el contexto: context_qrm!"));
+                                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "128 - si no se especifica una extensión activa ni existe el contexto: context_qrm!"));
                                 break;
                             default:
                                 break;
@@ -461,7 +470,7 @@ public class GestionController implements Serializable {
                                         llamadaConDatos.setConversationLength(Integer.valueOf(0));
                                     }
                                 }
-                                
+
                                 llamadaConDatos.setIdGestion(this.gestion);
                                 llamadaConDatos.setEstado("ING");
                                 llamadaConDatos.setUsuarioingreso(this.usuario.getUsuario());
@@ -703,7 +712,7 @@ public class GestionController implements Serializable {
     /**
      *
      */
-    public void addTelefonoLlamada() {        
+    public void addTelefonoLlamada() {
         if (this.telefonos != null && !this.telefonos.isEmpty()) {
             for (int index = 0; index < this.telefonos.size(); index++) {
                 String telefono = this.telefonos.get(index).getTelefono();
@@ -721,18 +730,18 @@ public class GestionController implements Serializable {
                     llamada.setCallToNumber(telefono);
 
                     Tipotelefono tt = this.telefonos.get(index).getIdTipotelefono();
-                    
+
                     Tipificacion tipF = new Tipificacion();
                     Subtipificacion subTP = new Subtipificacion();
                     Razonmora rm = new Razonmora();
-                    
+
                     llamada.setIdTipotelefono(tt);
-                    
-                    subTP.setIdTipificacion(tipF);                    
+
+                    subTP.setIdTipificacion(tipF);
                     llamada.setIdTipificacion(tipF);
                     llamada.setIdSubtipificacion(subTP);
                     llamada.setIdrazonmora(rm);
-                    
+
                     this.llamadaList.add(llamada);
                 }//existe
             }
@@ -874,7 +883,7 @@ public class GestionController implements Serializable {
 
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Teléfono Eliminado. Correcto!"));
                 PrimeFaces.current().ajax().update("form:messages", "form:tblTelefono");
-                                                                     
+
             }
 
         } catch (NumberFormatException e) {
