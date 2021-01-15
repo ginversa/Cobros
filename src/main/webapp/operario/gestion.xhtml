@@ -67,7 +67,7 @@
                                         </p:commandButton>
                                     </p:column>                                    
                                     <p:column headerText="Teléfono" >                                        
-                                        <p:commandLink value="#{llamada.callToNumber}" actionListener="#{gestionController.generarLlamada(llamada)}" process="@this" >
+                                        <p:commandLink value="#{llamada.callToNumber}" actionListener="#{gestionController.generarLlamada(llamada)}" process="@this" update="tblTelefono" >
                                             <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}" />
                                         </p:commandLink>                                        
                                     </p:column>

@@ -22,6 +22,8 @@
     <class>com.inversa.cobros.model.Tipotelefono</class>
     <class>com.inversa.cobros.model.Razonmora</class>
     <class>com.inversa.cobros.model.Subtipificacion</class>
+    <class>com.inversa.cobros.model.TblResultadotercero</class>
+    <class>com.inversa.cobros.model.TblResultadogestion</class>
     <properties>
       <property name="eclipselink.canonicalmodel.subpackage" value="one"/>
     </properties>

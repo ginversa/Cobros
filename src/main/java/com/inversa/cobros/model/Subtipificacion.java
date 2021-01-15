@@ -79,6 +79,8 @@ public class Subtipificacion implements Serializable {
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Tipificacion idTipificacion;
+    @OneToMany(mappedBy = "idSubtipificacion", fetch = FetchType.EAGER)
+    private List<TblResultadogestion> tblResultadogestionList;
 
     public Subtipificacion() {
     }
@@ -168,6 +170,15 @@ public class Subtipificacion implements Serializable {
         this.idTipificacion = idTipificacion;
     }
 
+    @XmlTransient
+    public List<TblResultadogestion> getTblResultadogestionList() {
+        return tblResultadogestionList;
+    }
+
+    public void setTblResultadogestionList(List<TblResultadogestion> tblResultadogestionList) {
+        this.tblResultadogestionList = tblResultadogestionList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -192,7 +203,5 @@ public class Subtipificacion implements Serializable {
     public String toString() {
         return this.descripcion;
     }
-
-   
     
 }

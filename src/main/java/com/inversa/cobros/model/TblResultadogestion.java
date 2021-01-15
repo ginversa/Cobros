@@ -9,13 +9,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -31,35 +32,31 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Z420WK
  */
 @Entity
-@Table(name = "tipificacion")
+@Table(name = "tbl_resultadogestion")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Tipificacion.findAll", query = "SELECT t FROM Tipificacion t"),
-    @NamedQuery(name = "Tipificacion.findByIdTipificacion", query = "SELECT t FROM Tipificacion t WHERE t.idTipificacion = :idTipificacion"),
-    @NamedQuery(name = "Tipificacion.findByDescripcion", query = "SELECT t FROM Tipificacion t WHERE t.descripcion = :descripcion"),
-    @NamedQuery(name = "Tipificacion.findByCodigoCartera", query = "SELECT t FROM Tipificacion t WHERE t.codigoCartera = :codigoCartera"),
-    @NamedQuery(name = "Tipificacion.findByEstado", query = "SELECT t FROM Tipificacion t WHERE t.estado = :estado"),
-    @NamedQuery(name = "Tipificacion.findByUsuarioingreso", query = "SELECT t FROM Tipificacion t WHERE t.usuarioingreso = :usuarioingreso"),
-    @NamedQuery(name = "Tipificacion.findByFechaingreso", query = "SELECT t FROM Tipificacion t WHERE t.fechaingreso = :fechaingreso"),
-    @NamedQuery(name = "Tipificacion.findByUsuariomodifico", query = "SELECT t FROM Tipificacion t WHERE t.usuariomodifico = :usuariomodifico"),
-    @NamedQuery(name = "Tipificacion.findByFechamodifico", query = "SELECT t FROM Tipificacion t WHERE t.fechamodifico = :fechamodifico")})
-public class Tipificacion implements Serializable {
+    @NamedQuery(name = "TblResultadogestion.findAll", query = "SELECT t FROM TblResultadogestion t"),
+    @NamedQuery(name = "TblResultadogestion.findByIdResultadogestion", query = "SELECT t FROM TblResultadogestion t WHERE t.idResultadogestion = :idResultadogestion"),
+    @NamedQuery(name = "TblResultadogestion.findByDescripcion", query = "SELECT t FROM TblResultadogestion t WHERE t.descripcion = :descripcion"),
+    @NamedQuery(name = "TblResultadogestion.findByCodigo", query = "SELECT t FROM TblResultadogestion t WHERE t.codigo = :codigo"),
+    @NamedQuery(name = "TblResultadogestion.findByUsuarioingreso", query = "SELECT t FROM TblResultadogestion t WHERE t.usuarioingreso = :usuarioingreso"),
+    @NamedQuery(name = "TblResultadogestion.findByFechaingreso", query = "SELECT t FROM TblResultadogestion t WHERE t.fechaingreso = :fechaingreso"),
+    @NamedQuery(name = "TblResultadogestion.findByUsuariomodifico", query = "SELECT t FROM TblResultadogestion t WHERE t.usuariomodifico = :usuariomodifico"),
+    @NamedQuery(name = "TblResultadogestion.findByFechamodifico", query = "SELECT t FROM TblResultadogestion t WHERE t.fechamodifico = :fechamodifico")})
+public class TblResultadogestion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_tipificacion")
-    private Integer idTipificacion;
-    @Size(max = 50)
+    @Column(name = "id_resultadogestion")
+    private Integer idResultadogestion;
+    @Size(max = 250)
     @Column(name = "descripcion")
     private String descripcion;
-    @Size(max = 5)
-    @Column(name = "codigo_cartera")
-    private String codigoCartera;
     @Size(max = 3)
-    @Column(name = "estado")
-    private String estado;
+    @Column(name = "codigo")
+    private String codigo;
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
@@ -72,28 +69,30 @@ public class Tipificacion implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idResultadogestion", fetch = FetchType.EAGER)
     private List<TblResultadotercero> tblResultadoterceroList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idResultadogestion", fetch = FetchType.EAGER)
     private List<TblLlamada> tblLlamadaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.EAGER)
-    private List<Subtipificacion> subtipificacionList;
-    @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.EAGER)
-    private List<TblResultadogestion> tblResultadogestionList;
+    @JoinColumn(name = "id_subtipificacion", referencedColumnName = "id_subtipificacion")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Subtipificacion idSubtipificacion;
+    @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Tipificacion idTipificacion;
 
-    public Tipificacion() {
+    public TblResultadogestion() {
     }
 
-    public Tipificacion(Integer idTipificacion) {
-        this.idTipificacion = idTipificacion;
+    public TblResultadogestion(Integer idResultadogestion) {
+        this.idResultadogestion = idResultadogestion;
     }
 
-    public Integer getIdTipificacion() {
-        return idTipificacion;
+    public Integer getIdResultadogestion() {
+        return idResultadogestion;
     }
 
-    public void setIdTipificacion(Integer idTipificacion) {
-        this.idTipificacion = idTipificacion;
+    public void setIdResultadogestion(Integer idResultadogestion) {
+        this.idResultadogestion = idResultadogestion;
     }
 
     public String getDescripcion() {
@@ -104,20 +103,12 @@ public class Tipificacion implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public String getCodigoCartera() {
-        return codigoCartera;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setCodigoCartera(String codigoCartera) {
-        this.codigoCartera = codigoCartera;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getUsuarioingreso() {
@@ -170,39 +161,37 @@ public class Tipificacion implements Serializable {
         this.tblLlamadaList = tblLlamadaList;
     }
 
-    @XmlTransient
-    public List<Subtipificacion> getSubtipificacionList() {
-        return subtipificacionList;
+    public Subtipificacion getIdSubtipificacion() {
+        return idSubtipificacion;
     }
 
-    public void setSubtipificacionList(List<Subtipificacion> subtipificacionList) {
-        this.subtipificacionList = subtipificacionList;
+    public void setIdSubtipificacion(Subtipificacion idSubtipificacion) {
+        this.idSubtipificacion = idSubtipificacion;
     }
 
-    @XmlTransient
-    public List<TblResultadogestion> getTblResultadogestionList() {
-        return tblResultadogestionList;
+    public Tipificacion getIdTipificacion() {
+        return idTipificacion;
     }
 
-    public void setTblResultadogestionList(List<TblResultadogestion> tblResultadogestionList) {
-        this.tblResultadogestionList = tblResultadogestionList;
+    public void setIdTipificacion(Tipificacion idTipificacion) {
+        this.idTipificacion = idTipificacion;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTipificacion != null ? idTipificacion.hashCode() : 0);
+        hash += (idResultadogestion != null ? idResultadogestion.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tipificacion)) {
+        if (!(object instanceof TblResultadogestion)) {
             return false;
         }
-        Tipificacion other = (Tipificacion) object;
-        if ((this.idTipificacion == null && other.idTipificacion != null) || (this.idTipificacion != null && !this.idTipificacion.equals(other.idTipificacion))) {
+        TblResultadogestion other = (TblResultadogestion) object;
+        if ((this.idResultadogestion == null && other.idResultadogestion != null) || (this.idResultadogestion != null && !this.idResultadogestion.equals(other.idResultadogestion))) {
             return false;
         }
         return true;
@@ -210,7 +199,7 @@ public class Tipificacion implements Serializable {
 
     @Override
     public String toString() {
-        return this.descripcion;
+        return "com.inversa.cobros.model.TblResultadogestion[ idResultadogestion=" + idResultadogestion + " ]";
     }
     
 }

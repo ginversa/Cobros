@@ -283,11 +283,11 @@ public class GestionController implements Serializable {
      */
     public void generarLlamada(TblLlamada callToNumber) {
         callToNumber.setIdLlamada(null);
-        System.out.println("Numero seleccionadocallToNumber: "+callToNumber.getCallToNumber());
+        System.out.println("Numero Seleccionado callToNumber: "+callToNumber.getCallToNumber());
         
-        if (this.selectedLlamada != null && this.selectedLlamada.getCallToNumber() != null && !this.selectedLlamada.getCallToNumber().trim().equals("")) {
-            this.selectedLlamada.setIdLlamada(null);
-            String telefono = this.selectedLlamada.getCallToNumber();
+        if (callToNumber != null && callToNumber.getCallToNumber() != null && !callToNumber.getCallToNumber().trim().equals("")) {
+            //this.selectedLlamada.setIdLlamada(null);
+            String telefono = callToNumber.getCallToNumber();
 
             String URL_LLAMAR = "http://192.168.7.201/PBXPortal/llamar.php?ext=118&numero=987356220";
             cliente = ClientBuilder.newClient();

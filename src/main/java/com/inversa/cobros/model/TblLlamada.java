@@ -106,6 +106,12 @@ public class TblLlamada implements Serializable {
     @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private TblGestion idGestion;
+    @JoinColumn(name = "id_resultadogestion", referencedColumnName = "id_resultadogestion")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TblResultadogestion idResultadogestion;
+    @JoinColumn(name = "id_resultadotercero", referencedColumnName = "id_resultadotercero")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TblResultadotercero idResultadotercero;
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Tipificacion idTipificacion;
@@ -256,6 +262,22 @@ public class TblLlamada implements Serializable {
 
     public void setIdGestion(TblGestion idGestion) {
         this.idGestion = idGestion;
+    }
+
+    public TblResultadogestion getIdResultadogestion() {
+        return idResultadogestion;
+    }
+
+    public void setIdResultadogestion(TblResultadogestion idResultadogestion) {
+        this.idResultadogestion = idResultadogestion;
+    }
+
+    public TblResultadotercero getIdResultadotercero() {
+        return idResultadotercero;
+    }
+
+    public void setIdResultadotercero(TblResultadotercero idResultadotercero) {
+        this.idResultadotercero = idResultadotercero;
     }
 
     public Tipificacion getIdTipificacion() {

@@ -15,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -30,35 +32,31 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Z420WK
  */
 @Entity
-@Table(name = "tipotelefono")
+@Table(name = "tbl_resultadotercero")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Tipotelefono.findAll", query = "SELECT t FROM Tipotelefono t"),
-    @NamedQuery(name = "Tipotelefono.findByIdTipotelefono", query = "SELECT t FROM Tipotelefono t WHERE t.idTipotelefono = :idTipotelefono"),
-    @NamedQuery(name = "Tipotelefono.findByDescripcion", query = "SELECT t FROM Tipotelefono t WHERE t.descripcion = :descripcion"),
-    @NamedQuery(name = "Tipotelefono.findByCodigo", query = "SELECT t FROM Tipotelefono t WHERE t.codigo = :codigo"),
-    @NamedQuery(name = "Tipotelefono.findByEstado", query = "SELECT t FROM Tipotelefono t WHERE t.estado = :estado"),
-    @NamedQuery(name = "Tipotelefono.findByUsuarioingreso", query = "SELECT t FROM Tipotelefono t WHERE t.usuarioingreso = :usuarioingreso"),
-    @NamedQuery(name = "Tipotelefono.findByFechaingreso", query = "SELECT t FROM Tipotelefono t WHERE t.fechaingreso = :fechaingreso"),
-    @NamedQuery(name = "Tipotelefono.findByUsuariomodifico", query = "SELECT t FROM Tipotelefono t WHERE t.usuariomodifico = :usuariomodifico"),
-    @NamedQuery(name = "Tipotelefono.findByFechamodifico", query = "SELECT t FROM Tipotelefono t WHERE t.fechamodifico = :fechamodifico")})
-public class Tipotelefono implements Serializable {
+    @NamedQuery(name = "TblResultadotercero.findAll", query = "SELECT t FROM TblResultadotercero t"),
+    @NamedQuery(name = "TblResultadotercero.findByIdResultadotercero", query = "SELECT t FROM TblResultadotercero t WHERE t.idResultadotercero = :idResultadotercero"),
+    @NamedQuery(name = "TblResultadotercero.findByDescripcion", query = "SELECT t FROM TblResultadotercero t WHERE t.descripcion = :descripcion"),
+    @NamedQuery(name = "TblResultadotercero.findByCodigo", query = "SELECT t FROM TblResultadotercero t WHERE t.codigo = :codigo"),
+    @NamedQuery(name = "TblResultadotercero.findByUsuarioingreso", query = "SELECT t FROM TblResultadotercero t WHERE t.usuarioingreso = :usuarioingreso"),
+    @NamedQuery(name = "TblResultadotercero.findByFechaingreso", query = "SELECT t FROM TblResultadotercero t WHERE t.fechaingreso = :fechaingreso"),
+    @NamedQuery(name = "TblResultadotercero.findByUsuariomodifico", query = "SELECT t FROM TblResultadotercero t WHERE t.usuariomodifico = :usuariomodifico"),
+    @NamedQuery(name = "TblResultadotercero.findByFechamodifico", query = "SELECT t FROM TblResultadotercero t WHERE t.fechamodifico = :fechamodifico")})
+public class TblResultadotercero implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_tipotelefono")
-    private Integer idTipotelefono;
-    @Size(max = 50)
+    @Column(name = "id_resultadotercero")
+    private Integer idResultadotercero;
+    @Size(max = 250)
     @Column(name = "descripcion")
     private String descripcion;
     @Size(max = 3)
     @Column(name = "codigo")
     private String codigo;
-    @Size(max = 3)
-    @Column(name = "estado")
-    private String estado;
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
@@ -71,22 +69,28 @@ public class Tipotelefono implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(mappedBy = "idTipotelefono", fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_resultadogestion", referencedColumnName = "id_resultadogestion")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TblResultadogestion idResultadogestion;
+    @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Tipificacion idTipificacion;
+    @OneToMany(mappedBy = "idResultadotercero", fetch = FetchType.EAGER)
     private List<TblLlamada> tblLlamadaList;
 
-    public Tipotelefono() {
+    public TblResultadotercero() {
     }
 
-    public Tipotelefono(Integer idTipotelefono) {
-        this.idTipotelefono = idTipotelefono;
+    public TblResultadotercero(Integer idResultadotercero) {
+        this.idResultadotercero = idResultadotercero;
     }
 
-    public Integer getIdTipotelefono() {
-        return idTipotelefono;
+    public Integer getIdResultadotercero() {
+        return idResultadotercero;
     }
 
-    public void setIdTipotelefono(Integer idTipotelefono) {
-        this.idTipotelefono = idTipotelefono;
+    public void setIdResultadotercero(Integer idResultadotercero) {
+        this.idResultadotercero = idResultadotercero;
     }
 
     public String getDescripcion() {
@@ -103,14 +107,6 @@ public class Tipotelefono implements Serializable {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public String getUsuarioingreso() {
@@ -145,6 +141,22 @@ public class Tipotelefono implements Serializable {
         this.fechamodifico = fechamodifico;
     }
 
+    public TblResultadogestion getIdResultadogestion() {
+        return idResultadogestion;
+    }
+
+    public void setIdResultadogestion(TblResultadogestion idResultadogestion) {
+        this.idResultadogestion = idResultadogestion;
+    }
+
+    public Tipificacion getIdTipificacion() {
+        return idTipificacion;
+    }
+
+    public void setIdTipificacion(Tipificacion idTipificacion) {
+        this.idTipificacion = idTipificacion;
+    }
+
     @XmlTransient
     public List<TblLlamada> getTblLlamadaList() {
         return tblLlamadaList;
@@ -157,18 +169,18 @@ public class Tipotelefono implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTipotelefono != null ? idTipotelefono.hashCode() : 0);
+        hash += (idResultadotercero != null ? idResultadotercero.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tipotelefono)) {
+        if (!(object instanceof TblResultadotercero)) {
             return false;
         }
-        Tipotelefono other = (Tipotelefono) object;
-        if ((this.idTipotelefono == null && other.idTipotelefono != null) || (this.idTipotelefono != null && !this.idTipotelefono.equals(other.idTipotelefono))) {
+        TblResultadotercero other = (TblResultadotercero) object;
+        if ((this.idResultadotercero == null && other.idResultadotercero != null) || (this.idResultadotercero != null && !this.idResultadotercero.equals(other.idResultadotercero))) {
             return false;
         }
         return true;
@@ -176,7 +188,7 @@ public class Tipotelefono implements Serializable {
 
     @Override
     public String toString() {
-        return this.descripcion;
+        return "com.inversa.cobros.model.TblResultadotercero[ idResultadotercero=" + idResultadotercero + " ]";
     }
     
 }

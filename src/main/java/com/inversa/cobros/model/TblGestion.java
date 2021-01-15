@@ -37,10 +37,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "TblGestion.findAll", query = "SELECT t FROM TblGestion t"),
     @NamedQuery(name = "TblGestion.findByIdGestion", query = "SELECT t FROM TblGestion t WHERE t.idGestion = :idGestion"),
-    @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera order by t.fechaingreso desc"),
+    @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblGestion.findByNombreCliente", query = "SELECT t FROM TblGestion t WHERE t.nombreCliente = :nombreCliente"),
     @NamedQuery(name = "TblGestion.findByDocumento", query = "SELECT t FROM TblGestion t WHERE t.documento = :documento"),
-    @NamedQuery(name = "TblGestion.findByCodigoGestor", query = "SELECT t FROM TblGestion t WHERE t.codigoGestor = :codigoGestor order by t.fechaingreso desc"),
+    @NamedQuery(name = "TblGestion.findByCodigoGestor", query = "SELECT t FROM TblGestion t WHERE t.codigoGestor = :codigoGestor"),
     @NamedQuery(name = "TblGestion.findBySaldo", query = "SELECT t FROM TblGestion t WHERE t.saldo = :saldo"),
     @NamedQuery(name = "TblGestion.findByMoneda", query = "SELECT t FROM TblGestion t WHERE t.moneda = :moneda"),
     @NamedQuery(name = "TblGestion.findByFechaGestion", query = "SELECT t FROM TblGestion t WHERE t.fechaGestion = :fechaGestion"),

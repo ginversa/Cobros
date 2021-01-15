@@ -178,7 +178,5 @@ public class Razonmora implements Serializable {
     public String toString() {
         return this.descripcion;
     }
-
-
     
 }
