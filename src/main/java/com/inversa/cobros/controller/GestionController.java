@@ -65,7 +65,7 @@ public class GestionController implements Serializable {
 
     @Inject
     private TelefonoService ejbTelefonoLocal;
-    
+
     @Inject
     private TipificacionController tipificacionController;
 
@@ -125,7 +125,7 @@ public class GestionController implements Serializable {
 
         this.promesaList = new ArrayList<TblPromesa>();
         this.telefono = new TblTelefono();
-        
+
         this.tipificacionController.setIsDisabledPromesa(true);
 
     }
@@ -283,8 +283,8 @@ public class GestionController implements Serializable {
      */
     public void generarLlamada(TblLlamada callToNumber) {
         callToNumber.setIdLlamada(null);
-        System.out.println("Numero Seleccionado callToNumber: "+callToNumber.getCallToNumber());
-        
+        System.out.println("Numero Seleccionado callToNumber: " + callToNumber.getCallToNumber());
+
         if (callToNumber != null && callToNumber.getCallToNumber() != null && !callToNumber.getCallToNumber().trim().equals("")) {
             //this.selectedLlamada.setIdLlamada(null);
             String telefono = callToNumber.getCallToNumber();
@@ -919,6 +919,54 @@ public class GestionController implements Serializable {
                 List<TblPromesa> promesas = this.llamadaList.get(index).getTblPromesaList();
                 if (promesas != null && !promesas.isEmpty() && promesas.size() > 0) {
                     this.promesaList.addAll(promesas);
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param objLlamada
+     */
+    public void setSubtipificacionNullonLlamada(TblLlamada objLlamada) {
+        if (objLlamada != null && this.llamadaList != null) {
+            String telefono = objLlamada.getCallToNumber();
+            for (int index = 0; index < this.llamadaList.size(); index++) {
+                TblLlamada obj = this.llamadaList.get(index);
+                if (obj.getCallToNumber().equals(telefono)) {
+                    this.llamadaList.get(index).setIdSubtipificacion(null);
+                }
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param objLlamada 
+     */
+    public void setResultadoGestionNullonLlamada(TblLlamada objLlamada) {
+        if (objLlamada != null && this.llamadaList != null) {
+            String telefono = objLlamada.getCallToNumber();
+            for (int index = 0; index < this.llamadaList.size(); index++) {
+                TblLlamada obj = this.llamadaList.get(index);
+                if (obj.getCallToNumber().equals(telefono)) {
+                    this.llamadaList.get(index).setIdResultadogestion(null);
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param objLlamada
+     */
+    public void setResultadoTerceroNullonLlamada(TblLlamada objLlamada) {
+            if (objLlamada != null && this.llamadaList != null) {
+            String telefono = objLlamada.getCallToNumber();
+            for (int index = 0; index < this.llamadaList.size(); index++) {
+                TblLlamada obj = this.llamadaList.get(index);
+                if (obj.getCallToNumber().equals(telefono)) {
+                    this.llamadaList.get(index).setIdResultadotercero(null);
                 }
             }
         }

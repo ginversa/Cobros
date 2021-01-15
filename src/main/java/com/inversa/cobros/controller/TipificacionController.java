@@ -7,6 +7,9 @@ package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.TipificacionService;
 import com.inversa.cobros.model.Subtipificacion;
+import com.inversa.cobros.model.TblLlamada;
+import com.inversa.cobros.model.TblResultadogestion;
+import com.inversa.cobros.model.TblResultadotercero;
 import com.inversa.cobros.model.Tipificacion;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,14 +33,21 @@ public class TipificacionController implements Serializable {
     private List<Tipificacion> tipificacionList;
 
     private List<Subtipificacion> subtipificacionList;
-    
+
+    private List<TblResultadogestion> resultadogestionList;
+
+    private List<TblResultadotercero> resultadoterceroList;
+
     private boolean isDisabledPromesa;
+
+    @Inject
+    private GestionController gestionController;
 
     @PostConstruct
     public void init() {
-        
+
         this.tipificacionList = ejbLocal.findAll();
-        
+
         this.isDisabledPromesa = true;// desabilita el boton de promesas...
     }
 
@@ -91,26 +101,51 @@ public class TipificacionController implements Serializable {
         this.subtipificacionList = subtipificacionList;
     }
 
-    @Inject
-    private GestionController gestionController;
-    
     /**
      *
      * @param selectedTipificacion
      */
-    public void onTipificacionChange(Tipificacion selectedTipificacion) {
-        if (selectedTipificacion != null) {
-            this.subtipificacionList = selectedTipificacion.getSubtipificacionList();
-            
-            if(selectedTipificacion.getIdTipificacion() == 1){
-                this.setIsDisabledPromesa(false);
-            }else{
+    public void onTipificacionChange(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            Tipificacion selectedTipificacion = selectedLlamada.getIdTipificacion();
+            if (selectedTipificacion != null) {
+                this.subtipificacionList = selectedTipificacion.getSubtipificacionList();
+                this.resultadogestionList = selectedTipificacion.getTblResultadogestionList();
+                this.resultadoterceroList = selectedTipificacion.getTblResultadoterceroList();
+
+                if (selectedTipificacion.getIdTipificacion() == 1) {
+                    this.setIsDisabledPromesa(false);
+                } else {
+                    this.setIsDisabledPromesa(true);
+                }
+
+            } else {
+                this.subtipificacionList = new ArrayList<Subtipificacion>();
                 this.setIsDisabledPromesa(true);
-            }            
+            }
+
+            this.gestionController.setSubtipificacionNullonLlamada(selectedLlamada);
+            this.gestionController.setResultadoGestionNullonLlamada(selectedLlamada);
+            this.gestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
+
+    }
+
+    /**
+     *
+     * @param selectedResultadogestion
+     */
+    public void onResultadogestionChange(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            TblResultadogestion selectedResultadogestion = selectedLlamada.getIdResultadogestion();
+            if (selectedResultadogestion != null) {
+                this.resultadoterceroList = selectedResultadogestion.getTblResultadoterceroList();
+
+            } else {
+                this.resultadoterceroList = new ArrayList<TblResultadotercero>();
+            }
             
-        } else {
-            this.subtipificacionList = new ArrayList<Subtipificacion>();
-            this.setIsDisabledPromesa(true);
+            this.gestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
         }
     }
 
@@ -120,6 +155,22 @@ public class TipificacionController implements Serializable {
 
     public void setIsDisabledPromesa(boolean isDisabledPromesa) {
         this.isDisabledPromesa = isDisabledPromesa;
+    }
+
+    public List<TblResultadogestion> getResultadogestionList() {
+        return resultadogestionList;
+    }
+
+    public void setResultadogestionList(List<TblResultadogestion> resultadogestionList) {
+        this.resultadogestionList = resultadogestionList;
+    }
+
+    public List<TblResultadotercero> getResultadoterceroList() {
+        return resultadoterceroList;
+    }
+
+    public void setResultadoterceroList(List<TblResultadotercero> resultadoterceroList) {
+        this.resultadoterceroList = resultadoterceroList;
     }
 
 }

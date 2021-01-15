@@ -42,6 +42,14 @@
                                 <p:outputLabel for="txtSaldo" value="Saldo" />
                                 <p:inputText id="txtSaldo" value="#{gestionController.gestion.saldo}" readonly="true" />
                                 <p:column />
+
+                                <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
+                                <p:selectOneMenu id="txtLeyUsura" disabled="true" >
+                                    <f:selectItem itemLabel="--- Si ---" itemValue="1" />
+                                    <f:selectItem itemLabel="--- No ---" itemValue="0" />
+                                </p:selectOneMenu>
+                                <p:column />
+
                                 <p:outputLabel for="txtdescripcion" value="Descripción" />
                                 <p:inputTextarea id="txtdescripcion" value="#{gestionController.gestion.descripcion}" />
                                 <p:message for="txtdescripcion" />                                
@@ -91,7 +99,7 @@
                                                 <h:selectOneMenu id="idTipificacion" value="#{llamada.idTipificacion}" converter="tipificacionConverter" required="true" requiredMessage="Tipificación requerido!" >
                                                     <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                     <f:selectItems value="#{tipificacionController.tipificacionList}" var="tipificacion" itemLabel="#{tipificacion.descripcion}" itemValue="#{tipificacion}" />
-                                                    <p:ajax listener="#{tipificacionController.onTipificacionChange(llamada.idTipificacion)}" event="change" update="txtSubTipificacion, tbnPromesa" process="@this" />
+                                                    <p:ajax listener="#{tipificacionController.onTipificacionChange(llamada)}" event="change" update="txtSubTipificacion, txtResultadogestion, txtidResultadotercero, tbnPromesa" process="@this tbnPromesa" />
                                                 </h:selectOneMenu>
                                             </f:facet>
                                         </p:cellEditor>
@@ -101,8 +109,31 @@
                                             <f:facet name="output"><h:outputText value="#{llamada.idSubtipificacion}" /></f:facet>
                                             <f:facet name="input">
                                                 <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
-                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="false" />
+                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                     <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
+                                                </h:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Resultado Gestión">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{llamada.idResultadogestion}" /></f:facet>
+                                            <f:facet name="input">
+                                                <h:selectOneMenu id="txtResultadogestion" value="#{llamada.idResultadogestion}" converter="resultadogestionConverter" >
+                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{tipificacionController.resultadogestionList}" var="resultadogestion" itemLabel="#{resultadogestion.descripcion}" itemValue="#{resultadogestion}" />
+                                                    <p:ajax listener="#{tipificacionController.onResultadogestionChange(llamada)}" event="change" update="txtidResultadotercero" process="@this tbnPromesa" />
+                                                </h:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Respuesta">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{llamada.idResultadotercero}" /></f:facet>
+                                            <f:facet name="input">
+                                                <h:selectOneMenu id="txtidResultadotercero" value="#{llamada.idResultadotercero}" converter="resultadoterceroConverter" >
+                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{tipificacionController.resultadoterceroList}" var="resultadotercero" itemLabel="#{resultadotercero.descripcion}" itemValue="#{resultadotercero}" />
                                                 </h:selectOneMenu>
                                             </f:facet>
                                         </p:cellEditor>

@@ -199,7 +199,7 @@ public class TblResultadogestion implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.TblResultadogestion[ idResultadogestion=" + idResultadogestion + " ]";
+        return this.descripcion;
     }
     
 }
