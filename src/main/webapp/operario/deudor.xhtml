@@ -30,7 +30,8 @@
                         <p:dataTable widgetVar="customersDT2" var="deudor" value="#{deudorController.deudorList}"
                                      paginator="true" rows="30" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
-                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines">
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                     emptyMessage="No se encontraron registros." >
 
                             <p:column headerText="Identificación" filterBy="#{deudor.documento}" filterMatchMode="contains" sortBy="#{deudor.documento}" >
                                 <p:commandLink action="gestion" actionListener="#{deudorController.setDeudor(deudor)}">

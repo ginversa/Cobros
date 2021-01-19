@@ -15,322 +15,583 @@
 
     <ui:param name="viewname" value="Gestión" />
 
-    <ui:define name="content">        
-        <div class="p-grid">
-            <h:form id="form">
-                <div class="p-col-12">                
-                    <div class="card">
-                        <h1>Gestión</h1>
-                        <p>Sistema de Cobros.</p>                    
-                        <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
-                            <p:autoUpdate/>
-                        </p:growl>                        
-                        <p:panelGrid id="pgInfoGestion" columns="2">
-                            <h:panelGrid id="pgDeudor" columns="3">
-                                <p:outputLabel for="txtFecha" value="Fecha Gestión" />
-                                <p:calendar id="txtFecha" value="#{gestionController.gestion.fechaGestion}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha Gestión requerida!" />
-                                <p:message for="txtFecha" />
-                                <p:outputLabel for="txtCartera" value="Cartera" />
-                                <p:inputText id="txtCartera" value="#{gestionController.gestion.codigoCartera}" readonly="true" />
-                                <p:column />                                            
-                                <p:outputLabel for="txtNombre" value="Nombre" />
-                                <p:inputTextarea id="txtNombre" value="#{gestionController.gestion.nombreCliente}" readonly="true" />
-                                <p:column />
-                                <p:outputLabel for="txtDocumento" value="Identificación" />
-                                <p:inputText id="txtDocumento" value="#{gestionController.gestion.documento}" readonly="true" />
-                                <p:column />
-                                <p:outputLabel for="txtSaldo" value="Saldo" />
-                                <p:inputText id="txtSaldo" value="#{gestionController.gestion.saldo}" readonly="true" />
-                                <p:column />
+    <ui:define name="content">
+        <h:form id="formGestion">
+            <div class="p-grid">
+                <div class="p-col-12">
+                    <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
+                        <p:autoUpdate/>
+                    </p:growl>                        
+                    <p:tabView id="idTabView" onTabChange="">
+                        <p:ajax event="tabChange" listener="#{findmeController.onTabViewChange}" />
+                        <p:tab title="Gestión">
+                            <div class="card">
+                                <h1>Gestión</h1>
+                                <p>Sistema de Cobros.</p>
+                                <p:panelGrid id="pgInfoGestion" columns="2">
+                                    <h:panelGrid id="pgDeudor" columns="3">
+                                        <p:outputLabel for="txtFecha" value="Fecha Gestión" />
+                                        <p:calendar id="txtFecha" value="#{gestionController.gestion.fechaGestion}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha Gestión requerida!" />
+                                        <p:message for="txtFecha" />
+                                        <p:outputLabel for="txtCartera" value="Cartera" />
+                                        <p:inputText id="txtCartera" value="#{gestionController.gestion.codigoCartera}" readonly="true" />
+                                        <p:column />                                            
+                                        <p:outputLabel for="txtNombre" value="Nombre" />
+                                        <p:inputTextarea id="txtNombre" value="#{gestionController.gestion.nombreCliente}" readonly="true" />
+                                        <p:column />
+                                        <p:outputLabel for="txtDocumento" value="Identificación" />
+                                        <p:inputText id="txtDocumento" value="#{gestionController.gestion.documento}" readonly="true" />
+                                        <p:column />
+                                        <p:outputLabel for="txtSaldo" value="Saldo" />
+                                        <p:inputText id="txtSaldo" value="#{gestionController.gestion.saldo}" readonly="true" />
+                                        <p:column />
 
-                                <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
-                                <p:selectOneMenu id="txtLeyUsura" disabled="true" >
-                                    <f:selectItem itemLabel="--- Si ---" itemValue="1" />
-                                    <f:selectItem itemLabel="--- No ---" itemValue="0" />
-                                </p:selectOneMenu>
-                                <p:column />
+                                        <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
+                                        <p:selectOneMenu id="txtLeyUsura" disabled="true" >
+                                            <f:selectItem itemLabel="--- Si ---" itemValue="1" />
+                                            <f:selectItem itemLabel="--- No ---" itemValue="0" />
+                                        </p:selectOneMenu>
+                                        <p:column />
 
-                                <p:outputLabel for="txtdescripcion" value="Descripción" />
-                                <p:inputTextarea id="txtdescripcion" value="#{gestionController.gestion.descripcion}" />
-                                <p:message for="txtdescripcion" />                                
-                            </h:panelGrid>
-                            <p:fieldset legend="Llamar">
-                                <div align="right">
-                                    <p:commandButton value="Agregar Teléfono" styleClass="p-mr-2 p-mb-2" update="form:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this"/>
-                                    <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
-                                    <p:commandButton value="Finalizar" actionListener="#{gestionController.finalizarGestion()}" styleClass="success-button p-mr-2 p-mb-2" process="@this pgDeudor" update="form:messages" />
-                                </div>
-                                <p:dataTable id="tblTelefono" value="#{gestionController.llamadaList}" var="llamada"
-                                             scrollable="true"
-                                             editMode="cell" editable="true" widgetVar="tblTelefono"
-                                             style="margin-bottom:20px"
-                                             styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
-                                             rows="5" paginator="true" lazy="false" >
+                                        <p:outputLabel for="txtdescripcion" value="Descripción" />
+                                        <p:inputTextarea id="txtdescripcion" value="#{gestionController.gestion.descripcion}" />
+                                        <p:message for="txtdescripcion" />                                
+                                    </h:panelGrid>
+                                    <p:fieldset legend="Llamar">
+                                        <div align="right">
+                                            <p:commandButton value="Agregar Teléfono" styleClass="p-mr-2 p-mb-2" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this"/>
+                                            <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
+                                            <p:commandButton value="Finalizar" actionListener="#{gestionController.finalizarGestion()}" styleClass="success-button p-mr-2 p-mb-2" process="@this pgDeudor" update="formGestion:messages" />
+                                        </div>
+                                        <p:dataTable id="tblTelefono" value="#{gestionController.llamadaList}" var="llamada"
+                                                     scrollable="true" paginator="true"
+                                                     editMode="cell" editable="true" widgetVar="tblTelefono"
+                                                     style="margin-bottom:20px"
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                     rows="5" 
+                                                     emptyMessage="No se encontraron registros." >
 
-                                    <p:ajax event="cellEdit" listener="#{gestionController.onCellEdit}" update="form:messages" />
+                                            <p:ajax event="cellEdit" listener="#{gestionController.onCellEdit}" update="formGestion:messages" />
 
-                                    <p:column exportable="false">
-                                        <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deleteTelefonoDialog').show()" title="Eliminar Teléfono!"  >
-                                            <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}" />
-                                        </p:commandButton>
-                                    </p:column>                                    
-                                    <p:column headerText="Teléfono" >                                        
-                                        <p:commandLink value="#{llamada.callToNumber}" actionListener="#{gestionController.generarLlamada(llamada)}" process="@this" update="tblTelefono" >
-                                            <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}" />
-                                        </p:commandLink>                                        
-                                    </p:column>
-                                    <p:column headerText="Tipo Teléfono" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">                                                
-                                                <h:outputText value="#{llamada.idTipotelefono}" />
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <h:selectOneMenu id="idTipoTelefono" value="#{llamada.idTipotelefono}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
-                                                    <f:selectItem itemLabel="---------------" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
-                                                </h:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="Tipificación">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{llamada.idTipificacion}" /></f:facet>
-                                            <f:facet name="input">
-                                                <h:selectOneMenu id="idTipificacion" value="#{llamada.idTipificacion}" converter="tipificacionConverter" required="true" requiredMessage="Tipificación requerido!" >
-                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{tipificacionController.tipificacionList}" var="tipificacion" itemLabel="#{tipificacion.descripcion}" itemValue="#{tipificacion}" />
-                                                    <p:ajax listener="#{tipificacionController.onTipificacionChange(llamada)}" event="change" update="txtSubTipificacion, txtResultadogestion, txtidResultadotercero, tbnPromesa" process="@this tbnPromesa" />
-                                                </h:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="Sub-Tipificación">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{llamada.idSubtipificacion}" /></f:facet>
-                                            <f:facet name="input">
-                                                <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
-                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
-                                                </h:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="Resultado Gestión">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{llamada.idResultadogestion}" /></f:facet>
-                                            <f:facet name="input">
-                                                <h:selectOneMenu id="txtResultadogestion" value="#{llamada.idResultadogestion}" converter="resultadogestionConverter" >
-                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{tipificacionController.resultadogestionList}" var="resultadogestion" itemLabel="#{resultadogestion.descripcion}" itemValue="#{resultadogestion}" />
-                                                    <p:ajax listener="#{tipificacionController.onResultadogestionChange(llamada)}" event="change" update="txtidResultadotercero" process="@this tbnPromesa" />
-                                                </h:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="Respuesta">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{llamada.idResultadotercero}" /></f:facet>
-                                            <f:facet name="input">
-                                                <h:selectOneMenu id="txtidResultadotercero" value="#{llamada.idResultadotercero}" converter="resultadoterceroConverter" >
-                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{tipificacionController.resultadoterceroList}" var="resultadotercero" itemLabel="#{resultadotercero.descripcion}" itemValue="#{resultadotercero}" />
-                                                </h:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="Razón Mora">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{llamada.idrazonmora}" /></f:facet>
-                                            <f:facet name="input">
-                                                <h:selectOneMenu id="txtRazonMora" value="#{llamada.idrazonmora}" converter="razonmoraConverter" required="true" requiredMessage="Razón Mora requerido!" >
-                                                    <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{razonmoraController.razonmoraList}" var="razonMora" itemLabel="#{razonMora.descripcion}" itemValue="#{razonMora}" />
-                                                </h:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="Promesa" >
-                                        <p:commandButton id="tbnPromesa" title="Agregar Promesa" icon="pi pi-user" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarDialog').show()" process="@this" disabled="#{tipificacionController.isDisabledPromesa}" >
-                                            <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}"  />
-                                        </p:commandButton>
-                                    </p:column>
-                                    <p:column headerText="Guardar" >
-                                        <p:commandButton actionListener="#{gestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this form:pgDeudor" update="form:messages" />
-                                    </p:column>                                          
-                                </p:dataTable> 
-                            </p:fieldset>
-                        </p:panelGrid>
+                                            <p:column exportable="false">
+                                                <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deleteTelefonoDialog').show()" title="Eliminar Teléfono!"  >
+                                                    <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}" />
+                                                </p:commandButton>
+                                            </p:column>                                    
+                                            <p:column headerText="Teléfono" >                                        
+                                                <p:commandLink value="#{llamada.callToNumber}" actionListener="#{gestionController.generarLlamada(llamada)}" process="@this" >
+                                                    <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}" />
+                                                </p:commandLink>                                        
+                                            </p:column>
+                                            <p:column headerText="Tipo Teléfono" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output">                                                
+                                                        <h:outputText value="#{llamada.idTipotelefono}" />
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <h:selectOneMenu id="idTipoTelefono" value="#{llamada.idTipotelefono}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
+                                                            <f:selectItem itemLabel="---------------" itemValue="" noSelectionOption="true" />
+                                                            <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
+                                                        </h:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Tipificación">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{llamada.idTipificacion}" /></f:facet>
+                                                    <f:facet name="input">
+                                                        <h:selectOneMenu id="idTipificacion" value="#{llamada.idTipificacion}" converter="tipificacionConverter" required="true" requiredMessage="Tipificación requerido!" >
+                                                            <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                            <f:selectItems value="#{tipificacionController.tipificacionList}" var="tipificacion" itemLabel="#{tipificacion.descripcion}" itemValue="#{tipificacion}" />
+                                                            <p:ajax listener="#{tipificacionController.onTipificacionChange(llamada)}" event="change" update="txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa" />
+                                                        </h:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Sub-Tipificación">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{llamada.idSubtipificacion}" /></f:facet>
+                                                    <f:facet name="input">
+                                                        <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
+                                                            <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                            <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
+                                                        </h:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Resultado Gestión">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{llamada.idResultadogestion}" /></f:facet>
+                                                    <f:facet name="input">
+                                                        <h:selectOneMenu id="txtResultadogestion" value="#{llamada.idResultadogestion}" converter="resultadogestionConverter" >
+                                                            <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                            <f:selectItems value="#{tipificacionController.resultadogestionList}" var="resultadogestion" itemLabel="#{resultadogestion.descripcion}" itemValue="#{resultadogestion}" />
+                                                            <p:ajax listener="#{tipificacionController.onResultadogestionChange(llamada)}" event="change" update="txtidResultadotercero" process="@this" />
+                                                        </h:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Respuesta">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{llamada.idResultadotercero}" /></f:facet>
+                                                    <f:facet name="input">
+                                                        <h:selectOneMenu id="txtidResultadotercero" value="#{llamada.idResultadotercero}" converter="resultadoterceroConverter" >
+                                                            <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                            <f:selectItems value="#{tipificacionController.resultadoterceroList}" var="resultadotercero" itemLabel="#{resultadotercero.descripcion}" itemValue="#{resultadotercero}" />
+                                                        </h:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Razón Mora">
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{llamada.idrazonmora}" /></f:facet>
+                                                    <f:facet name="input">
+                                                        <h:selectOneMenu id="txtRazonMora" value="#{llamada.idrazonmora}" converter="razonmoraConverter" required="true" requiredMessage="Razón Mora requerido!" >
+                                                            <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                            <f:selectItems value="#{razonmoraController.razonmoraList}" var="razonMora" itemLabel="#{razonMora.descripcion}" itemValue="#{razonMora}" />
+                                                        </h:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Promesa" >
+                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarDialog').show()" process="@this" update="formGestion:manage-llamar-content" disabled="#{tipificacionController.isDisabledPromesa}" >
+                                                    <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}"  />
+                                                </p:commandButton>
+                                            </p:column>
+                                            <p:column headerText="Guardar" >
+                                                <p:commandButton actionListener="#{gestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" />
+                                            </p:column>                                          
+                                        </p:dataTable> 
+                                    </p:fieldset>
+                                </p:panelGrid>
 
-                        <p:fieldset legend="Operaciones">
-                            <p:dataTable id="tblOperaciones" var="deudor" value="#{gestionController.deudorList}"
-                                         rendered="true"
-                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                                         paginator="true" rows="5" style="margin-bottom:20px">
+                                <p:fieldset legend="Operaciones">
+                                    <p:dataTable id="tblOperaciones" var="deudor" value="#{gestionController.deudorList}"
+                                                 rendered="true"
+                                                 scrollable="true" rows="5" style="margin-bottom:20px"
+                                                 emptyMessage="No se encontraron registros." >
 
-                                <p:column headerText="Operación" filterBy="#{deudor.clienteOperacion}" filterMatchMode="contains" sortBy="#{deudor.clienteOperacion}" >
-                                    <h:outputText value="#{deudor.clienteOperacion}" />                                
-                                </p:column>
-                                <p:column headerText="Saldo" filterBy="#{deudor.saldo}" sortBy="#{deudor.saldo}" >
-                                    <h:outputText value="#{deudor.saldo}" />
-                                </p:column>
-                                <!-- 
-                                <p:column headerText="Tipificacion" filterBy="#{deudor.tipificacion}" sortBy="#{deudor.tipificacion}" >
-                                    <h:outputText value="#{deudor.tipificacion}" />
-                                </p:column>
-                                -->
-                                <p:column headerText="Sub-Tipificación" filterBy="#{deudor.subtipificacion}" sortBy="#{deudor.subtipificacion}" >
-                                    <h:outputText value="#{deudor.subtipificacion}" />
-                                </p:column>
-                                <p:column headerText="Última Gestión" filterBy="#{deudor.fecUltGest}" sortBy="#{deudor.fecUltGest}" >
-                                    <h:outputText value="#{deudor.fecUltGest}" >
-                                        <f:convertDateTime pattern="dd/mm/yyyy" />
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="Última Promesa" filterBy="#{deudor.fecUltProm}" sortBy="#{deudor.fecUltProm}" >
-                                    <h:outputText value="#{deudor.fecUltProm}" >
-                                        <f:convertDateTime pattern="dd/mm/yyyy" />
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="Última Pago" filterBy="#{deudor.fecUltPago}" sortBy="#{deudor.fecUltPago}" >
-                                    <h:outputText value="#{deudor.fecUltPago}" >
-                                        <f:convertDateTime pattern="dd/mm/yyyy" />
-                                    </h:outputText>
-                                </p:column>                                        
-                            </p:dataTable>
-                        </p:fieldset>
+                                        <p:column headerText="Operación" filterBy="#{deudor.clienteOperacion}" filterMatchMode="contains" sortBy="#{deudor.clienteOperacion}" >
+                                            <h:outputText value="#{deudor.clienteOperacion}" />                                
+                                        </p:column>
+                                        <p:column headerText="Saldo" filterBy="#{deudor.saldo}" sortBy="#{deudor.saldo}" >
+                                            <h:outputText value="#{deudor.saldo}" />
+                                        </p:column>
+                                        <!-- 
+                                        <p:column headerText="Tipificacion" filterBy="#{deudor.tipificacion}" sortBy="#{deudor.tipificacion}" >
+                                            <h:outputText value="#{deudor.tipificacion}" />
+                                        </p:column>
+                                        -->
+                                        <p:column headerText="Sub-Tipificación" filterBy="#{deudor.subtipificacion}" sortBy="#{deudor.subtipificacion}" >
+                                            <h:outputText value="#{deudor.subtipificacion}" />
+                                        </p:column>
+                                        <p:column headerText="Última Gestión" filterBy="#{deudor.fecUltGest}" sortBy="#{deudor.fecUltGest}" >
+                                            <h:outputText value="#{deudor.fecUltGest}" >
+                                                <f:convertDateTime pattern="dd/mm/yyyy" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Última Promesa" filterBy="#{deudor.fecUltProm}" sortBy="#{deudor.fecUltProm}" >
+                                            <h:outputText value="#{deudor.fecUltProm}" >
+                                                <f:convertDateTime pattern="dd/mm/yyyy" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Última Pago" filterBy="#{deudor.fecUltPago}" sortBy="#{deudor.fecUltPago}" >
+                                            <h:outputText value="#{deudor.fecUltPago}" >
+                                                <f:convertDateTime pattern="dd/mm/yyyy" />
+                                            </h:outputText>
+                                        </p:column>                                        
+                                    </p:dataTable>
+                                </p:fieldset>
 
-                        <p:dialog header="Promesas" width="800" showEffect="fade" modal="true" widgetVar="manageLlamarDialog" responsive="true">
-                            <p:outputPanel id="manage-llamar-content" class="ui-fluid">
-                                <p:outputPanel rendered='true'>
-                                    <div class="p-field">                                        
-                                        <h:panelGrid id="pgLlamar01" columns="3">
-                                            <p:outputLabel for="txtSelectedTelefono" value="Teléfono: " />
-                                            <h:outputText id="txtSelectedTelefono" value="#{gestionController.selectedLlamada.callToNumber}" />
-                                            <p:column />
-                                            <p:outputLabel for="txtN" value="Nombre" />
-                                            <h:outputText id="txtN" value="#{gestionController.gestion.nombreCliente}" />
-                                            <p:column />
-                                            <p:outputLabel for="txtD" value="Documento" />
-                                            <h:outputText id="txtD" value="#{gestionController.gestion.documento}" />
-                                            <p:column />
-                                            <p:outputLabel for="txtS" value="Saldo" />
-                                            <h:outputText id="txtS" value="#{gestionController.gestion.saldo}" />
-                                            <p:column />
-                                        </h:panelGrid>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Findme">                        
+                            <div class="card">
+                                <p:panelGrid id="pgFindme" columns="1" >
+                                    <p:fieldset legend="Historial Telefonos" >
+                                        <p:dataTable id="idHistorialTelefonos" value="#{findmeController.historialTelefonoList}" var="historialTelefono"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
-                                        <p:fieldset legend="Promesa" >                                    
-                                            <p:growl id="msgs" showDetail="true"/>
-                                            <div class="ui-g">
-                                                <div class="ui-g-12">
-                                                    <p:commandButton value="Agregar Promesa" styleClass="ui-priority-primary" process="@this" update=":form:msgs"
-                                                                     action="#{gestionController.onAddNewPromesa()}" oncomplete="PF('tblPromesa').addRow();"/>
-                                                </div>
+                                            <p:column headerText="Teléfono">
+                                                <h:outputText value="#{historialTelefono.telefono}" />
+                                            </p:column>
+                                            <p:column headerText="Tipo Teléfono">
+                                                <h:outputText value="#{historialTelefono.tipo_telefono}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{historialTelefono.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Historial Correos" >
+                                        <p:dataTable id="idHistorialCorreo" value="#{findmeController.historialCorreoList}" var="historialCorreo"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Correo">
+                                                <h:outputText value="#{historialCorreo.correo}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{historialCorreo.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Historial Direcciones" >
+                                        <p:dataTable id="idHistorialDireccion" value="#{findmeController.historialDireccionList}" var="historialDireccion"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Tipo">
+                                                <h:outputText value="#{historialDireccion.tipo}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Dirección">
+                                                <h:outputText value="#{historialDireccion.direccion}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{historialDireccion.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Arbol Familiar" >
+                                        <p:dataTable id="idArbolFamiliar" value="#{findmeController.arbolFamiliarList}" var="arbolFamiliar"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Nombre">
+                                                <h:outputText value="#{arbolFamiliar.nombre}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Parentesco">
+                                                <h:outputText value="#{arbolFamiliar.parentesco}" />
+                                            </p:column>
+                                            <p:column headerText="Teléfono">
+                                                <h:outputText value="#{arbolFamiliar.telefonos}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{arbolFamiliar.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Análisis Laboral" >
+                                        <p:dataTable id="idAnalisisLaboral" value="#{findmeController.historialLaboralList}" var="historialLaboral"                                                 
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Estatus">
+                                                <h:outputText value="#{historialLaboral.estatus}" />
+                                            </p:column>
+                                            <p:column headerText="Cédula Patrono">
+                                                <h:outputText value="#{historialLaboral.cedula_patrono}" />
+                                            </p:column>
+                                            <p:column headerText="Nombre">
+                                                <h:outputText value="#{historialLaboral.nombre}" />
+                                            </p:column>
+                                            <p:column headerText="Último Salario">
+                                                <h:outputText value="#{historialLaboral.ultimo_salario}" />
+                                            </p:column>
+                                            <p:column headerText="Último Periodo">
+                                                <h:outputText value="#{historialLaboral.ultimo_periodo}" />
+                                            </p:column>
+                                            <p:column headerText="Meses">
+                                                <h:outputText value="#{historialLaboral.meses}" />
+                                            </p:column>
+                                            <p:column headerText="Promedio">
+                                                <h:outputText value="#{historialLaboral.promedio}" />
+                                            </p:column>
+                                            <p:column headerText="Tipo Salario">
+                                                <h:outputText value="#{historialLaboral.tipo_salario}" />
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Sociedades Anónimas" >
+                                        <p:dataTable id="idSociedadAnonima" value="#{findmeController.sociedadAnonimaList}" var="sociedadAnonima"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Posición">
+                                                <h:outputText value="#{sociedadAnonima.posicion}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Nombre Sociedad">
+                                                <h:outputText value="#{sociedadAnonima.nombre_sociedad}" />
+                                            </p:column>
+                                            <p:column headerText="Cédula Jurídica">
+                                                <h:outputText value="#{sociedadAnonima.cedula_juridica}" />
+                                            </p:column>
+                                            <p:column headerText="Dirección">
+                                                <h:outputText value="#{sociedadAnonima.direccion}" />
+                                            </p:column>
+                                            <p:column headerText="Teléfono">
+                                                <h:outputText value="#{sociedadAnonima.telefono}" />
+                                            </p:column>
+                                            <p:column headerText="Fax">
+                                                <h:outputText value="#{sociedadAnonima.fax}" />
+                                            </p:column>
+                                            <p:column headerText="Verificado">
+                                                <h:outputText value="#{sociedadAnonima.verificado}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{arbolFamiliar.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Propiedades Registradas" >
+                                        <p:dataTable id="idPropiedadRegistrada" value="#{findmeController.propiedadRegistradaList}" var="propiedadRegistrada"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Provincial">
+                                                <h:outputText value="#{propiedadRegistrada.provincia}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Cantón">
+                                                <h:outputText value="#{propiedadRegistrada.canton}" />
+                                            </p:column>
+                                            <p:column headerText="Distrito">
+                                                <h:outputText value="#{propiedadRegistrada.distrito}" />
+                                            </p:column>
+                                            <p:column headerText="Valor">
+                                                <h:outputText value="#{propiedadRegistrada.valor}" />
+                                            </p:column>
+                                            <p:column headerText="País">
+                                                <h:outputText value="#{propiedadRegistrada.pais}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{propiedadRegistrada.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Vehículos" >
+                                        <p:dataTable id="idVehiculo" value="#{findmeController.vehiculoList}" var="vehiculo"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Placa">
+                                                <h:outputText value="#{vehiculo.placa}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Año de Fabricación">
+                                                <h:outputText value="#{vehiculo.ano_fabricacion}" />
+                                            </p:column>
+                                            <p:column headerText="Estilo">
+                                                <h:outputText value="#{vehiculo.estilo}" />
+                                            </p:column>
+                                            <p:column headerText="Tipo">
+                                                <h:outputText value="#{vehiculo.tipo}" />
+                                            </p:column>
+                                            <p:column headerText="Valor Fiscal">
+                                                <h:outputText value="#{vehiculo.valor_fiscal}" />
+                                            </p:column>
+                                            <p:column headerText="País">
+                                                <h:outputText value="#{vehiculo.pais}" />
+                                            </p:column>
+                                            <p:column headerText="Antigüedad">
+                                                <h:outputText value="#{vehiculo.antiguedad}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{vehiculo.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Historial Judicial" >
+                                        <p:dataTable id="idHistorialJudicial" value="#{findmeController.historialJudicialList}" var="historialJudicial"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Expediente">
+                                                <h:outputText value="#{historialJudicial.expediente}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Asunto">
+                                                <h:outputText value="#{historialJudicial.asunto}" />
+                                            </p:column>
+                                            <p:column headerText="Oficina">
+                                                <h:outputText value="#{historialJudicial.oficina}" />
+                                            </p:column>
+                                            <p:column headerText="Caso">
+                                                <h:outputText value="#{historialJudicial.caso}" />
+                                            </p:column>
+                                            <p:column headerText="Tipo Parte">
+                                                <h:outputText value="#{historialJudicial.tipo_parte}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha Caso">
+                                                <h:outputText value="#{historialJudicial.fecha_caso}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                            <p:column headerText="Estado">
+                                                <h:outputText value="#{historialJudicial.estado}" />
+                                            </p:column>
+                                            <p:column headerText="País">
+                                                <h:outputText value="#{historialJudicial.pais}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha del Dato">
+                                                <h:outputText value="#{historialJudicial.fecha_del_dato}" >
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                </h:outputText>                                                
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                </p:panelGrid>
+                            </div>                        
+                        </p:tab>
+                    </p:tabView>
+
+                    <p:confirmDialog widgetVar="deleteTelefonoDialog" showEffect="fade" width="300" message="Eliminar este Teléfono?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{gestionController.deleteTelefono()}" process="@this" update="formGestion:idTabView:tblTelefono" oncomplete="PF('deleteTelefonoDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" />
+                    </p:confirmDialog>
+
+                    <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{gestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()"/>
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" />
+                    </p:confirmDialog>
+
+                    <p:dialog header="Promesas" width="800" showEffect="fade" modal="true" widgetVar="manageLlamarDialog" responsive="true">
+                        <p:outputPanel id="manage-llamar-content" class="ui-fluid">
+                            <p:outputPanel rendered='true'>
+                                <div class="p-field">                                        
+                                    <h:panelGrid id="pgLlamar01" columns="3">
+                                        <p:outputLabel for="txtSelectedTelefono" value="Teléfono: " />
+                                        <h:outputText id="txtSelectedTelefono" value="#{gestionController.selectedLlamada.callToNumber}" />
+                                        <p:column />
+                                        <p:outputLabel for="txtN" value="Nombre" />
+                                        <h:outputText id="txtN" value="#{gestionController.gestion.nombreCliente}" />
+                                        <p:column />
+                                        <p:outputLabel for="txtD" value="Documento" />
+                                        <h:outputText id="txtD" value="#{gestionController.gestion.documento}" />
+                                        <p:column />
+                                        <p:outputLabel for="txtS" value="Saldo" />
+                                        <h:outputText id="txtS" value="#{gestionController.gestion.saldo}" />
+                                        <p:column />
+                                    </h:panelGrid>
+
+                                    <p:fieldset legend="Promesa" >                                    
+                                        <p:growl id="msgs" showDetail="true"/>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12">
+                                                <p:commandButton value="Agregar Promesa" styleClass="ui-priority-primary" process="@this" update="formGestion:msgs, tblPromesa"
+                                                                 action="#{gestionController.onAddNewPromesa()}" /> <!-- oncomplete="PF('tblPromesa').addRow();" -->
                                             </div>
-                                            <p:dataTable id="tblPromesa" widgetVar="tblPromesa" var="promesa" value="#{gestionController.promesaList}" editable="true" style="margin-bottom:20px">
+                                        </div>
+                                        <p:dataTable id="tblPromesa" widgetVar="tblPromesa" var="promesa"
+                                                     value="#{gestionController.promesaList}" editable="true" style="margin-bottom:20px"
+                                                     emptyMessage="No se encontraron registros." >
 
-                                                <p:ajax event="rowEdit" listener="#{gestionController.onRowEdit}" update=":form:msgs" />
-                                                <p:ajax event="rowEditCancel" listener="#{gestionController.onRowCancel}" update=":form:msgs" />
+                                            <p:ajax event="rowEdit" listener="#{gestionController.onRowEdit}" update="formGestion:msgs" />
+                                            <p:ajax event="rowEditCancel" listener="#{gestionController.onRowCancel}" update="formGestion:msgs" />
 
-                                                <p:column exportable="false">                                            
-                                                    <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
-                                                        <f:setPropertyActionListener value="#{promesa}" target="#{gestionController.selectedPromesa}" />
-                                                    </p:commandButton>
-                                                </p:column>
-                                                <p:column headerText="Teléfono" >
-                                                    <h:outputText value="#{promesa.telefono}" />
-                                                </p:column>
-                                                <p:column headerText="Fecha Pago" >
-                                                    <p:cellEditor>
-                                                        <f:facet name="output">
-                                                            <h:outputText value="#{promesa.fechaPago}" >
-                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                            </h:outputText>
-                                                        </f:facet>
-                                                        <f:facet name="input">
-                                                            <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" style="width:100%"/>
-                                                        </f:facet>
-                                                    </p:cellEditor>
-                                                </p:column>
-                                                <p:column headerText="Monto" >
-                                                    <p:cellEditor>
-                                                        <f:facet name="output">
-                                                            <h:outputText value="#{promesa.mtopago}" >
-                                                                <f:convertNumber type="currency" pattern="###,###,###,###.####" />
-                                                            </h:outputText>                                                            
-                                                        </f:facet>
-                                                        <f:facet name="input">
-                                                            <p:inputText value="#{promesa.mtopago}" style="width:100%" >
-                                                                <f:validateDoubleRange minimum="0" maximum="#{gestionController.gestion.saldo}" />
-                                                            </p:inputText>                                                            
-                                                        </f:facet>
-                                                    </p:cellEditor>
-                                                </p:column>
-                                                <p:column headerText="Operación" >
-                                                    <p:cellEditor>
-                                                        <f:facet name="output"><h:outputText value="#{promesa.operacion}" /></f:facet>
-                                                        <f:facet name="input">
-                                                            <h:selectOneMenu id="txtOperacionPromesa" value="#{promesa.operacion}" required="true" requiredMessage="Campo requerido!" style="width:100%">
-                                                                <f:selectItem itemLabel="-------" itemValue="" noSelectionOption="true" />
-                                                                <f:selectItems value="#{gestionController.deudorList}" var="deudor" itemLabel="#{deudor.clienteOperacion}" itemValue="#{deudor.clienteOperacion}" />
-                                                            </h:selectOneMenu>
-                                                        </f:facet>
-                                                    </p:cellEditor>
-                                                </p:column>
-                                                <p:column style="width:32px">
-                                                    <p:rowEditor />
-                                                </p:column>
-                                            </p:dataTable>                                    
-                                        </p:fieldset>                                
-                                    </div>
-                                </p:outputPanel>
+                                            <p:column exportable="false">                                            
+                                                <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
+                                                    <f:setPropertyActionListener value="#{promesa}" target="#{gestionController.selectedPromesa}" />
+                                                </p:commandButton>
+                                            </p:column>
+                                            <p:column headerText="Teléfono" >
+                                                <h:outputText value="#{promesa.telefono}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha Pago" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output">
+                                                        <h:outputText value="#{promesa.fechaPago}" >
+                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" style="width:100%" />
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Monto" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output">
+                                                        <h:outputText value="#{promesa.mtopago}" >
+                                                            <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                        </h:outputText>                                                            
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <p:inputText value="#{promesa.mtopago}" style="width:100%" required="true" requiredMessage="Monto requerido!" >
+                                                            <f:validateDoubleRange minimum="0" maximum="#{gestionController.gestion.saldo}" />
+                                                        </p:inputText>                                                            
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Operación" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{promesa.operacion}" /></f:facet>
+                                                    <f:facet name="input">
+                                                        <h:selectOneMenu id="txtOperacionPromesa" value="#{promesa.operacion}" required="true" requiredMessage="Campo requerido!" style="width:100%">
+                                                            <f:selectItem itemLabel="-------" itemValue="" noSelectionOption="true" />
+                                                            <f:selectItems value="#{gestionController.deudorList}" var="deudor" itemLabel="#{deudor.clienteOperacion}" itemValue="#{deudor.clienteOperacion}" />
+                                                            <!-- 
+                                                            <p:ajax listener="#{gestionController.onOperacionPromesaChange(deudor)}" event="change" update="txtS, tblPromesa" process="@this tblPromesa" />                                                               
+                                                            -->
+                                                        </h:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column style="width:32px">
+                                                <p:rowEditor />
+                                            </p:column>
+                                        </p:dataTable>                                    
+                                    </p:fieldset>                                
+                                </div>
                             </p:outputPanel>
-                            <f:facet name="footer">
-                                <p:commandButton value="Guardar" icon="pi pi-check" update="manage-llamar-content" process="manage-llamar-content @this" onclick="PF('manageLlamarDialog').hide()" />                                        
-                            </f:facet>
-                        </p:dialog>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" icon="pi pi-check" update="manage-llamar-content" process="manage-llamar-content @this" onclick="PF('manageLlamarDialog').hide()" />                                        
+                        </f:facet>
+                    </p:dialog>
 
-                        <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
-                            <p:commandButton value="Si" icon="pi pi-check" actionListener="#{gestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()"/>
-                            <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" />
-                        </p:confirmDialog>
-
-                        <p:confirmDialog widgetVar="deleteTelefonoDialog" showEffect="fade" width="300" message="Eliminar este Teléfono?" header="Confirmar" severity="warn">
-                            <p:commandButton value="Si" icon="pi pi-check" actionListener="#{gestionController.deleteTelefono()}" process="@this" oncomplete="PF('deleteTelefonoDialog').hide()" />
-                            <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" />
-                        </p:confirmDialog>
-
-                        <p:dialog header="Agregar Teléfono" width="800" showEffect="fade" modal="true" widgetVar="manageTelefonoDialog" responsive="true">
-                            <p:outputPanel id="manage-Telefono-content" class="ui-fluid">
-                                <p:outputPanel rendered='true'>
-                                    <div class="p-field">                                        
-                                        <h:panelGrid id="pgTelefono01" columns="3">
-                                            <p:outputLabel for="txtNonbreContacto" value="Nombre: " />
-                                            <h:outputText id="txtNonbreContacto" value="#{gestionController.contacto.nombre}" />
-                                            <p:column />
-                                            <p:outputLabel for="txtCedulaContacto" value="Identificación: " />
-                                            <h:outputText id="txtCedulaContacto" value="#{gestionController.contacto.cedula}" />
-                                            <p:column />
-                                            <p:outputLabel for="txtTelefonoContacto" value="Teléfono" />
-                                            <p:inputMask id="txtTelefonoContacto" value="#{gestionController.telefono.telefono}" mask="9999-9999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
-                                            <p:message for="txtTelefonoContacto" />
-                                            <p:outputLabel for="txtTipotelefono" value="Tipo Teléfono" />
-                                            <p:selectOneMenu id="txtTipotelefono" value="#{gestionController.tipo}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
-                                                <f:selectItem itemLabel="--------------------" itemValue="" noSelectionOption="true" />
-                                                <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
-                                            </p:selectOneMenu>
-                                            <p:message for="txtTipotelefono" />
-                                        </h:panelGrid>                              
-                                    </div>
-                                </p:outputPanel>
+                    <p:dialog header="Agregar Teléfono" width="800" showEffect="fade" modal="true" widgetVar="manageTelefonoDialog" responsive="true" >
+                        <p:outputPanel id="manage-Telefono-content" class="ui-fluid">
+                            <p:outputPanel rendered='true'>
+                                <div class="p-field">                                        
+                                    <h:panelGrid id="pgTelefono01" columns="3">
+                                        <p:outputLabel for="txtNonbreContacto" value="Nombre: " />
+                                        <h:outputText id="txtNonbreContacto" value="#{gestionController.contacto.nombre}" />
+                                        <p:column />
+                                        <p:outputLabel for="txtCedulaContacto" value="Identificación: " />
+                                        <h:outputText id="txtCedulaContacto" value="#{gestionController.contacto.cedula}" />
+                                        <p:column />
+                                        <p:outputLabel for="txtTelefonoContacto" value="Teléfono" />
+                                        <p:inputMask id="txtTelefonoContacto" value="#{gestionController.telefono.telefono}" mask="99999999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
+                                        <p:message for="txtTelefonoContacto" />
+                                        <p:outputLabel for="txtTipotelefono" value="Tipo Teléfono" />
+                                        <p:selectOneMenu id="txtTipotelefono" value="#{gestionController.tipo}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
+                                            <f:selectItem itemLabel="--------------------" itemValue="" noSelectionOption="true" />
+                                            <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="txtTipotelefono" />
+                                    </h:panelGrid>                              
+                                </div>
                             </p:outputPanel>
-                            <f:facet name="footer">    
-                                <p:commandButton value="Save" icon="pi pi-check" actionListener="#{gestionController.addTelefono()}" update="manage-Telefono-content, form:tblTelefono" process="manage-Telefono-content @this form:tblTelefono" ajax="true" />
-                                <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageTelefonoDialog').hide()" class="secondary-button" />
-                            </f:facet>
-                        </p:dialog>
-                    </div>
+                        </p:outputPanel>
+                        <f:facet name="footer">    
+                            <p:commandButton value="Save" icon="pi pi-check" actionListener="#{gestionController.addTelefono()}" update="manage-Telefono-content, formGestion:idTabView:tblTelefono" process="manage-Telefono-content @this" ajax="true" />
+                            <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageTelefonoDialog').hide()" class="secondary-button" />
+                        </f:facet>
+                    </p:dialog>
+
                 </div>
-            </h:form>
-        </div>                
+            </div>
+        </h:form>
     </ui:define>
 </ui:composition>

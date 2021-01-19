@@ -30,7 +30,8 @@
                         <p:dataTable widgetVar="customersDT2" var="gestion" value="#{listarGestionController.gestionList}"
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
-                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines">
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                     emptyMessage="No se encontraron registros." >
                             
                             <p:column headerText="Código Cartera" filterBy="#{gestion.codigoCartera}" filterMatchMode="contains" sortBy="#{gestion.codigoCartera}" >                                    
                                 <h:outputText value="#{gestion.codigoCartera}" />                                    

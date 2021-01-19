@@ -242,7 +242,7 @@ public class GestionController implements Serializable {
                     this.promesaList.remove(index);
                     this.selectedPromesa = null;
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Promesa Removida"));
-                    PrimeFaces.current().ajax().update("form:messages", "form:tblPromesa");
+                    PrimeFaces.current().ajax().update("formGestion:messages", "formGestion:tblPromesa");
                 }
             }
         }
@@ -817,7 +817,7 @@ public class GestionController implements Serializable {
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Teléfono Registrado. Correcto!"));
             PrimeFaces.current().executeScript("PF('manageTelefonoDialog').hide()");
-            PrimeFaces.current().ajax().update("form:messages", "form:tblTelefono");
+            PrimeFaces.current().ajax().update("formGestion:messages", "formGestion:idTabView:tblTelefono");
 
             this.telefono.setTelefono("");
             this.tipo = null;
@@ -880,9 +880,15 @@ public class GestionController implements Serializable {
                 this.contacto.setTblTelefonoList(telefonoList);
                 this.telefonos = this.contacto.getTblTelefonoList();
                 this.addTelefonoLlamada();
+                
+                for(int index=0; index<this.llamadaList.size();index++){
+                    if(this.llamadaList.get(index).getCallToNumber().equals(telefono)){
+                        this.llamadaList.remove(index);
+                    }
+                }
 
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Teléfono Eliminado. Correcto!"));
-                PrimeFaces.current().ajax().update("form:messages", "form:tblTelefono");
+                PrimeFaces.current().ajax().update("formGestion:idTabView:tblTelefono","formGestion:messages");
 
             }
 
@@ -969,6 +975,18 @@ public class GestionController implements Serializable {
                     this.llamadaList.get(index).setIdResultadotercero(null);
                 }
             }
+        }
+    }
+    
+    /**
+     * 
+     * @param deudor 
+     */
+    public void onOperacionPromesaChange(TblDeudor deudor){
+        if(deudor != null){
+            String operacion = deudor.getClienteOperacion();
+            BigDecimal saldo = deudor.getSaldo();
+            this.gestion.setSaldo(saldo);            
         }
     }
 
