@@ -183,7 +183,7 @@ public class FindmeController implements Serializable {
             this.historialJudicialList = this.ejbLocal.historial_judicial(cedula);
         }
         
-        PrimeFaces.current().ajax().update("formGestion:idTabView:idHistorialTelefonos","formGestion:idTabView:idHistorialDireccion","formGestion:idTabView:idArbolFamiliar","formGestion:idTabView:idAnalisisLaboral","formGestion:idTabView:idSociedadAnonima","formGestion:idTabView:idPropiedadRegistrada","formGestion:idTabView:Vehículos","formGestion:idTabView:idHistorialJudicial");
+        PrimeFaces.current().ajax().update("formGestion:idTabView:idHistorialTelefonos","formGestion:idTabView:idHistorialDireccion","formGestion:idTabView:idArbolFamiliar","formGestion:idTabView:idAnalisisLaboral","formGestion:idTabView:idSociedadAnonima","formGestion:idTabView:idPropiedadRegistrada","formGestion:idTabView:idVehiculo","formGestion:idTabView:idHistorialJudicial");
     }
 
 }
