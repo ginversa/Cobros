@@ -8,6 +8,7 @@ package com.inversa.cobros.controller;
 import com.inversa.cobros.ejb.ContactoService;
 import com.inversa.cobros.ejb.DeudorService;
 import com.inversa.cobros.ejb.GestionService;
+import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.ejb.TelefonoService;
 import com.inversa.cobros.model.Razonmora;
 import com.inversa.cobros.model.Subtipificacion;
@@ -53,6 +54,9 @@ public class GestionController implements Serializable {
 
     @Inject
     private GestionService ejbLocal;
+
+    @Inject
+    private PromesaService ejbPromesaLocal;
 
     @Inject
     private ContactoService ejbContactoLocal;
@@ -239,6 +243,16 @@ public class GestionController implements Serializable {
                 }
 
                 if (isTrueTelefono && isTrueFechaPago && isTrueMtopago && isTrueMoneda && isTrueOperacion) {
+
+                    TblPromesa promesa = this.promesaList.get(index);
+                    boolean hasOperation = promesa.getOperacion() != null && !promesa.getOperacion().trim().equals("") ? true : false;
+                    boolean hasMtopago = promesa.getMtopago() != null && !promesa.getMtopago().equals(0) ? true : false;
+
+                    if (hasOperation && hasMtopago) {
+                        promesa.setEstado("DEL");
+                        this.ejbPromesaLocal.update(promesa);
+                    }
+
                     this.promesaList.remove(index);
                     this.selectedPromesa = null;
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Promesa Removida"));
@@ -287,6 +301,7 @@ public class GestionController implements Serializable {
 
         if (callToNumber != null && callToNumber.getCallToNumber() != null && !callToNumber.getCallToNumber().trim().equals("")) {
             //this.selectedLlamada.setIdLlamada(null);
+            this.selectedLlamada = callToNumber;// llamada seleccionada...
             String telefono = callToNumber.getCallToNumber();
 
             String URL_LLAMAR = "http://192.168.7.201/PBXPortal/llamar.php?ext=118&numero=987356220";
@@ -606,7 +621,14 @@ public class GestionController implements Serializable {
                                     if (llamadaConDatosList.get(index).getCallToNumber().equals(this.promesaList.get(i).getTelefono())) {
                                         this.promesaList.get(i).setIdLlamada(llamadaConDatosList.get(index));
                                         this.promesaList.get(i).setIdGestion(this.gestion);
-                                        promesas.add(this.promesaList.get(i));
+
+                                        boolean hasOperation = this.promesaList.get(i).getOperacion() != null && !this.promesaList.get(i).getOperacion().trim().equals("") ? true : false;
+                                        boolean hasMtopago = this.promesaList.get(i).getMtopago() != null && !this.promesaList.get(i).getMtopago().equals(0) ? true : false;
+
+                                        if (hasOperation && hasMtopago) {
+                                            promesas.add(this.promesaList.get(i));
+                                        }
+
                                     }
                                 }
 
@@ -880,15 +902,15 @@ public class GestionController implements Serializable {
                 this.contacto.setTblTelefonoList(telefonoList);
                 this.telefonos = this.contacto.getTblTelefonoList();
                 this.addTelefonoLlamada();
-                
-                for(int index=0; index<this.llamadaList.size();index++){
-                    if(this.llamadaList.get(index).getCallToNumber().equals(telefono)){
+
+                for (int index = 0; index < this.llamadaList.size(); index++) {
+                    if (this.llamadaList.get(index).getCallToNumber().equals(telefono)) {
                         this.llamadaList.remove(index);
                     }
                 }
 
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Teléfono Eliminado. Correcto!"));
-                PrimeFaces.current().ajax().update("formGestion:idTabView:tblTelefono","formGestion:messages");
+                PrimeFaces.current().ajax().update("formGestion:idTabView:tblTelefono", "formGestion:messages");
 
             }
 
@@ -916,17 +938,46 @@ public class GestionController implements Serializable {
      */
     private void cargarGestionActual(TblGestion gestion) {
         if (gestion.getIdGestion() != null) {
-            this.llamadaList = new ArrayList<TblLlamada>();
-            this.promesaList = new ArrayList<TblPromesa>();
             this.gestion = this.ejbLocal.findById(gestion);
-            this.llamadaList = this.gestion.getTblLlamadaList();
+            List<TblLlamada> llamadaConIdList = this.gestion.getTblLlamadaList();
+            for (int index1 = 0; index1 < llamadaConIdList.size(); index1++) {
+                TblLlamada llamadaConId = llamadaConIdList.get(index1);
+                for (int index2 = 0; index2 < this.llamadaList.size(); index2++) {
+                    TblLlamada llamadaSinId = this.llamadaList.get(index2);
+                    if (llamadaConId.getCallToNumber().equals(llamadaSinId.getCallToNumber()) && llamadaConId.getCallLogId().equals(llamadaSinId.getCallLogId())) {
+                        this.llamadaList.get(index2).setIdLlamada(llamadaConId.getIdLlamada());
+                        List<TblPromesa> promesaConIdList = llamadaConId.getTblPromesaList();
+                        if (promesaConIdList != null && !promesaConIdList.isEmpty() && promesaConIdList.size() > 0) {
+                            for (int index3 = 0; index3 < promesaConIdList.size(); index3++) {
+                                TblPromesa promesaConId = promesaConIdList.get(index3);
+                                String operacion = promesaConId.getOperacion();
+                                String telefono = promesaConId.getTelefono();
+                                Date fechaPago = promesaConId.getFechaPago();
+                                BigDecimal mtopago = promesaConId.getMtopago();
 
-            for (int index = 0; index < this.llamadaList.size(); index++) {
-                List<TblPromesa> promesas = this.llamadaList.get(index).getTblPromesaList();
-                if (promesas != null && !promesas.isEmpty() && promesas.size() > 0) {
-                    this.promesaList.addAll(promesas);
-                }
-            }
+                                for (int index4 = 0; index4 < this.promesaList.size(); index4++) {
+                                    TblPromesa promesaSinId = this.promesaList.get(index4);
+                                    String operacionSinId = promesaSinId.getOperacion();
+                                    String telefonoSinId = promesaSinId.getTelefono();
+                                    Date fechaPagoSinId = promesaSinId.getFechaPago();
+                                    BigDecimal mtopagoSinId = promesaSinId.getMtopago();
+
+                                    boolean isTrueOperacion = operacion.equals(operacionSinId);
+                                    boolean isTrueTelefono = telefono.equals(telefonoSinId);
+                                    boolean isTrueFechaPago = fechaPago.equals(fechaPagoSinId);
+                                    boolean isTrueMtopago = mtopago.equals(mtopagoSinId);
+
+                                    if (isTrueOperacion && isTrueTelefono && isTrueFechaPago && isTrueMtopago) {
+                                        this.promesaList.get(index4).setIdPromesa(promesaConId.getIdPromesa());
+                                        this.promesaList.get(index4).setIdLlamada(promesaConId.getIdLlamada());
+                                        this.promesaList.get(index4).setIdGestion(promesaConId.getIdGestion());
+                                    }
+                                }// index4
+                            }//index3
+                        }
+                    }
+                }// index2
+            }// index1
         }
     }
 
@@ -947,8 +998,8 @@ public class GestionController implements Serializable {
     }
 
     /**
-     * 
-     * @param objLlamada 
+     *
+     * @param objLlamada
      */
     public void setResultadoGestionNullonLlamada(TblLlamada objLlamada) {
         if (objLlamada != null && this.llamadaList != null) {
@@ -967,7 +1018,7 @@ public class GestionController implements Serializable {
      * @param objLlamada
      */
     public void setResultadoTerceroNullonLlamada(TblLlamada objLlamada) {
-            if (objLlamada != null && this.llamadaList != null) {
+        if (objLlamada != null && this.llamadaList != null) {
             String telefono = objLlamada.getCallToNumber();
             for (int index = 0; index < this.llamadaList.size(); index++) {
                 TblLlamada obj = this.llamadaList.get(index);
@@ -977,16 +1028,16 @@ public class GestionController implements Serializable {
             }
         }
     }
-    
+
     /**
-     * 
-     * @param deudor 
+     *
+     * @param deudor
      */
-    public void onOperacionPromesaChange(TblDeudor deudor){
-        if(deudor != null){
+    public void onOperacionPromesaChange(TblDeudor deudor) {
+        if (deudor != null) {
             String operacion = deudor.getClienteOperacion();
             BigDecimal saldo = deudor.getSaldo();
-            this.gestion.setSaldo(saldo);            
+            this.gestion.setSaldo(saldo);
         }
     }
 

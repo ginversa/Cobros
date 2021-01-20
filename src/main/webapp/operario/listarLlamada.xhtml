@@ -56,6 +56,15 @@
                             <p:column headerText="Sub-Tipificación" filterBy="#{llamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idSubtipificacion.descripcion}" >
                                 <h:outputText value="#{llamada.idSubtipificacion.descripcion}" />
                             </p:column>
+                            
+                            <p:column headerText="Resultado Gestión" filterBy="#{llamada.idResultadogestion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadogestion.descripcion}" >
+                                <h:outputText value="#{llamada.idResultadogestion.descripcion}" />
+                            </p:column>
+                            
+                            <p:column headerText="Respuesta" filterBy="#{llamada.idResultadotercero.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadotercero.descripcion}" >
+                                <h:outputText value="#{llamada.idResultadotercero.descripcion}" />
+                            </p:column>
+                            
                             <p:column headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
                                 <h:outputText value="#{llamada.idrazonmora.descripcion}" />
                             </p:column>
@@ -69,9 +78,6 @@
                             </p:column>
                             <p:column headerText="Dial_Status" filterBy="#{llamada.dialstatus}" filterMatchMode="contains" sortBy="#{llamada.dialstatus}" >
                                 <h:outputText value="#{llamada.dialstatus}" />
-                            </p:column> 
-                            <p:column headerText="Call_Log_Id" filterBy="#{llamada.callLogId}" filterMatchMode="contains" sortBy="#{llamada.callLogId}" >
-                                <h:outputText value="#{llamada.callLogId}" />
                             </p:column>
                             <p:column headerText="Call_From_Number" filterBy="#{llamada.callFromNumber}" filterMatchMode="contains" sortBy="#{llamada.callFromNumber}" >
                                 <h:outputText value="#{llamada.callFromNumber}" />
@@ -85,12 +91,17 @@
                                 <h:outputText value="#{llamada.dateEnd}" >
                                     <f:convertDateTime dateStyle="full" pattern="yyyy/MM/dd HH:mm:ss" />
                                 </h:outputText>
-                            </p:column>                                                                                                               
+                            </p:column>
+                            <p:column headerText="Call_Log_Id" filterBy="#{llamada.callLogId}" filterMatchMode="contains" sortBy="#{llamada.callLogId}" >
+                                <h:outputText value="#{llamada.callLogId}" />
+                            </p:column>
+                            <!-- 
                             <p:column headerText="Fecha Ingreso" filterBy="#{llamada.fechaingreso}" sortBy="#{llamada.fechaingreso}" >
                                 <h:outputText value="#{llamada.fechaingreso}" >
                                     <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
                                 </h:outputText>
                             </p:column>
+                            -->
                         </p:dataTable>
                     </div>
                 </div>

@@ -36,7 +36,7 @@
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >
-                            
+
                             <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
                                 <h:outputText value="#{promesa.idGestion.codigoCartera}" />
                             </p:column>
@@ -51,17 +51,17 @@
                             </p:column>
                             <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
                                 <h:outputText value="#{promesa.telefono}" />                                    
-                            </p:column>                    
-                            <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
-                                <h:outputText value="#{promesa.fechaPago}" >
-                                    <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
-                                </h:outputText>
                             </p:column>
                             <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
                                 <h:outputText value="#{promesa.mtopago}" >
                                     <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
                                 </h:outputText>
-                            </p:column>                            
+                            </p:column>
+                            <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
+                                <h:outputText value="#{promesa.fechaPago}" >
+                                    <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>                                                        
                             <p:column headerText="Fecha Ingreso" filterBy="#{promesa.fechaingreso}" sortBy="#{promesa.fechaingreso}" >
                                 <h:outputText value="#{promesa.fechaingreso}" >
                                     <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy HH:mm:ss" />

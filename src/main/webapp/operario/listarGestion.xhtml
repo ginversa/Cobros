@@ -59,11 +59,13 @@
                                 </h:outputText>
                             </p:column>
                             <p:column headerText="Descripción" filterBy="#{gestion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.descripcion}" >
-                                <h:outputText value="#{deudor.fecIngreso}" />
+                                <h:outputText value="#{gestion.descripcion}" />
                             </p:column>
+                            <!--
                             <p:column headerText="Estado" filterBy="#{gestion.estado}" filterMatchMode="contains" sortBy="#{gestion.estado}" >
                                 <h:outputText value="#{gestion.estado}" />
-                            </p:column> 
+                            </p:column>
+                            -->
                             <p:column headerText="Fecha Ingreso" filterBy="#{gestion.fechaingreso}" sortBy="#{gestion.fechaingreso}" >
                                 <h:outputText value="#{gestion.fechaingreso}" >
                                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
