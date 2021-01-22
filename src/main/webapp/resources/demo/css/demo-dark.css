@@ -113,8 +113,10 @@ pre {
   display: block; }
 .crud-demo .ui-dialog-footer .ui-button {
   min-width: 6rem; }
+/*
 .crud-demo .ui-datatable .ui-column-filter {
   display: none; }
+*/
 .crud-demo .products-table-header {
   display: -ms-flexbox;
   display: flex;
@@ -291,9 +293,10 @@ pre {
 .misc-demo .badges .ui-badge,
 .misc-demo .badges .ui-tag {
   margin-right: .125rem; }
-
+/*
 .table-demo .ui-datatable .ui-column-filter {
   display: none; }
+*/
 .table-demo .customers-table-header {
   display: -ms-flexbox;
   display: flex;
