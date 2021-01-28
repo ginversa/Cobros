@@ -76,9 +76,14 @@
                         
                         <p:submenu id="idGestiones" label="Gestiones" icon="pi pi-briefcase">
                             <p:menuitem id="idMiCartera" value="Mi Cartera" icon="pi pi-id-card" outcome="/operario/deudor" />
-                            <p:menuitem id="idGestion" value="Mi Gestión" icon="pi pi-id-card" outcome="/operario/listarGestion" />
-                            <p:menuitem id="idLlamada" value="Mi Llamada" icon="pi pi-id-card" outcome="/operario/listarLlamada" />
-                            <p:menuitem id="idPromesa" value="Mi Promesa" icon="pi pi-id-card" outcome="/operario/listarPromesa" />
+                            <p:menuitem id="idGestion" value="Mi Gestión" icon="pi pi-id-card" outcome="/operario/listarGestion" />                            
+                        </p:submenu>
+                        
+                        <p:submenu id="idGestionesSup" label="Supervisor" icon="pi pi-briefcase">                            
+                            <p:menuitem id="idGestionSup" value="Gestiones" icon="pi pi-id-card" outcome="/operario/listarGestion" />
+                            <p:menuitem id="idLlamadaSup" value="Llamadas" icon="pi pi-id-card" outcome="/operario/listarLlamada" />
+                            <p:menuitem id="idPromesaSup" value="Promesas" icon="pi pi-id-card" outcome="/operario/listarPromesa" />
+                            <p:menuitem id="idFindmeSup" value="Findme" icon="pi pi-id-card" outcome="/administrador/findme" />
                         </p:submenu>
                         
                         <p:submenu id="idMantenimiento" label="Mantenimiento" icon="pi pi-briefcase">

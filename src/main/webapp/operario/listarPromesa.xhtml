@@ -31,7 +31,7 @@
                 <div class="p-col-12">
                     <div class="card">
                         <h4>Mi Promesa</h4>
-                        <p:dataTable widgetVar="customersDT2" var="promesa" value="#{listarPromesaController.promesasList}"
+                        <p:dataTable widgetVar="customersDT2" var="promesa" value="#{listarPromesaController.promesasFechaHoyList}"
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
@@ -40,22 +40,22 @@
                             <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
                                 <h:outputText value="#{promesa.idGestion.codigoCartera}" />
                             </p:column>
+                             <p:column headerText="Identificación" filterBy="#{promesa.idGestion.documento}" filterMatchMode="contains" sortBy="#{promesa.idGestion.documento}" >
+                                <h:outputText value="#{promesa.idGestion.documento}" />
+                            </p:column>
                             <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
                                 <h:outputText value="#{promesa.idGestion.nombreCliente}" />
-                            </p:column>
-                            <p:column headerText="Identificación" filterBy="#{promesa.idGestion.documento}" filterMatchMode="contains" sortBy="#{promesa.idGestion.documento}" >
-                                <h:outputText value="#{promesa.idGestion.documento}" />
-                            </p:column>                    
+                            </p:column>                                               
                             <p:column headerText="#Cuenta" filterBy="#{promesa.operacion}" filterMatchMode="contains" sortBy="#{promesa.operacion}" >
                                 <h:outputText value="#{promesa.operacion}" />
                             </p:column>
-                            <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
-                                <h:outputText value="#{promesa.telefono}" />                                    
-                            </p:column>
-                            <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
+                             <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
                                 <h:outputText value="#{promesa.mtopago}" >
                                     <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
                                 </h:outputText>
+                            </p:column>
+                            <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
+                                <h:outputText value="#{promesa.telefono}" />                                    
                             </p:column>
                             <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
                                 <h:outputText value="#{promesa.fechaPago}" >

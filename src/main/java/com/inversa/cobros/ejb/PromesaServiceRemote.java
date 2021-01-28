@@ -37,6 +37,8 @@ public interface PromesaServiceRemote {
     public List<TblPromesa> findByUsuariomodifico(TblPromesa obj);
 
     public List<TblPromesa> findByFechamodifico(TblPromesa obj);
+    
+    public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj);
 
     public void insert(TblPromesa obj);
 

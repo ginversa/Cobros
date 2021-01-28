@@ -59,14 +59,16 @@
                                     </h:panelGrid>
                                     <p:fieldset legend="Llamar">
                                         <div align="right">
+                                            <p:commandButton value="Promesa" styleClass="p-mr-2 p-mb-2" actionListener="#{gestionController.validarSelectedLlamada()}" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" />
                                             <p:commandButton value="Agregar Teléfono" styleClass="p-mr-2 p-mb-2" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this"/>
                                             <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
                                             <p:commandButton value="Finalizar" actionListener="#{gestionController.finalizarGestion()}" styleClass="success-button p-mr-2 p-mb-2" process="@this pgDeudor" update="formGestion:messages" />
                                         </div>
                                         <p:dataTable id="tblTelefono" value="#{gestionController.llamadaList}" var="llamada"
-                                                     scrollable="true" paginator="true"
+                                                     scrollable="true" paginator="true" paginatorPosition="top"
                                                      editMode="cell" editable="true" widgetVar="tblTelefono"
                                                      style="margin-bottom:20px"
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                                      rows="5" 
                                                      emptyMessage="No se encontraron registros." >
@@ -154,7 +156,7 @@
                                                 </p:cellEditor>
                                             </p:column>
                                             <p:column headerText="Promesa" >
-                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarDialog').show()" process="@this" update="formGestion:manage-llamar-content" disabled="#{tipificacionController.isDisabledPromesa}" >
+                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
                                                     <f:setPropertyActionListener value="#{llamada}" target="#{gestionController.selectedLlamada}"  />
                                                 </p:commandButton>
                                             </p:column>
@@ -205,31 +207,41 @@
 
                             </div>
                         </p:tab>
-                        <p:tab title="Findme">                        
+                        <p:tab title="Findme">
+                            <p:commandButton value="Imprimir" type="button" icon="pi pi-print" style="margin-bottom: 2rem">
+                                <p:printer target="pgFindme" />
+                            </p:commandButton>
                             <div class="card">
                                 <p:panelGrid id="pgFindme" columns="1" >
+                                    <h2>Datos adicionales para la gestión.</h2>
+                                    <p>Localización. Según Findme</p>
+
                                     <p:fieldset legend="Historial Telefonos" >
                                         <p:dataTable id="idHistorialTelefonos" value="#{findmeController.historialTelefonoList}" var="historialTelefono"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
-                                            <p:column headerText="Teléfono">
-                                                <h:outputText value="#{historialTelefono.telefono}" />
+                                            <p:column headerText="Teléfono" >
+                                                <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" process="@this" >
+                                                    <f:setPropertyActionListener value="#{historialTelefono}" target="#{findmeController.selectedHistorialTelefono}" />
+                                                </p:commandLink>
                                             </p:column>
                                             <p:column headerText="Tipo Teléfono">
                                                 <h:outputText value="#{historialTelefono.tipo_telefono}" />
-                                            </p:column>
+                                            </p:column>                                            
                                             <p:column headerText="Fecha del Dato">
                                                 <h:outputText value="#{historialTelefono.fecha_del_dato}" >
                                                     <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
-                                            </p:column>
+                                                </h:outputText>
+                                            </p:column>                                            
                                         </p:dataTable>
                                     </p:fieldset>
 
                                     <p:fieldset legend="Historial Correos" >
                                         <p:dataTable id="idHistorialCorreo" value="#{findmeController.historialCorreoList}" var="historialCorreo"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                             <p:column headerText="Correo">
@@ -246,6 +258,7 @@
                                     <p:fieldset legend="Historial Direcciones" >
                                         <p:dataTable id="idHistorialDireccion" value="#{findmeController.historialDireccionList}" var="historialDireccion"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                             <p:column headerText="Tipo">
@@ -262,9 +275,10 @@
                                         </p:dataTable>
                                     </p:fieldset>
 
-                                    <p:fieldset legend="Arbol Familiar" >
+                                    <p:fieldset legend="Árbol Familiar" >
                                         <p:dataTable id="idArbolFamiliar" value="#{findmeController.arbolFamiliarList}" var="arbolFamiliar"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                             <p:column headerText="Nombre">
@@ -287,6 +301,7 @@
                                     <p:fieldset legend="Análisis Laboral" >
                                         <p:dataTable id="idAnalisisLaboral" value="#{findmeController.historialLaboralList}" var="historialLaboral"                                                 
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                             <p:column headerText="Estatus">
@@ -299,7 +314,9 @@
                                                 <h:outputText value="#{historialLaboral.nombre}" />
                                             </p:column>
                                             <p:column headerText="Último Salario">
-                                                <h:outputText value="#{historialLaboral.ultimo_salario}" />
+                                                <h:outputText value="#{historialLaboral.ultimo_salario}" >
+                                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                                </h:outputText>
                                             </p:column>
                                             <p:column headerText="Último Periodo">
                                                 <h:outputText value="#{historialLaboral.ultimo_periodo}" />
@@ -308,7 +325,9 @@
                                                 <h:outputText value="#{historialLaboral.meses}" />
                                             </p:column>
                                             <p:column headerText="Promedio">
-                                                <h:outputText value="#{historialLaboral.promedio}" />
+                                                <h:outputText value="#{historialLaboral.promedio}" >
+                                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                                </h:outputText>
                                             </p:column>
                                             <p:column headerText="Tipo Salario">
                                                 <h:outputText value="#{historialLaboral.tipo_salario}" />
@@ -319,6 +338,7 @@
                                     <p:fieldset legend="Sociedades Anónimas" >
                                         <p:dataTable id="idSociedadAnonima" value="#{findmeController.sociedadAnonimaList}" var="sociedadAnonima"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                             <p:column headerText="Posición">
@@ -353,9 +373,10 @@
                                     <p:fieldset legend="Propiedades Registradas" >
                                         <p:dataTable id="idPropiedadRegistrada" value="#{findmeController.propiedadRegistradaList}" var="propiedadRegistrada"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
-                                            <p:column headerText="Provincial">
+                                            <p:column headerText="Provincia">
                                                 <h:outputText value="#{propiedadRegistrada.provincia}" />
                                             </p:column>                                        
                                             <p:column headerText="Cantón">
@@ -365,7 +386,9 @@
                                                 <h:outputText value="#{propiedadRegistrada.distrito}" />
                                             </p:column>
                                             <p:column headerText="Valor">
-                                                <h:outputText value="#{propiedadRegistrada.valor}" />
+                                                <h:outputText value="#{propiedadRegistrada.valor}" >
+                                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                                </h:outputText>
                                             </p:column>
                                             <p:column headerText="País">
                                                 <h:outputText value="#{propiedadRegistrada.pais}" />
@@ -381,6 +404,7 @@
                                     <p:fieldset legend="Vehículos" >
                                         <p:dataTable id="idVehiculo" value="#{findmeController.vehiculoList}" var="vehiculo"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                             <p:column headerText="Placa">
@@ -396,7 +420,9 @@
                                                 <h:outputText value="#{vehiculo.tipo}" />
                                             </p:column>
                                             <p:column headerText="Valor Fiscal">
-                                                <h:outputText value="#{vehiculo.valor_fiscal}" />
+                                                <h:outputText value="#{vehiculo.valor_fiscal}" >
+                                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                                </h:outputText>
                                             </p:column>
                                             <p:column headerText="País">
                                                 <h:outputText value="#{vehiculo.pais}" />
@@ -415,6 +441,7 @@
                                     <p:fieldset legend="Historial Judicial" >
                                         <p:dataTable id="idHistorialJudicial" value="#{findmeController.historialJudicialList}" var="historialJudicial"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                             <p:column headerText="Expediente">
@@ -460,107 +487,8 @@
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" />
                     </p:confirmDialog>
 
-                    <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{gestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()"/>
-                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" />
-                    </p:confirmDialog>
 
-                    <p:dialog header="Promesas" width="800" showEffect="fade" modal="true" widgetVar="manageLlamarDialog" responsive="true">
-                        <p:outputPanel id="manage-llamar-content" class="ui-fluid">
-                            <p:outputPanel rendered='true'>
-                                <div class="p-field">                                        
-                                    <h:panelGrid id="pgLlamar01" columns="3">
-                                        <p:outputLabel for="txtSelectedTelefono" value="Teléfono: " />
-                                        <h:outputText id="txtSelectedTelefono" value="#{gestionController.selectedLlamada.callToNumber}" />
-                                        <p:column />
-                                        <p:outputLabel for="txtN" value="Nombre" />
-                                        <h:outputText id="txtN" value="#{gestionController.gestion.nombreCliente}" />
-                                        <p:column />
-                                        <p:outputLabel for="txtD" value="Documento" />
-                                        <h:outputText id="txtD" value="#{gestionController.gestion.documento}" />
-                                        <p:column />
-                                        <p:outputLabel for="txtS" value="Saldo" />
-                                        <h:outputText id="txtS" value="#{gestionController.gestion.saldo}" />
-                                        <p:column />
-                                    </h:panelGrid>
-
-                                    <p:fieldset legend="Promesa" >                                    
-                                        <p:growl id="msgs" showDetail="true"/>
-                                        <div class="ui-g">
-                                            <div class="ui-g-12">
-                                                <p:commandButton value="Agregar Promesa" styleClass="ui-priority-primary" process="@this" update="formGestion:msgs, tblPromesa"
-                                                                 action="#{gestionController.onAddNewPromesa()}" /> <!-- oncomplete="PF('tblPromesa').addRow();" -->
-                                            </div>
-                                        </div>
-                                        <p:dataTable id="tblPromesa" widgetVar="tblPromesa" var="promesa"
-                                                     value="#{gestionController.promesaList}" editable="true" style="margin-bottom:20px"
-                                                     emptyMessage="No se encontraron registros." >
-
-                                            <p:ajax event="rowEdit" listener="#{gestionController.onRowEdit}" update="formGestion:msgs" />
-                                            <p:ajax event="rowEditCancel" listener="#{gestionController.onRowCancel}" update="formGestion:msgs" />
-
-                                            <p:column exportable="false">                                            
-                                                <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
-                                                    <f:setPropertyActionListener value="#{promesa}" target="#{gestionController.selectedPromesa}" />
-                                                </p:commandButton>
-                                            </p:column>
-                                            <p:column headerText="Teléfono" >
-                                                <h:outputText value="#{promesa.telefono}" />
-                                            </p:column>
-                                            <p:column headerText="Fecha Pago" >
-                                                <p:cellEditor>
-                                                    <f:facet name="output">
-                                                        <h:outputText value="#{promesa.fechaPago}" >
-                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                        </h:outputText>
-                                                    </f:facet>
-                                                    <f:facet name="input">
-                                                        <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" style="width:100%" />
-                                                    </f:facet>
-                                                </p:cellEditor>
-                                            </p:column>
-                                            <p:column headerText="Monto" >
-                                                <p:cellEditor>
-                                                    <f:facet name="output">
-                                                        <h:outputText value="#{promesa.mtopago}" >
-                                                            <f:convertNumber type="currency" pattern="###,###,###,###.####" />
-                                                        </h:outputText>                                                            
-                                                    </f:facet>
-                                                    <f:facet name="input">
-                                                        <p:inputText value="#{promesa.mtopago}" style="width:100%" required="true" requiredMessage="Monto requerido!" >
-                                                            <f:validateDoubleRange minimum="0" maximum="#{gestionController.gestion.saldo}" />
-                                                        </p:inputText>                                                            
-                                                    </f:facet>
-                                                </p:cellEditor>
-                                            </p:column>
-                                            <p:column headerText="Operación" >
-                                                <p:cellEditor>
-                                                    <f:facet name="output"><h:outputText value="#{promesa.operacion}" /></f:facet>
-                                                    <f:facet name="input">
-                                                        <h:selectOneMenu id="txtOperacionPromesa" value="#{promesa.operacion}" required="true" requiredMessage="Campo requerido!" style="width:100%">
-                                                            <f:selectItem itemLabel="-------" itemValue="" noSelectionOption="true" />
-                                                            <f:selectItems value="#{gestionController.deudorList}" var="deudor" itemLabel="#{deudor.clienteOperacion}" itemValue="#{deudor.clienteOperacion}" />
-                                                            <!-- 
-                                                            <p:ajax listener="#{gestionController.onOperacionPromesaChange(deudor)}" event="change" update="txtS, tblPromesa" process="@this tblPromesa" />                                                               
-                                                            -->
-                                                        </h:selectOneMenu>
-                                                    </f:facet>
-                                                </p:cellEditor>
-                                            </p:column>
-                                            <p:column style="width:32px">
-                                                <p:rowEditor />
-                                            </p:column>
-                                        </p:dataTable>                                    
-                                    </p:fieldset>                                
-                                </div>
-                            </p:outputPanel>
-                        </p:outputPanel>
-                        <f:facet name="footer">
-                            <p:commandButton value="Guardar" icon="pi pi-check" update="manage-llamar-content" process="manage-llamar-content @this" onclick="PF('manageLlamarDialog').hide()" />                                        
-                        </f:facet>
-                    </p:dialog>
-
-                    <p:dialog header="Agregar Teléfono" width="800" showEffect="fade" modal="true" widgetVar="manageTelefonoDialog" responsive="true" >
+                    <p:dialog header="Agregar Teléfono" width="900" showEffect="fade" modal="true" widgetVar="manageTelefonoDialog" responsive="true" >
                         <p:outputPanel id="manage-Telefono-content" class="ui-fluid">
                             <p:outputPanel rendered='true'>
                                 <div class="p-field">                                        
@@ -590,6 +518,434 @@
                         </f:facet>
                     </p:dialog>
 
+                    <p:dialog header="Promesa." width="1000" showEffect="fade" modal="true" widgetVar="manageLlamarPromesaArregloPagoDialog" responsive="true">
+                        <p:outputPanel id="manage-llamarPromesaArregloPago-content" class="ui-fluid">
+                            <p:outputPanel rendered='true'>
+                                <div class="p-field">                                        
+                                    <h:panelGrid id="pgLlamar02" columns="3">                                        
+                                        <p:outputLabel for="txtNombrePromesa" value="Nombre" />
+                                        <h:outputText id="txtNombrePromesa" value="#{gestionController.gestion.nombreCliente}" />
+                                        <p:column />                                        
+                                        <p:outputLabel for="txtDocPromesa" value="Identificación" />
+                                        <h:outputText id="txtDocPromesa" value="#{gestionController.gestion.documento}" />
+                                        <p:column />
+                                        <p:outputLabel for="txtTelefonoPromesa" value="Teléfono" />
+                                        <h:outputText id="txtTelefonoPromesa" value="#{gestionController.selectedLlamada.callToNumber}" />
+                                        <p:column />
+                                    </h:panelGrid>
+
+                                    <p:fieldset legend="Arreglo de pago" >
+                                        <p:growl id="msgsArregloPago" showDetail="true"/>
+                                        <p:tabView id="idtabViewPromesa">
+                                            <p:tab id="idCancelacionTotal" title="Cancelación Total" >                                                
+                                                <h:panelGrid id="idArreglodepago" columns="3">
+                                                    <p:outputLabel for="txtOperacionPromesa" value="Operación" />
+                                                    <h:selectOneMenu id="txtOperacionPromesa" value="#{gestionController.clienteOperacion}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItems value="#{gestionController.deudorList}" var="deudor" itemLabel="#{deudor.clienteOperacion}" itemValue="#{deudor.clienteOperacion}" />                                                            
+                                                        <p:ajax listener="#{gestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacion, tblPromesaArregloPago" process="@this" />
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtOperacionPromesa" />
+
+                                                    <p:outputLabel for="txtSaldoOperacion" value="Saldo" />
+                                                    <h:outputText id="txtSaldoOperacion" value="#{gestionController.mtoSaldoOperacion}" />
+                                                    <p:message for="txtSaldoOperacion" />
+
+                                                    <p:outputLabel for="txtTipoDescuento" value="Tipo Descuento" />
+                                                    <h:selectOneMenu id="txtTipoDescuento" value="#{gestionController.tipoDescuentoPromesa}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Monto Fijo" itemValue="FIJ"/>
+                                                        <f:selectItem itemLabel="Porcentaje" itemValue="POR"/>
+                                                        <p:ajax listener="#{gestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesa" process="@this" />
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtTipoDescuento" />
+
+                                                    <p:outputLabel for="txtDescuentoPromesa" value="Monto o %" />
+                                                    <p:inputText id="txtDescuentoPromesa" value="#{gestionController.mtoDescuentoPromesa}" >
+                                                        <p:ajax event="blur" update="txtNewSaldoPromesa" listener="#{gestionController.calcNuevoMontoSegunDescuento()}"/>
+                                                    </p:inputText>
+                                                    <p:message for="txtDescuentoPromesa" />
+
+                                                    <p:outputLabel for="txtNewSaldoPromesa" value="Monto Promesa" />
+                                                    <p:inputText id="txtNewSaldoPromesa" value="#{gestionController.mtoSaldoPromesa}" readonly="true" />
+                                                    <p:message for="txtNewSaldoPromesa" />
+
+                                                    <p:outputLabel for="txtFechaPago" value="Fecha Pago" />
+                                                    <p:calendar id="txtFechaPago" value="#{gestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" immediate="true" />                                                        
+                                                    <p:message for="txtFechaPago" />                                                   
+                                                </h:panelGrid>
+
+                                                <p:commandButton id="idGuardarArreglodepago" value="Guardar" actionListener="#{gestionController.agregarCancelacionTotal()}" process="@this idArreglodepago" update="tblPromesaArregloPago" />
+
+                                                <p:dataTable id="tblPromesaArregloPago" value="#{gestionController.promesaList}" var="promesa"
+                                                             style="margin-bottom:20px"
+                                                             emptyMessage="No se encontraron registros."
+                                                             scrollable="true" rows="5"
+                                                             widgetVar="tblPromesaArregloPago"
+                                                             reflow="true" >
+
+                                                    <p:column exportable="false">                                            
+                                                        <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
+                                                            <f:setPropertyActionListener value="#{promesa}" target="#{gestionController.selectedPromesa}" />
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                    <p:column headerText="Teléfono" >
+                                                        <h:outputText value="#{promesa.telefono}" />
+                                                    </p:column>
+                                                    <p:column headerText="Operación" >
+                                                        <h:outputText value="#{promesa.operacion}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Tipo Descuento" >
+                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Monto o %" >
+                                                        <h:outputText value="#{promesa.mtoporcentaje}" />
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Monto Promesa" >                                                
+                                                        <h:outputText value="#{promesa.mtopago}" >
+                                                            <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                        </h:outputText>
+                                                    </p:column>                                            
+                                                    <p:column headerText="Fecha Pago" >
+                                                        <h:outputText value="#{promesa.fechaPago}" >
+                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Estado" >
+                                                        <h:outputText value="#{promesa.estado}" />
+                                                    </p:column>
+                                                    <p:column headerText="Tipo Arreglo" >
+                                                        <h:outputText value="#{promesa.tipoarreglopago}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas" >
+                                                <h:panelGrid id="idArreglodepagoCTC" columns="3">
+                                                    <p:outputLabel for="txtOperacionPromesaCTC" value="Operación" />
+                                                    <h:selectOneMenu id="txtOperacionPromesaCTC" value="#{gestionController.clienteOperacion}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItems value="#{gestionController.deudorList}" var="deudor" itemLabel="#{deudor.clienteOperacion}" itemValue="#{deudor.clienteOperacion}" />                                                            
+                                                        <p:ajax listener="#{gestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionCTC, tblPromesaArregloPagoCTC" process="@this" />
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtOperacionPromesaCTC" />
+
+                                                    <p:outputLabel for="txtSaldoOperacionCTC" value="Saldo" />
+                                                    <h:outputText id="txtSaldoOperacionCTC" value="#{gestionController.mtoSaldoOperacion}" />
+                                                    <p:message for="txtSaldoOperacionCTC" />
+
+                                                    <p:outputLabel for="txtTipoDescuentoCTC" value="Tipo Descuento" />
+                                                    <h:selectOneMenu id="txtTipoDescuentoCTC" value="#{gestionController.tipoDescuentoPromesa}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Monto Fijo" itemValue="FIJ"/>
+                                                        <f:selectItem itemLabel="Porcentaje" itemValue="POR"/>
+                                                        <p:ajax listener="#{gestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesaCTC" process="@this" />
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtTipoDescuentoCTC" />
+
+                                                    <p:outputLabel for="txtDescuentoPromesaCTC" value="Monto o %" />
+                                                    <p:inputText id="txtDescuentoPromesaCTC" value="#{gestionController.mtoDescuentoPromesa}" >
+                                                        <p:ajax event="blur" update="txtNewSaldoPromesaCTC" listener="#{gestionController.calcNuevoMontoSegunDescuento()}"/>
+                                                    </p:inputText>
+                                                    <p:message for="txtDescuentoPromesaCTC" />
+
+                                                    <p:outputLabel for="txtNewSaldoPromesaCTC" value="Monto Promesa" />
+                                                    <p:inputText id="txtNewSaldoPromesaCTC" value="#{gestionController.mtoSaldoPromesa}" readonly="true" />
+                                                    <p:message for="txtNewSaldoPromesaCTC" />
+
+                                                    <p:outputLabel for="txtFechaPagoCTC" value="Fecha Pago" />
+                                                    <p:calendar id="txtFechaPagoCTC" value="#{gestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" immediate="true" />
+                                                    <p:message for="txtFechaPagoCTC" />
+
+                                                    <p:outputLabel for="txtCuotasCTC" value="Cuotas" />
+                                                    <h:selectOneMenu id="txtCuotasCTC" value="#{gestionController.cuotas}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Una" itemValue="001"/>
+                                                        <f:selectItem itemLabel="Dos" itemValue="002"/>
+                                                        <f:selectItem itemLabel="tres" itemValue="003"/>
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtCuotasCTC" />
+                                                </h:panelGrid>
+
+                                                <p:commandButton id="idGuardarArreglodepagoCTC" value="Generar" actionListener="#{gestionController.agregarCancelacionTotalPorCuotas()}" process="@this idArreglodepagoCTC" update="tblPromesaArregloPagoCTC" />
+
+                                                <p:dataTable id="tblPromesaArregloPagoCTC" value="#{gestionController.promesaList}" var="promesa"
+                                                             style="margin-bottom:20px"
+                                                             emptyMessage="No se encontraron registros."
+                                                             scrollable="true" rows="5"                                                             
+                                                             widgetVar="tblPromesaArregloPagoCTC"
+                                                             reflow="true"
+                                                             editable="true">
+
+                                                    <p:ajax event="rowEdit" listener="#{gestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{gestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:column exportable="false">                                            
+                                                        <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
+                                                            <f:setPropertyActionListener value="#{promesa}" target="#{gestionController.selectedPromesa}" />
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                    <p:column headerText="Teléfono" >
+                                                        <h:outputText value="#{promesa.telefono}" />
+                                                    </p:column>
+                                                    <p:column headerText="Operación" >
+                                                        <h:outputText value="#{promesa.operacion}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Tipo Descuento" >
+                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Monto o %" >
+                                                        <h:outputText value="#{promesa.mtoporcentaje}" />
+                                                    </p:column>
+                                                    <p:column headerText="Monto Promesa" >
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.mtopago}" >
+                                                                    <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                                </h:outputText>                                                            
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:inputText value="#{promesa.mtopago}" style="width:100%" required="true" requiredMessage="Monto requerido!" />
+                                                            </f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Fecha primer pago" >
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.fechaPago}" >
+                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                                </h:outputText>
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" style="width:100%" />
+                                                            </f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>
+                                                    <p:column headerText="Estado" >
+                                                        <h:outputText value="#{promesa.estado}" />
+                                                    </p:column>
+                                                    <p:column headerText="Tipo Arreglo" >
+                                                        <h:outputText value="#{promesa.tipoarreglopago}" />
+                                                    </p:column>
+                                                    <p:column style="width:32px">
+                                                        <p:rowEditor />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab id="idRefinanciamiento" title="Refinanciamiento" >
+                                                <h:panelGrid id="idArreglodepagoREF" columns="3">
+                                                    <p:outputLabel for="txtOperacionPromesaREF" value="Operación" />
+                                                    <h:selectOneMenu id="txtOperacionPromesaREF" value="#{gestionController.clienteOperacion}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItems value="#{gestionController.deudorList}" var="deudor" itemLabel="#{deudor.clienteOperacion}" itemValue="#{deudor.clienteOperacion}" />                                                            
+                                                        <p:ajax listener="#{gestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionREF, tblPromesaArregloPagoREF" process="@this" />
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtOperacionPromesaREF" />
+
+                                                    <p:outputLabel for="txtSaldoOperacionREF" value="Saldo" />
+                                                    <h:outputText id="txtSaldoOperacionREF" value="#{gestionController.mtoSaldoOperacion}" />
+                                                    <p:message for="txtSaldoOperacionREF" />
+                                                    
+                                                    <p:outputLabel for="txtDescuentoPromesaREF" value="Primer Tracto" />
+                                                    <p:inputText id="txtDescuentoPromesaREF" value="#{gestionController.mtoDescuentoPromesa}" >
+                                                        <p:ajax event="blur" listener="#{gestionController.calcSaldoRestanteREF()}" update="txtNewSaldoPromesaREF"/>
+                                                    </p:inputText>
+                                                    <p:message for="txtDescuentoPromesaREF" />
+
+                                                    <p:outputLabel for="txtNewSaldoPromesaREF" value="Saldo restante" />
+                                                    <p:inputText id="txtNewSaldoPromesaREF" value="#{gestionController.mtoSaldoPromesa}" readonly="true" />
+                                                    <p:message for="txtNewSaldoPromesaREF" />
+
+                                                    <p:outputLabel for="txtFechaPagoREF" value="Fecha Pago Inicial" />
+                                                    <p:calendar id="txtFechaPagoREF" value="#{gestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" immediate="true" />                                                        
+                                                    <p:message for="txtFechaPagoREF" />
+
+                                                    <p:outputLabel for="txtCuotasREF" value="Cuotas" />
+                                                    <h:selectOneMenu id="txtCuotasREF" value="#{gestionController.cuotas}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Seis (06)" itemValue="006"/>
+                                                        <f:selectItem itemLabel="Doce (12)" itemValue="012"/>                                                        
+                                                        <f:selectItem itemLabel="Dieciocho (18)" itemValue="018"/>
+                                                        <f:selectItem itemLabel="VeintiCuatro (24)" itemValue="024"/>
+                                                        <f:selectItem itemLabel="Treinta (30)" itemValue="030"/>
+                                                        <f:selectItem itemLabel="Treinta y Seis (36)" itemValue="036"/>
+                                                        <f:selectItem itemLabel="Cuarenta Y Dos (42)" itemValue="042"/>
+                                                        <f:selectItem itemLabel="Cuarenta Y Ocho (48)" itemValue="048"/>
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtCuotasREF" />
+                                                </h:panelGrid>
+
+                                                <p:commandButton id="idGuardarArreglodepagoREF" value="Generar" actionListener="#{gestionController.agregarRefinanciamiento()}" process="@this idArreglodepagoREF" update="tblPromesaArregloPagoREF" />
+
+                                                <p:dataTable id="tblPromesaArregloPagoREF" value="#{gestionController.promesaList}" var="promesa"
+                                                             style="margin-bottom:20px"
+                                                             emptyMessage="No se encontraron registros."
+                                                             scrollable="true" rows="5"
+                                                             paginator="true" paginatorPosition="top"
+                                                             widgetVar="tblPromesaArregloPagoREF"
+                                                             reflow="true"
+                                                             editable="true" >
+
+                                                    <p:ajax event="rowEdit" listener="#{gestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{gestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:column exportable="false">                                            
+                                                        <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
+                                                            <f:setPropertyActionListener value="#{promesa}" target="#{gestionController.selectedPromesa}" />
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                    <p:column headerText="Teléfono" >
+                                                        <h:outputText value="#{promesa.telefono}" />
+                                                    </p:column>
+                                                    <p:column headerText="Operación" >
+                                                        <h:outputText value="#{promesa.operacion}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Tipo Descuento" >
+                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Monto o %" >
+                                                        <h:outputText value="#{promesa.mtoporcentaje}" />
+                                                    </p:column>
+                                                    <p:column headerText="Monto Promesa" >
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.mtopago}" >
+                                                                    <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                                </h:outputText>                                                            
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:inputText value="#{promesa.mtopago}" style="width:100%" required="true" requiredMessage="Monto requerido!" />
+                                                            </f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Fecha Pago" >
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.fechaPago}" >
+                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                                </h:outputText>
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" style="width:100%" />
+                                                            </f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>
+                                                    <p:column headerText="Estado" >
+                                                        <h:outputText value="#{promesa.estado}" />
+                                                    </p:column>
+                                                    <p:column headerText="Tipo Arreglo" >
+                                                        <h:outputText value="#{promesa.tipoarreglopago}" />
+                                                    </p:column>
+                                                    <p:column style="width:32px">
+                                                        <p:rowEditor />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab id="idPagoParcial" title="Pago Parcial">
+                                                <h:panelGrid id="idArreglodepagoPAP" columns="3">
+                                                    <p:outputLabel for="txtOperacionPromesaPAP" value="Operación" />
+                                                    <h:selectOneMenu id="txtOperacionPromesaPAP" value="#{gestionController.clienteOperacion}" style="width:100%" >
+                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                                        <f:selectItems value="#{gestionController.deudorList}" var="deudor" itemLabel="#{deudor.clienteOperacion}" itemValue="#{deudor.clienteOperacion}" />                                                            
+                                                        <p:ajax listener="#{gestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionPAP, tblPromesaArregloPagoPAP" process="@this" />
+                                                    </h:selectOneMenu>
+                                                    <p:message for="txtOperacionPromesaPAP" />
+
+                                                    <p:outputLabel for="txtSaldoOperacionPAP" value="Saldo" />
+                                                    <h:outputText id="txtSaldoOperacionPAP" value="#{gestionController.mtoSaldoOperacion}" />
+                                                    <p:message for="txtSaldoOperacionPAP" />                                                    
+
+                                                    <p:outputLabel for="txtNewSaldoPromesaPAP" value="Monto Promesa" />
+                                                    <p:inputText id="txtNewSaldoPromesaPAP" value="#{gestionController.mtoSaldoPromesa}" />
+                                                    <p:message for="txtNewSaldoPromesaPAP" />
+
+                                                    <p:outputLabel for="txtFechaPagoPAP" value="Fecha Pago" />
+                                                    <p:calendar id="txtFechaPagoPAP" value="#{gestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" immediate="true" />
+                                                    <p:message for="txtFechaPagoPAP" />
+                                                </h:panelGrid>
+
+                                                <p:commandButton id="idGuardarArreglodepagoPAP" value="Generar" actionListener="#{gestionController.agregarPagoParcial()}" process="@this idArreglodepagoPAP" update="tblPromesaArregloPagoPAP" />
+
+                                                <p:dataTable id="tblPromesaArregloPagoPAP" value="#{gestionController.promesaList}" var="promesa"
+                                                             style="margin-bottom:20px"
+                                                             emptyMessage="No se encontraron registros."
+                                                             scrollable="true" rows="5"                                                             
+                                                             widgetVar="tblPromesaArregloPagoPAP"
+                                                             reflow="true"
+                                                             editable="true">
+
+                                                    <p:ajax event="rowEdit" listener="#{gestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{gestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:column exportable="false">                                            
+                                                        <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
+                                                            <f:setPropertyActionListener value="#{promesa}" target="#{gestionController.selectedPromesa}" />
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                    <p:column headerText="Teléfono" >
+                                                        <h:outputText value="#{promesa.telefono}" />
+                                                    </p:column>
+                                                    <p:column headerText="Operación" >
+                                                        <h:outputText value="#{promesa.operacion}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Tipo Descuento" >
+                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Monto o %" >
+                                                        <h:outputText value="#{promesa.mtoporcentaje}" />
+                                                    </p:column>
+                                                    <p:column headerText="Monto Promesa" >
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.mtopago}" >
+                                                                    <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                                </h:outputText>                                                            
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:inputText value="#{promesa.mtopago}" style="width:100%" required="true" requiredMessage="Monto requerido!" />
+                                                            </f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>                                                    
+                                                    <p:column headerText="Fecha primer pago" >
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.fechaPago}" >
+                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                                </h:outputText>
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" style="width:100%" />
+                                                            </f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>
+                                                    <p:column headerText="Estado" >
+                                                        <h:outputText value="#{promesa.estado}" />
+                                                    </p:column>
+                                                    <p:column headerText="Tipo Arreglo" >
+                                                        <h:outputText value="#{promesa.tipoarreglopago}" />
+                                                    </p:column>
+                                                    <p:column style="width:32px">
+                                                        <p:rowEditor />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                        </p:tabView>
+                                    </p:fieldset>                                
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton value="Cerrar" icon="pi pi-check" update="manage-llamarPromesaArregloPago-content" process="manage-llamarPromesaArregloPago-content @this" onclick="PF('manageLlamarPromesaArregloPagoDialog').hide()" />                                        
+                        </f:facet>
+                    </p:dialog>
+
+                    <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{gestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="formGestion:idtabViewPromesa:tblPromesaArregloPago,formGestion:idtabViewPromesa:tblPromesaArregloPagoCTC"/>
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" />
+                    </p:confirmDialog>
                 </div>
             </div>
         </h:form>

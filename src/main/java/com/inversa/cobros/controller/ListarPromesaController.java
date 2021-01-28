@@ -6,12 +6,14 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
+import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -23,26 +25,35 @@ import javax.inject.Named;
  *
  * @author Z420WK
  */
-
 @Named
 @ViewScoped
-public class ListarPromesaController implements Serializable{
-    
-     @Inject
-    private GestionService ejbLocal;
-    
+public class ListarPromesaController implements Serializable {
+
+    @Inject
+    private PromesaService ejbLocal;
+
+    @Inject
+    private GestionService ejbGestionLocal;
+
     private List<TblGestion> gestionList;
-        
-    private List<TblPromesa> promesasList;
-    
+
+    private List<TblPromesa> promesasFechaHoyList;
+    private List<TblPromesa> promesasFechaAyerList;
+
+    private TblUsuario usuario;
+    private Calendar fechaHoy;
+    private Calendar fechaAyer;
+    private int dias = -1;// dias a restar...
+
     @PostConstruct
-    public void init(){
-        
-        this.promesasList = new ArrayList<TblPromesa>();
-        
-         // Usuario de session...
-        TblUsuario usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        
+    public void init() {
+
+        this.promesasFechaHoyList = new ArrayList<TblPromesa>();
+        this.promesasFechaAyerList = new ArrayList<TblPromesa>();
+
+        // Usuario de session...
+        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        /*
         TblGestion gestion = new TblGestion();
         gestion.setCodigoGestor(usuario.getCodigoGestor());
         this.gestionList = this.ejbLocal.findByCodigoGestor(gestion);
@@ -56,14 +67,38 @@ public class ListarPromesaController implements Serializable{
                 }                
             }            
         }
+         */
+
+        this.fechaHoy = Calendar.getInstance();
+        this.fechaAyer = Calendar.getInstance();
+        this.fechaAyer.add(Calendar.DAY_OF_YEAR, dias);// resta 
+
+        TblPromesa promesaHoy = new TblPromesa();
+        promesaHoy.setFechaPago(this.fechaHoy.getTime());
+        promesaHoy.setUsuarioingreso(this.usuario.getUsuario());
+        this.promesasFechaHoyList = this.ejbLocal.findByUsuarioingreso(promesaHoy);//.findByFechaPagoAndUsuarioIngreso(promesa);
+
+        TblPromesa promesaAyer = new TblPromesa();
+        promesaAyer.setFechaPago(this.fechaHoy.getTime());
+        promesaAyer.setUsuarioingreso(this.usuario.getUsuario());
+        this.promesasFechaAyerList = this.ejbLocal.findByUsuarioingreso(promesaAyer);//.findByFechaPagoAndUsuarioIngreso(promesa);
+
     }
 
-    public List<TblPromesa> getPromesasList() {
-        return promesasList;
+    public List<TblPromesa> getPromesasFechaHoyList() {
+        return promesasFechaHoyList;
     }
 
-    public void setPromesasList(List<TblPromesa> promesasList) {
-        this.promesasList = promesasList;
+    public void setPromesasFechaHoyList(List<TblPromesa> promesasFechaHoyList) {
+        this.promesasFechaHoyList = promesasFechaHoyList;
+    }
+
+    public List<TblPromesa> getPromesasFechaAyerList() {
+        return promesasFechaAyerList;
+    }
+
+    public void setPromesasFechaAyerList(List<TblPromesa> promesasFechaAyerList) {
+        this.promesasFechaAyerList = promesasFechaAyerList;
     }
 
 }

@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TblPromesa.findByOperacion", query = "SELECT t FROM TblPromesa t WHERE t.operacion = :operacion"),
     @NamedQuery(name = "TblPromesa.findByTelefono", query = "SELECT t FROM TblPromesa t WHERE t.telefono = :telefono"),
     @NamedQuery(name = "TblPromesa.findByFechaPago", query = "SELECT t FROM TblPromesa t WHERE t.fechaPago = :fechaPago"),
+    @NamedQuery(name = "TblPromesa.findByFechaPagoAndUsuarioIngreso", query = "SELECT t FROM TblPromesa t WHERE t.fechaPago = :fechaPago AND t.usuarioingreso = :usuarioingreso"),
     @NamedQuery(name = "TblPromesa.findByMtopago", query = "SELECT t FROM TblPromesa t WHERE t.mtopago = :mtopago"),
     @NamedQuery(name = "TblPromesa.findByMoneda", query = "SELECT t FROM TblPromesa t WHERE t.moneda = :moneda"),
     @NamedQuery(name = "TblPromesa.findByEstado", query = "SELECT t FROM TblPromesa t WHERE t.estado = :estado"),
@@ -89,6 +90,18 @@ public class TblPromesa implements Serializable {
     @JoinColumn(name = "id_llamada", referencedColumnName = "id_llamada")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private TblLlamada idLlamada;
+
+    @Size(max = 3)
+    @Column(name = "tipodescuento")
+    private String tipodescuento;
+
+    @Size(max = 3)
+    @Column(name = "tipoarreglopago")
+    private String tipoarreglopago;
+    
+    @Column(name = "mtoporcentaje")
+    private BigDecimal mtoporcentaje;
+    
 
     public TblPromesa() {
     }
@@ -201,6 +214,31 @@ public class TblPromesa implements Serializable {
         this.idLlamada = idLlamada;
     }
 
+    public String getTipodescuento() {
+        return tipodescuento;
+    }
+
+    public void setTipodescuento(String tipodescuento) {
+        this.tipodescuento = tipodescuento;
+    }
+
+    public String getTipoarreglopago() {
+        return tipoarreglopago;
+    }
+
+    public void setTipoarreglopago(String tipoarreglopago) {
+        this.tipoarreglopago = tipoarreglopago;
+    }
+
+    public BigDecimal getMtoporcentaje() {
+        return mtoporcentaje;
+    }
+
+    public void setMtoporcentaje(BigDecimal mtoporcentaje) {
+        this.mtoporcentaje = mtoporcentaje;
+    }
+    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -225,5 +263,5 @@ public class TblPromesa implements Serializable {
     public String toString() {
         return "com.inversa.cobros.model.TblPromesa[ idPromesa=" + idPromesa + " ]";
     }
-    
+
 }

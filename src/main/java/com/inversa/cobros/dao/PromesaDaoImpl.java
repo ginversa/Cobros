@@ -114,5 +114,14 @@ public class PromesaDaoImpl implements PromesaDao{
         em.merge(obj);
         em.remove(obj);
     }
+
+    @Override
+    public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj) {
+        TypedQuery<TblPromesa> query = em.createNamedQuery("TblPromesa.findByFechaPagoAndUsuarioIngreso", TblPromesa.class);
+        query.setParameter("fechaPago", obj.getFechaPago());
+        query.setParameter("usuarioingreso", obj.getUsuarioingreso());
+        List<TblPromesa> results = query.getResultList();
+        return results;
+    }
     
 }

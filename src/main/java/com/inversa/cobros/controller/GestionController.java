@@ -24,6 +24,8 @@ import com.inversa.cobros.model.Tipotelefono;
 import com.inversa.cobros.util.FechaOperacion;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -80,6 +82,7 @@ public class GestionController implements Serializable {
     private List<TblPromesa> promesaList;
     private List<TblLlamada> llamadaList;
     private TblLlamada selectedLlamada;
+    private String clienteOperacion;
 
     private List<TblDeudor> deudorList;
 
@@ -132,6 +135,10 @@ public class GestionController implements Serializable {
 
         this.tipificacionController.setIsDisabledPromesa(true);
 
+        this.mtoSaldoOperacion = new BigDecimal(BigInteger.ZERO);
+        this.mtoDescuentoPromesa = new BigDecimal(BigInteger.ZERO);
+        this.mtoSaldoPromesa = new BigDecimal(BigInteger.ZERO);
+
     }
 
     public TblGestion getGestion() {
@@ -177,9 +184,7 @@ public class GestionController implements Serializable {
         this.promesaList = promesaList;
     }
 
-    /**
-     *
-     */
+    /*
     public void onAddNewPromesa() {
         // Add one new promesa to the list:
         if (this.selectedLlamada != null) {
@@ -207,7 +212,7 @@ public class GestionController implements Serializable {
 
         }
     }
-
+     */
     public void onRowEdit(RowEditEvent<TblPromesa> event) {
         FacesMessage msg = new FacesMessage("Promesa Editada", event.getObject().getFechaPago().toString());
         FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -234,21 +239,27 @@ public class GestionController implements Serializable {
             if (this.selectedPromesa != null && (this.promesaList != null && this.promesaList.size() > 0)) {
 
                 boolean isTrueTelefono = this.promesaList.get(index).getTelefono().equals(this.selectedPromesa.getTelefono()) ? true : false;
-                boolean isTrueFechaPago = this.promesaList.get(index).getFechaPago().equals(this.selectedPromesa.getFechaPago()) ? true : false;
-                boolean isTrueMtopago = this.promesaList.get(index).getMtopago().equals(this.selectedPromesa.getMtopago()) ? true : false;
-                boolean isTrueMoneda = this.promesaList.get(index).getMoneda().equals(this.selectedPromesa.getMoneda()) ? true : false;
                 boolean isTrueOperacion = true;
+                boolean isTrueTipoDescuento = this.promesaList.get(index).getTipodescuento().equals(this.selectedPromesa.getTipodescuento()) ? true : false;
+                boolean isTrueMontoPorcentaje = this.promesaList.get(index).getMtoporcentaje().equals(this.selectedPromesa.getMtoporcentaje()) ? true : false;
+                boolean isTrueMtopago = this.promesaList.get(index).getMtopago().equals(this.selectedPromesa.getMtopago()) ? true : false;
+                boolean isTrueFechaPago = this.promesaList.get(index).getFechaPago().equals(this.selectedPromesa.getFechaPago()) ? true : false;
+                boolean isTrueEstado = this.promesaList.get(index).getEstado().equals(this.selectedPromesa.getEstado()) ? true : false;
+                boolean isTrueTipoArreglo = this.promesaList.get(index).getEstado().equals(this.selectedPromesa.getEstado()) ? true : false;
+                boolean isTrueMoneda = this.promesaList.get(index).getMoneda().equals(this.selectedPromesa.getMoneda()) ? true : false;
+
                 if (this.promesaList.get(index).getOperacion() != null) {
                     isTrueOperacion = this.promesaList.get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
                 }
 
-                if (isTrueTelefono && isTrueFechaPago && isTrueMtopago && isTrueMoneda && isTrueOperacion) {
+                if (isTrueTelefono && isTrueOperacion && isTrueTipoDescuento && isTrueMontoPorcentaje && isTrueMtopago && isTrueFechaPago && isTrueEstado && isTrueTipoArreglo && isTrueMoneda) {
 
                     TblPromesa promesa = this.promesaList.get(index);
                     boolean hasOperation = promesa.getOperacion() != null && !promesa.getOperacion().trim().equals("") ? true : false;
                     boolean hasMtopago = promesa.getMtopago() != null && !promesa.getMtopago().equals(0) ? true : false;
+                    boolean hasIdGestion = promesa.getIdGestion() != null && promesa.getIdGestion().getIdGestion() != null ? true : false;
 
-                    if (hasOperation && hasMtopago) {
+                    if (hasOperation && hasMtopago && hasIdGestion) {
                         promesa.setEstado("DEL");
                         this.ejbPromesaLocal.update(promesa);
                     }
@@ -1031,14 +1042,592 @@ public class GestionController implements Serializable {
 
     /**
      *
-     * @param deudor
      */
-    public void onOperacionPromesaChange(TblDeudor deudor) {
-        if (deudor != null) {
-            String operacion = deudor.getClienteOperacion();
-            BigDecimal saldo = deudor.getSaldo();
-            this.gestion.setSaldo(saldo);
+    public void onOperacionPromesaChange() {
+        if (this.clienteOperacion != null && !clienteOperacion.trim().equals("")) {
+            if (this.deudorList != null && !this.deudorList.isEmpty() && this.deudorList.size() > 0) {
+                for (int index = 0; index < this.deudorList.size(); index++) {
+                    if (this.deudorList.get(index).getClienteOperacion().equals(this.clienteOperacion)) {
+                        this.mtoSaldoOperacion = this.deudorList.get(index).getSaldo();
+                    } //if
+                } //for
+            } //if
+        } //if
+    }
+
+    public String getClienteOperacion() {
+        return clienteOperacion;
+    }
+
+    public void setClienteOperacion(String clienteOperacion) {
+        this.clienteOperacion = clienteOperacion;
+    }
+
+    /*
+Promesa.
+Hacer arreglo de pago    
+     */
+    private BigDecimal mtoSaldoOperacion;
+    private String tipoDescuentoPromesa;
+    private BigDecimal mtoDescuentoPromesa;
+    private BigDecimal mtoSaldoPromesa;
+    private Date fechaPagoPromesa;
+    private String cuotas;
+
+    public BigDecimal getMtoSaldoOperacion() {
+        return mtoSaldoOperacion;
+    }
+
+    public void setMtoSaldoOperacion(BigDecimal mtoSaldoOperacion) {
+        this.mtoSaldoOperacion = mtoSaldoOperacion;
+    }
+
+    public String getTipoDescuentoPromesa() {
+        return tipoDescuentoPromesa;
+    }
+
+    public void setTipoDescuentoPromesa(String tipoDescuentoPromesa) {
+        this.tipoDescuentoPromesa = tipoDescuentoPromesa;
+    }
+
+    public BigDecimal getMtoDescuentoPromesa() {
+        return mtoDescuentoPromesa;
+    }
+
+    public void setMtoDescuentoPromesa(BigDecimal mtoDescuentoPromesa) {
+        this.mtoDescuentoPromesa = mtoDescuentoPromesa;
+    }
+
+    public BigDecimal getMtoSaldoPromesa() {
+        return mtoSaldoPromesa;
+    }
+
+    public void setMtoSaldoPromesa(BigDecimal mtoSaldoPromesa) {
+        this.mtoSaldoPromesa = mtoSaldoPromesa;
+    }
+
+    public Date getFechaPagoPromesa() {
+        return fechaPagoPromesa;
+    }
+
+    public void setFechaPagoPromesa(Date fechaPagoPromesa) {
+        this.fechaPagoPromesa = fechaPagoPromesa;
+    }
+
+    public String getCuotas() {
+        return cuotas;
+    }
+
+    public void setCuotas(String cuotas) {
+        this.cuotas = cuotas;
+    }
+
+    public void validarSelectedLlamada() {
+        boolean isTrue = this.validarSelectedLlamada(true);
+    }
+
+    public boolean validarSelectedLlamada(boolean isTrue) {
+
+        if (this.selectedLlamada != null) {
+            String telefono = this.selectedLlamada.getCallToNumber();
+            if (telefono == null || telefono.trim().equals("")) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe hacer una Llamada!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return false;
+            }
+
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe hacer una Llamada!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
         }
+
+        return true;
+    }
+
+    /*
+*******************************************************************************
+Arreglo de Pago    
+*******************************************************************************    
+     */
+    /**
+     *
+     */
+    public void agregarCancelacionTotal() {
+        if (this.selectedLlamada != null) {
+
+            if (this.validArregloPago()) {
+                TblPromesa promesa = new TblPromesa();
+
+                if (this.usuario != null) {
+                    promesa.setUsuarioingreso(this.usuario.getUsuario());
+                }
+
+                promesa.setIdGestion(this.gestion);
+                promesa.setIdLlamada(this.llamada_En_Proceso);
+                promesa.setOperacion(this.clienteOperacion);
+                promesa.setTelefono(this.selectedLlamada.getCallToNumber());
+                promesa.setFechaPago(this.fechaPagoPromesa);
+                promesa.setMtopago(this.mtoSaldoPromesa);
+                promesa.setMoneda("CRC");
+                promesa.setEstado("SEG"); // Seguimiento
+                promesa.setTipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
+                promesa.setMtoporcentaje(this.mtoDescuentoPromesa); // Monto o %
+                promesa.setTipoarreglopago("CAT");//CAT = Cancelacion Total.
+                promesa.setFechaingreso(this.fechaHoy.getTime());
+
+                if (this.existOneCTC(promesa) && this.existOneREF(promesa) && this.validOnlyOneCAT(promesa) && this.existOnePAP(promesa)) {
+                    this.promesaList.add(promesa);
+                    FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                }
+
+            }
+
+        } else {
+            FacesMessage msg = new FacesMessage("Promesa NO Agregada!: ", null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public void agregarCancelacionTotalPorCuotas() {
+        if (this.selectedLlamada != null) {
+
+            if (this.validArregloPago() && this.validCancelacionTotalPorCuotas()) {
+
+                Calendar fechaInicial = Calendar.getInstance();
+                fechaInicial.setTime(this.fechaPagoPromesa);
+
+                BigDecimal coutasInt = new BigDecimal(this.cuotas);
+                BigDecimal saldo = this.mtoSaldoPromesa.divide(coutasInt, 6, RoundingMode.HALF_UP);
+
+                for (int count = 0; count < coutasInt.intValue(); count++) {
+                    TblPromesa promesa = new TblPromesa();
+
+                    if (this.usuario != null) {
+                        promesa.setUsuarioingreso(this.usuario.getUsuario());
+                    }
+
+                    promesa.setIdGestion(this.gestion);
+                    promesa.setIdLlamada(this.llamada_En_Proceso);
+                    promesa.setOperacion(this.clienteOperacion);
+                    promesa.setTelefono(this.selectedLlamada.getCallToNumber());
+                    promesa.setFechaPago(fechaInicial.getTime());
+                    fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
+                    promesa.setMtopago(saldo);
+                    promesa.setMoneda("CRC");
+                    promesa.setEstado("SEG"); // Seguimiento
+                    promesa.setTipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
+                    promesa.setMtoporcentaje(this.mtoDescuentoPromesa); // Monto o %
+                    promesa.setTipoarreglopago("CTC");//CTC = Cancelacion Total por Cuotas.
+                    promesa.setFechaingreso(this.fechaHoy.getTime());
+
+                    if (this.existOneCAT(promesa) && this.existOneREF(promesa) && this.validOnlyThreeCTC(promesa) && this.existOnePAP(promesa)) {
+                        this.promesaList.add(promesa);
+                        FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                    }
+                }
+            }
+
+        } else {
+            FacesMessage msg = new FacesMessage("Promesa NO Agregada!: ", null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public void agregarRefinanciamiento() {
+        if (this.selectedLlamada != null) {
+            if (this.validRefinanciamiento()) {
+
+                Calendar fechaInicial = Calendar.getInstance();
+                fechaInicial.setTime(this.fechaPagoPromesa);
+
+                BigDecimal coutasInt = new BigDecimal(this.cuotas);
+                BigDecimal coutasIntLessOne = coutasInt.subtract(BigDecimal.ONE);// restar una cuota.
+                BigDecimal primerTracto = this.mtoDescuentoPromesa;// primer tracto
+                BigDecimal saldo = this.mtoSaldoPromesa.divide(coutasIntLessOne, 6, RoundingMode.HALF_UP);// saldo restante
+
+                // borra las promesas...
+                this.deleteByOperacionAndArregloPago(this.clienteOperacion, "REF");
+
+                for (int count = 0; count < coutasInt.intValue(); count++) {
+                    TblPromesa promesa = new TblPromesa();
+
+                    if (this.usuario != null) {
+                        promesa.setUsuarioingreso(this.usuario.getUsuario());
+                    }
+
+                    promesa.setIdGestion(this.gestion);
+                    promesa.setIdLlamada(this.llamada_En_Proceso);
+                    promesa.setOperacion(this.clienteOperacion);
+                    promesa.setTelefono(this.selectedLlamada.getCallToNumber());
+                    promesa.setFechaPago(fechaInicial.getTime());
+
+                    fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
+
+                    if (count == 0 && primerTracto.compareTo(BigDecimal.ZERO) == 1) {
+                        promesa.setMtopago(primerTracto);
+                    } else {
+                        promesa.setMtopago(saldo);
+                    }
+
+                    promesa.setMoneda("CRC");
+                    promesa.setEstado("SEG"); // Seguimiento
+                    promesa.setTipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
+                    promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
+                    promesa.setTipoarreglopago("REF");//REF = Refinanciamiento.
+                    promesa.setFechaingreso(this.fechaHoy.getTime());
+
+                    if (this.existOneCAT(promesa) && this.validOnlyThreeCTC(promesa) && this.existOneCTC(promesa) && this.existOnePAP(promesa)) {
+                        this.promesaList.add(promesa);
+                        FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                    }
+                }
+            }
+
+        } else {
+            FacesMessage msg = new FacesMessage("Promesa NO Agregada!: ", null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    /**
+     *
+     */
+    public void agregarPagoParcial() {
+        if (this.selectedLlamada != null) {
+
+            if (this.validPagoParcial()) {
+
+                Calendar fechaInicial = Calendar.getInstance();
+                fechaInicial.setTime(this.fechaPagoPromesa);
+
+                TblPromesa promesa = new TblPromesa();
+
+                if (this.usuario != null) {
+                    promesa.setUsuarioingreso(this.usuario.getUsuario());
+                }
+
+                promesa.setIdGestion(this.gestion);
+                promesa.setIdLlamada(this.llamada_En_Proceso);
+                promesa.setOperacion(this.clienteOperacion);
+                promesa.setTelefono(this.selectedLlamada.getCallToNumber());
+                promesa.setFechaPago(fechaInicial.getTime());
+                promesa.setMtopago(this.mtoSaldoPromesa);
+                promesa.setMoneda("CRC");
+                promesa.setEstado("SEG"); // Seguimiento
+                promesa.setTipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
+                promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
+                promesa.setTipoarreglopago("PAP");//CTC = Cancelacion Total por Cuotas.
+                promesa.setFechaingreso(this.fechaHoy.getTime());
+
+                if (this.existOneCAT(promesa) && this.existOneREF(promesa) && this.existOneCTC(promesa) && this.existOnePAP(promesa)) {
+                    this.promesaList.add(promesa);
+                    FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                }
+
+            }
+
+        } else {
+            FacesMessage msg = new FacesMessage("Promesa NO Agregada!: ", null);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public boolean validPagoParcial() {
+        if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.mtoSaldoPromesa == null || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == -1) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser mayor a cero!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.fechaPagoPromesa == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    /**
+     * Remueve las promesas, segun operacion y tipo de arrglo de pago.
+     *
+     * @param operacion
+     * @param arregloPago
+     */
+    public void deleteByOperacionAndArregloPago(String operacion, String arregloPago) {
+        int index = 0;
+        while (this.promesaList.size() > 0 && this.promesaList.size() > index) {
+            boolean isOperacion = this.promesaList.get(index).getOperacion().equals(operacion);
+            boolean isAP = this.promesaList.get(index).getTipoarreglopago().equals(arregloPago);
+            if (isOperacion && isAP) {
+                this.promesaList.remove(index);
+            } else {
+                index++;
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public void calcSaldoRestanteREF() {
+        BigDecimal saldoRestante = new BigDecimal(BigInteger.ZERO);
+        BigDecimal mtoSaldo = this.mtoSaldoOperacion;
+        BigDecimal primerTracto = this.mtoDescuentoPromesa;
+
+        if (mtoSaldo != null && primerTracto != null) {
+            if (mtoSaldo.compareTo(BigDecimal.ZERO) == 1) {// mayor que cero.
+                if (primerTracto.compareTo(BigDecimal.ZERO) == 1) {// mayor que cero.
+                    saldoRestante = mtoSaldo.subtract(primerTracto);
+                } else {
+                    saldoRestante = mtoSaldo;
+                }
+            }
+        }
+
+        this.mtoSaldoPromesa = saldoRestante;
+    }
+
+    /**
+     *
+     */
+    public void calcNuevoMontoSegunDescuento() {
+        BigDecimal cien = new BigDecimal("100");
+        BigDecimal newSaldo = new BigDecimal(BigInteger.ZERO);
+        BigDecimal mtoSaldo = this.mtoSaldoOperacion;
+        BigDecimal mtoPort = this.mtoDescuentoPromesa;
+
+        if (this.tipoDescuentoPromesa.equals("FIJ")) {
+            newSaldo = mtoSaldo.subtract(mtoPort);
+
+        } else {
+            BigDecimal porcentage = mtoSaldo.multiply(mtoPort).divide(cien);
+            newSaldo = mtoSaldo.subtract(porcentage);
+        }
+
+        this.mtoSaldoPromesa = newSaldo;
+    }
+
+    /**
+     * Validar los datos del Arreglo de pago. Cancelacion Total
+     *
+     * @return
+     */
+    private boolean validArregloPago() {
+
+        if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.tipoDescuentoPromesa == null || this.tipoDescuentoPromesa.equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Tipo Descuento!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.mtoDescuentoPromesa == null || this.mtoDescuentoPromesa.equals(BigDecimal.ZERO)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe digitar Monto o %!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.mtoSaldoPromesa == null || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == -1) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser mayor a cero!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.fechaPagoPromesa == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private boolean validCancelacionTotalPorCuotas() {
+
+        if (this.cuotas == null || this.cuotas.trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una cuota!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private boolean validRefinanciamiento() {
+
+        if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.mtoDescuentoPromesa == null || this.mtoDescuentoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoDescuentoPromesa.compareTo(BigDecimal.ZERO) == -1) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Primer Tracto, debe ser mayor a cero!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.mtoSaldoPromesa == null || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == -1) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo restante, debe ser mayor a cero!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.fechaPagoPromesa == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago Inicial!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.cuotas == null || this.cuotas.trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una cuota!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 
+     * @param promesa
+     * @return 
+     */
+    public boolean existOnePAP(TblPromesa promesa) {
+        if (this.promesaList != null && !this.promesaList.isEmpty()) {
+            for (int index = 0; index < this.promesaList.size(); index++) {
+                String operacion = promesa.getOperacion();
+                String tipoarreglopago = "PAP";
+                if (this.promesaList.get(index).getOperacion().equals(operacion) && this.promesaList.get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Pago Parcial. Sólo puede haber uno!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Verifica que solo exista una operacion, con el arreglo de pago,
+     * Cancelacion Total.
+     *
+     * @param promesa
+     * @return
+     */
+    public boolean validOnlyOneCAT(TblPromesa promesa) {
+        if (this.promesaList != null && !this.promesaList.isEmpty()) {
+            for (int index = 0; index < this.promesaList.size(); index++) {
+                String operacion = promesa.getOperacion();
+                String tipoarreglopago = "CAT";
+                if (this.promesaList.get(index).getOperacion().equals(operacion) && this.promesaList.get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Cancelación Total. Sólo puede haber uno!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Sólo puede haber uno. Ya existe una Cancelación Total!
+     *
+     * @param promesa
+     * @return
+     */
+    public boolean existOneCAT(TblPromesa promesa) {
+        if (this.promesaList != null && !this.promesaList.isEmpty()) {
+            for (int index = 0; index < this.promesaList.size(); index++) {
+                String operacion = promesa.getOperacion();
+                String tipoarreglopago = "CAT";
+                if (this.promesaList.get(index).getOperacion().equals(operacion) && this.promesaList.get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Ya existe una Cancelación Total. Sólo puede haber uno!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Ya existe una Cancelación Total por Cuotas!
+     *
+     * @param promesa
+     * @return
+     */
+    public boolean existOneCTC(TblPromesa promesa) {
+        if (this.promesaList != null && !this.promesaList.isEmpty()) {
+            for (int index = 0; index < this.promesaList.size(); index++) {
+                String operacion = promesa.getOperacion();
+                String tipoarreglopago = "CTC";
+                if (this.promesaList.get(index).getOperacion().equals(operacion) && this.promesaList.get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Ya existe una Cancelación Total por Cuotas!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Ya existe arreglo de pago, Refinanciamiento!
+     *
+     * @param promesa
+     * @return
+     */
+    public boolean existOneREF(TblPromesa promesa) {
+        if (this.promesaList != null && !this.promesaList.isEmpty()) {
+            for (int index = 0; index < this.promesaList.size(); index++) {
+                String operacion = promesa.getOperacion();
+                String tipoarreglopago = "REF";//REF = Refinanciamiento.
+                if (this.promesaList.get(index).getOperacion().equals(operacion) && this.promesaList.get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Refinanciamiento. Ya existe arreglo de pago!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean validOnlyThreeCTC(TblPromesa promesa) {
+        int countCTC = 0;
+        if (this.promesaList != null && !this.promesaList.isEmpty()) {
+            for (int i = 0; i < this.promesaList.size(); i++) {
+                if (this.promesaList.get(i).getTipoarreglopago().equals("CTC")) {
+                    countCTC++;
+                }
+            }
+
+            if (countCTC >= 3) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Cancelacion Total por Cuotas. Maximo tres arreglos de pago!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }

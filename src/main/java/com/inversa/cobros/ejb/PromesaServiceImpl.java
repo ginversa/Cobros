@@ -109,4 +109,9 @@ public class PromesaServiceImpl implements PromesaService, PromesaServiceRemote 
         }
     }
 
+    @Override
+    public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj) {
+        return dao.findByFechaPagoAndUsuarioIngreso(obj);
+    }
+
 }

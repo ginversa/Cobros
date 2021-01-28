@@ -25,65 +25,155 @@
         <h:form id="form">
             <div class="p-grid table-demo">
                 <div class="p-col-12">
-                    <div class="card">
-                        <h4>Mi Cartera</h4>                        
-                        <p:dataTable widgetVar="customersDT2" var="deudor" value="#{deudorController.deudorList}"
-                                     paginator="true" rows="30" paginatorPosition="top"
-                                     reflow="true" scrollable="true" scrollHeight="1050"
-                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
-                                     emptyMessage="No se encontraron registros." >
 
-                            <p:column headerText="Identificación" filterBy="#{deudor.documento}" filterMatchMode="contains" sortBy="#{deudor.documento}" >
-                                <p:commandLink action="gestion" actionListener="#{deudorController.setDeudor(deudor)}">
-                                    <h:outputText value="#{deudor.documento}" />
-                                </p:commandLink>                        
-                            </p:column>                               
-                            <p:column headerText="Nombre" filterBy="#{deudor.nombre}" filterMatchMode="contains" sortBy="#{deudor.nombre}" >
-                                <h:outputText value="#{deudor.nombre}" />
-                            </p:column>
-                            <p:column headerText="#Cuenta" filterBy="#{deudor.clienteOperacion}" filterMatchMode="contains" sortBy="#{deudor.clienteOperacion}" >
-                                <h:outputText value="#{deudor.clienteOperacion}" />                                
-                            </p:column>
-                            <p:column headerText="Saldo" filterBy="#{deudor.saldo}" sortBy="#{deudor.saldo}" >
-                                <h:outputText value="#{deudor.saldo}" >
-                                    <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="4" />
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="Saldo Dolares" filterBy="#{deudor.saldoDolares}" sortBy="#{deudor.saldoDolares}" >
-                                <h:outputText value="#{deudor.saldoDolares}" >
-                                    <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="20" maxFractionDigits="4" />
-                                </h:outputText>
-                            </p:column>                    
-                            <!-- 
-                            <p:column headerText="Tipificacion" filterBy="#{deudor.tipificacion}" sortBy="#{deudor.tipificacion}" >
-                                <h:outputText value="#{deudor.tipificacion}" />
-                            </p:column>
-                            -->
-                            <p:column headerText="Sub-Tipificacion" filterBy="#{deudor.subtipificacion}" sortBy="#{deudor.subtipificacion}" >
-                                <h:outputText value="#{deudor.subtipificacion}" />
-                            </p:column>
-                            <p:column headerText="Última Gestión" filterBy="#{deudor.fecUltGest}" sortBy="#{deudor.fecUltGest}" >
-                                <h:outputText value="#{deudor.fecUltGest}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="Última Promesa" filterBy="#{deudor.fecUltProm}" sortBy="#{deudor.fecUltProm}" >
-                                <h:outputText value="#{deudor.fecUltProm}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="Última Pago" filterBy="#{deudor.fecUltPago}" sortBy="#{deudor.fecUltPago}" >
-                                <h:outputText value="#{deudor.fecUltPago}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" />
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="Fecha Ingreso" filterBy="#{deudor.fecIngreso}" sortBy="#{deudor.fecIngreso}" >
-                                <h:outputText value="#{deudor.fecIngreso}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                                </h:outputText>
-                            </p:column>                            
-                        </p:dataTable>
-                    </div>
+                    <p:tabView id="idTabViewDeudor" onTabChange="">
+                        <p:tab title="Promesas">
+                            <div class="card">
+                                <h4>Promesas</h4>
+                                <p:dataTable widgetVar="customersDT21" var="promesa" value="#{listarPromesaController.promesasFechaHoyList}"
+                                             paginator="true" rows="20" paginatorPosition="top"
+                                             reflow="true" scrollable="true" scrollHeight="1050"
+                                             styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                             emptyMessage="No se encontraron registros." >
+
+                                    <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
+                                        <h:outputText value="#{promesa.idGestion.codigoCartera}" />
+                                    </p:column>
+                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.documento}" filterMatchMode="contains" sortBy="#{promesa.idGestion.documento}" >
+                                        <h:outputText value="#{promesa.idGestion.documento}" />
+                                    </p:column>
+                                    <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
+                                        <h:outputText value="#{promesa.idGestion.nombreCliente}" />
+                                    </p:column>                                               
+                                    <p:column headerText="#Cuenta" filterBy="#{promesa.operacion}" filterMatchMode="contains" sortBy="#{promesa.operacion}" >
+                                        <h:outputText value="#{promesa.operacion}" />
+                                    </p:column>
+                                    <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
+                                        <h:outputText value="#{promesa.mtopago}" >
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
+                                        <h:outputText value="#{promesa.telefono}" />                                    
+                                    </p:column>
+                                    <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
+                                        <h:outputText value="#{promesa.fechaPago}" >
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>                                                        
+                                    <p:column headerText="Fecha Ingreso" filterBy="#{promesa.fechaingreso}" sortBy="#{promesa.fechaingreso}" >
+                                        <h:outputText value="#{promesa.fechaingreso}" >
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy HH:mm:ss" />
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Recordatorio">
+                            <div class="card">
+                                <h4>Recordatorio</h4>
+                                <p:dataTable widgetVar="customersDT22" var="promesa" value="#{listarPromesaController.promesasFechaAyerList}"
+                                             paginator="true" rows="20" paginatorPosition="top"
+                                             reflow="true" scrollable="true" scrollHeight="1050"
+                                             styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                             emptyMessage="No se encontraron registros." >
+
+                                    <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
+                                        <h:outputText value="#{promesa.idGestion.codigoCartera}" />
+                                    </p:column>
+                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.documento}" filterMatchMode="contains" sortBy="#{promesa.idGestion.documento}" >
+                                        <h:outputText value="#{promesa.idGestion.documento}" />
+                                    </p:column>
+                                    <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
+                                        <h:outputText value="#{promesa.idGestion.nombreCliente}" />
+                                    </p:column>                                               
+                                    <p:column headerText="#Cuenta" filterBy="#{promesa.operacion}" filterMatchMode="contains" sortBy="#{promesa.operacion}" >
+                                        <h:outputText value="#{promesa.operacion}" />
+                                    </p:column>
+                                    <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
+                                        <h:outputText value="#{promesa.mtopago}" >
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
+                                        <h:outputText value="#{promesa.telefono}" />                                    
+                                    </p:column>
+                                    <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
+                                        <h:outputText value="#{promesa.fechaPago}" >
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>                                                        
+                                    <p:column headerText="Fecha Ingreso" filterBy="#{promesa.fechaingreso}" sortBy="#{promesa.fechaingreso}" >
+                                        <h:outputText value="#{promesa.fechaingreso}" >
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy HH:mm:ss" />
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Mi Cartera">
+                            <div class="card">
+                                <h4>Mi Cartera</h4>
+                                <p:dataTable widgetVar="customersDT23" var="deudor" value="#{deudorController.deudorList}"
+                                             paginator="true" rows="30" paginatorPosition="top"
+                                             reflow="true" scrollable="true" scrollHeight="1050"
+                                             styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                             emptyMessage="No se encontraron registros." >
+
+                                    <p:column headerText="Identificación" filterBy="#{deudor.documento}" filterMatchMode="contains" sortBy="#{deudor.documento}" filterStyle="  " >
+                                        <p:commandLink action="gestion" actionListener="#{deudorController.setDeudor(deudor)}">
+                                            <h:outputText value="#{deudor.documento}" />
+                                        </p:commandLink>                        
+                                    </p:column>                               
+                                    <p:column id="idNombreDeudor" headerText="Nombre" filterBy="#{deudor.nombre}" filterMatchMode="contains" sortBy="#{deudor.nombre}" filterStyle="display" >
+                                        <h:outputText value="#{deudor.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="#Cuenta" filterBy="#{deudor.clienteOperacion}" filterMatchMode="contains" sortBy="#{deudor.clienteOperacion}" >
+                                        <h:outputText value="#{deudor.clienteOperacion}" />                                
+                                    </p:column>
+                                    <p:column headerText="Saldo" filterBy="#{deudor.saldo}" sortBy="#{deudor.saldo}" >
+                                        <h:outputText value="#{deudor.saldo}" >
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="4" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Saldo Dolares" filterBy="#{deudor.saldoDolares}" sortBy="#{deudor.saldoDolares}" >
+                                        <h:outputText value="#{deudor.saldoDolares}" >
+                                            <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="20" maxFractionDigits="4" />
+                                        </h:outputText>
+                                    </p:column>                    
+                                    <!-- 
+                                    <p:column headerText="Tipificacion" filterBy="#{deudor.tipificacion}" sortBy="#{deudor.tipificacion}" >
+                                        <h:outputText value="#{deudor.tipificacion}" />
+                                    </p:column>
+                                    -->
+                                    <p:column headerText="Sub-Tipificacion" filterBy="#{deudor.subtipificacion}" sortBy="#{deudor.subtipificacion}" >
+                                        <h:outputText value="#{deudor.subtipificacion}" />
+                                    </p:column>
+                                    <p:column headerText="Última Gestión" filterBy="#{deudor.fecUltGest}" sortBy="#{deudor.fecUltGest}" >
+                                        <h:outputText value="#{deudor.fecUltGest}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Última Promesa" filterBy="#{deudor.fecUltProm}" sortBy="#{deudor.fecUltProm}" >
+                                        <h:outputText value="#{deudor.fecUltProm}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Última Pago" filterBy="#{deudor.fecUltPago}" sortBy="#{deudor.fecUltPago}" >
+                                        <h:outputText value="#{deudor.fecUltPago}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Fecha Ingreso" filterBy="#{deudor.fecIngreso}" sortBy="#{deudor.fecIngreso}" >
+                                        <h:outputText value="#{deudor.fecIngreso}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                                        </h:outputText>
+                                    </p:column>                            
+                                </p:dataTable>
+                            </div>
+                        </p:tab>
+                    </p:tabView>                        
+
                 </div>
             </div>
         </h:form>
