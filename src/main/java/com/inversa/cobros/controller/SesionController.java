@@ -72,7 +72,7 @@ public class SesionController implements Serializable {
             TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get("usuario");
 
             if (obj == null) {
-                context.getExternalContext().redirect("../notfound.xhtml");
+                context.getExternalContext().redirect("../login.xhtml");
 
             }
 

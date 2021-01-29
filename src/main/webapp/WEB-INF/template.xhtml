@@ -40,7 +40,7 @@
                         <a href="#" title="Bookmark">
                             <i class="pi pi-bookmark"></i>
                         </a>                        
-                            <p:commandLink title="Logout" actionListener="#{sesionController.cerrarSesion()}" action="./login.xhtml?faces-redirect=true" >                        
+                            <p:commandLink title="Logout" actionListener="#{sesionController.cerrarSesion()}" action="../login.xhtml" > <!-- action="./../login.xhtml?faces-redirect=true" -->
                                 <i class="pi pi-sign-out"></i>
                             </p:commandLink>
                         </h:form>

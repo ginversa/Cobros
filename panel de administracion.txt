@@ -1,0 +1,19 @@
+Accesso de aplicativo:
+
+https://gestionresuelva.com:8499/cobros/
+
+jesline.umaña    118240566
+
+
+Panel de administracion
+
+https://gestionresuelva.com:8499/manager
+
+admin07  Resuelv@123$
+resuelvacr  Resuelv@123$
+
+
+Consola de administracion y transferencia de archivos Putty SSH y WinScp
+209.126.13.228   puerto 33029
+
+root      GDataC3nt3r01y

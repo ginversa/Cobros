@@ -19,11 +19,16 @@
         <div class="body-container">
             <div class="p-grid">
                 <div class="p-col-12 p-lg-6 left-side">
-                    <p:graphicImage name="#{guestPreferences.darkMode != 'light'? 'images/logo-white.png' : 'images/logo-dark.png'}" library="apollo-layout" width="110" height="110" />
+                    <p:graphicImage name="#{guestPreferences.darkMode != 'light'? 'images/logo-white.png' : 'images/logo-dark.png'}" library="apollo-layout" width="300" height="180" style="width: 150px" />
                     <h1>Bienvenido</h1>
                     <p>
-                        Regístrese para iniciar su sesión
+                        <h3>
+                        En Resuelva somos proactivos.<br></br>
+                        Convertimos los problemas en retos.<br></br>
+                        Somos un equipo.
+                        </h3>
                     </p>
+
                 </div>
                 <h:form>
                     <p:growl id="messages" showDetail="true" showSummary="true" severity="warn,fatal" >
@@ -33,16 +38,16 @@
                     <div class="p-col-12 p-lg-6 right-side">
                         <div class="login-wrapper">
                             <div class="login-container">
-                                <span class="title">Login</span>
-                                  <div class="p-grid ui-fluid">
-                                      <h:panelGrid id="gridLoggin" columns="2" class="p-col-12">
-                                        <p:inputText id="textUsuario" placeholder="Username" autocomplete="off" value="#{loginController.usuario.usuario}" required="true" requiredMessage="Campo requerido!" />
+                                <span class="title">Ingresar</span>
+                                <div class="p-grid ui-fluid">
+                                    <h:panelGrid id="gridLoggin" columns="2" class="p-col-12">
+                                        <p:inputText id="textUsuario" placeholder="Usuario" autocomplete="off" value="#{loginController.usuario.usuario}" required="true" requiredMessage="Campo requerido!" />
                                         <p:message for="textUsuario"/>
-                                        
-                                        <p:password id="textClave" placeholder="Password" autocomplete="off" feedback="false" value="#{loginController.usuario.clave}" required="true" requiredMessage="Campo requerido!" />
+
+                                        <p:password id="textClave" placeholder="Contraseña" autocomplete="off" feedback="false" value="#{loginController.usuario.clave}" required="true" requiredMessage="Campo requerido!" />
                                         <p:message for="textUsuario"/>
-                                        
-                                        <p:commandButton action="#{loginController.iniciarSesion}" value="Login" icon="pi pi-check" update="gridLoggin, messages" />
+
+                                        <p:commandButton action="#{loginController.iniciarSesion}" value="Acceder" icon="pi pi-check" update="gridLoggin, messages" />
                                         <p:link></p:link>
                                     </h:panelGrid>
                                 </div>

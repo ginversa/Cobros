@@ -53,7 +53,13 @@ import org.primefaces.shaded.json.JSONObject;
 @Named
 @ViewScoped
 public class GestionController implements Serializable {
-
+    
+    //private static String ip_publica = "192.168.7.201";    
+    private static String ip_publica = "190.106.65.237";    
+    private static String http = "http://";
+    //private static String http = "https://";
+    private static String telefonoDefault = "71723220";
+    
     @Inject
     private GestionService ejbLocal;
 
@@ -314,8 +320,9 @@ public class GestionController implements Serializable {
             //this.selectedLlamada.setIdLlamada(null);
             this.selectedLlamada = callToNumber;// llamada seleccionada...
             String telefono = callToNumber.getCallToNumber();
-
-            String URL_LLAMAR = "http://192.168.7.201/PBXPortal/llamar.php?ext=118&numero=987356220";
+            
+            String URL_LLAMAR = this.http + this.ip_publica + "/PBXPortal/llamar.php?ext=118&numero=9"+this.telefonoDefault;
+            
             cliente = ClientBuilder.newClient();
 
             //Leer una llamada (metodo get)
@@ -447,8 +454,8 @@ public class GestionController implements Serializable {
                         }
 
                     } else {
-
-                        String URL_CONSULTAR = "http://192.168.7.201/PBXPortal/consultar.php?call_log_id=" + callLogId;
+                        
+                        String URL_CONSULTAR = this.http + this.ip_publica+"/PBXPortal/consultar.php?call_log_id=" + callLogId;
 
                         cliente = ClientBuilder.newClient();
                         //Leer una llamada (metodo get)

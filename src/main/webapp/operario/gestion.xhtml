@@ -18,59 +18,94 @@
     <ui:define name="content">
         <h:form id="formGestion">
             <div class="p-grid">
-                <div class="p-col-12">
+                <div class="p-col-12 p-md-12">
                     <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
                         <p:autoUpdate/>
                     </p:growl>                        
-                    <p:tabView id="idTabView" onTabChange="">
+                    <p:tabView id="idTabView" >
                         <p:ajax event="tabChange" listener="#{findmeController.onTabViewChange}" />
                         <p:tab title="Gestión">
                             <div class="card">
                                 <h1>Gestión</h1>
                                 <p>Sistema de Cobros.</p>
-                                <p:panelGrid id="pgInfoGestion" columns="2">
-                                    <h:panelGrid id="pgDeudor" columns="3">
-                                        <p:outputLabel for="txtFecha" value="Fecha Gestión" />
-                                        <p:calendar id="txtFecha" value="#{gestionController.gestion.fechaGestion}" pattern="dd/MM/yyyy" required="true" requiredMessage="Fecha Gestión requerida!" />
-                                        <p:message for="txtFecha" />
-                                        <p:outputLabel for="txtCartera" value="Cartera" />
-                                        <p:inputText id="txtCartera" value="#{gestionController.gestion.codigoCartera}" readonly="true" />
-                                        <p:column />                                            
-                                        <p:outputLabel for="txtNombre" value="Nombre" />
-                                        <p:inputTextarea id="txtNombre" value="#{gestionController.gestion.nombreCliente}" readonly="true" />
-                                        <p:column />
-                                        <p:outputLabel for="txtDocumento" value="Identificación" />
-                                        <p:inputText id="txtDocumento" value="#{gestionController.gestion.documento}" readonly="true" />
-                                        <p:column />
-                                        <p:outputLabel for="txtSaldo" value="Saldo" />
-                                        <p:inputText id="txtSaldo" value="#{gestionController.gestion.saldo}" readonly="true" />
-                                        <p:column />
+                                <!-- class="ui-fluid" -->
+                                <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
+                                    <p:panelGrid id="pgDeudor" columns="5" layout="grid">
+                                        <p:panelGrid columns="2" >
+                                            <p:outputLabel for="txtCartera" value="Cartera" />
+                                            <p:inputText id="txtCartera" value="#{gestionController.gestion.codigoCartera}" readonly="true" />
 
-                                        <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
-                                        <p:selectOneMenu id="txtLeyUsura" disabled="true" >
-                                            <f:selectItem itemLabel="--- Si ---" itemValue="1" />
-                                            <f:selectItem itemLabel="--- No ---" itemValue="0" />
-                                        </p:selectOneMenu>
-                                        <p:column />
+                                            <p:outputLabel for="txtDocumento" value="Identificación" />
+                                            <p:inputText id="txtDocumento" value="#{gestionController.gestion.documento}" readonly="true" />                                           
 
-                                        <p:outputLabel for="txtdescripcion" value="Descripción" />
-                                        <p:inputTextarea id="txtdescripcion" value="#{gestionController.gestion.descripcion}" />
-                                        <p:message for="txtdescripcion" />                                
-                                    </h:panelGrid>
-                                    <p:fieldset legend="Llamar">
-                                        <div align="right">
-                                            <p:commandButton value="Promesa" styleClass="p-mr-2 p-mb-2" actionListener="#{gestionController.validarSelectedLlamada()}" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" />
-                                            <p:commandButton value="Agregar Teléfono" styleClass="p-mr-2 p-mb-2" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this"/>
-                                            <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
-                                            <p:commandButton value="Finalizar" actionListener="#{gestionController.finalizarGestion()}" styleClass="success-button p-mr-2 p-mb-2" process="@this pgDeudor" update="formGestion:messages" />
+                                            <p:outputLabel for="txtNombre" value="Nombre" />
+                                            <p:inputText id="txtNombre" value="#{gestionController.gestion.nombreCliente}" readonly="true" />
+
+                                            <p:outputLabel for="txtOperacion" value="Operación" />
+                                            <p:inputText id="txtOperacion" value="#{gestionController.deudor.clienteOperacion}" readonly="true" />
+                                        </p:panelGrid>
+
+                                        <p:panelGrid columns="2" >
+                                            <p:outputLabel for="txtSaldoColones" value="Saldo Colones" />
+                                            <p:inputText id="txtSaldoColones" value="#{gestionController.deudor.saldo}" readonly="true" />                                            
+
+                                            <p:outputLabel for="txtInteresesColones" value="Intereses Colones" />
+                                            <p:inputText id="txtInteresesColones" value="0" readonly="true" />
+
+                                            <p:outputLabel for="txtSaldoDolares" value="Saldo Dolares" />
+                                            <p:inputText id="txtSaldoDolares" value="0" readonly="true" />
+
+                                            <p:outputLabel for="txtInteresesDolares" value="Intereses Dolares" />
+                                            <p:inputText id="txtInteresesDolares" value="0" readonly="true" />
+                                        </p:panelGrid>
+
+                                        <p:panelGrid columns="2" >
+                                            <p:outputLabel for="txtFechaUltimoPago" value="Fecha Último Pago" />
+                                            <p:calendar id="txtFechaUltimoPago" pattern="dd/MM/yyyy" readonly="true" />
+
+                                            <p:outputLabel for="txtMontoUltimoPago" value="Monto Último Pago" />
+                                            <p:inputText id="txtMontoUltimoPago" value="0" readonly="true" />
+
+                                            <p:outputLabel for="txtFechaUltimoPromesa" value="Fecha Último Promesa" />
+                                            <p:calendar id="txtFechaUltimoPromesa" pattern="dd/MM/yyyy" readonly="true" />
+
+                                            <p:outputLabel for="txtMontoUltimoPromesa" value="Monto Último Promesa" />
+                                            <p:inputText id="txtMontoUltimoPromesa" value="0" readonly="true" />                                            
+                                        </p:panelGrid>
+
+                                        <p:panelGrid columns="2" >
+                                            <p:outputLabel for="txtRazonMora" value="Última Razón Mora" />
+                                            <p:inputText id="txtRazonMora" value="razon de mora" readonly="true" />
+
+                                            <p:outputLabel for="txtdescripcion" value="Observación" />
+                                            <p:inputTextarea id="txtdescripcion" value="#{gestionController.gestion.descripcion}" />                                        
+                                        </p:panelGrid>                                                                       
+                                    </p:panelGrid>
+
+                                    <p:fieldset legend="Llamar" class="ui-fluid" >
+                                        <div>
+                                            <!--
+                                                    <p:commandButton value="Promesa" styleClass="p-mr-2 p-mb-2" actionListener="#{gestionController.validarSelectedLlamada()}" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" />
+                                                     
+                                            -->
+                                            <p:toolbar>
+                                                <f:facet name="right">
+                                                    <h:panelGrid columns="3">
+                                                        <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                                        <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
+                                                        <p:commandButton value="Finalizar" actionListener="#{gestionController.finalizarGestion()}" process="@this pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                                    </h:panelGrid>
+                                                </f:facet>
+                                            </p:toolbar>
                                         </div>
+
+                                        <!-- paginator="true" paginatorPosition="top" rows="5" -->
                                         <p:dataTable id="tblTelefono" value="#{gestionController.llamadaList}" var="llamada"
-                                                     scrollable="true" paginator="true" paginatorPosition="top"
                                                      editMode="cell" editable="true" widgetVar="tblTelefono"
-                                                     style="margin-bottom:20px"
                                                      reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
-                                                     rows="5" 
+                                                     style="margin-bottom:20px"
+                                                     scrollable="true"
                                                      emptyMessage="No se encontraron registros." >
 
                                             <p:ajax event="cellEdit" listener="#{gestionController.onCellEdit}" update="formGestion:messages" />
@@ -168,10 +203,12 @@
                                 </p:panelGrid>
 
                                 <p:fieldset legend="Operaciones">
-                                    <p:dataTable id="tblOperaciones" var="deudor" value="#{gestionController.deudorList}"
-                                                 rendered="true"
-                                                 scrollable="true" rows="5" style="margin-bottom:20px"
-                                                 emptyMessage="No se encontraron registros." >
+                                    <p:dataTable id="tblOperaciones" var="deudor" value="#{gestionController.deudorList}"                                                 
+                                                 widgetVar="tblOperaciones"
+                                                 reflow="true"
+                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                 style="margin-bottom:20px"
+                                                 emptyMessage="No se encontraron registros."  >
 
                                         <p:column headerText="Operación" filterBy="#{deudor.clienteOperacion}" filterMatchMode="contains" sortBy="#{deudor.clienteOperacion}" >
                                             <h:outputText value="#{deudor.clienteOperacion}" />                                
@@ -212,68 +249,49 @@
                                 <p:printer target="pgFindme" />
                             </p:commandButton>
                             <div class="card">
-                                <p:panelGrid id="pgFindme" columns="1" >
+                                <p:panelGrid id="pgFindme" columns="1" layout="grid">
                                     <h2>Datos adicionales para la gestión.</h2>
                                     <p>Localización. Según Findme</p>
+                                    <p:panelGrid id="pgHistorial" columns="3" layout="grid">
+                                        <p:fieldset legend="Teléfonos" >
+                                            <p:dataTable id="idHistorialTelefonos" value="#{findmeController.historialTelefonoList}" var="historialTelefono"
+                                                         style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                         reflow="true"
+                                                         styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
-                                    <p:fieldset legend="Historial Telefonos" >
-                                        <p:dataTable id="idHistorialTelefonos" value="#{findmeController.historialTelefonoList}" var="historialTelefono"
-                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
-                                                     reflow="true"
-                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+                                                <p:column headerText="Teléfono" >
+                                                    <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" process="@this" >
+                                                        <f:setPropertyActionListener value="#{historialTelefono}" target="#{findmeController.selectedHistorialTelefono}" />
+                                                    </p:commandLink>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:fieldset>
+                                        <p:fieldset legend="Correos" >
+                                            <p:dataTable id="idHistorialCorreo" value="#{findmeController.historialCorreoList}" var="historialCorreo"
+                                                         style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                         reflow="true"
+                                                         styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
-                                            <p:column headerText="Teléfono" >
-                                                <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" process="@this" >
-                                                    <f:setPropertyActionListener value="#{historialTelefono}" target="#{findmeController.selectedHistorialTelefono}" />
-                                                </p:commandLink>
-                                            </p:column>
-                                            <p:column headerText="Tipo Teléfono">
-                                                <h:outputText value="#{historialTelefono.tipo_telefono}" />
-                                            </p:column>                                            
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{historialTelefono.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>
-                                            </p:column>                                            
-                                        </p:dataTable>
-                                    </p:fieldset>
+                                                <p:column headerText="Correo">
+                                                    <h:outputText value="#{historialCorreo.correo}" />
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:fieldset>
+                                        <p:fieldset legend="Direcciones" >
+                                            <p:dataTable id="idHistorialDireccion" value="#{findmeController.historialDireccionList}" var="historialDireccion"
+                                                         style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                         reflow="true"
+                                                         styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
-                                    <p:fieldset legend="Historial Correos" >
-                                        <p:dataTable id="idHistorialCorreo" value="#{findmeController.historialCorreoList}" var="historialCorreo"
-                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
-                                                     reflow="true"
-                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
-
-                                            <p:column headerText="Correo">
-                                                <h:outputText value="#{historialCorreo.correo}" />
-                                            </p:column>                                        
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{historialCorreo.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
-                                            </p:column>
-                                        </p:dataTable>
-                                    </p:fieldset>
-
-                                    <p:fieldset legend="Historial Direcciones" >
-                                        <p:dataTable id="idHistorialDireccion" value="#{findmeController.historialDireccionList}" var="historialDireccion"
-                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
-                                                     reflow="true"
-                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
-
-                                            <p:column headerText="Tipo">
-                                                <h:outputText value="#{historialDireccion.tipo}" />
-                                            </p:column>                                        
-                                            <p:column headerText="Dirección">
-                                                <h:outputText value="#{historialDireccion.direccion}" />
-                                            </p:column>
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{historialDireccion.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
-                                            </p:column>
-                                        </p:dataTable>
-                                    </p:fieldset>
+                                                <p:column headerText="Tipo">
+                                                    <h:outputText value="#{historialDireccion.tipo}" />
+                                                </p:column>                                        
+                                                <p:column headerText="Dirección">
+                                                    <h:outputText value="#{historialDireccion.direccion}" />
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:fieldset>
+                                    </p:panelGrid>
 
                                     <p:fieldset legend="Árbol Familiar" >
                                         <p:dataTable id="idArbolFamiliar" value="#{findmeController.arbolFamiliarList}" var="arbolFamiliar"
@@ -289,11 +307,6 @@
                                             </p:column>
                                             <p:column headerText="Teléfono">
                                                 <h:outputText value="#{arbolFamiliar.telefonos}" />
-                                            </p:column>
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{arbolFamiliar.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
                                             </p:column>
                                         </p:dataTable>
                                     </p:fieldset>
@@ -362,15 +375,10 @@
                                             <p:column headerText="Verificado">
                                                 <h:outputText value="#{sociedadAnonima.verificado}" />
                                             </p:column>
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{arbolFamiliar.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
-                                            </p:column>
                                         </p:dataTable>
                                     </p:fieldset>
 
-                                    <p:fieldset legend="Propiedades Registradas" >
+                                    <p:fieldset legend="Bienes Inmuebles" >
                                         <p:dataTable id="idPropiedadRegistrada" value="#{findmeController.propiedadRegistradaList}" var="propiedadRegistrada"
                                                      style="margin-bottom:20px" emptyMessage="No se encontraron registros."
                                                      reflow="true"
@@ -392,11 +400,6 @@
                                             </p:column>
                                             <p:column headerText="País">
                                                 <h:outputText value="#{propiedadRegistrada.pais}" />
-                                            </p:column>                                        
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{propiedadRegistrada.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
                                             </p:column>
                                         </p:dataTable>
                                     </p:fieldset>
@@ -413,27 +416,20 @@
                                             <p:column headerText="Año de Fabricación">
                                                 <h:outputText value="#{vehiculo.ano_fabricacion}" />
                                             </p:column>
-                                            <p:column headerText="Estilo">
+                                            <p:column headerText="Fabricante">
+                                                <h:outputText/>
+                                            </p:column>
+                                            <p:column headerText="Modelo">
                                                 <h:outputText value="#{vehiculo.estilo}" />
                                             </p:column>
                                             <p:column headerText="Tipo">
                                                 <h:outputText value="#{vehiculo.tipo}" />
-                                            </p:column>
-                                            <p:column headerText="Valor Fiscal">
-                                                <h:outputText value="#{vehiculo.valor_fiscal}" >
-                                                    <f:convertNumber pattern="###,###,###,###.00" />
-                                                </h:outputText>
-                                            </p:column>
+                                            </p:column>                                            
                                             <p:column headerText="País">
                                                 <h:outputText value="#{vehiculo.pais}" />
                                             </p:column>
                                             <p:column headerText="Antigüedad">
                                                 <h:outputText value="#{vehiculo.antiguedad}" />
-                                            </p:column>                                        
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{vehiculo.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
                                             </p:column>
                                         </p:dataTable>
                                     </p:fieldset>
@@ -469,11 +465,6 @@
                                             </p:column>
                                             <p:column headerText="País">
                                                 <h:outputText value="#{historialJudicial.pais}" />
-                                            </p:column>
-                                            <p:column headerText="Fecha del Dato">
-                                                <h:outputText value="#{historialJudicial.fecha_del_dato}" >
-                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                </h:outputText>                                                
                                             </p:column>
                                         </p:dataTable>
                                     </p:fieldset>
@@ -746,7 +737,7 @@
                                                     <p:outputLabel for="txtSaldoOperacionREF" value="Saldo" />
                                                     <h:outputText id="txtSaldoOperacionREF" value="#{gestionController.mtoSaldoOperacion}" />
                                                     <p:message for="txtSaldoOperacionREF" />
-                                                    
+
                                                     <p:outputLabel for="txtDescuentoPromesaREF" value="Primer Tracto" />
                                                     <p:inputText id="txtDescuentoPromesaREF" value="#{gestionController.mtoDescuentoPromesa}" >
                                                         <p:ajax event="blur" listener="#{gestionController.calcSaldoRestanteREF()}" update="txtNewSaldoPromesaREF"/>
