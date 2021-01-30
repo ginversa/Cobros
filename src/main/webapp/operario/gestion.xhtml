@@ -101,11 +101,10 @@
 
                                         <!-- paginator="true" paginatorPosition="top" rows="5" -->
                                         <p:dataTable id="tblTelefono" value="#{gestionController.llamadaList}" var="llamada"
-                                                     editMode="cell" editable="true" widgetVar="tblTelefono"
+                                                     editMode="cell" editable="true" widgetVar="tblTelefono"                                                     
                                                      reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                                      style="margin-bottom:20px"
-                                                     scrollable="true"
                                                      emptyMessage="No se encontraron registros." >
 
                                             <p:ajax event="cellEdit" listener="#{gestionController.onCellEdit}" update="formGestion:messages" />
@@ -208,7 +207,7 @@
                                                  reflow="true"
                                                  styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                                  style="margin-bottom:20px"
-                                                 emptyMessage="No se encontraron registros."  >
+                                                 emptyMessage="No se encontraron registros." >
 
                                         <p:column headerText="Operación" filterBy="#{deudor.clienteOperacion}" filterMatchMode="contains" sortBy="#{deudor.clienteOperacion}" >
                                             <h:outputText value="#{deudor.clienteOperacion}" />                                
