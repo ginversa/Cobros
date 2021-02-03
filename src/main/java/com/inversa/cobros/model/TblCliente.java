@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblCliente.findAll", query = "SELECT t FROM TblCliente t"),
     @NamedQuery(name = "TblCliente.findByIdCliente", query = "SELECT t FROM TblCliente t WHERE t.idCliente = :idCliente"),
     @NamedQuery(name = "TblCliente.findByNombre", query = "SELECT t FROM TblCliente t WHERE t.nombre = :nombre"),
+    @NamedQuery(name = "TblCliente.findByCodigo", query = "SELECT t FROM TblCliente t WHERE t.codigo = :codigo"),
     @NamedQuery(name = "TblCliente.findByEstado", query = "SELECT t FROM TblCliente t WHERE t.estado = :estado"),
     @NamedQuery(name = "TblCliente.findByUsuarioingreso", query = "SELECT t FROM TblCliente t WHERE t.usuarioingreso = :usuarioingreso"),
     @NamedQuery(name = "TblCliente.findByFechaingreso", query = "SELECT t FROM TblCliente t WHERE t.fechaingreso = :fechaingreso"),
@@ -53,6 +54,9 @@ public class TblCliente implements Serializable {
     @Size(max = 50)
     @Column(name = "nombre")
     private String nombre;
+    @Size(max = 50)
+    @Column(name = "codigo")
+    private String codigo;
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
@@ -74,6 +78,8 @@ public class TblCliente implements Serializable {
     private List<TblCartera> tblCarteraList;
     @OneToMany(mappedBy = "idCliente", fetch = FetchType.EAGER)
     private List<TblClienteUsuario> tblClienteUsuarioList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.EAGER)
+    private List<TblClientePrefijo> tblClientePrefijoList;
 
     public TblCliente() {
     }
@@ -96,6 +102,14 @@ public class TblCliente implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getEstado() {
@@ -163,6 +177,15 @@ public class TblCliente implements Serializable {
 
     public void setTblClienteUsuarioList(List<TblClienteUsuario> tblClienteUsuarioList) {
         this.tblClienteUsuarioList = tblClienteUsuarioList;
+    }
+
+    @XmlTransient
+    public List<TblClientePrefijo> getTblClientePrefijoList() {
+        return tblClientePrefijoList;
+    }
+
+    public void setTblClientePrefijoList(List<TblClientePrefijo> tblClientePrefijoList) {
+        this.tblClientePrefijoList = tblClientePrefijoList;
     }
 
     @Override

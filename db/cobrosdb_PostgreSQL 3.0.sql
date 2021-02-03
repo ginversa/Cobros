@@ -135,11 +135,11 @@ CREATE TABLE if not exists RazonMora(
 CREATE TABLE IF NOT EXISTS tbl_gestion (
   	id_gestion BIGSERIAL primary key,
   	codigo_cartera varchar(5),
+  	nombre_cartera varchar(100),  	
+  	identificacion varchar(50),
   	nombre_cliente varchar(50),
-  	documento varchar(50),	
+  	operacion varchar(50),
   	codigo_gestor varchar(5),
-  	saldo DECIMAL(19,4) default 0,
-  	moneda VARCHAR(3),-- CRC
   	fecha_gestion timestamp,
   	descripcion text,
   	estado varchar(3) default 'ING', --INGRESAR
@@ -175,6 +175,8 @@ create table if not exists tbl_llamada(
 	id_tipificacion SERIAL references Tipificacion(id_tipificacion),
 	id_subtipificacion SERIAL references SubTipificacion(id_subtipificacion),    
 	idRazonMora int8 references RazonMora(idRazonMora),
+	id_resultadogestion INT4 references tbl_resultadogestion(id_resultadogestion),
+    id_resultadotercero INT4 references tbl_resultadotercero(id_resultadotercero),
 	id_tipotelefono int8 references TipoTelefono(id_tipotelefono),
 	usuarioIngreso varchar(50),
 	fechaIngreso timestamp default CURRENT_TIMESTAMP,
@@ -188,9 +190,12 @@ CREATE TABLE IF NOT EXISTS tbl_promesa (
   	id_gestion BIGSERIAL references tbl_gestion(id_gestion),  	
   	operacion varchar(50),
   	telefono varchar(50),
-  	fecha_pago timestamp,
+  	tipoDescuento VARCHAR(3),
+  	mtoPorcentaje DECIMAL(19,4) default 0,
   	mtoPago DECIMAL(19,4) default 0,
   	moneda VARCHAR(3),
+  	fecha_pago timestamp,
+  	tipoArregloPago VARCHAR(3),  	
   	estado varchar(3) default 'ING', --INGRESAR
   	usuarioIngreso varchar(50),
 	fechaIngreso timestamp default CURRENT_TIMESTAMP,
@@ -226,6 +231,7 @@ CREATE TABLE if not exists tbl_usuario(
 	usuario varchar(50),
 	clave varchar(50),
 	codigo_gestor varchar(5),
+	ext_ension varchar(5),
 	estado varchar(3) default 'ACT',
 	id_usuarioSupervisor int8 references tbl_usuario(id_persona),
 	id_rolusuario int8 references tbl_rolusuario(id_rolusuario),
@@ -239,6 +245,7 @@ CREATE TABLE if not exists tbl_usuario(
 CREATE TABLE if not exists tbl_cliente(
 	id_cliente serial primary key,
 	nombre varchar(50),
+	codigo varchar(50),
 	estado varchar(3) default 'ACT',-- Activo, Inactivo
 	usuarioIngreso varchar(50),
 	fechaIngreso timestamp default CURRENT_TIMESTAMP,
@@ -246,18 +253,37 @@ CREATE TABLE if not exists tbl_cliente(
 	fechaModifico timestamp
 );
 
-CREATE TABLE if not exists tbl_cartera(
-	id_cartera BIGSERIAL primary key,
-	id_cliente serial references tbl_cliente(id_cliente),
-	nombre varchar(100),
-	codigo_cartera varchar(5),
-	usuarioIngreso varchar(50),
-	fechaIngreso timestamp default CURRENT_TIMESTAMP,
-    usuarioModifico varchar(50),
-	fechaModifico timestamp
-);
+  create table if not EXISTS tbl_cartera (
+  "id" serial not null,
+  id_cliente serial references tbl_cliente(id_cliente),
+  "codigo_cartera" varchar(10) not null,
+  "codigo_gestor" varchar(10)  not null,
+  "numero_cliente_cif" varchar(30) ,
+  "nombre_cliente" varchar(100) not null,
+  "identificacion" varchar(20) ,
+  "numero_cuenta" varchar(30) ,
+  "numero_tarjeta" varchar(30) ,
+  "saldo_colones" decimal(18,6) default 0 ,  -- si monto_principales_colones y interereses_colones son 0 ponere saldo_colones   ---- si no se toma el saldo principal
+  "intereses_colones" decimal(18,6) default 0 ,----interereses_colones tal cual
+  "id_moneda_colones" serial references moneda(id_moneda) ,--id de la moneda colones
+  "saldo_dolares" decimal(18,6)  default 0, --- saldo_dolares tal cual
+  "intereses_dolares" decimal(18,6)  default 0,-- intereses dolares tal cual
+  "id_moneda_dolares" serial references moneda(id_moneda),--id de la moneda colones
+  "tipo_producto" varchar(20) ,
+  "bucket" varchar(15) ,
+  "dias_mora" varchar(15) ,
+  "placement" varchar(15) ,
+  "fecha_asignacion" timestamp ,
+ "estado" varchar(3) default 'ING',
+ "usuario_ingreso" varchar(30) not null,
+ "fecha_ingreso" timestamp  default current_timestamp,
+ "usuario_modifico" varchar(30) default null ,
+ "fecha_modifico" timestamp default null  ,
+  primary key ("id")
+ );
 
-CREATE TABLE if not exists tbl_cliente_usuario(
+
+CREATE TABLE if not exists tbl_cliente_usuario(--
 	id_cliente_usuario serial primary key,
 	id_cliente int8 references tbl_cliente(id_cliente),
 	id_persona int8 references tbl_usuario(id_persona),
@@ -266,6 +292,7 @@ CREATE TABLE if not exists tbl_cliente_usuario(
     usuarioModifico varchar(50),
 	fechaModifico timestamp
 );
+
 /*****************************************************************************/
 /*****************************************************************************/
 
@@ -281,7 +308,7 @@ CREATE TABLE if not exists tbl_carteraMapa(
 );
 
 
-CREATE TABLE if not exists tbl_perfilCartera(
+CREATE TABLE if not exists tbl_perfilCartera(----
 	id_perfilCartera serial primary key,
 	id_cliente serial references tbl_cliente(id_cliente),
 	codigo_cartera varchar(5),
@@ -313,7 +340,7 @@ CREATE TABLE if not exists tbl_telefono(
 	id_contacto serial references tbl_contacto(id_contacto),
 	id_tipoTelefono int8 references tipotelefono(id_tipoTelefono),
 	telefono varchar(50),
-	ranking int,
+	ranking int default 0,
 	estado varchar(3) default 'ACT',-- Activo, Inactivo
 	usuarioIngreso varchar(50),
 	fechaIngreso timestamp default CURRENT_TIMESTAMP,
@@ -453,6 +480,13 @@ ACT - Activo
 INA - Inactivo
 ING - Ingresar
 DAT - Datos
+
+-- Estados de una promesa.
+SEG - Seguimiento, antes de recordatorio
+PRO - Promesa, si cuando lo llame recordando, dice que si paga mañana.
+INC - Incumplida, al resivir los pago, se comprueba que no pago.
+EFE - Efectiva, al resivir los pago, se comprueba que si pago.
+REP - Reprogramada
 select * from Estado
  */
 
@@ -460,6 +494,12 @@ insert into Estado(codigo,descripcion,usuarioIngreso) values('ING','Ingresar','h
 insert into Estado(codigo,descripcion,usuarioIngreso) values('ACT','Activo','hbonilla');
 insert into Estado(codigo,descripcion,usuarioIngreso) values('INA','InActivo','hbonilla');
 insert into Estado(codigo,descripcion,usuarioIngreso) values('DAT','Datos','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('SEG','Seguimiento','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('PRO','Promesa','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('INC','Incumplida','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('EFE','Efectiva','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('DEL','Registro borrado','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('REP','Reprogramada','hbonilla');
 
 
 /*
@@ -485,7 +525,7 @@ insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('PRO
 insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('RECORDATORIO DE PAGO',null,'hbonilla');
 insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('MENSAJE GRABADORA',null,'hbonilla');
 insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('MENSAJE FAMILIAR',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('MENSAJE COMPAÃ‘ERO',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('MENSAJE COMPAERO',null,'hbonilla');
 insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('NO CONTESTA',null,'hbonilla');
 insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('CONTACTO SIN PROMESA',null,'hbonilla');
 insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('ILOCALIZADO TELEFONICAMENTE',null,'hbonilla');
@@ -551,6 +591,256 @@ insert into moneda(codigo,simbolo,descripcion,usuarioIngreso) values('USD','$','
 -- Rol de los usuarios del sistema.
 insert into tbl_rolusuario (nombre,descripcion,usuarioIngreso) values('Gestor','Gestiona llamadas y promesas','hbonilla');
 insert into tbl_rolusuario (nombre,descripcion,usuarioIngreso) values('Supervisor','Supervisa la gestion de llamadas y promesas','hbonilla');
+
+
+/*
+ ************************************************************************************************************************************************ 
+ */
+CREATE TABLE IF NOT EXISTS tbl_resultadogestion (
+	id_resultadogestion SERIAL PRIMARY KEY,
+  	descripcion varchar(250),
+  	codigo varchar(3),
+    id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+  	id_subtipificacion int4 references SubTipificacion(id_subtipificacion),
+  	usuarioIngreso varchar(50),
+	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tbl_resultadotercero (
+	id_resultadotercero SERIAL PRIMARY KEY,
+	id_resultadogestion SERIAL references tbl_resultadogestion(id_resultadogestion),
+	id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+  	descripcion varchar(250),
+  	codigo varchar(3),
+  	usuarioIngreso varchar(50),
+	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico TIMESTAMP
+);
+
+--*****************************************************************************************
+/*
+ --- Mensage en Grabadora - 3
+MENSAJE EN BUZON - MEB
+BUZON LLENO - BLL
+ */
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('MENSAJE EN BUZON','MEB',3,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('BUZON LLENO','BLL',3,null,'hbonilla');
+
+/*
+--- Mesaje Familiar - 4
+NO TOMO MESAJE - NTM *** 
+TOMO MENSAJE - TMJ   ***
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('NO TOMO MESAJE','NTM',4,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('TOMO MENSAJE','TMJ',4,null,'hbonilla');
+
+/*
+ -- Mensaje Companero - 5
+NO TOMO MESAJE - NTM
+TOMO MENSAJE - TMJ
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('NO TOMO MESAJE','NTM',5,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('TOMO MENSAJE','TMJ',5,null,'hbonilla');
+
+/*
+-- Ilocalizado Telefonicamente - 8
+-- Numero Reasignado - 22
+NO CONOCE A TITULAR
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('NO CONOCE A TITULAR','NCT',8,22,'hbonilla');
+
+/*
+-- Ilocalizado Telefonicamente - 8
+-- Cambio de Trabajo - 23
+NO TOMO MESAJE - NTM ***
+TOMO MENSAJE - TMJ   ***
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('NO TOMO MESAJE','NTM',8,23,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('TOMO MENSAJE','TMJ',8,23,'hbonilla');
+
+
+/*
+-- Ilocalizado Telefonicamente - 8
+-- Numero Equivocado - 24
+NO CONOCE A TITULAR - NCT
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('NO CONOCE A TITULAR','NCT',8,24,'hbonilla');
+
+/*
+select * from tbl_resultadotercero
+-- TOMO MENSAJE
+NO BRINDO HORA PARA LOCALIZAR - NBH
+BRINDO TELEFONO o CORREO PARA LOCALIZAR AL TITULAR BTC ***
+BRINDO TELEFONO DE LOCALIZAR - BTL
+BRINDO EMAIL DE TITULAR - BET
+NO BRINDO TELEFONO, NI EMAIL PARA LOCALIZAR A TITULAR - NTE
+
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 4;
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 5;
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 8;
+*/
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(3,4,'NO BRINDO HORA PARA LOCALIZAR','NBH','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(4,4,'BRINDO TELEFONO o CORREO PARA LOCALIZAR AL TITULAR','BTC','hbonilla');
+
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(5,5,'NO BRINDO HORA PARA LOCALIZAR','NBH','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(6,5,'BRINDO TELEFONO o CORREO PARA LOCALIZAR AL TITULAR','BTC','hbonilla');
+
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(8,8,'NO BRINDO HORA PARA LOCALIZAR','NBH','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(9,8,'BRINDO TELEFONO o CORREO PARA LOCALIZAR AL TITULAR','BTC','hbonilla');
+
+/******************************************************************************
+*******************************************************************************/
+
+create table if not EXISTS tbl_cliente_prefijo (
+  "id" serial not null,
+  "id_cliente" serial references tbl_cliente(id_cliente) not null,
+  "id_salida" serial references tbl_prefijo_salida(id) not null,
+  primary key ("id")
+);
+
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,1);
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,2);
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,3);
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,4);
+
+/*
+******************************************************************************************************** 
+*/
+
+create table if not EXISTS tbl_central (
+  "id" serial not null,
+  "nombre_central" varchar(50),
+  "protocolo" varchar(10),
+   "ip_central" varchar(30),
+  "Directorio" varchar(30),
+  primary key ("id")
+ );
+
+INSERT INTO public.tbl_central(nombre_central, protocolo, ip_central, "Directorio") VALUES('PBX', 'http://', '190.106.65.237', '/PBXPortal/');
+
+
+--*************************************************************************************************
+create table if not EXISTS tbl_prefijo_salida (
+  "id" serial not null,
+  "id_central" serial references tbl_central(id) not null,
+  "prefijo" varchar(10),
+  "nombre" varchar(20),
+  "descripcion" varchar(60),
+  primary key ("id")
+ );
+
+
+INSERT INTO public.tbl_prefijo_salida
+(id_central,prefijo, nombre, descripcion)
+VALUES(1,'4', 'privado', 'Salida de la llamada por un número privado');
+
+
+INSERT INTO public.tbl_prefijo_salida
+(id_central,prefijo, nombre, descripcion)
+VALUES(1,'6', 'celular', 'Salida de la llamada por un número celular al azar');
+
+INSERT INTO public.tbl_prefijo_salida
+(id_central,prefijo, nombre, descripcion)
+VALUES(1,'8', 'telefonica', 'Salida de la llamada por un número de movistar telefonica');
+
+INSERT INTO public.tbl_prefijo_salida
+(id_central,prefijo, nombre, descripcion)
+VALUES(1,'9', 'claro', 'Salida de la llamada por un número de claro');
+
+--*************************************************************************************************
+
+create table if not EXISTS tbl_cliente_prefijo (
+  "id" serial not null,
+  "id_cliente" serial references tbl_cliente(id_cliente) not null,
+  "id_salida" serial references tbl_prefijo_salida(id) not null,
+  primary key ("id")
+);
+
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,1);
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,2);
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,3);
+
+insert into tbl_cliente_prefijo
+(id_cliente,id_salida)
+values(1,4);
+
+
+--*************************************************************************************************
+
+create table if not EXISTS tbl_url_llamada (
+  "id" serial not null,
+  "id_central" serial references tbl_central(id) not null,
+  "servicio" varchar(50),
+    "parametro" varchar(100),
+     "descripcion" varchar(50),
+  primary key ("id")
+);
+
+
+INSERT INTO public.tbl_url_llamada
+(id_central,servicio, parametro, descripcion)
+VALUES(1,'llamar.php?ext=', '&numero=', 'llamar');
+
+INSERT INTO public.tbl_url_llamada
+(id_central,servicio, parametro, descripcion)
+VALUES(1,'consultar.php?call_log_id=', '', 'consultar');
+
+INSERT INTO public.tbl_url_llamada
+(id_central,servicio, parametro, descripcion)
+VALUES(1,'llamar.php?ext=', '&escuchar=', 'escuchar');
+
+INSERT INTO public.tbl_url_llamada
+(id_central,servicio, parametro, descripcion)
+VALUES(1,'consultar.php?call_log_id=', '&bajar=1', 'descargar');
+
+
+--*************************************************************************************************
+create table if not EXISTS tbl_pagos_historial (
+  "id" serial not null,
+  "codigo_cartera" varchar(6) not null,
+  "numero_cuenta" varchar(20)  not null,
+  "fecha_pago" timestamp,
+  "codigo_gestor" varchar(20) ,
+  "tipo_pago" varchar(20),
+  "total_colones" decimal(18,6) default 0,
+    "total_dolares" decimal(18,6) default 0,
+     "usuario_ingreso" varchar(30) not null,
+ "fecha_ingreso" timestamp not null default current_timestamp,
+ "usuario_modifico" varchar(30) default '' ,
+ "fecha_modifico" timestamp default null ,
+    primary key ("id")
+); 
+
 /******************************************************************************
 ************************************** fin ************************************
 *******************************************************************************/
+
+
+
+
+
+ 

@@ -24,11 +24,9 @@ public interface GestionServiceRemote {
 
     public List<TblGestion> findByNombreCliente(TblGestion obj);
 
-    public List<TblGestion> findByDocumento(TblGestion obj);
+    public List<TblGestion> findByIdentificacion(TblGestion obj);
 
     public List<TblGestion> findByCodigoGestor(TblGestion obj);
-
-    public List<TblGestion> findByMoneda(TblGestion obj);
 
     public List<TblGestion> findByFechaGestion(TblGestion obj);
 
@@ -41,7 +39,9 @@ public interface GestionServiceRemote {
     public List<TblGestion> findByUsuariomodifico(TblGestion obj);
 
     public List<TblGestion> findByFechamodifico(TblGestion obj);
-
+    
+    public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj);
+    
     public void insert(TblGestion obj);
 
     public void update(TblGestion obj);

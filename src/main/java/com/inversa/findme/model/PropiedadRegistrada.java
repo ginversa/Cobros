@@ -6,6 +6,7 @@
 package com.inversa.findme.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,35 +19,45 @@ import javax.persistence.TemporalType;
  *
  * @author Z420WK
  */
-
 @Entity
-@Table(name="PropiedadRegistrada")
-public class PropiedadRegistrada implements Serializable{
-    
+@Table(name = "PropiedadRegistrada")
+public class PropiedadRegistrada implements Serializable {
+
     @Id
     private Integer id;
-    
-    @Column(name="cedula")
+
+    @Column(name = "cedula")
     private String cedula;
-    
-    @Column(name="provincia")
+
+    @Column(name = "provincia")
     private String provincia;
-    
-    @Column(name="canton")
+
+    @Column(name = "canton")
     private String canton;
-    
-    @Column(name="distrito")
+
+    @Column(name = "distrito")
     private String distrito;
-    
-    @Column(name="valor")
-    private String valor;
-    
-    @Column(name="pais")
+
+    @Column(name = "valor")
+    private BigDecimal valor;
+
+    @Column(name = "moneda")
+    private String moneda;
+
+    @Column(name = "pais")
     private String pais;
-    
-    @Column(name="fecha_del_dato")
+
+    @Column(name = "fecha_del_dato")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha_del_dato;
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }    
 
     public Integer getId() {
         return id;
@@ -88,11 +99,11 @@ public class PropiedadRegistrada implements Serializable{
         this.distrito = distrito;
     }
 
-    public String getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(String valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 
@@ -116,5 +127,5 @@ public class PropiedadRegistrada implements Serializable{
     public String toString() {
         return "PropiedadRegistrada{" + "id=" + id + ", cedula=" + cedula + ", provincia=" + provincia + ", canton=" + canton + ", distrito=" + distrito + ", valor=" + valor + ", pais=" + pais + ", fecha_del_dato=" + fecha_del_dato + '}';
     }
-    
+
 }

@@ -118,10 +118,12 @@ public class GestionController implements Serializable {
             // info de la gestion *******************
             this.gestion.setCodigoCartera(codigoCartera);
             this.gestion.setNombreCliente(this.deudor.getNombre());
-            this.gestion.setDocumento(documento);
+            this.gestion.setIdentificacion(documento);
             this.gestion.setCodigoGestor(codigoGestor);
+            /*
             this.gestion.setSaldo(this.deudor.getSaldo());
             this.gestion.setMoneda(null);
+            */
             this.gestion.setFechaGestion(this.fechaHoy.getTime());// fecha Hoy...
             this.gestion.setUsuarioingreso(this.usuario.getUsuario());
             this.gestion.setFechaingreso(this.fechaHoy.getTime());// fecha Hoy...

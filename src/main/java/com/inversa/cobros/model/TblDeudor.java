@@ -53,7 +53,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "TblDeudor.findByFechaIngreso", query = "SELECT t FROM TblDeudor t WHERE t.fechaIngreso = :fechaIngreso"),
     @NamedQuery(name = "TblDeudor.findByUsuarioModifico", query = "SELECT t FROM TblDeudor t WHERE t.usuarioModifico = :usuarioModifico"),
     @NamedQuery(name = "TblDeudor.findByFechaModifico", query = "SELECT t FROM TblDeudor t WHERE t.fechaModifico = :fechaModifico"),
-    @NamedQuery(name = "TblDeudor.findByGestorIfNotExistsGestion", query = "SELECT td FROM TblDeudor td WHERE NOT EXISTS (SELECT tg.documento FROM TblGestion tg INNER JOIN TblPromesa tp on tp.idGestion = tg.idGestion WHERE tg.codigoCartera = td.codigoCartera AND tg.codigoGestor = :codigoGestor AND tg.documento = td.documento) AND td.saldo > 0")
+    @NamedQuery(name = "TblDeudor.findByGestorIfNotExistsGestion", query = "SELECT td FROM TblDeudor td WHERE NOT EXISTS (SELECT tg.identificacion FROM TblGestion tg INNER JOIN TblPromesa tp on tp.idGestion = tg.idGestion WHERE tg.codigoCartera = td.codigoCartera AND tg.codigoGestor = :codigoGestor AND tg.identificacion = td.documento)")
 })
 public class TblDeudor implements Serializable {
 

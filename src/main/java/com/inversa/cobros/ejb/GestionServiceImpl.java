@@ -47,8 +47,8 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
     }
 
     @Override
-    public List<TblGestion> findByDocumento(TblGestion obj) {
-        return dao.findByDocumento(obj);
+    public List<TblGestion> findByIdentificacion(TblGestion obj) {
+        return dao.findByIdentificacion(obj);
     }
 
     @Override
@@ -56,10 +56,6 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
         return dao.findByCodigoGestor(obj);
     }
 
-    @Override
-    public List<TblGestion> findByMoneda(TblGestion obj) {
-        return dao.findByMoneda(obj);
-    }
 
     @Override
     public List<TblGestion> findByFechaGestion(TblGestion obj) {
@@ -122,6 +118,11 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
             contexto.setRollbackOnly();// hace rollback...
             t.printStackTrace(System.out);// imprime en consola el error
         }
+    }
+
+    @Override
+    public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj) {
+        return dao.findByCodigoCarteraANDIdentificacion(obj);
     }
 
 }

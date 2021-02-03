@@ -24,15 +24,15 @@
                     <p:growl id="messages" showDetail="true" />
                     <h5>Buscar archivo!</h5>
                     <h:form enctype="multipart/form-data">
-                        <p:fileUpload value="#{carteraController.file}" mode="simple" skinSimple="true"/>
+                        <p:fileUpload value="#{carteraFileController.file}" mode="simple" skinSimple="true"/>
                         <br />
-                        <p:commandButton value="Submit" ajax="false" action="#{carteraController.upload()}" disabled="false" />
+                        <p:commandButton value="Submit" ajax="false" action="#{carteraFileController.upload()}" disabled="false" />
                     </h:form>
                 </div>
                 <div class="card">
                     <h4>Cartera</h4>
                     <h:form id="form">
-                        <p:dataTable widgetVar="customersDT2" id="cartera" var="cartera" value="#{carteraController.cartera}"
+                        <p:dataTable widgetVar="customersDT2" id="cartera" var="cartera" value="#{carteraFileController.cartera}"
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines">

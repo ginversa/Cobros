@@ -39,10 +39,17 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblGestion.findByIdGestion", query = "SELECT t FROM TblGestion t WHERE t.idGestion = :idGestion"),
     @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblGestion.findByNombreCliente", query = "SELECT t FROM TblGestion t WHERE t.nombreCliente = :nombreCliente"),
-    @NamedQuery(name = "TblGestion.findByDocumento", query = "SELECT t FROM TblGestion t WHERE t.documento = :documento"),
-    @NamedQuery(name = "TblGestion.findByCodigoGestor", query = "SELECT t FROM TblGestion t WHERE t.codigoGestor = :codigoGestor order by t.fechaingreso desc"),
-    @NamedQuery(name = "TblGestion.findBySaldo", query = "SELECT t FROM TblGestion t WHERE t.saldo = :saldo"),
-    @NamedQuery(name = "TblGestion.findByMoneda", query = "SELECT t FROM TblGestion t WHERE t.moneda = :moneda"),
+    @NamedQuery(name = "TblGestion.findByIdentificacion", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion"),
+
+    @NamedQuery(name = "TblGestion.findByCodigoCarteraANDIdentificacion", query = "SELECT t FROM TblGestion t\n"
+            + " WHERE t.codigoCartera = :codigoCartera\n"
+            + "   and t.identificacion = :identificacion\n"
+            + "   and t.fechaingreso = (select max(gestion.fechaingreso)\n"
+            + "						    from TblGestion gestion\n"
+            + "						   where gestion.codigoCartera = t.codigoCartera\n"
+            + "                             and gestion.identificacion = t.identificacion)"),
+
+    @NamedQuery(name = "TblGestion.findByCodigoGestor", query = "SELECT t FROM TblGestion t WHERE t.codigoGestor = :codigoGestor order by t.fechaingreso desc"),    
     @NamedQuery(name = "TblGestion.findByFechaGestion", query = "SELECT t FROM TblGestion t WHERE t.fechaGestion = :fechaGestion order by t.fechaingreso desc"),
     @NamedQuery(name = "TblGestion.findByDescripcion", query = "SELECT t FROM TblGestion t WHERE t.descripcion = :descripcion"),
     @NamedQuery(name = "TblGestion.findByEstado", query = "SELECT t FROM TblGestion t WHERE t.estado = :estado"),
@@ -61,21 +68,24 @@ public class TblGestion implements Serializable {
     @Size(max = 5)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
+    
+    @Column(name = "nombre_cartera")
+    private String nombre_cartera;
+    
+    @Column(name = "operacion")
+    private String operacion;    
+    
     @Size(max = 50)
     @Column(name = "nombre_cliente")
     private String nombreCliente;
     @Size(max = 50)
-    @Column(name = "documento")
-    private String documento;
+    @Column(name = "identificacion")
+    private String identificacion;
+    
     @Size(max = 5)
     @Column(name = "codigo_gestor")
     private String codigoGestor;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "saldo")
-    private BigDecimal saldo;
-    @Size(max = 3)
-    @Column(name = "moneda")
-    private String moneda;
+
     @Column(name = "fecha_gestion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaGestion;
@@ -133,36 +143,12 @@ public class TblGestion implements Serializable {
         this.nombreCliente = nombreCliente;
     }
 
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
-
     public String getCodigoGestor() {
         return codigoGestor;
     }
 
     public void setCodigoGestor(String codigoGestor) {
         this.codigoGestor = codigoGestor;
-    }
-
-    public BigDecimal getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(BigDecimal saldo) {
-        this.saldo = saldo;
-    }
-
-    public String getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
     }
 
     public Date getFechaGestion() {
@@ -239,6 +225,31 @@ public class TblGestion implements Serializable {
         this.tblPromesaList = tblPromesaList;
     }
 
+    public String getNombre_cartera() {
+        return nombre_cartera;
+    }
+
+    public void setNombre_cartera(String nombre_cartera) {
+        this.nombre_cartera = nombre_cartera;
+    }
+
+    public String getOperacion() {
+        return operacion;
+    }
+
+    public void setOperacion(String operacion) {
+        this.operacion = operacion;
+    }
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
+    }
+    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -263,5 +274,5 @@ public class TblGestion implements Serializable {
     public String toString() {
         return "com.inversa.cobros.model.TblGestion[ idGestion=" + idGestion + " ]";
     }
-    
+
 }

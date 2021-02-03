@@ -6,6 +6,7 @@
 package com.inversa.findme.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +34,10 @@ public class Vehiculo implements Serializable{
     private String placa;
     
     @Column(name="ano_fabricacion")
-    private String ano_fabricacion;
+    private Integer ano_fabricacion;
+    
+    @Column(name="marca")
+    private String marca;
     
     @Column(name="estilo")
     private String estilo;
@@ -42,13 +46,16 @@ public class Vehiculo implements Serializable{
     private String tipo;
     
     @Column(name="valor_fiscal")
-    private String valor_fiscal;
+    private BigDecimal valor_fiscal;
+    
+    @Column(name="moneda")
+    private String moneda;
     
     @Column(name="pais")
     private String pais;
     
     @Column(name="antiguedad")
-    private String antiguedad;
+    private Integer antiguedad;
     
     @Column(name="fecha_del_dato")
     @Temporal(TemporalType.TIMESTAMP)
@@ -78,11 +85,11 @@ public class Vehiculo implements Serializable{
         this.placa = placa;
     }
 
-    public String getAno_fabricacion() {
+    public Integer getAno_fabricacion() {
         return ano_fabricacion;
     }
 
-    public void setAno_fabricacion(String ano_fabricacion) {
+    public void setAno_fabricacion(Integer ano_fabricacion) {
         this.ano_fabricacion = ano_fabricacion;
     }
 
@@ -102,11 +109,11 @@ public class Vehiculo implements Serializable{
         this.tipo = tipo;
     }
 
-    public String getValor_fiscal() {
+    public BigDecimal getValor_fiscal() {
         return valor_fiscal;
     }
 
-    public void setValor_fiscal(String valor_fiscal) {
+    public void setValor_fiscal(BigDecimal valor_fiscal) {
         this.valor_fiscal = valor_fiscal;
     }
 
@@ -118,11 +125,11 @@ public class Vehiculo implements Serializable{
         this.pais = pais;
     }
 
-    public String getAntiguedad() {
+    public Integer getAntiguedad() {
         return antiguedad;
     }
 
-    public void setAntiguedad(String antiguedad) {
+    public void setAntiguedad(Integer antiguedad) {
         this.antiguedad = antiguedad;
     }
 
@@ -133,6 +140,23 @@ public class Vehiculo implements Serializable{
     public void setFecha_del_dato(Date fecha_del_dato) {
         this.fecha_del_dato = fecha_del_dato;
     }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
+    
 
     @Override
     public String toString() {

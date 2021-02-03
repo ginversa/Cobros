@@ -60,17 +60,9 @@ public class GestionDaoImpl implements GestionDao {
     }
 
     @Override
-    public List<TblGestion> findByDocumento(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByDocumento");
-        query.setParameter("documento", obj.getDocumento());
-        List<TblGestion> results = query.getResultList();
-        return results;
-    }
-
-    @Override
-    public List<TblGestion> findByMoneda(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByMoneda");
-        query.setParameter("moneda", obj.getMoneda());
+    public List<TblGestion> findByIdentificacion(TblGestion obj) {
+        Query query = em.createNamedQuery("TblGestion.findByIdentificacion");
+        query.setParameter("identificacion", obj.getIdentificacion());
         List<TblGestion> results = query.getResultList();
         return results;
     }
@@ -85,7 +77,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByEstado(TblGestion obj) {
-         Query query = em.createNamedQuery("TblGestion.findByEstado");
+        Query query = em.createNamedQuery("TblGestion.findByEstado");
         query.setParameter("estado", obj.getEstado());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -128,8 +120,8 @@ public class GestionDaoImpl implements GestionDao {
         em.persist(obj);
         //em.flush();
         //em.refresh(obj);
-        System.out.println("Gestion ID: "+obj.getIdGestion());
-        
+        System.out.println("Gestion ID: " + obj.getIdGestion());
+
     }
 
     @Override
@@ -137,13 +129,27 @@ public class GestionDaoImpl implements GestionDao {
         em.merge(obj);
         //em.flush();
         //em.refresh(obj);
-        System.out.println("Gestion ID: "+obj.getIdGestion());
+        System.out.println("Gestion ID: " + obj.getIdGestion());
     }
 
     @Override
     public void delete(TblGestion obj) {
         em.merge(obj);
         em.remove(obj);
+    }
+
+    @Override
+    public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj) {
+        Query query = em.createNamedQuery("TblGestion.findByCodigoCarteraANDIdentificacion");
+        query.setParameter("codigoCartera", obj.getCodigoCartera());
+        query.setParameter("identificacion", obj.getIdentificacion());
+        List<TblGestion> found = query.getResultList();
+
+        if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {
+            return found.get(0);
+        }
     }
 
 }

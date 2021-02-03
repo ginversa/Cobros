@@ -6,6 +6,7 @@
 package com.inversa.findme.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -33,22 +34,25 @@ public class HistorialLaboral implements Serializable{
     private String nombre;
     
     @Column(name="ultimo_salario")
-    private String ultimo_salario;
+    private BigDecimal ultimo_salario;
     
     @Column(name="ultimo_periodo")
     private String ultimo_periodo;
     
     @Column(name="meses")
-    private String meses;
+    private Integer meses;
     
     @Column(name="promedio")
-    private String promedio;
+    private BigDecimal promedio;
     
     @Column(name="tipo_salario")
     private String tipo_salario;
     
     @Column(name="estatus")
     private String estatus;
+    
+    @Column(name="moneda")
+    private String moneda;
 
     public Integer getId() {
         return id;
@@ -82,11 +86,11 @@ public class HistorialLaboral implements Serializable{
         this.nombre = nombre;
     }
 
-    public String getUltimo_salario() {
+    public BigDecimal getUltimo_salario() {
         return ultimo_salario;
     }
 
-    public void setUltimo_salario(String ultimo_salario) {
+    public void setUltimo_salario(BigDecimal ultimo_salario) {
         this.ultimo_salario = ultimo_salario;
     }
 
@@ -98,19 +102,19 @@ public class HistorialLaboral implements Serializable{
         this.ultimo_periodo = ultimo_periodo;
     }
 
-    public String getMeses() {
+    public Integer getMeses() {
         return meses;
     }
 
-    public void setMeses(String meses) {
+    public void setMeses(Integer meses) {
         this.meses = meses;
     }
 
-    public String getPromedio() {
+    public BigDecimal getPromedio() {
         return promedio;
     }
 
-    public void setPromedio(String promedio) {
+    public void setPromedio(BigDecimal promedio) {
         this.promedio = promedio;
     }
 
@@ -129,6 +133,15 @@ public class HistorialLaboral implements Serializable{
     public void setEstatus(String estatus) {
         this.estatus = estatus;
     }
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }   
+    
 
     @Override
     public String toString() {

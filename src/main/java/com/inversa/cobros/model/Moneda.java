@@ -7,19 +7,24 @@ package com.inversa.cobros.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -67,6 +72,10 @@ public class Moneda implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMonedaColones", fetch = FetchType.EAGER)
+    private List<TblCartera> tblCarteraList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMonedaDolares", fetch = FetchType.EAGER)
+    private List<TblCartera> tblCarteraList1;
 
     public Moneda() {
     }
@@ -137,6 +146,24 @@ public class Moneda implements Serializable {
 
     public void setFechamodifico(Date fechamodifico) {
         this.fechamodifico = fechamodifico;
+    }
+
+    @XmlTransient
+    public List<TblCartera> getTblCarteraList() {
+        return tblCarteraList;
+    }
+
+    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
+        this.tblCarteraList = tblCarteraList;
+    }
+
+    @XmlTransient
+    public List<TblCartera> getTblCarteraList1() {
+        return tblCarteraList1;
+    }
+
+    public void setTblCarteraList1(List<TblCartera> tblCarteraList1) {
+        this.tblCarteraList1 = tblCarteraList1;
     }
 
     @Override

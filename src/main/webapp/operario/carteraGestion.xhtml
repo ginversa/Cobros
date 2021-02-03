@@ -33,52 +33,73 @@
                                     <p:panelGrid id="pgDeudor" columns="5" layout="grid">
                                         <p:panelGrid columns="2" >
                                             <p:outputLabel for="txtCartera" value="Cartera" />
-                                            <p:inputText id="txtCartera" value="#{gestionController.gestion.codigoCartera}" readonly="true" />
+                                            <h:outputText id="txtCartera" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
 
                                             <p:outputLabel for="txtDocumento" value="Identificación" />
-                                            <p:inputText id="txtDocumento" value="#{gestionController.gestion.identificacion}" readonly="true" />                                           
+                                            <h:outputText id="txtDocumento" value="#{carteraGestionController.gestion.identificacion}" />
 
                                             <p:outputLabel for="txtNombre" value="Nombre" />
-                                            <p:inputText id="txtNombre" value="#{gestionController.gestion.nombreCliente}" readonly="true" />
+                                            <h:outputText id="txtNombre" value="#{carteraGestionController.gestion.nombreCliente}" />
 
                                             <p:outputLabel for="txtOperacion" value="Operación" />
-                                            <p:inputText id="txtOperacion" value="#{gestionController.deudor.clienteOperacion}" readonly="true" />
+                                            <h:outputText id="txtOperacion" value="#{carteraGestionController.gestion.operacion}" />
+                                        </p:panelGrid>
+
+                                        <p:panelGrid columns="2">
+                                            <p:outputLabel for="txtSaldoColones" value="Saldo Colones" />
+                                            <h:outputText id="txtSaldoColones" value="#{carteraGestionController.selectedCartera.saldoColones}" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
+                                            <p:outputLabel for="txtInteresesColones" value="Intereses Colones" />
+                                            <h:outputText id="txtInteresesColones" value="#{carteraGestionController.selectedCartera.interesesColones}" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
+                                            <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
+                                            <p:selectOneMenu id="txtLeyUsura" disabled="true" >
+                                                <f:selectItem itemLabel="--- Si ---" itemValue="1" />
+                                                <f:selectItem itemLabel="--- No ---" itemValue="0" />
+                                            </p:selectOneMenu>                                            
+                                            <p:outputLabel for="txtSaldo" value="Saldo a cobrar" />
+                                            <p:inputNumber id="txtSaldo" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </p:inputNumber>
                                         </p:panelGrid>
 
                                         <p:panelGrid columns="2" >
-                                            <p:outputLabel for="txtSaldoColones" value="Saldo Colones" />
-                                            <p:inputText id="txtSaldoColones" value="#{gestionController.deudor.saldo}" readonly="true" />                                            
-
-                                            <p:outputLabel for="txtInteresesColones" value="Intereses Colones" />
-                                            <p:inputText id="txtInteresesColones" value="0" readonly="true" />
-
                                             <p:outputLabel for="txtSaldoDolares" value="Saldo Dolares" />
-                                            <p:inputText id="txtSaldoDolares" value="0" readonly="true" />
+                                            <h:outputText id="txtSaldoDolares" value="#{carteraGestionController.selectedCartera.saldoDolares}" >
+                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
 
                                             <p:outputLabel for="txtInteresesDolares" value="Intereses Dolares" />
-                                            <p:inputText id="txtInteresesDolares" value="0" readonly="true" />
-                                        </p:panelGrid>
+                                            <h:outputText id="txtInteresesDolares" value="#{carteraGestionController.selectedCartera.interesesDolares}" >
+                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
 
-                                        <p:panelGrid columns="2" >
                                             <p:outputLabel for="txtFechaUltimoPago" value="Fecha Último Pago" />
                                             <p:calendar id="txtFechaUltimoPago" pattern="dd/MM/yyyy" readonly="true" />
 
                                             <p:outputLabel for="txtMontoUltimoPago" value="Monto Último Pago" />
-                                            <p:inputText id="txtMontoUltimoPago" value="0" readonly="true" />
-
-                                            <p:outputLabel for="txtFechaUltimoPromesa" value="Fecha Último Promesa" />
-                                            <p:calendar id="txtFechaUltimoPromesa" pattern="dd/MM/yyyy" readonly="true" />
-
-                                            <p:outputLabel for="txtMontoUltimoPromesa" value="Monto Último Promesa" />
-                                            <p:inputText id="txtMontoUltimoPromesa" value="0" readonly="true" />                                            
+                                            <h:outputText id="txtMontoUltimoPago" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
                                         </p:panelGrid>
 
                                         <p:panelGrid columns="2" >
+                                            <p:outputLabel for="txtFechaUltimoPromesa" value="Fecha Último Promesa" />
+                                            <p:calendar id="txtFechaUltimoPromesa" pattern="dd/MM/yyyy" value="#{carteraGestionController.selectedCartera.fechaUltimaPromesa}" readonly="true" />
+
+                                            <p:outputLabel for="txtMontoUltimoPromesa" value="Monto Último Promesa" />
+                                            <h:outputText id="txtMontoUltimoPromesa" value="#{carteraGestionController.selectedCartera.montoUltimaPromesa}" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
                                             <p:outputLabel for="txtRazonMora" value="Última Razón Mora" />
-                                            <p:inputText id="txtRazonMora" value="razon de mora" readonly="true" />
+                                            <h:outputText id="txtRazonMora" value="#{carteraGestionController.selectedCartera.razonMora}" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
 
                                             <p:outputLabel for="txtdescripcion" value="Observación" />
-                                            <p:inputTextarea id="txtdescripcion" value="#{gestionController.gestion.descripcion}" />                                        
+                                            <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" />                                        
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
 
@@ -100,7 +121,7 @@
                                         </div>
 
                                         <!-- paginator="true" paginatorPosition="top" rows="5" -->
-                                        <p:dataTable id="tblTelefono" value="#{gestionController.llamadaList}" var="llamada"
+                                        <p:dataTable id="tblTelefono" value="#{carteraGestionController.llamadaList}" var="llamada"
                                                      editMode="cell" editable="true" widgetVar="tblTelefono"                                                     
                                                      reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
@@ -202,41 +223,57 @@
                                 </p:panelGrid>
 
                                 <p:fieldset legend="Operaciones">
-                                    <p:dataTable id="tblOperaciones" var="deudor" value="#{gestionController.deudorList}"                                                 
+                                    <p:dataTable id="tblOperaciones" value="#{carteraGestionController.carteraList}" var="cartera"
+                                                 selectionMode="single" selection="#{carteraGestionController.selectedCartera}" rowKey="#{cartera.id}"
                                                  widgetVar="tblOperaciones"
                                                  reflow="true"
                                                  styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                                  style="margin-bottom:20px"
                                                  emptyMessage="No se encontraron registros." >
 
-                                        <p:column headerText="Operación" filterBy="#{deudor.clienteOperacion}" filterMatchMode="contains" sortBy="#{deudor.clienteOperacion}" >
-                                            <h:outputText value="#{deudor.clienteOperacion}" />                                
+                                        <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
+                                        <p:ajax event="rowUnselect" listener="#{carteraGestionController.onRowUnselect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
+
+                                        <p:column headerText="Operación" filterBy="#{cartera.numeroCuenta}" filterMatchMode="contains" sortBy="#{cartera.numeroCuenta}" >
+                                            <h:outputText value="#{cartera.numeroCuenta}" />                                
                                         </p:column>
-                                        <p:column headerText="Saldo" filterBy="#{deudor.saldo}" sortBy="#{deudor.saldo}" >
-                                            <h:outputText value="#{deudor.saldo}" />
-                                        </p:column>
-                                        <!-- 
-                                        <p:column headerText="Tipificacion" filterBy="#{deudor.tipificacion}" sortBy="#{deudor.tipificacion}" >
-                                            <h:outputText value="#{deudor.tipificacion}" />
-                                        </p:column>
-                                        -->
-                                        <p:column headerText="Sub-Tipificación" filterBy="#{deudor.subtipificacion}" sortBy="#{deudor.subtipificacion}" >
-                                            <h:outputText value="#{deudor.subtipificacion}" />
-                                        </p:column>
-                                        <p:column headerText="Última Gestión" filterBy="#{deudor.fecUltGest}" sortBy="#{deudor.fecUltGest}" >
-                                            <h:outputText value="#{deudor.fecUltGest}" >
-                                                <f:convertDateTime pattern="dd/mm/yyyy" />
+                                        <p:column headerText="Saldo Colones" filterBy="#{cartera.saldoColones}" sortBy="#{cartera.saldoColones}" >
+                                            <h:outputText value="#{cartera.saldoColones}">
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
                                         </p:column>
-                                        <p:column headerText="Última Promesa" filterBy="#{deudor.fecUltProm}" sortBy="#{deudor.fecUltProm}" >
-                                            <h:outputText value="#{deudor.fecUltProm}" >
-                                                <f:convertDateTime pattern="dd/mm/yyyy" />
+                                        <p:column headerText="Intereses Colones" filterBy="#{cartera.interesesColones}" sortBy="#{cartera.interesesColones}" >
+                                            <h:outputText value="#{cartera.interesesColones}">
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
                                         </p:column>
-                                        <p:column headerText="Última Pago" filterBy="#{deudor.fecUltPago}" sortBy="#{deudor.fecUltPago}" >
-                                            <h:outputText value="#{deudor.fecUltPago}" >
-                                                <f:convertDateTime pattern="dd/mm/yyyy" />
+                                        <p:column headerText="Saldo Dolares" filterBy="#{cartera.saldoDolares}" sortBy="#{cartera.saldoDolares}" >
+                                            <h:outputText value="#{cartera.saldoDolares}">
+                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Intereses Dolares" filterBy="#{cartera.interesesDolares}" sortBy="#{cartera.interesesDolares}" >
+                                            <h:outputText value="#{cartera.interesesDolares}">
+                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Última Gestión" filterBy="#{cartera.fechaUltimaGestion}" sortBy="#{cartera.fechaUltimaGestion}" >
+                                            <h:outputText value="#{cartera.fechaUltimaGestion}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Última Promesa" filterBy="#{cartera.fechaUltimaPromesa}" sortBy="#{cartera.fechaUltimaPromesa}" >
+                                            <h:outputText value="#{cartera.fechaUltimaPromesa}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Última Promesa" filterBy="#{cartera.montoUltimaPromesa}" sortBy="#{cartera.montoUltimaPromesa}" >
+                                            <h:outputText value="#{cartera.montoUltimaPromesa}" >                                            
+                                                <f:convertNumber type="currency" currencySymbol="#{cartera.idMonedaDolares.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Razón Mora" filterBy="#{cartera.razonMora}" sortBy="#{cartera.razonMora}" >
+                                            <h:outputText value="#{cartera.razonMora}" />
                                         </p:column>                                        
                                     </p:dataTable>
                                 </p:fieldset>

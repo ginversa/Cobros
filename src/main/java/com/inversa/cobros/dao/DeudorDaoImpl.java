@@ -77,7 +77,7 @@ public class DeudorDaoImpl implements DeudorDao {
                 + "                    from tbl_gestion tg inner join tbl_promesa tp on tp.id_gestion = tg.id_gestion\n"
                 + "                    where tg.codigo_cartera = td.codigo_cartera \n"
                 + "                      and tg.codigo_gestor = ?1\n"
-                + "                      and tg.documento = td.documento)\n"
+                + "                      and tg.identificacion = td.documento)\n"
                 + "    and td.saldo > 0\n"
                 + "    and td.codigo_gestor = ?2\n"
                 + "    and date_trunc('day', td.fechaingreso) = to_date(?3,'YYYY-MM-DD')";

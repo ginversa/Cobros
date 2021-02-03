@@ -66,7 +66,6 @@ public class TblPersona implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "tblPersona", fetch = FetchType.EAGER)
     private TblUsuario tblUsuario;
 

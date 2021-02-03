@@ -16,7 +16,6 @@ import javax.persistence.TypedQuery;
  *
  * @author Z420WK
  */
-
 @Stateless
 public class ContactoDaoImpl implements ContactoDao {
 
@@ -47,8 +46,13 @@ public class ContactoDaoImpl implements ContactoDao {
     public TblContacto findByCedula(TblContacto obj) {
         TypedQuery<TblContacto> query = em.createNamedQuery("TblContacto.findByCedula", TblContacto.class);
         query.setParameter("cedula", obj.getCedula());
-        TblContacto results = query.getSingleResult();
-        return results;
+        List<TblContacto> found = query.getResultList();
+        if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {
+            return found.get(0);
+        }
+        //return results;
     }
 
     @Override
@@ -61,7 +65,7 @@ public class ContactoDaoImpl implements ContactoDao {
 
     @Override
     public List<TblContacto> findByFechaingreso(TblContacto obj) {
-         TypedQuery<TblContacto> query = em.createNamedQuery("TblContacto.findByFechaingreso", TblContacto.class);
+        TypedQuery<TblContacto> query = em.createNamedQuery("TblContacto.findByFechaingreso", TblContacto.class);
         query.setParameter("fechaingreso", obj.getFechaingreso());
         List<TblContacto> results = query.getResultList();
         return results;

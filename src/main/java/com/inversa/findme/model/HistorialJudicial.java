@@ -45,7 +45,8 @@ public class HistorialJudicial implements Serializable{
     private String tipo_parte;
     
     @Column(name="fecha_caso")
-    private String fecha_caso;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecha_caso;
     
     @Column(name="estado")
     private String estado;
@@ -113,11 +114,11 @@ public class HistorialJudicial implements Serializable{
         this.tipo_parte = tipo_parte;
     }
 
-    public String getFecha_caso() {
+    public Date getFecha_caso() {
         return fecha_caso;
     }
 
-    public void setFecha_caso(String fecha_caso) {
+    public void setFecha_caso(Date fecha_caso) {
         this.fecha_caso = fecha_caso;
     }
 

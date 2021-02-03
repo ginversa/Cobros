@@ -46,7 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblUsuario.findByUsuarioingreso", query = "SELECT t FROM TblUsuario t WHERE t.usuarioingreso = :usuarioingreso"),
     @NamedQuery(name = "TblUsuario.findByFechaingreso", query = "SELECT t FROM TblUsuario t WHERE t.fechaingreso = :fechaingreso"),
     @NamedQuery(name = "TblUsuario.findByUsuariomodifico", query = "SELECT t FROM TblUsuario t WHERE t.usuariomodifico = :usuariomodifico"),
-    @NamedQuery(name = "TblUsuario.findByFechamodifico", query = "SELECT t FROM TblUsuario t WHERE t.fechamodifico = :fechamodifico")})
+    @NamedQuery(name = "TblUsuario.findByFechamodifico", query = "SELECT t FROM TblUsuario t WHERE t.fechamodifico = :fechamodifico"),
+    @NamedQuery(name = "TblUsuario.findByExtEnsion", query = "SELECT t FROM TblUsuario t WHERE t.extEnsion = :extEnsion")})
 public class TblUsuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -79,6 +80,9 @@ public class TblUsuario implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
+    @Size(max = 5)
+    @Column(name = "ext_ension")
+    private String extEnsion;
     @JoinColumn(name = "id_persona", referencedColumnName = "id_persona", insertable = false, updatable = false)
     @OneToOne(optional = false, fetch = FetchType.EAGER)
     private TblPersona tblPersona;
@@ -170,6 +174,14 @@ public class TblUsuario implements Serializable {
 
     public void setFechamodifico(Date fechamodifico) {
         this.fechamodifico = fechamodifico;
+    }
+
+    public String getExtEnsion() {
+        return extEnsion;
+    }
+
+    public void setExtEnsion(String extEnsion) {
+        this.extEnsion = extEnsion;
     }
 
     public TblPersona getTblPersona() {
