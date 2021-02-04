@@ -45,12 +45,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Moneda.findByFechamodifico", query = "SELECT m FROM Moneda m WHERE m.fechamodifico = :fechamodifico")})
 public class Moneda implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_moneda")
-    private Integer idMoneda;
     @Size(max = 3)
     @Column(name = "codigo")
     private String codigo;
@@ -63,12 +57,21 @@ public class Moneda implements Serializable {
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    @Column(name = "fechaingreso")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaingreso;
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMoneda", fetch = FetchType.EAGER)
+    private List<TblGestionsaldo> tblGestionsaldoList;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id_moneda")
+    private Integer idMoneda;
+    @Column(name = "fechaingreso")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaingreso;
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
@@ -92,37 +95,6 @@ public class Moneda implements Serializable {
         this.idMoneda = idMoneda;
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public String getSimbolo() {
-        return simbolo;
-    }
-
-    public void setSimbolo(String simbolo) {
-        this.simbolo = simbolo;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getUsuarioingreso() {
-        return usuarioingreso;
-    }
-
-    public void setUsuarioingreso(String usuarioingreso) {
-        this.usuarioingreso = usuarioingreso;
-    }
 
     public Date getFechaingreso() {
         return fechaingreso;
@@ -132,13 +104,6 @@ public class Moneda implements Serializable {
         this.fechaingreso = fechaingreso;
     }
 
-    public String getUsuariomodifico() {
-        return usuariomodifico;
-    }
-
-    public void setUsuariomodifico(String usuariomodifico) {
-        this.usuariomodifico = usuariomodifico;
-    }
 
     public Date getFechamodifico() {
         return fechamodifico;
@@ -189,6 +154,55 @@ public class Moneda implements Serializable {
     @Override
     public String toString() {
         return "com.inversa.cobros.model.Moneda[ idMoneda=" + idMoneda + " ]";
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getSimbolo() {
+        return simbolo;
+    }
+
+    public void setSimbolo(String simbolo) {
+        this.simbolo = simbolo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getUsuarioingreso() {
+        return usuarioingreso;
+    }
+
+    public void setUsuarioingreso(String usuarioingreso) {
+        this.usuarioingreso = usuarioingreso;
+    }
+
+    public String getUsuariomodifico() {
+        return usuariomodifico;
+    }
+
+    public void setUsuariomodifico(String usuariomodifico) {
+        this.usuariomodifico = usuariomodifico;
+    }
+
+    @XmlTransient
+    public List<TblGestionsaldo> getTblGestionsaldoList() {
+        return tblGestionsaldoList;
+    }
+
+    public void setTblGestionsaldoList(List<TblGestionsaldo> tblGestionsaldoList) {
+        this.tblGestionsaldoList = tblGestionsaldoList;
     }
     
 }

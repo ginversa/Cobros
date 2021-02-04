@@ -41,7 +41,7 @@ public class TipificacionController implements Serializable {
     private boolean isDisabledPromesa;
 
     @Inject
-    private GestionController gestionController;
+    private CarteraGestionController carteraGestionController;
 
     @PostConstruct
     public void init() {
@@ -124,9 +124,9 @@ public class TipificacionController implements Serializable {
                 this.setIsDisabledPromesa(true);
             }
 
-            this.gestionController.setSubtipificacionNullonLlamada(selectedLlamada);
-            this.gestionController.setResultadoGestionNullonLlamada(selectedLlamada);
-            this.gestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+            this.carteraGestionController.setSubtipificacionNullonLlamada(selectedLlamada);
+            this.carteraGestionController.setResultadoGestionNullonLlamada(selectedLlamada);
+            this.carteraGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
         }
 
     }
@@ -145,7 +145,7 @@ public class TipificacionController implements Serializable {
                 this.resultadoterceroList = new ArrayList<TblResultadotercero>();
             }
             
-            this.gestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+            this.carteraGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
         }
     }
 

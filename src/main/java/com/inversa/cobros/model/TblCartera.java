@@ -148,6 +148,9 @@ public class TblCartera implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private TblCliente idCliente;
     
+    @Column(name = "leyusura")
+    private String leyUsura;
+    
     /* datos a buscar */
     @Transient    
     private Date fechaUltimaGestion;
@@ -433,6 +436,13 @@ public class TblCartera implements Serializable {
     public void setRazonMora(String razonMora) {
         this.razonMora = razonMora;
     }
-    
+
+    public String getLeyUsura() {
+        return leyUsura;
+    }
+
+    public void setLeyUsura(String leyUsura) {
+        this.leyUsura = leyUsura;
+    }
     
 }

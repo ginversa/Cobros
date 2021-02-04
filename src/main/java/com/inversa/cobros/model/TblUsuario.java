@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author Z420WK
  */
-@Entity
+    @Entity
 @Table(name = "tbl_usuario")
 @XmlRootElement
 @NamedQueries({

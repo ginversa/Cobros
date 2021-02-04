@@ -45,12 +45,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblCliente.findByFechamodifico", query = "SELECT t FROM TblCliente t WHERE t.fechamodifico = :fechamodifico")})
 public class TblCliente implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_cliente")
-    private Integer idCliente;
     @Size(max = 50)
     @Column(name = "nombre")
     private String nombre;
@@ -63,12 +57,19 @@ public class TblCliente implements Serializable {
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    @Column(name = "fechaingreso")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaingreso;
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id_cliente")
+    private Integer idCliente;
+    @Column(name = "fechaingreso")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaingreso;
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
@@ -96,37 +97,6 @@ public class TblCliente implements Serializable {
         this.idCliente = idCliente;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getUsuarioingreso() {
-        return usuarioingreso;
-    }
-
-    public void setUsuarioingreso(String usuarioingreso) {
-        this.usuarioingreso = usuarioingreso;
-    }
 
     public Date getFechaingreso() {
         return fechaingreso;
@@ -136,13 +106,6 @@ public class TblCliente implements Serializable {
         this.fechaingreso = fechaingreso;
     }
 
-    public String getUsuariomodifico() {
-        return usuariomodifico;
-    }
-
-    public void setUsuariomodifico(String usuariomodifico) {
-        this.usuariomodifico = usuariomodifico;
-    }
 
     public Date getFechamodifico() {
         return fechamodifico;
@@ -211,6 +174,46 @@ public class TblCliente implements Serializable {
     @Override
     public String toString() {
         return "com.inversa.cobros.model.TblCliente[ idCliente=" + idCliente + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getUsuarioingreso() {
+        return usuarioingreso;
+    }
+
+    public void setUsuarioingreso(String usuarioingreso) {
+        this.usuarioingreso = usuarioingreso;
+    }
+
+    public String getUsuariomodifico() {
+        return usuariomodifico;
+    }
+
+    public void setUsuariomodifico(String usuariomodifico) {
+        this.usuariomodifico = usuariomodifico;
     }
     
 }

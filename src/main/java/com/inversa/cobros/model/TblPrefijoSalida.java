@@ -15,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -38,12 +40,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblPrefijoSalida.findByDescripcion", query = "SELECT t FROM TblPrefijoSalida t WHERE t.descripcion = :descripcion")})
 public class TblPrefijoSalida implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Size(max = 10)
     @Column(name = "prefijo")
     private String prefijo;
@@ -53,6 +49,16 @@ public class TblPrefijoSalida implements Serializable {
     @Size(max = 60)
     @Column(name = "descripcion")
     private String descripcion;
+    @JoinColumn(name = "id_central", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private TblCentral idCentral;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSalida", fetch = FetchType.EAGER)
     private List<TblClientePrefijo> tblClientePrefijoList;
 
@@ -71,29 +77,6 @@ public class TblPrefijoSalida implements Serializable {
         this.id = id;
     }
 
-    public String getPrefijo() {
-        return prefijo;
-    }
-
-    public void setPrefijo(String prefijo) {
-        this.prefijo = prefijo;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 
     @XmlTransient
     public List<TblClientePrefijo> getTblClientePrefijoList() {
@@ -127,6 +110,38 @@ public class TblPrefijoSalida implements Serializable {
     @Override
     public String toString() {
         return "com.inversa.cobros.model.TblPrefijoSalida[ id=" + id + " ]";
+    }
+
+    public String getPrefijo() {
+        return prefijo;
+    }
+
+    public void setPrefijo(String prefijo) {
+        this.prefijo = prefijo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public TblCentral getIdCentral() {
+        return idCentral;
+    }
+
+    public void setIdCentral(TblCentral idCentral) {
+        this.idCentral = idCentral;
     }
     
 }
