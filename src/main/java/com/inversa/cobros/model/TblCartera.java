@@ -58,7 +58,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TblCartera.findByUsuarioIngreso", query = "SELECT t FROM TblCartera t WHERE t.usuarioIngreso = :usuarioIngreso"),
     @NamedQuery(name = "TblCartera.findByFechaIngreso", query = "SELECT t FROM TblCartera t WHERE t.fechaIngreso = :fechaIngreso"),
     @NamedQuery(name = "TblCartera.findByUsuarioModifico", query = "SELECT t FROM TblCartera t WHERE t.usuarioModifico = :usuarioModifico"),
-    @NamedQuery(name = "TblCartera.findByFechaModifico", query = "SELECT t FROM TblCartera t WHERE t.fechaModifico = :fechaModifico")})
+    @NamedQuery(name = "TblCartera.findByFechaModifico", query = "SELECT t FROM TblCartera t WHERE t.fechaModifico = :fechaModifico"),
+    @NamedQuery(name = "TblCartera.findByLeyusura", query = "SELECT t FROM TblCartera t WHERE t.leyusura = :leyusura")})
 public class TblCartera implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -135,23 +136,20 @@ public class TblCartera implements Serializable {
     @Column(name = "fecha_modifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModifico;
-    
+    @Size(max = 1)
+    @Column(name = "leyusura")
+    private String leyusura;
     @JoinColumn(name = "id_moneda_colones", referencedColumnName = "id_moneda")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Moneda idMonedaColones;
-    
     @JoinColumn(name = "id_moneda_dolares", referencedColumnName = "id_moneda")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Moneda idMonedaDolares;
-    
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private TblCliente idCliente;
     
-    @Column(name = "leyusura")
-    private String leyUsura;
-    
-    /* datos a buscar */
+        /* datos a buscar */
     @Transient    
     private Date fechaUltimaGestion;
     
@@ -162,8 +160,7 @@ public class TblCartera implements Serializable {
     private BigDecimal montoUltimaPromesa;
     
     @Transient
-    private String razonMora;    
-    
+    private String razonMora;  
 
     public TblCartera() {
     }
@@ -356,6 +353,14 @@ public class TblCartera implements Serializable {
         this.fechaModifico = fechaModifico;
     }
 
+    public String getLeyusura() {
+        return leyusura;
+    }
+
+    public void setLeyusura(String leyusura) {
+        this.leyusura = leyusura;
+    }
+
     public Moneda getIdMonedaColones() {
         return idMonedaColones;
     }
@@ -404,8 +409,8 @@ public class TblCartera implements Serializable {
     public String toString() {
         return "com.inversa.cobros.model.TblCartera[ id=" + id + " ]";
     }
-
-    public Date getFechaUltimaGestion() {
+    
+        public Date getFechaUltimaGestion() {
         return fechaUltimaGestion;
     }
 
@@ -435,14 +440,6 @@ public class TblCartera implements Serializable {
 
     public void setRazonMora(String razonMora) {
         this.razonMora = razonMora;
-    }
-
-    public String getLeyUsura() {
-        return leyUsura;
-    }
-
-    public void setLeyUsura(String leyUsura) {
-        this.leyUsura = leyUsura;
     }
     
 }

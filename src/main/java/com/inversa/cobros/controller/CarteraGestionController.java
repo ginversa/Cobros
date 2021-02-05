@@ -14,6 +14,7 @@ import com.inversa.cobros.model.Moneda;
 import com.inversa.cobros.model.Razonmora;
 import com.inversa.cobros.model.Subtipificacion;
 import com.inversa.cobros.model.TblCartera;
+import com.inversa.cobros.model.TblCliente;
 import com.inversa.cobros.model.TblContacto;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblGestionsaldo;
@@ -62,9 +63,9 @@ public class CarteraGestionController implements Serializable {
     //private static String ip_publica = "190.106.65.237";
     private static String http = "http://";
     //private static String http = "https://";
-    private static String telefonoDefault = "87356220";
+    private static String telefonoDefault = "87356220";// 64801981
     
-    private int ext = 118;
+    private String ext = "118";
     private int numeroSalida = 9;
 
     private static Client cliente;
@@ -125,6 +126,11 @@ public class CarteraGestionController implements Serializable {
         this.mtoSaldoOperacion = new BigDecimal(BigInteger.ZERO);
         this.mtoDescuentoPromesa = new BigDecimal(BigInteger.ZERO);
         this.mtoSaldoPromesa = new BigDecimal(BigInteger.ZERO);
+        
+        // informacion para hacer llamada.
+        TblCliente cliente = this.selectedCartera.getIdCliente();
+        //List<TblClientePrefijo> clientePrefijoList = cliente.getTblClientePrefijoList();
+        this.ext = this.usuario.getExtEnsion();
 
     }
 
@@ -310,7 +316,9 @@ public class CarteraGestionController implements Serializable {
 
             // info de la gestion *******************
             this.gestion.setCodigoCartera(codigoCartera);
-            this.gestion.setNombre_cartera(objCartera.getIdCliente().getNombre());
+            if(objCartera.getIdCliente() != null){
+                this.gestion.setNombre_cartera(objCartera.getIdCliente().getNombre());
+            }            
             this.gestion.setIdentificacion(identificacion);
             this.gestion.setNombreCliente(objCartera.getNombreCliente());
             this.gestion.setOperacion(objCartera.getNumeroCuenta());
@@ -320,7 +328,7 @@ public class CarteraGestionController implements Serializable {
             this.gestion.setFechaGestion(this.fechaHoy.getTime());// fecha Hoy...
             this.gestion.setUsuarioingreso(this.usuario.getUsuario());
             this.gestion.setFechaingreso(this.fechaHoy.getTime());// fecha Hoy...
-            this.gestion.setLeyusura(objCartera.getLeyUsura());
+            this.gestion.setLeyusura(objCartera.getLeyusura());
             this.gestion.setMtosaldocobrar(BigDecimal.ZERO);
 
             //***************************************

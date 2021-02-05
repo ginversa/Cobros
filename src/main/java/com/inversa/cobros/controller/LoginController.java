@@ -52,7 +52,7 @@ public class LoginController implements Serializable{
             TblUsuario obj = this.ejbLocal.findByUsuarioAndClave(usuario);
             if(obj!=null){                
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", obj);
-                redireccion = "operario/deudor?faces-redirect=true";
+                redireccion = "operario/cartera";
                 
             }else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Aviso","Credenciales incorrectas!"));

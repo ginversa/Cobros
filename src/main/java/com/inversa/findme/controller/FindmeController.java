@@ -5,10 +5,10 @@
  */
 package com.inversa.findme.controller;
 
-import com.inversa.cobros.controller.DeudorController;
+import com.inversa.cobros.controller.CarteraController;
 import com.inversa.cobros.controller.GestionController;
 import com.inversa.cobros.ejb.PromesaService;
-import com.inversa.cobros.model.TblDeudor;
+import com.inversa.cobros.model.TblCartera;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;
 import com.inversa.cobros.model.TblUsuario;
@@ -77,9 +77,16 @@ public class FindmeController implements Serializable {
     @Inject
     private GestionController gestionController;
 
+    /*
     @Inject
     private DeudorController deudorController;
     private TblDeudor deudor;
+    */
+    
+    @Inject
+    private CarteraController carteraController;
+    
+    private TblCartera cartera;
     private String cedula;
 
     private Calendar fechaHoy;
@@ -104,11 +111,12 @@ public class FindmeController implements Serializable {
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         this.fechaHoy = Calendar.getInstance();
 
-        this.deudor = deudorController.getDeudor();
-        if (this.deudor != null) {
-            cedula = this.deudor.getDocumento();
-            cedula = "108020318";
-            cedula.trim();
+        this.cartera = this.carteraController.getCartera();
+                
+        if (this.cartera != null) {
+            cedula = this.cartera.getIdentificacion();
+            //cedula = "108020318";
+            //cedula.trim();
             //cargarFindme();
         }
 

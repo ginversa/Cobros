@@ -8,9 +8,9 @@
     <ui:define name="title">Gestión</ui:define>
 
     <ui:define name="viewname">
-        <li><p:link outcome="deudor">Mi Cartera</p:link></li>
+        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
         <li>/</li>
-        <li><p:link outcome="gestion">Gestión</p:link></li>
+        <li>Gestión</li>
     </ui:define>
 
     <ui:param name="viewname" value="Gestión" />
@@ -24,16 +24,30 @@
                     </p:growl>                        
                     <p:tabView id="idTabView" >
                         <p:ajax event="tabChange" listener="#{findmeController.onTabViewChange}" />
-                        <p:tab title="Gestión">
+                        <p:tab title="Gestión">                            
                             <div class="card">
                                 <h1>Gestión</h1>
                                 <p>Sistema de Cobros.</p>
                                 <!-- class="ui-fluid" -->
                                 <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
+                                    <!--
+                                           <p:commandButton value="Promesa" styleClass="p-mr-2 p-mb-2" actionListener="#{gestionController.validarSelectedLlamada()}" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" />
+                                            
+                                    -->
+                                    <p:toolbar styleClass="">
+                                        <f:facet name="right">
+                                            <h:panelGrid columns="3">
+                                                <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                                <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
+                                                <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                            </h:panelGrid>
+                                        </f:facet>
+                                    </p:toolbar>
+
                                     <p:panelGrid id="pgDeudor" columns="5" layout="grid">
                                         <p:panelGrid columns="2" >
                                             <p:outputLabel for="txtCartera" value="Cartera" />
-                                            <h:outputText id="txtCartera" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
+                                            <h:outputText id="txtCartera" value="#{carteraGestionController.gestion.codigoCartera}" />
 
                                             <p:outputLabel for="txtDocumento" value="Identificación" />
                                             <h:outputText id="txtDocumento" value="#{carteraGestionController.gestion.identificacion}" />
@@ -102,21 +116,6 @@
                                     </p:panelGrid>
 
                                     <p:fieldset legend="Llamar" class="ui-fluid" >
-                                        <div>
-                                            <!--
-                                                    <p:commandButton value="Promesa" styleClass="p-mr-2 p-mb-2" actionListener="#{gestionController.validarSelectedLlamada()}" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" />
-                                                     
-                                            -->
-                                            <p:toolbar>
-                                                <f:facet name="right">
-                                                    <h:panelGrid columns="3">
-                                                        <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                        <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
-                                                        <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
-                                                    </h:panelGrid>
-                                                </f:facet>
-                                            </p:toolbar>
-                                        </div>
 
                                         <!-- paginator="true" paginatorPosition="top" rows="5" -->
                                         <p:dataTable id="tblTelefono" value="#{carteraGestionController.llamadaList}" var="llamada"

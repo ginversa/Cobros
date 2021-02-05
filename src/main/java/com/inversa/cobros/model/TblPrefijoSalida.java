@@ -6,9 +6,8 @@
 package com.inversa.cobros.model;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Objects;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,14 +15,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -40,6 +38,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblPrefijoSalida.findByDescripcion", query = "SELECT t FROM TblPrefijoSalida t WHERE t.descripcion = :descripcion")})
 public class TblPrefijoSalida implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @Size(max = 10)
     @Column(name = "prefijo")
     private String prefijo;
@@ -49,24 +53,17 @@ public class TblPrefijoSalida implements Serializable {
     @Size(max = 60)
     @Column(name = "descripcion")
     private String descripcion;
-    @JoinColumn(name = "id_central", referencedColumnName = "id")
+    
+    @JoinColumns({
+        @JoinColumn(name = "id_central", referencedColumnName = "id"),
+        @JoinColumn(name = "id_central", referencedColumnName = "id")})
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private TblCentral idCentral;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSalida", fetch = FetchType.EAGER)
-    private List<TblClientePrefijo> tblClientePrefijoList;
+    private TblCentral tblCentral;
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private TblCliente idCliente;
 
     public TblPrefijoSalida() {
-    }
-
-    public TblPrefijoSalida(Integer id) {
-        this.id = id;
     }
 
     public Integer getId() {
@@ -75,41 +72,6 @@ public class TblPrefijoSalida implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-
-    @XmlTransient
-    public List<TblClientePrefijo> getTblClientePrefijoList() {
-        return tblClientePrefijoList;
-    }
-
-    public void setTblClientePrefijoList(List<TblClientePrefijo> tblClientePrefijoList) {
-        this.tblClientePrefijoList = tblClientePrefijoList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TblPrefijoSalida)) {
-            return false;
-        }
-        TblPrefijoSalida other = (TblPrefijoSalida) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.inversa.cobros.model.TblPrefijoSalida[ id=" + id + " ]";
     }
 
     public String getPrefijo() {
@@ -136,12 +98,67 @@ public class TblPrefijoSalida implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public TblCentral getIdCentral() {
-        return idCentral;
+   
+
+    public TblCentral getTblCentral() {
+        return tblCentral;
     }
 
-    public void setIdCentral(TblCentral idCentral) {
-        this.idCentral = idCentral;
+    public void setTblCentral(TblCentral tblCentral) {
+        this.tblCentral = tblCentral;
+    }
+
+    public TblCliente getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(TblCliente idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Objects.hashCode(this.id);
+        hash = 19 * hash + Objects.hashCode(this.prefijo);
+        hash = 19 * hash + Objects.hashCode(this.nombre);
+        hash = 19 * hash + Objects.hashCode(this.descripcion);
+        hash = 19 * hash + Objects.hashCode(this.tblCentral);
+        hash = 19 * hash + Objects.hashCode(this.idCliente);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TblPrefijoSalida other = (TblPrefijoSalida) obj;
+        if (!Objects.equals(this.prefijo, other.prefijo)) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        if (!Objects.equals(this.descripcion, other.descripcion)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.tblCentral, other.tblCentral)) {
+            return false;
+        }
+        if (!Objects.equals(this.idCliente, other.idCliente)) {
+            return false;
+        }
+        return true;
     }
     
 }

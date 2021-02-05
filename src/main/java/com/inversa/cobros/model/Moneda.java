@@ -60,8 +60,11 @@ public class Moneda implements Serializable {
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMoneda", fetch = FetchType.EAGER)
-    private List<TblGestionsaldo> tblGestionsaldoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMonedaColones", fetch = FetchType.EAGER)
+    private List<TblCartera> tblCarteraList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMonedaDolares", fetch = FetchType.EAGER)
+    private List<TblCartera> tblCarteraList1;
+    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -69,16 +72,15 @@ public class Moneda implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_moneda")
     private Integer idMoneda;
+    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMonedaColones", fetch = FetchType.EAGER)
-    private List<TblCartera> tblCarteraList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMonedaDolares", fetch = FetchType.EAGER)
-    private List<TblCartera> tblCarteraList1;
+    
 
     public Moneda() {
     }
@@ -111,25 +113,7 @@ public class Moneda implements Serializable {
 
     public void setFechamodifico(Date fechamodifico) {
         this.fechamodifico = fechamodifico;
-    }
-
-    @XmlTransient
-    public List<TblCartera> getTblCarteraList() {
-        return tblCarteraList;
-    }
-
-    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
-        this.tblCarteraList = tblCarteraList;
-    }
-
-    @XmlTransient
-    public List<TblCartera> getTblCarteraList1() {
-        return tblCarteraList1;
-    }
-
-    public void setTblCarteraList1(List<TblCartera> tblCarteraList1) {
-        this.tblCarteraList1 = tblCarteraList1;
-    }
+    }   
 
     @Override
     public int hashCode() {
@@ -197,12 +181,21 @@ public class Moneda implements Serializable {
     }
 
     @XmlTransient
-    public List<TblGestionsaldo> getTblGestionsaldoList() {
-        return tblGestionsaldoList;
+    public List<TblCartera> getTblCarteraList() {
+        return tblCarteraList;
     }
 
-    public void setTblGestionsaldoList(List<TblGestionsaldo> tblGestionsaldoList) {
-        this.tblGestionsaldoList = tblGestionsaldoList;
+    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
+        this.tblCarteraList = tblCarteraList;
+    }
+
+    @XmlTransient
+    public List<TblCartera> getTblCarteraList1() {
+        return tblCarteraList1;
+    }
+
+    public void setTblCarteraList1(List<TblCartera> tblCarteraList1) {
+        this.tblCarteraList1 = tblCarteraList1;
     }
     
 }

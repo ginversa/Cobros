@@ -7,6 +7,7 @@ package com.inversa.cobros.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -57,17 +58,17 @@ public class TblCentral implements Serializable {
     @Size(max = 30)
     @Column(name = "directorio")
     private String directorio;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCentral", fetch = FetchType.EAGER)
+    
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblCentral", fetch = FetchType.EAGER)
     private List<TblPrefijoSalida> tblPrefijoSalidaList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCentral", fetch = FetchType.EAGER)
     private List<TblUrlLlamada> tblUrlLlamadaList;
 
     public TblCentral() {
     }
 
-    public TblCentral(Integer id) {
-        this.id = id;
-    }
 
     public Integer getId() {
         return id;
@@ -129,19 +130,48 @@ public class TblCentral implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.nombreCentral);
+        hash = 89 * hash + Objects.hashCode(this.protocolo);
+        hash = 89 * hash + Objects.hashCode(this.ipCentral);
+        hash = 89 * hash + Objects.hashCode(this.directorio);
+        hash = 89 * hash + Objects.hashCode(this.tblPrefijoSalidaList);
+        hash = 89 * hash + Objects.hashCode(this.tblUrlLlamadaList);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TblCentral)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        TblCentral other = (TblCentral) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TblCentral other = (TblCentral) obj;
+        if (!Objects.equals(this.nombreCentral, other.nombreCentral)) {
+            return false;
+        }
+        if (!Objects.equals(this.protocolo, other.protocolo)) {
+            return false;
+        }
+        if (!Objects.equals(this.ipCentral, other.ipCentral)) {
+            return false;
+        }
+        if (!Objects.equals(this.directorio, other.directorio)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.tblPrefijoSalidaList, other.tblPrefijoSalidaList)) {
+            return false;
+        }
+        if (!Objects.equals(this.tblUrlLlamadaList, other.tblUrlLlamadaList)) {
             return false;
         }
         return true;
@@ -149,7 +179,7 @@ public class TblCentral implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.TblCentral[ id=" + id + " ]";
+        return "TblCentral{" + "id=" + id + ", nombreCentral=" + nombreCentral + ", protocolo=" + protocolo + ", ipCentral=" + ipCentral + ", directorio=" + directorio + ", tblPrefijoSalidaList=" + tblPrefijoSalidaList + ", tblUrlLlamadaList=" + tblUrlLlamadaList + '}';
     }
     
 }

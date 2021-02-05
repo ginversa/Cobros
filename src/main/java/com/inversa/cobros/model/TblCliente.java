@@ -60,6 +60,8 @@ public class TblCliente implements Serializable {
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.EAGER)
+    private List<TblCartera> tblCarteraList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -74,13 +76,7 @@ public class TblCliente implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.EAGER)
-    private List<TblPerfilcartera> tblPerfilcarteraList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.EAGER)
-    private List<TblCartera> tblCarteraList;
-    @OneToMany(mappedBy = "idCliente", fetch = FetchType.EAGER)
-    private List<TblClienteUsuario> tblClienteUsuarioList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.EAGER)
-    private List<TblClientePrefijo> tblClientePrefijoList;
+    private List<TblPrefijoSalida> tblPrefijoSalidaList;
 
     public TblCliente() {
     }
@@ -116,39 +112,12 @@ public class TblCliente implements Serializable {
     }
 
     @XmlTransient
-    public List<TblPerfilcartera> getTblPerfilcarteraList() {
-        return tblPerfilcarteraList;
+    public List<TblPrefijoSalida> getTblPrefijoSalidaList() {
+        return tblPrefijoSalidaList;
     }
 
-    public void setTblPerfilcarteraList(List<TblPerfilcartera> tblPerfilcarteraList) {
-        this.tblPerfilcarteraList = tblPerfilcarteraList;
-    }
-
-    @XmlTransient
-    public List<TblCartera> getTblCarteraList() {
-        return tblCarteraList;
-    }
-
-    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
-        this.tblCarteraList = tblCarteraList;
-    }
-
-    @XmlTransient
-    public List<TblClienteUsuario> getTblClienteUsuarioList() {
-        return tblClienteUsuarioList;
-    }
-
-    public void setTblClienteUsuarioList(List<TblClienteUsuario> tblClienteUsuarioList) {
-        this.tblClienteUsuarioList = tblClienteUsuarioList;
-    }
-
-    @XmlTransient
-    public List<TblClientePrefijo> getTblClientePrefijoList() {
-        return tblClientePrefijoList;
-    }
-
-    public void setTblClientePrefijoList(List<TblClientePrefijo> tblClientePrefijoList) {
-        this.tblClientePrefijoList = tblClientePrefijoList;
+    public void setTblPrefijoSalidaList(List<TblPrefijoSalida> tblPrefijoSalidaList) {
+        this.tblPrefijoSalidaList = tblPrefijoSalidaList;
     }
 
     @Override
@@ -214,6 +183,15 @@ public class TblCliente implements Serializable {
 
     public void setUsuariomodifico(String usuariomodifico) {
         this.usuariomodifico = usuariomodifico;
+    }
+
+    @XmlTransient
+    public List<TblCartera> getTblCarteraList() {
+        return tblCarteraList;
+    }
+
+    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
+        this.tblCarteraList = tblCarteraList;
     }
     
 }

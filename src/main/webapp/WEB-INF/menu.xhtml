@@ -12,6 +12,7 @@
                 <div class="layout-menu-title">MENU</div>
                 <h:form id="menuform">
                     <pa:menu widgetVar="ApolloMenuWidget">
+                        <!--
                         <p:menuitem id="om_dashboard" value="Dashboard" icon="pi pi-home" outcome="/dashboard" />
                         <p:submenu id="om_components" label="UI Kit" icon="pi pi-star">
                             <p:menuitem id="om_formlayout" value="Form Layout" icon="pi pi-id-card" outcome="/formlayout" />
@@ -73,10 +74,12 @@
                             <p:menuitem id="om_buy" value="Buy Now" icon="pi pi-shopping-cart" url="https://www.primefaces.org/store" />
                             <p:menuitem id="om_doc" value="Documentation" icon="pi pi-info-circle" outcome="/documentation"/>
                         </p:submenu>    
-                        
+                        comment -->
                         <p:submenu id="idGestiones" label="Gestiones" icon="pi pi-briefcase">
+                            <!-- 
                             <p:menuitem id="idMiCartera" value="Mi Cartera" icon="pi pi-id-card" outcome="/operario/deudor" />
-                            <p:menuitem id="idCartera" value="Cartera Credomatic" icon="pi pi-id-card" outcome="/operario/cartera" />
+                            -->
+                            <p:menuitem id="idCartera" value="Mi Cartera" icon="pi pi-id-card" outcome="/operario/cartera" />
                             <p:menuitem id="idGestion" value="Mi Gestión" icon="pi pi-id-card" outcome="/operario/listarGestion" />                            
                         </p:submenu>
                         
@@ -84,17 +87,21 @@
                             <p:menuitem id="idGestionSup" value="Gestiones" icon="pi pi-id-card" outcome="/operario/listarGestion" />
                             <p:menuitem id="idLlamadaSup" value="Llamadas" icon="pi pi-id-card" outcome="/operario/listarLlamada" />
                             <p:menuitem id="idPromesaSup" value="Promesas" icon="pi pi-id-card" outcome="/operario/listarPromesa" />
+                            <!--
                             <p:menuitem id="idFindmeSup" value="Findme" icon="pi pi-id-card" outcome="/administrador/findme" />
+                            -->
                         </p:submenu>
-                        
+                        <!-- 
                         <p:submenu id="idMantenimiento" label="Mantenimiento" icon="pi pi-briefcase">
                             <p:menuitem id="idCliente" value="Cliente" icon="pi pi-id-card" outcome="/crud" />
                             <p:menuitem id="idCarteraPrincipal" value="Cartera Principal" icon="pi pi-id-card" outcome="/calendar" />
                             <p:menuitem id="idPerfilCartera" value="Perfil Cartera" icon="pi pi-id-card" outcome="/landing" />                            
                             <p:menuitem id="idCargarCartera" value="Cargar Cartera" icon="pi pi-id-card" outcome="/administrador/cargarCartera" />
                         </p:submenu>
+                        -->
                     </pa:menu>
-
+                    
+                    <!-- 
                     <div class="layout-menu-footer">
                         <div class="layout-menu-footer-title">TASKS</div>
 
@@ -106,6 +113,7 @@
                             Overall
                         </div>
                     </div>
+                    -->
 
                 </h:form>
                 
