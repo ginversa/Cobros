@@ -130,14 +130,8 @@ public class TblCentral implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + Objects.hashCode(this.id);
-        hash = 89 * hash + Objects.hashCode(this.nombreCentral);
-        hash = 89 * hash + Objects.hashCode(this.protocolo);
-        hash = 89 * hash + Objects.hashCode(this.ipCentral);
-        hash = 89 * hash + Objects.hashCode(this.directorio);
-        hash = 89 * hash + Objects.hashCode(this.tblPrefijoSalidaList);
-        hash = 89 * hash + Objects.hashCode(this.tblUrlLlamadaList);
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -153,29 +147,13 @@ public class TblCentral implements Serializable {
             return false;
         }
         final TblCentral other = (TblCentral) obj;
-        if (!Objects.equals(this.nombreCentral, other.nombreCentral)) {
-            return false;
-        }
-        if (!Objects.equals(this.protocolo, other.protocolo)) {
-            return false;
-        }
-        if (!Objects.equals(this.ipCentral, other.ipCentral)) {
-            return false;
-        }
-        if (!Objects.equals(this.directorio, other.directorio)) {
-            return false;
-        }
         if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.tblPrefijoSalidaList, other.tblPrefijoSalidaList)) {
-            return false;
-        }
-        if (!Objects.equals(this.tblUrlLlamadaList, other.tblUrlLlamadaList)) {
             return false;
         }
         return true;
     }
+
+   
 
     @Override
     public String toString() {

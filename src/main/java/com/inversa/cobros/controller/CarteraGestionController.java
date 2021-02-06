@@ -14,13 +14,16 @@ import com.inversa.cobros.model.Moneda;
 import com.inversa.cobros.model.Razonmora;
 import com.inversa.cobros.model.Subtipificacion;
 import com.inversa.cobros.model.TblCartera;
+import com.inversa.cobros.model.TblCentral;
 import com.inversa.cobros.model.TblCliente;
 import com.inversa.cobros.model.TblContacto;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblGestionsaldo;
 import com.inversa.cobros.model.TblLlamada;
+import com.inversa.cobros.model.TblPrefijoSalida;
 import com.inversa.cobros.model.TblPromesa;
 import com.inversa.cobros.model.TblTelefono;
+import com.inversa.cobros.model.TblUrlLlamada;
 import com.inversa.cobros.model.TblUsuario;
 import com.inversa.cobros.model.Tipificacion;
 import com.inversa.cobros.model.Tipotelefono;
@@ -59,14 +62,22 @@ import org.primefaces.shaded.json.JSONObject;
 @ViewScoped
 public class CarteraGestionController implements Serializable {
 
-    private static String ip_publica = "192.168.7.201";    
+    private static String ip_publica = "192.168.7.201";
     //private static String ip_publica = "190.106.65.237";
     private static String http = "http://";
     //private static String http = "https://";
+
+    // Telefono: prefijos de salida.
+    private TblPrefijoSalida prefijoSalidaSelected;
+    private List<TblPrefijoSalida> prefijoSalidaList;
+    private String directorioCentral;
+    private String servicio;
+    private String parametro;
+
     private static String telefonoDefault = "87356220";// 64801981
-    
+
     private String ext = "118";
-    private int numeroSalida = 9;
+    private String numeroSalida = "9";
 
     private static Client cliente;
     private static WebTarget webTarget;
@@ -126,12 +137,34 @@ public class CarteraGestionController implements Serializable {
         this.mtoSaldoOperacion = new BigDecimal(BigInteger.ZERO);
         this.mtoDescuentoPromesa = new BigDecimal(BigInteger.ZERO);
         this.mtoSaldoPromesa = new BigDecimal(BigInteger.ZERO);
-        
-        // informacion para hacer llamada.
-        TblCliente cliente = this.selectedCartera.getIdCliente();
-        //List<TblClientePrefijo> clientePrefijoList = cliente.getTblClientePrefijoList();
-        this.ext = this.usuario.getExtEnsion();
 
+        TblCliente cliente = this.selectedCartera.getIdCliente();
+        this.prefijoSalidaList = cliente.getTblPrefijoSalidaList();
+        if (this.prefijoSalidaList != null && !this.prefijoSalidaList.isEmpty()) {
+            //prefijoSalidaSelected = this.prefijoSalidaList.get(0);
+        }
+
+    }
+
+    /**
+     * informacion para hacer llamada.
+     *
+     * @return
+     */
+    private String crearUrlLlamada(String telefono) {
+
+        TblCentral central = this.prefijoSalidaList.get(0).getTblCentral();
+        this.http = central.getProtocolo();
+        this.ip_publica = central.getIpCentral();
+        this.directorioCentral = central.getDirectorio();
+        TblUrlLlamada urlLlamar = central.getTblUrlLlamadaList().get(0);// llamar. Buscar servicio para llamar.
+        this.servicio = urlLlamar.getServicio();
+        this.ext = this.usuario.getExtEnsion();
+        this.parametro = urlLlamar.getParametro();
+        this.numeroSalida = prefijoSalidaSelected.getPrefijo();
+        String URL_LLAMAR = this.http + this.ip_publica + this.directorioCentral + this.servicio + this.ext + this.parametro + this.numeroSalida + telefono;
+        System.out.println("URL_LLAMAR: " + URL_LLAMAR);
+        return URL_LLAMAR;
     }
 
     public TblGestion getGestion() {
@@ -316,9 +349,9 @@ public class CarteraGestionController implements Serializable {
 
             // info de la gestion *******************
             this.gestion.setCodigoCartera(codigoCartera);
-            if(objCartera.getIdCliente() != null){
+            if (objCartera.getIdCliente() != null) {
                 this.gestion.setNombre_cartera(objCartera.getIdCliente().getNombre());
-            }            
+            }
             this.gestion.setIdentificacion(identificacion);
             this.gestion.setNombreCliente(objCartera.getNombreCliente());
             this.gestion.setOperacion(objCartera.getNumeroCuenta());
@@ -787,81 +820,90 @@ public class CarteraGestionController implements Serializable {
      * @param callToNumber
      */
     public void generarLlamada(TblLlamada callToNumber) {
-        callToNumber.setIdLlamada(null);
-        System.out.println("Numero Seleccionado callToNumber: " + callToNumber.getCallToNumber());
 
-        if (callToNumber != null && callToNumber.getCallToNumber() != null && !callToNumber.getCallToNumber().trim().equals("")) {
-            //this.selectedLlamada.setIdLlamada(null);
-            this.selectedLlamada = callToNumber;// llamada seleccionada...
-            String telefono = callToNumber.getCallToNumber();            
-            
-            String URL_LLAMAR = this.http + this.ip_publica + "/PBXPortal/llamar.php?ext="+this.ext+"&numero=" + this.numeroSalida + this.telefonoDefault;
+        if (prefijoSalidaSelected == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Prefijo Salida!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } else {
 
-            cliente = ClientBuilder.newClient();
+            callToNumber.setIdLlamada(null);
+            System.out.println("Numero Seleccionado callToNumber: " + callToNumber.getCallToNumber());
 
-            //Leer una llamada (metodo get)
-            webTarget = cliente.target(URL_LLAMAR);
-            // get extracted document as JSON
-            String jsonExtract = webTarget.request(MediaType.APPLICATION_JSON).get(String.class);
-            System.out.println("Generar una llamada: " + jsonExtract);
+            if (callToNumber != null && callToNumber.getCallToNumber() != null && !callToNumber.getCallToNumber().trim().equals("")) {
+                //this.selectedLlamada.setIdLlamada(null);
+                this.selectedLlamada = callToNumber;// llamada seleccionada...
+                String telefono = callToNumber.getCallToNumber();
 
-            String errorCentral = null;
-            String[] erroresCentralTel = jsonExtract.split("#");
-            if (erroresCentralTel != null && erroresCentralTel.length > 1) {
-                errorCentral = erroresCentralTel[1];
-                System.out.println("Error Central: " + errorCentral);
-            } else {
-                System.out.println("Error Central: " + erroresCentralTel[0]);
-            }
+                //String URL_LLAMAR = this.http + this.ip_publica + "/PBXPortal/llamar.php?ext=" + this.ext + "&numero=" + this.numeroSalida + this.telefonoDefault;            
+                String URL_LLAMAR = this.crearUrlLlamada(this.telefonoDefault);
 
-            if (errorCentral != null && !errorCentral.trim().equals("")) {
+                cliente = ClientBuilder.newClient();
 
-                switch (errorCentral.trim()) {
-                    case "0":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "0 - No está configurado el servicio!"));
-                        break;
-                    case "1":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "1 - El IP no está autorizado!"));
-                        break;
-                    case "001":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "001 - No indica la extensión!"));
-                        break;
-                    case "002":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "002 - El número a marcar no es correcto!"));
-                        break;
-                    case "004":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "004 - La extensión no es numérica!"));
-                        break;
-                    case "008":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "008 - La extensión no existe ni está como activa!"));
-                        break;
-                    case "016":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "016 - Falla en generar la llamada local inicial!"));
-                        break;
-                    case "032":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "032 - No logra recuperar el ID de la llamada!"));
-                        break;
-                    case "064":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "064 - si se envía un ID de llamada que no sea numérico para el caso de escucharla!"));
-                        break;
-                    case "128":
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "128 - si no se especifica una extensión activa ni existe el contexto: context_qrm!"));
-                        break;
-                    default:
-                        break;
+                //Leer una llamada (metodo get)
+                webTarget = cliente.target(URL_LLAMAR);
+                // get extracted document as JSON
+                String jsonExtract = webTarget.request(MediaType.APPLICATION_JSON).get(String.class);
+                System.out.println("Generar una llamada: " + jsonExtract);
+
+                String errorCentral = null;
+                String[] erroresCentralTel = jsonExtract.split("#");
+                if (erroresCentralTel != null && erroresCentralTel.length > 1) {
+                    errorCentral = erroresCentralTel[1];
+                    System.out.println("Error Central: " + errorCentral);
+                } else {
+                    System.out.println("Error Central: " + erroresCentralTel[0]);
                 }
 
-            } else {
-                if (this.llamadaList != null) {
-                    for (int index = 0; index < this.llamadaList.size(); index++) {
-                        if (this.llamadaList.get(index).getCallToNumber().equals(telefono)) {
-                            this.llamadaList.get(index).setCallLogId(jsonExtract);
+                if (errorCentral != null && !errorCentral.trim().equals("")) {
+
+                    switch (errorCentral.trim()) {
+                        case "0":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "0 - No está configurado el servicio!"));
+                            break;
+                        case "1":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "1 - El IP no está autorizado!"));
+                            break;
+                        case "001":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "001 - No indica la extensión!"));
+                            break;
+                        case "002":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "002 - El número a marcar no es correcto!"));
+                            break;
+                        case "004":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "004 - La extensión no es numérica!"));
+                            break;
+                        case "008":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "008 - La extensión no existe ni está como activa!"));
+                            break;
+                        case "016":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "016 - Falla en generar la llamada local inicial!"));
+                            break;
+                        case "032":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "032 - No logra recuperar el ID de la llamada!"));
+                            break;
+                        case "064":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "064 - si se envía un ID de llamada que no sea numérico para el caso de escucharla!"));
+                            break;
+                        case "128":
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "128 - si no se especifica una extensión activa ni existe el contexto: context_qrm!"));
+                            break;
+                        default:
+                            break;
+                    }
+
+                } else {
+                    if (this.llamadaList != null) {
+                        for (int index = 0; index < this.llamadaList.size(); index++) {
+                            if (this.llamadaList.get(index).getCallToNumber().equals(telefono)) {
+                                this.llamadaList.get(index).setCallLogId(jsonExtract);
+                            }
                         }
                     }
                 }
-            }
 
-        }// if
+            }// if
+
+        }
 
         this.selectedLlamada = null;
     }
@@ -1037,6 +1079,22 @@ public class CarteraGestionController implements Serializable {
 
     public void setCuotas(String cuotas) {
         this.cuotas = cuotas;
+    }
+
+    public TblPrefijoSalida getPrefijoSalidaSelected() {
+        return prefijoSalidaSelected;
+    }
+
+    public void setPrefijoSalidaSelected(TblPrefijoSalida prefijoSalidaSelected) {
+        this.prefijoSalidaSelected = prefijoSalidaSelected;
+    }
+
+    public List<TblPrefijoSalida> getPrefijoSalidaList() {
+        return prefijoSalidaList;
+    }
+
+    public void setPrefijoSalidaList(List<TblPrefijoSalida> prefijoSalidaList) {
+        this.prefijoSalidaList = prefijoSalidaList;
     }
 
     /**
@@ -1681,16 +1739,30 @@ Arreglo de Pago
                 colones.setSaldo(BigDecimal.ZERO);
             }
         }
+        colones.setIdGestion(this.gestion);
 
         TblGestionsaldo dolares = new TblGestionsaldo();
         dolares.setSaldo(saldoDolares);
         dolares.setIntereses(interesesDolares);
         dolares.setIdMoneda(monedaDolares);
+        dolares.setIdGestion(this.gestion);
 
         saldos.add(colones);
         saldos.add(dolares);
 
         return saldos;
+    }
+
+    /**
+     *
+     * @param prefijo
+     */
+    public void onPrefijoSalidaChange() {
+
+        if (this.prefijoSalidaSelected != null) {
+            System.out.println("Prefijo: " + this.prefijoSalidaSelected.getId() + " - " + this.prefijoSalidaSelected.getPrefijo() + " - " + this.prefijoSalidaSelected.getNombre() + " - " + this.prefijoSalidaSelected.getDescripcion());
+        }
+
     }
 
 }//end

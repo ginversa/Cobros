@@ -98,8 +98,6 @@ public class TblPrefijoSalida implements Serializable {
         this.descripcion = descripcion;
     }
 
-   
-
     public TblCentral getTblCentral() {
         return tblCentral;
     }
@@ -118,13 +116,8 @@ public class TblPrefijoSalida implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 19 * hash + Objects.hashCode(this.id);
-        hash = 19 * hash + Objects.hashCode(this.prefijo);
-        hash = 19 * hash + Objects.hashCode(this.nombre);
-        hash = 19 * hash + Objects.hashCode(this.descripcion);
-        hash = 19 * hash + Objects.hashCode(this.tblCentral);
-        hash = 19 * hash + Objects.hashCode(this.idCliente);
+        int hash = 5;
+        hash = 83 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -140,25 +133,15 @@ public class TblPrefijoSalida implements Serializable {
             return false;
         }
         final TblPrefijoSalida other = (TblPrefijoSalida) obj;
-        if (!Objects.equals(this.prefijo, other.prefijo)) {
-            return false;
-        }
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        if (!Objects.equals(this.descripcion, other.descripcion)) {
-            return false;
-        }
         if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.tblCentral, other.tblCentral)) {
-            return false;
-        }
-        if (!Objects.equals(this.idCliente, other.idCliente)) {
             return false;
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "TblPrefijoSalida{" + "id=" + id + ", prefijo=" + prefijo + ", nombre=" + nombre + ", descripcion=" + descripcion + ", tblCentral=" + tblCentral + ", idCliente=" + idCliente + '}';
+    }  
     
 }

@@ -39,19 +39,11 @@
                             <p:column headerText="Nombre" filterBy="#{gestion.nombreCliente}" filterMatchMode="contains" sortBy="#{gestion.nombreCliente}" >
                                 <h:outputText value="#{gestion.nombreCliente}" />
                             </p:column>
-                            <p:column headerText="Identificación" filterBy="#{gestion.documento}" filterMatchMode="contains" sortBy="#{gestion.documento}" >
-                                <h:outputText value="#{gestion.documento}" />
+                            <p:column headerText="Identificación" filterBy="#{gestion.identificacion}" filterMatchMode="contains" sortBy="#{gestion.identificacion}" >
+                                <h:outputText value="#{gestion.identificacion}" />
                             </p:column>                    
                             <p:column headerText="Código Gestor" filterBy="#{gestion.codigoGestor}" filterMatchMode="contains" sortBy="#{gestion.codigoGestor}" >
                                 <h:outputText value="#{gestion.codigoGestor}" />
-                            </p:column>
-                            <p:column headerText="Saldo" filterBy="#{gestion.saldo}" sortBy="#{gestion.saldo}" >
-                                <h:outputText value="#{gestion.saldo}" >
-                                    <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
-                                </h:outputText>                                    
-                            </p:column>                    
-                            <p:column headerText="Moneda" filterBy="#{gestion.moneda}" filterMatchMode="contains" sortBy="#{gestion.moneda}" >
-                                <h:outputText value="#{gestion.moneda}" />
                             </p:column>
                             <p:column headerText="Fecha Gestión" filterBy="#{gestion.fechaGestion}" sortBy="#{gestion.fechaGestion}" >
                                 <h:outputText value="#{gestion.fechaGestion}" >
@@ -60,12 +52,7 @@
                             </p:column>
                             <p:column headerText="Descripción" filterBy="#{gestion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.descripcion}" >
                                 <h:outputText value="#{gestion.descripcion}" />
-                            </p:column>
-                            <!--
-                            <p:column headerText="Estado" filterBy="#{gestion.estado}" filterMatchMode="contains" sortBy="#{gestion.estado}" >
-                                <h:outputText value="#{gestion.estado}" />
-                            </p:column>
-                            -->
+                            </p:column>                            
                             <p:column headerText="Fecha Ingreso" filterBy="#{gestion.fechaingreso}" sortBy="#{gestion.fechaingreso}" >
                                 <h:outputText value="#{gestion.fechaingreso}" >
                                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />

@@ -30,15 +30,15 @@
                                 <p>Sistema de Cobros.</p>
                                 <!-- class="ui-fluid" -->
                                 <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
-                                    <!--
-                                           <p:commandButton value="Promesa" styleClass="p-mr-2 p-mb-2" actionListener="#{gestionController.validarSelectedLlamada()}" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" />
-                                            
-                                    -->
                                     <p:toolbar styleClass="">
                                         <f:facet name="right">
                                             <h:panelGrid columns="3">
+                                                <p:selectOneMenu id="txtPrefijo" value="#{carteraGestionController.prefijoSalidaSelected}" converter="prefijoSalidaConverter" required="true" requiredMessage="Prefijo Salida requerido!" styleClass="secondary-button p-mr-2 p-mb-2" >
+                                                    <f:selectItem itemLabel="--- Prefijo Salida ---" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{carteraGestionController.prefijoSalidaList}" var="prefijoSalida" itemLabel="#{prefijoSalida.prefijo} - #{prefijoSalida.nombre}" itemValue="#{prefijoSalida}" />
+                                                    <p:ajax listener="#{carteraGestionController.onPrefijoSalidaChange()}" event="change" />
+                                                </p:selectOneMenu>
                                                 <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:button value="Mi Cartera" outcome="deudor" styleClass="secondary-button p-mr-2 p-mb-2" />
                                                 <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
                                             </h:panelGrid>
                                         </f:facet>
@@ -109,14 +109,12 @@
                                             <h:outputText id="txtRazonMora" value="#{carteraGestionController.selectedCartera.razonMora}" >
                                                 <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
-
                                             <p:outputLabel for="txtdescripcion" value="Observación" />
                                             <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" />                                        
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
 
-                                    <p:fieldset legend="Llamar" class="ui-fluid" >
-
+                                    <p:fieldset legend="Llamar" class="ui-fluid" >                                        
                                         <!-- paginator="true" paginatorPosition="top" rows="5" -->
                                         <p:dataTable id="tblTelefono" value="#{carteraGestionController.llamadaList}" var="llamada"
                                                      editMode="cell" editable="true" widgetVar="tblTelefono"                                                     
@@ -572,7 +570,9 @@
                                                     <p:message for="txtOperacionPromesa" />
 
                                                     <p:outputLabel for="txtSaldoOperacion" value="Saldo" />
-                                                    <h:outputText id="txtSaldoOperacion" value="#{carteraGestionController.mtoSaldoOperacion}" />
+                                                    <h:outputText id="txtSaldoOperacion" value="#{carteraGestionController.mtoSaldoOperacion}">
+                                                        <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                                    </h:outputText>
                                                     <p:message for="txtSaldoOperacion" />
 
                                                     <p:outputLabel for="txtTipoDescuento" value="Tipo Descuento" />
@@ -585,13 +585,15 @@
                                                     <p:message for="txtTipoDescuento" />
 
                                                     <p:outputLabel for="txtDescuentoPromesa" value="Monto o %" />
-                                                    <p:inputText id="txtDescuentoPromesa" value="#{carteraGestionController.mtoDescuentoPromesa}" >
+                                                    <p:inputNumber id="txtDescuentoPromesa" value="#{carteraGestionController.mtoDescuentoPromesa}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
                                                         <p:ajax event="blur" update="txtNewSaldoPromesa" listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}"/>
-                                                    </p:inputText>
+                                                    </p:inputNumber>
                                                     <p:message for="txtDescuentoPromesa" />
 
                                                     <p:outputLabel for="txtNewSaldoPromesa" value="Monto Promesa" />
-                                                    <p:inputText id="txtNewSaldoPromesa" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true" />
+                                                    <p:inputText id="txtNewSaldoPromesa" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true" >
+                                                        <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                                    </p:inputText>
                                                     <p:message for="txtNewSaldoPromesa" />
 
                                                     <p:outputLabel for="txtFechaPago" value="Fecha Pago" />
@@ -628,7 +630,7 @@
                                                     </p:column>                                                    
                                                     <p:column headerText="Monto Promesa" >                                                
                                                         <h:outputText value="#{promesa.mtopago}" >
-                                                            <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                         </h:outputText>
                                                     </p:column>                                            
                                                     <p:column headerText="Fecha Pago" >
@@ -655,7 +657,9 @@
                                                     <p:message for="txtOperacionPromesaCTC" />
 
                                                     <p:outputLabel for="txtSaldoOperacionCTC" value="Saldo" />
-                                                    <h:outputText id="txtSaldoOperacionCTC" value="#{carteraGestionController.mtoSaldoOperacion}" />
+                                                    <h:outputText id="txtSaldoOperacionCTC" value="#{carteraGestionController.mtoSaldoOperacion}" >
+                                                        <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                                    </h:outputText>
                                                     <p:message for="txtSaldoOperacionCTC" />
 
                                                     <p:outputLabel for="txtTipoDescuentoCTC" value="Tipo Descuento" />
@@ -668,13 +672,15 @@
                                                     <p:message for="txtTipoDescuentoCTC" />
 
                                                     <p:outputLabel for="txtDescuentoPromesaCTC" value="Monto o %" />
-                                                    <p:inputText id="txtDescuentoPromesaCTC" value="#{carteraGestionController.mtoDescuentoPromesa}" >
+                                                    <p:inputNumber id="txtDescuentoPromesaCTC" value="#{carteraGestionController.mtoDescuentoPromesa}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
                                                         <p:ajax event="blur" update="txtNewSaldoPromesaCTC" listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}"/>
-                                                    </p:inputText>
+                                                    </p:inputNumber>
                                                     <p:message for="txtDescuentoPromesaCTC" />
 
                                                     <p:outputLabel for="txtNewSaldoPromesaCTC" value="Monto Promesa" />
-                                                    <p:inputText id="txtNewSaldoPromesaCTC" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true" />
+                                                    <p:inputText id="txtNewSaldoPromesaCTC" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true" >
+                                                        <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                                    </p:inputText>
                                                     <p:message for="txtNewSaldoPromesaCTC" />
 
                                                     <p:outputLabel for="txtFechaPagoCTC" value="Fecha Pago" />
@@ -684,7 +690,6 @@
                                                     <p:outputLabel for="txtCuotasCTC" value="Cuotas" />
                                                     <h:selectOneMenu id="txtCuotasCTC" value="#{carteraGestionController.cuotas}" style="width:100%" >
                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                        <f:selectItem itemLabel="Una" itemValue="001"/>
                                                         <f:selectItem itemLabel="Dos" itemValue="002"/>
                                                         <f:selectItem itemLabel="tres" itemValue="003"/>
                                                     </h:selectOneMenu>
@@ -726,7 +731,7 @@
                                                         <p:cellEditor>
                                                             <f:facet name="output">
                                                                 <h:outputText value="#{promesa.mtopago}" >
-                                                                    <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                                    <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                 </h:outputText>                                                            
                                                             </f:facet>
                                                             <f:facet name="input">
@@ -768,17 +773,21 @@
                                                     <p:message for="txtOperacionPromesaREF" />
 
                                                     <p:outputLabel for="txtSaldoOperacionREF" value="Saldo" />
-                                                    <h:outputText id="txtSaldoOperacionREF" value="#{carteraGestionController.mtoSaldoOperacion}" />
+                                                    <h:outputText id="txtSaldoOperacionREF" value="#{carteraGestionController.mtoSaldoOperacion}" >
+                                                        <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" /> 
+                                                    </h:outputText>
                                                     <p:message for="txtSaldoOperacionREF" />
 
                                                     <p:outputLabel for="txtDescuentoPromesaREF" value="Primer Tracto" />
-                                                    <p:inputText id="txtDescuentoPromesaREF" value="#{carteraGestionController.mtoDescuentoPromesa}" >
+                                                    <p:inputNumber id="txtDescuentoPromesaREF" value="#{carteraGestionController.mtoDescuentoPromesa}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Primer Tracto!">
                                                         <p:ajax event="blur" listener="#{carteraGestionController.calcSaldoRestanteREF()}" update="txtNewSaldoPromesaREF"/>
-                                                    </p:inputText>
+                                                    </p:inputNumber>
                                                     <p:message for="txtDescuentoPromesaREF" />
 
                                                     <p:outputLabel for="txtNewSaldoPromesaREF" value="Saldo restante" />
-                                                    <p:inputText id="txtNewSaldoPromesaREF" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true" />
+                                                    <p:inputText id="txtNewSaldoPromesaREF" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true">
+                                                        <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                                    </p:inputText>
                                                     <p:message for="txtNewSaldoPromesaREF" />
 
                                                     <p:outputLabel for="txtFechaPagoREF" value="Fecha Pago Inicial" />
@@ -836,7 +845,7 @@
                                                         <p:cellEditor>
                                                             <f:facet name="output">
                                                                 <h:outputText value="#{promesa.mtopago}" >
-                                                                    <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                                    <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                 </h:outputText>                                                            
                                                             </f:facet>
                                                             <f:facet name="input">
@@ -878,11 +887,13 @@
                                                     <p:message for="txtOperacionPromesaPAP" />
 
                                                     <p:outputLabel for="txtSaldoOperacionPAP" value="Saldo" />
-                                                    <h:outputText id="txtSaldoOperacionPAP" value="#{carteraGestionController.mtoSaldoOperacion}" />
+                                                    <h:outputText id="txtSaldoOperacionPAP" value="#{carteraGestionController.mtoSaldoOperacion}">
+                                                        <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" /> 
+                                                    </h:outputText>
                                                     <p:message for="txtSaldoOperacionPAP" />                                                    
 
                                                     <p:outputLabel for="txtNewSaldoPromesaPAP" value="Monto Promesa" />
-                                                    <p:inputText id="txtNewSaldoPromesaPAP" value="#{carteraGestionController.mtoSaldoPromesa}" />
+                                                    <p:inputNumber id="txtNewSaldoPromesaPAP" value="#{carteraGestionController.mtoSaldoPromesa}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto Promesa!"/>
                                                     <p:message for="txtNewSaldoPromesaPAP" />
 
                                                     <p:outputLabel for="txtFechaPagoPAP" value="Fecha Pago" />
@@ -925,7 +936,7 @@
                                                         <p:cellEditor>
                                                             <f:facet name="output">
                                                                 <h:outputText value="#{promesa.mtopago}" >
-                                                                    <f:convertNumber type="currency" pattern="###,###,###,###.####" />
+                                                                    <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                 </h:outputText>                                                            
                                                             </f:facet>
                                                             <f:facet name="input">
