@@ -22,10 +22,7 @@ public interface PromesaDao {
 
     public List<TblPromesa> findByTelefono(TblPromesa obj);
 
-    public List<TblPromesa> findByFechaPago(TblPromesa obj);
-
-    // public List<TblPromesa> findByMtopago(TblPromesa obj);
-    public List<TblPromesa> findByMoneda(TblPromesa obj);
+    public List<TblPromesa> findByFechaPago(TblPromesa obj);    
 
     public List<TblPromesa> findByUsuarioingreso(TblPromesa obj);
 

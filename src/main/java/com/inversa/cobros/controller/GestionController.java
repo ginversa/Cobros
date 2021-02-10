@@ -254,13 +254,13 @@ public class GestionController implements Serializable {
                 boolean isTrueFechaPago = this.promesaList.get(index).getFechaPago().equals(this.selectedPromesa.getFechaPago()) ? true : false;
                 boolean isTrueEstado = this.promesaList.get(index).getEstado().equals(this.selectedPromesa.getEstado()) ? true : false;
                 boolean isTrueTipoArreglo = this.promesaList.get(index).getEstado().equals(this.selectedPromesa.getEstado()) ? true : false;
-                boolean isTrueMoneda = this.promesaList.get(index).getMoneda().equals(this.selectedPromesa.getMoneda()) ? true : false;
+                //boolean isTrueMoneda = this.promesaList.get(index).getMoneda().equals(this.selectedPromesa.getMoneda()) ? true : false;
 
                 if (this.promesaList.get(index).getOperacion() != null) {
                     isTrueOperacion = this.promesaList.get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
                 }
 
-                if (isTrueTelefono && isTrueOperacion && isTrueTipoDescuento && isTrueMontoPorcentaje && isTrueMtopago && isTrueFechaPago && isTrueEstado && isTrueTipoArreglo && isTrueMoneda) {
+                if (isTrueTelefono && isTrueOperacion && isTrueTipoDescuento && isTrueMontoPorcentaje && isTrueMtopago && isTrueFechaPago && isTrueEstado && isTrueTipoArreglo /*&& isTrueMoneda*/) {
 
                     TblPromesa promesa = this.promesaList.get(index);
                     boolean hasOperation = promesa.getOperacion() != null && !promesa.getOperacion().trim().equals("") ? true : false;
@@ -1178,7 +1178,7 @@ Arreglo de Pago
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(this.fechaPagoPromesa);
                 promesa.setMtopago(this.mtoSaldoPromesa);
-                promesa.setMoneda("CRC");
+                //promesa.setMoneda("CRC");
                 promesa.setEstado("SEG"); // Seguimiento
                 promesa.setTipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
                 promesa.setMtoporcentaje(this.mtoDescuentoPromesa); // Monto o %
@@ -1224,7 +1224,7 @@ Arreglo de Pago
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
                     promesa.setMtopago(saldo);
-                    promesa.setMoneda("CRC");
+                    //promesa.setMoneda("CRC");
                     promesa.setEstado("SEG"); // Seguimiento
                     promesa.setTipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
                     promesa.setMtoporcentaje(this.mtoDescuentoPromesa); // Monto o %
@@ -1281,7 +1281,7 @@ Arreglo de Pago
                         promesa.setMtopago(saldo);
                     }
 
-                    promesa.setMoneda("CRC");
+                    //promesa.setMoneda("CRC");
                     promesa.setEstado("SEG"); // Seguimiento
                     promesa.setTipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
                     promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
@@ -1325,7 +1325,7 @@ Arreglo de Pago
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(fechaInicial.getTime());
                 promesa.setMtopago(this.mtoSaldoPromesa);
-                promesa.setMoneda("CRC");
+                //promesa.setMoneda("CRC");
                 promesa.setEstado("SEG"); // Seguimiento
                 promesa.setTipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
                 promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %

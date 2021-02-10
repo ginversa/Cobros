@@ -352,7 +352,7 @@ public class FindmeController implements Serializable {
             promesa.setTelefono(this.selectedLlamada.getCallToNumber());
             promesa.setFechaPago(this.fechaHoy.getTime());
             promesa.setMtopago(BigDecimal.ZERO);
-            promesa.setMoneda("CRC");
+            //promesa.setMoneda("CRC");
             promesa.setEstado("ING");
             promesa.setFechaingreso(this.fechaHoy.getTime());
             this.promesaList.add(promesa);
@@ -440,13 +440,13 @@ public class FindmeController implements Serializable {
                 boolean isTrueTelefono = this.promesaList.get(index).getTelefono().equals(this.selectedPromesa.getTelefono()) ? true : false;
                 boolean isTrueFechaPago = this.promesaList.get(index).getFechaPago().equals(this.selectedPromesa.getFechaPago()) ? true : false;
                 boolean isTrueMtopago = this.promesaList.get(index).getMtopago().equals(this.selectedPromesa.getMtopago()) ? true : false;
-                boolean isTrueMoneda = this.promesaList.get(index).getMoneda().equals(this.selectedPromesa.getMoneda()) ? true : false;
+                //boolean isTrueMoneda = this.promesaList.get(index).getMoneda().equals(this.selectedPromesa.getMoneda()) ? true : false;
                 boolean isTrueOperacion = true;
                 if (this.promesaList.get(index).getOperacion() != null) {
                     isTrueOperacion = this.promesaList.get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
                 }
 
-                if (isTrueTelefono && isTrueFechaPago && isTrueMtopago && isTrueMoneda && isTrueOperacion) {
+                if (isTrueTelefono && isTrueFechaPago && isTrueMtopago /*&& isTrueMoneda*/ && isTrueOperacion) {
 
                     TblPromesa promesa = this.promesaList.get(index);
                     boolean hasOperation = promesa.getOperacion() != null && !promesa.getOperacion().trim().equals("") ? true : false;

@@ -52,11 +52,6 @@ public class PromesaServiceImpl implements PromesaService, PromesaServiceRemote 
     }
 
     @Override
-    public List<TblPromesa> findByMoneda(TblPromesa obj) {
-        return dao.findByMoneda(obj);
-    }
-
-    @Override
     public List<TblPromesa> findByUsuarioingreso(TblPromesa obj) {
         return dao.findByUsuarioingreso(obj);
     }

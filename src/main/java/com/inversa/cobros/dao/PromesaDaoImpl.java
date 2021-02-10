@@ -60,14 +60,6 @@ public class PromesaDaoImpl implements PromesaDao{
     }
 
     @Override
-    public List<TblPromesa> findByMoneda(TblPromesa obj) {
-        TypedQuery<TblPromesa> query = em.createNamedQuery("TblPromesa.findByMoneda", TblPromesa.class);
-        query.setParameter("moneda", obj.getMoneda());
-        List<TblPromesa> results = query.getResultList();
-        return results;
-    }
-
-    @Override
     public List<TblPromesa> findByUsuarioingreso(TblPromesa obj) {
         TypedQuery<TblPromesa> query = em.createNamedQuery("TblPromesa.findByUsuarioingreso", TblPromesa.class);
         query.setParameter("usuarioingreso", obj.getUsuarioingreso());

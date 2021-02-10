@@ -12,6 +12,18 @@ use cobrosdb;
 /**************************************************/
 -- INICIO
 
+CREATE TABLE IF NOT EXISTS Moneda (
+    id_Moneda SERIAL PRIMARY KEY,
+    codigo varchar(3),
+    simbolo varchar(1),
+    descripcion varchar(20),    
+	usuarioIngreso varchar(50),
+	fechaIngreso timestamp default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico timestamp
+);
+
+
 CREATE TABLE IF NOT EXISTS tbl_deudor ( -- deuda
 	id_deudor serial,
   	codigo_cartera varchar(5),
@@ -139,7 +151,9 @@ CREATE TABLE IF NOT EXISTS tbl_gestion (
   	identificacion varchar(50),
   	nombre_cliente varchar(50),
   	operacion varchar(50),
-  	codigo_gestor varchar(5),
+  	leyUsura varchar(1) default '0',--?????
+  	mtoSaldoCobrar decimal(18,6) default 0,--????
+  	codigo_gestor varchar(5),  	  	
   	fecha_gestion timestamp,
   	descripcion text,
   	estado varchar(3) default 'ING', --INGRESAR
@@ -159,6 +173,37 @@ CREATE TABLE IF NOT EXISTS TipoTelefono (
     usuarioModifico varchar(50),
 	fechaModifico timestamp
 );
+
+/*
+************************************************************************************************************************************************ 
+*/
+CREATE TABLE IF NOT EXISTS tbl_resultadogestion (
+	id_resultadogestion SERIAL PRIMARY KEY,
+  	descripcion varchar(250),
+  	codigo varchar(3),
+    id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+  	id_subtipificacion int4 references SubTipificacion(id_subtipificacion),
+  	usuarioIngreso varchar(50),
+	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tbl_resultadotercero (
+	id_resultadotercero SERIAL PRIMARY KEY,
+	id_resultadogestion SERIAL references tbl_resultadogestion(id_resultadogestion),
+	id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+  	descripcion varchar(250),
+  	codigo varchar(3),
+  	usuarioIngreso varchar(50),
+	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico TIMESTAMP
+);
+
+/*
+ ************************************************************************************************************************************************ 
+*/
 
 create table if not exists tbl_llamada(
 	id_Llamada BIGSERIAL primary key,
@@ -383,17 +428,6 @@ CREATE TABLE IF NOT EXISTS Estado (
 	fechaModifico timestamp
 );
 
-CREATE TABLE IF NOT EXISTS Moneda (
-    id_Moneda SERIAL PRIMARY KEY,
-    codigo varchar(3),
-    simbolo varchar(1),
-    descripcion varchar(20),    
-	usuarioIngreso varchar(50),
-	fechaIngreso timestamp default CURRENT_TIMESTAMP,
-    usuarioModifico varchar(50),
-	fechaModifico timestamp
-);
-
 
 /**************************************************/
 -- tablas temporales
@@ -483,12 +517,14 @@ DAT - Datos
 
 -- Estados de una promesa.
 SEG - Seguimiento, antes de recordatorio
-PRO - Promesa, si cuando lo llame recordando, dice que si paga ma�ana.
+PRO - Promesa, si cuando lo llame recordando, dice que si paga maÃ±ana.
 INC - Incumplida, al resivir los pago, se comprueba que no pago.
 EFE - Efectiva, al resivir los pago, se comprueba que si pago.
 REP - Reprogramada
 select * from Estado
  */
+
+insert into tbl_cliente(nombre,codigo,estado,usuarioIngreso) values('Credomatic','00017','ACT','hbonilla');
 
 insert into Estado(codigo,descripcion,usuarioIngreso) values('ING','Ingresar','hbonilla');
 insert into Estado(codigo,descripcion,usuarioIngreso) values('ACT','Activo','hbonilla');
@@ -565,8 +601,8 @@ insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIn
 insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'SUEGRO(A)',null,'hbonilla');
 
 
--- MENSAJE COMPAÃƒâ€˜ERO
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'MENSAJE COMPAÑERO',null,'hbonilla');
+-- MENSAJE COMPAÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“ERO
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'MENSAJE COMPAÃ±ERO',null,'hbonilla');
 
 
 
@@ -592,33 +628,6 @@ insert into moneda(codigo,simbolo,descripcion,usuarioIngreso) values('USD','$','
 insert into tbl_rolusuario (nombre,descripcion,usuarioIngreso) values('Gestor','Gestiona llamadas y promesas','hbonilla');
 insert into tbl_rolusuario (nombre,descripcion,usuarioIngreso) values('Supervisor','Supervisa la gestion de llamadas y promesas','hbonilla');
 
-
-/*
- ************************************************************************************************************************************************ 
- */
-CREATE TABLE IF NOT EXISTS tbl_resultadogestion (
-	id_resultadogestion SERIAL PRIMARY KEY,
-  	descripcion varchar(250),
-  	codigo varchar(3),
-    id_tipificacion SERIAL references Tipificacion(id_tipificacion),
-  	id_subtipificacion int4 references SubTipificacion(id_subtipificacion),
-  	usuarioIngreso varchar(50),
-	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
-    usuarioModifico varchar(50),
-	fechaModifico TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS tbl_resultadotercero (
-	id_resultadotercero SERIAL PRIMARY KEY,
-	id_resultadogestion SERIAL references tbl_resultadogestion(id_resultadogestion),
-	id_tipificacion SERIAL references Tipificacion(id_tipificacion),
-  	descripcion varchar(250),
-  	codigo varchar(3),
-  	usuarioIngreso varchar(50),
-	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
-    usuarioModifico varchar(50),
-	fechaModifico TIMESTAMP
-);
 
 --*****************************************************************************************
 /*
@@ -692,111 +701,51 @@ insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion
 insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(9,8,'BRINDO TELEFONO o CORREO PARA LOCALIZAR AL TITULAR','BTC','hbonilla');
 
 /******************************************************************************
-*******************************************************************************/
-
-create table if not EXISTS tbl_cliente_prefijo (
-  "id" serial not null,
-  "id_cliente" serial references tbl_cliente(id_cliente) not null,
-  "id_salida" serial references tbl_prefijo_salida(id) not null,
-  primary key ("id")
-);
-
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,1);
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,2);
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,3);
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,4);
+******************************************************************************/
 
 /*
 ******************************************************************************************************** 
 */
 
 create table if not EXISTS tbl_central (
-  "id" serial not null,
-  "nombre_central" varchar(50),
-  "protocolo" varchar(10),
-   "ip_central" varchar(30),
-  "Directorio" varchar(30),
+  id serial not null,
+  nombre_central varchar(50),
+  protocolo varchar(10),
+  ip_central varchar(30),
+  directorio varchar(30),
   primary key ("id")
  );
 
-INSERT INTO public.tbl_central(nombre_central, protocolo, ip_central, "Directorio") VALUES('PBX', 'http://', '190.106.65.237', '/PBXPortal/');
+INSERT INTO tbl_central(nombre_central, protocolo, ip_central, directorio) VALUES('PBX', 'http://', '190.106.65.237', '/PBXPortal/');
 
 
 --*************************************************************************************************
 create table if not EXISTS tbl_prefijo_salida (
-  "id" serial not null,
-  "id_central" serial references tbl_central(id) not null,
-  "prefijo" varchar(10),
-  "nombre" varchar(20),
-  "descripcion" varchar(60),
+  id serial not null,
+  id_cliente serial references tbl_cliente(id_cliente) not null,
+  id_central serial references tbl_central(id) not null,
+  prefijo varchar(10),
+  nombre varchar(20),
+  descripcion varchar(60),
   primary key ("id")
  );
 
 
-INSERT INTO public.tbl_prefijo_salida
-(id_central,prefijo, nombre, descripcion)
-VALUES(1,'4', 'privado', 'Salida de la llamada por un n�mero privado');
-
-
-INSERT INTO public.tbl_prefijo_salida
-(id_central,prefijo, nombre, descripcion)
-VALUES(1,'6', 'celular', 'Salida de la llamada por un n�mero celular al azar');
-
-INSERT INTO public.tbl_prefijo_salida
-(id_central,prefijo, nombre, descripcion)
-VALUES(1,'8', 'telefonica', 'Salida de la llamada por un n�mero de movistar telefonica');
-
-INSERT INTO public.tbl_prefijo_salida
-(id_central,prefijo, nombre, descripcion)
-VALUES(1,'9', 'claro', 'Salida de la llamada por un n�mero de claro');
-
 --*************************************************************************************************
-
-create table if not EXISTS tbl_cliente_prefijo (
-  "id" serial not null,
-  "id_cliente" serial references tbl_cliente(id_cliente) not null,
-  "id_salida" serial references tbl_prefijo_salida(id) not null,
-  primary key ("id")
-);
-
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,1);
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,2);
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,3);
-
-insert into tbl_cliente_prefijo
-(id_cliente,id_salida)
-values(1,4);
+INSERT INTO tbl_prefijo_salida(id_cliente,id_central,prefijo, nombre, descripcion) VALUES(1,1,'4', 'Privado', 'Salida de la llamada por un n�mero privado');
+INSERT INTO tbl_prefijo_salida(id_cliente,id_central,prefijo, nombre, descripcion) VALUES(1,1,'6', 'Celular', 'Salida de la llamada por un n�mero celular al azar');
+INSERT INTO tbl_prefijo_salida(id_cliente,id_central,prefijo, nombre, descripcion)VALUES(1,1,'8', 'Telefonica', 'Salida de la llamada por un n�mero de movistar telefonica');
+INSERT INTO tbl_prefijo_salida(id_cliente,id_central,prefijo, nombre, descripcion) VALUES(1,1,'9', 'Claro', 'Salida de la llamada por un n�mero de claro');
 
 
 --*************************************************************************************************
 
 create table if not EXISTS tbl_url_llamada (
-  "id" serial not null,
-  "id_central" serial references tbl_central(id) not null,
-  "servicio" varchar(50),
-    "parametro" varchar(100),
-     "descripcion" varchar(50),
+  id serial not null,
+  id_central serial references tbl_central(id) not null,
+  servicio varchar(50),
+  parametro varchar(100),
+  descripcion varchar(50),
   primary key ("id")
 );
 
@@ -817,24 +766,45 @@ INSERT INTO public.tbl_url_llamada
 (id_central,servicio, parametro, descripcion)
 VALUES(1,'consultar.php?call_log_id=', '&bajar=1', 'descargar');
 
-
---*************************************************************************************************
+/*
+*************************************************************************************************
+*************************************************************************************************
+*/
 create table if not EXISTS tbl_pagos_historial (
-  "id" serial not null,
-  "codigo_cartera" varchar(6) not null,
-  "numero_cuenta" varchar(20)  not null,
-  "fecha_pago" timestamp,
-  "codigo_gestor" varchar(20) ,
-  "tipo_pago" varchar(20),
-  "total_colones" decimal(18,6) default 0,
-    "total_dolares" decimal(18,6) default 0,
-     "usuario_ingreso" varchar(30) not null,
- "fecha_ingreso" timestamp not null default current_timestamp,
- "usuario_modifico" varchar(30) default '' ,
- "fecha_modifico" timestamp default null ,
+	"id" serial not null,
+  	"codigo_cartera" varchar(6) not null,
+  	"numero_cuenta" varchar(20)  not null,
+  	"fecha_pago" timestamp,
+  	"codigo_gestor" varchar(20) ,
+  	"tipo_pago" varchar(20),
+  	"total_colones" decimal(18,6) default 0,
+  	"total_dolares" decimal(18,6) default 0,
+  	"usuario_ingreso" varchar(30) not null,
+ 	"fecha_ingreso" timestamp not null default current_timestamp,
+ 	"usuario_modifico" varchar(30) default '' ,
+ 	"fecha_modifico" timestamp default null ,
     primary key ("id")
-); 
+);
 
+/*
+*************************************************************************************************
+*************************************************************************************************
+*/
+CREATE TABLE IF NOT EXISTS tbl_GestionSaldo (
+    id_GestionSaldo SERIAL PRIMARY KEY,
+    id_gestion BIGSERIAL references tbl_gestion(id_gestion),
+    saldo decimal(18,6) default 0,
+    intereses decimal(18,6) default 0,
+    /*
+    leyUsura varchar(1) default '0'
+  	mtoSaldoCobrar decimal(18,6) default 0
+  	*/
+    id_Moneda SERIAL references moneda(id_Moneda),
+	usuarioIngreso varchar(50),
+	fechaIngreso timestamp default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico timestamp
+);
 /******************************************************************************
 ************************************** fin ************************************
 *******************************************************************************/

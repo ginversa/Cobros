@@ -27,9 +27,6 @@ public interface PromesaService {
 
     public List<TblPromesa> findByFechaPago(TblPromesa obj);
 
-    // public List<TblPromesa> findByMtopago(TblPromesa obj);
-    public List<TblPromesa> findByMoneda(TblPromesa obj);
-
     public List<TblPromesa> findByUsuarioingreso(TblPromesa obj);
 
     public List<TblPromesa> findByFechaingreso(TblPromesa obj);
