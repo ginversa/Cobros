@@ -1267,11 +1267,11 @@ Arreglo de Pago
                     promesa.setTipoarreglopago("CTC");//CTC = Cancelacion Total por Cuotas.
                     promesa.setFechaingreso(this.fechaHoy.getTime());
 
-                    if (this.existOneCAT(promesa) && this.existOneREF(promesa) && this.validOnlyThreeCTC(promesa) && this.existOnePAP(promesa)) {
-                        this.promesaList.add(promesa);
-                        FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
-                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                    }
+                    //if (this.existOneCAT(promesa) && this.existOneREF(promesa) && this.validOnlyThreeCTC(promesa) && this.existOnePAP(promesa)) {
+                    this.promesaList.add(promesa);
+                    FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    //}
                 }
             }
 
@@ -1366,6 +1366,23 @@ Arreglo de Pago
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
+    
+    /**
+     * Arreglo de pago.
+     * Limpia campos del formulario
+     */
+    public void cleanFormArregloPago(){
+        
+        this.setClienteOperacion(null); //clienteOperacion;
+        this.setMtoSaldoOperacion(BigDecimal.ZERO); //mtoSaldoOperacion;
+        this.setTipoDescuentoPromesa(null); //tipoDescuentoPromesa;
+        this.setMtoDescuentoPromesa(BigDecimal.ZERO); //mtoDescuentoPromesa;
+        this.setMtoSaldoPromesa(BigDecimal.ZERO); //mtoSaldoPromesa;
+        this.setFechaPagoPromesa(null); //fechaPagoPromesa;
+        this.setCuotas(null); //cuotas;        
+        
+        this.deleteArregloPago();    
+    }
 
     /**
      * CAT = Cancelacion Total. CTC = Cancelacion Total por Cuotas. REF =
@@ -1382,14 +1399,6 @@ Arreglo de Pago
         while (this.promesaList.size() > 0 && this.promesaList.size() > index) {
             this.promesaList.remove(index);
         }
-
-        this.setClienteOperacion(null); //clienteOperacion;
-        this.setMtoSaldoOperacion(BigDecimal.ZERO); //mtoSaldoOperacion;
-        this.setTipoDescuentoPromesa(null); //tipoDescuentoPromesa;
-        this.setMtoDescuentoPromesa(BigDecimal.ZERO); //mtoDescuentoPromesa;
-        this.setMtoSaldoPromesa(BigDecimal.ZERO); //mtoSaldoPromesa;
-        this.setFechaPagoPromesa(null); //fechaPagoPromesa;
-        this.setCuotas(null); //cuotas;
     }
 
     /**
@@ -1450,11 +1459,11 @@ Arreglo de Pago
                 // borra las promesas...
                 this.deleteByOperacionAndArregloPago(this.clienteOperacion, "PAP");
 
-                if (this.existOneCAT(promesa) && this.existOneREF(promesa) && this.existOneCTC(promesa) && this.existOnePAP(promesa)) {
-                    this.promesaList.add(promesa);
-                    FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                }
+                //if (this.existOneCAT(promesa) && this.existOneREF(promesa) && this.existOneCTC(promesa) && this.existOnePAP(promesa)) {
+                this.promesaList.add(promesa);
+                FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                //}
 
             }
 
@@ -1774,7 +1783,7 @@ Arreglo de Pago
                     this.promesaList.remove(index);
                     this.selectedPromesa = null;
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Promesa Removida"));
-                    PrimeFaces.current().ajax().update("formGestion:messages", "formGestion:tblPromesa");
+                    PrimeFaces.current().ajax().update("formGestion:messages", "formGestion:tblPromesaArregloPago,formGestion:tblPromesaArregloPagoCTC,formGestion:tblPromesaArregloPagoREF,formGestion:tblPromesaArregloPagoPAP");
                 }
             }
         }
@@ -1888,10 +1897,7 @@ Arreglo de Pago
      * @param pFechaPago
      */
     public void recalcularCuotas(String pOperacion, BigDecimal pmtoPago, Date pFechaPago) {
-
-        Calendar fechaInicial = Calendar.getInstance();
-        fechaInicial.setTime(this.fechaPagoPromesa);
-
+        
         BigDecimal coutasInt = new BigDecimal(this.cuotas);
         BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
         BigDecimal sumar = new BigDecimal(BigInteger.ZERO);
@@ -1916,8 +1922,7 @@ Arreglo de Pago
                 if (isTrueOperacion && isFechaPagoEquals && index == 0) {
                     this.promesaList.get(index).setMtopago(saldo);
 
-                }
-                if (isTrueOperacion && isFechaPagoEquals && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                } else if (isTrueOperacion && isFechaPagoEquals && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
                     this.promesaList.get(index).setMtopago(saldo);
 
                 } else if (isTrueOperacion && isFechaPagoAfter) {
@@ -1981,9 +1986,6 @@ Arreglo de Pago
      */
     public void recalcularCuotasREF(String pOperacion, BigDecimal pmtoPago, Date pFechaPago) {
 
-        Calendar fechaInicial = Calendar.getInstance();
-        fechaInicial.setTime(this.fechaPagoPromesa);
-
         BigDecimal coutasInt = new BigDecimal(this.cuotas);
         BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
         BigDecimal sumar = new BigDecimal(BigInteger.ZERO);
@@ -2008,8 +2010,7 @@ Arreglo de Pago
                 if (isTrueOperacion && isFechaPagoEquals && index == 0) {
                     this.promesaList.get(index).setMtopago(saldo);
 
-                }
-                if (isTrueOperacion && isFechaPagoEquals && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                } else if (isTrueOperacion && isFechaPagoEquals && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
                     this.promesaList.get(index).setMtopago(saldo);
 
                 } else if (isTrueOperacion && isFechaPagoAfter) {
