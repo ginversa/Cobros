@@ -149,7 +149,7 @@ public class CarteraGestionController implements Serializable {
         if (this.prefijoSalidaList != null && !this.prefijoSalidaList.isEmpty()) {
             //prefijoSalidaSelected = this.prefijoSalidaList.get(0);
         }
-        
+
         this.leyusuraIsRequired = false;
         this.leyusuraDisabled = true;
 
@@ -246,8 +246,8 @@ public class CarteraGestionController implements Serializable {
 
     public void setLeyusuraDisabled(boolean leyusuraDisabled) {
         this.leyusuraDisabled = leyusuraDisabled;
-    }   
-    
+    }
+
 
     /*
     ***************************************************************************
@@ -381,12 +381,12 @@ public class CarteraGestionController implements Serializable {
             this.gestion.setFechaingreso(this.fechaHoy.getTime());// fecha Hoy...
             this.gestion.setLeyusura(objCartera.getLeyusura());
             this.gestion.setMtosaldocobrar(BigDecimal.ZERO);
-            
-            if(this.gestion.getLeyusura() != null && this.gestion.getLeyusura().equals("1")){
+
+            if (this.gestion.getLeyusura() != null && this.gestion.getLeyusura().equals("1")) {
                 this.setLeyusuraIsRequired(true);
                 this.setLeyusuraDisabled(false);
-                
-            }else{
+
+            } else {
                 this.setLeyusuraIsRequired(false);
                 this.setLeyusuraDisabled(true);
             }
@@ -1377,15 +1377,19 @@ Arreglo de Pago
         arregloPago.add("CTC");
         arregloPago.add("REF");
         arregloPago.add("PAP");
-        /*
-        for (String tipoPago : arregloPago) {
-            System.out.println(tipoPago);
-        }
-         */
+
         int index = 0;
         while (this.promesaList.size() > 0 && this.promesaList.size() > index) {
             this.promesaList.remove(index);
         }
+
+        this.setClienteOperacion(null); //clienteOperacion;
+        this.setMtoSaldoOperacion(BigDecimal.ZERO); //mtoSaldoOperacion;
+        this.setTipoDescuentoPromesa(null); //tipoDescuentoPromesa;
+        this.setMtoDescuentoPromesa(BigDecimal.ZERO); //mtoDescuentoPromesa;
+        this.setMtoSaldoPromesa(BigDecimal.ZERO); //mtoSaldoPromesa;
+        this.setFechaPagoPromesa(null); //fechaPagoPromesa;
+        this.setCuotas(null); //cuotas;
     }
 
     /**
@@ -1465,13 +1469,24 @@ Arreglo de Pago
      * @return
      */
     public boolean validPagoParcial() {
+
         if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
+        } else if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
         } else if (this.mtoSaldoPromesa == null || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == -1) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser mayor a cero!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.mtoSaldoPromesa.compareTo(this.mtoSaldoOperacion) > 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser menor o igual al saldo de la operación!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
@@ -1578,13 +1593,13 @@ Arreglo de Pago
      */
     private boolean validArregloPago() {
 
-        if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
+        if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
-        } else if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
+        } else if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
@@ -1678,13 +1693,13 @@ Arreglo de Pago
      */
     private boolean validRefinanciamiento() {
 
-        if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
+        if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
-        } else if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
+        } else if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
@@ -1730,9 +1745,9 @@ Arreglo de Pago
             if (this.selectedPromesa != null && (this.promesaList != null && this.promesaList.size() > 0)) {
 
                 boolean isTrueTelefono = this.promesaList.get(index).getTelefono().equals(this.selectedPromesa.getTelefono()) ? true : false;
-                boolean isTrueOperacion = true;
-                boolean isTrueTipoDescuento = this.promesaList.get(index).getTipodescuento().equals(this.selectedPromesa.getTipodescuento()) ? true : false;
-                boolean isTrueMontoPorcentaje = this.promesaList.get(index).getMtoporcentaje().equals(this.selectedPromesa.getMtoporcentaje()) ? true : false;
+                boolean isTrueOperacion = this.promesaList.get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
+                //boolean isTrueTipoDescuento = this.promesaList.get(index).getTipodescuento().equals(this.selectedPromesa.getTipodescuento()) ? true : false;
+                //boolean isTrueMontoPorcentaje = this.promesaList.get(index).getMtoporcentaje().equals(this.selectedPromesa.getMtoporcentaje()) ? true : false;
                 boolean isTrueMtopago = this.promesaList.get(index).getMtopago().equals(this.selectedPromesa.getMtopago()) ? true : false;
                 boolean isTrueFechaPago = this.promesaList.get(index).getFechaPago().equals(this.selectedPromesa.getFechaPago()) ? true : false;
                 boolean isTrueEstado = this.promesaList.get(index).getEstado().equals(this.selectedPromesa.getEstado()) ? true : false;
@@ -1743,7 +1758,8 @@ Arreglo de Pago
                     isTrueOperacion = this.promesaList.get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
                 }
 
-                if (isTrueTelefono && isTrueOperacion && isTrueTipoDescuento && isTrueMontoPorcentaje && isTrueMtopago && isTrueFechaPago && isTrueEstado && isTrueTipoArreglo && isTrueMoneda) {
+                // isTrueTipoDescuento && isTrueMontoPorcentaje &&
+                if (isTrueTelefono && isTrueOperacion && isTrueMtopago && isTrueFechaPago && isTrueEstado && isTrueTipoArreglo && isTrueMoneda) {
 
                     TblPromesa promesa = this.promesaList.get(index);
                     boolean hasOperation = promesa.getOperacion() != null && !promesa.getOperacion().trim().equals("") ? true : false;
@@ -1955,6 +1971,107 @@ Arreglo de Pago
                 }//else
             }//for
         }//else
+    }
+
+    /**
+     *
+     * @param pOperacion
+     * @param pmtoPago
+     * @param pFechaPago
+     */
+    public void recalcularCuotasREF(String pOperacion, BigDecimal pmtoPago, Date pFechaPago) {
+
+        Calendar fechaInicial = Calendar.getInstance();
+        fechaInicial.setTime(this.fechaPagoPromesa);
+
+        BigDecimal coutasInt = new BigDecimal(this.cuotas);
+        BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
+        BigDecimal sumar = new BigDecimal(BigInteger.ZERO);
+        BigDecimal contador = new BigDecimal(BigInteger.ZERO);
+
+        if (pmtoPago.compareTo(this.mtoSaldoOperacion) > 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto digitado es mayor al Monto Promesa!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+            saldo = this.mtoSaldoOperacion.divide(coutasInt, 6, RoundingMode.HALF_UP);
+
+            for (int index = 0; index < this.promesaList.size(); index++) {
+
+                String operacion = this.promesaList.get(index).getOperacion();
+                Date fechaPago = this.promesaList.get(index).getFechaPago();
+
+                boolean isTrueOperacion = pOperacion.equals(operacion);
+                boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
+                boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
+                contador = contador.add(BigDecimal.ONE);
+
+                if (isTrueOperacion && isFechaPagoEquals && index == 0) {
+                    this.promesaList.get(index).setMtopago(saldo);
+
+                }
+                if (isTrueOperacion && isFechaPagoEquals && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                    this.promesaList.get(index).setMtopago(saldo);
+
+                } else if (isTrueOperacion && isFechaPagoAfter) {
+                    this.promesaList.get(index).setMtopago(saldo);
+
+                } else if (coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                    BigDecimal mtoUltimo = this.mtoSaldoOperacion.subtract(sumar);
+                    this.promesaList.get(index).setMtopago(mtoUltimo);
+
+                } else {
+                    sumar = sumar.add(this.promesaList.get(index).getMtopago());
+                    BigDecimal saldoRestante = this.mtoSaldoOperacion.subtract(sumar);
+                    if (!coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                        saldo = saldoRestante.divide(coutasInt.subtract(contador), 6, RoundingMode.HALF_UP);
+                    }
+                }
+
+            }//for
+
+        } else {
+
+            for (int index = 0; index < this.promesaList.size(); index++) {
+                if (sumar.compareTo(this.mtoSaldoOperacion) > 0) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "La suma de las cuotas es mayor al Monto Promesa!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    break;
+
+                } else {
+                    String operacion = this.promesaList.get(index).getOperacion();
+                    Date fechaPago = this.promesaList.get(index).getFechaPago();
+
+                    boolean isTrueOperacion = pOperacion.equals(operacion);
+                    boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
+                    contador = contador.add(BigDecimal.ONE);
+
+                    if (isTrueOperacion && isFechaPagoAfter) {
+                        this.promesaList.get(index).setMtopago(saldo);
+
+                    } else if (coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                        BigDecimal mtoUltimo = this.mtoSaldoOperacion.subtract(sumar);
+                        this.promesaList.get(index).setMtopago(mtoUltimo);
+
+                    } else {
+                        sumar = sumar.add(this.promesaList.get(index).getMtopago());
+                        BigDecimal saldoRestante = this.mtoSaldoOperacion.subtract(sumar);
+                        if (!coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                            saldo = saldoRestante.divide(coutasInt.subtract(contador), 6, RoundingMode.HALF_UP);
+                        }
+                    }
+
+                }//else
+            }//for
+        }//else
+    }
+
+    /**
+     *
+     * @param event
+     */
+    public void fechaPagoChanged(SelectEvent event) {
+        Date fecha = (Date) event.getObject();
+        this.fechaPagoPromesa.setTime(fecha.getTime());
     }
 
 }//end
