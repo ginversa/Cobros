@@ -129,7 +129,7 @@ public class Moneda implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.Moneda[ idMoneda=" + idMoneda + " ]";
+        return this.simbolo.toString();
     }
 
     public String getCodigo() {
