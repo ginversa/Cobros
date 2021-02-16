@@ -967,13 +967,16 @@
                                                              scrollable="true" rows="5"                                                             
                                                              widgetVar="tblPromesaArregloPagoPAP"
                                                              reflow="true"
-                                                             editable="true">                                                    
-
+                                                             editable="true">
+                                                    
+                                                    <!-- 
                                                     <p:column exportable="false">
                                                         <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
-                                                            <f:setPropertyActionListener value="#{promesa}" target="#{carteraGestionController.selectedPromesa}" />
-                                                        </p:commandButton>
+                                                        <f:setPropertyActionListener value="#{promesa}" target="#{carteraGestionController.selectedPromesa}" />
+                                                    </p:commandButton>                                                    
                                                     </p:column>
+                                                    -->
+                                                    
                                                     <p:column headerText="Teléfono" >
                                                         <h:outputText value="#{promesa.telefono}" />
                                                     </p:column>
@@ -1402,13 +1405,16 @@
                                                              scrollable="true" rows="5"                                                             
                                                              widgetVar="tblPromesaArregloPagoPAPUSD"
                                                              reflow="true"
-                                                             editable="true">                                                    
+                                                             editable="true">
 
+                                                    <!-- comment 
                                                     <p:column exportable="false">
                                                         <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
                                                             <f:setPropertyActionListener value="#{promesa}" target="#{carteraGestionController.selectedPromesa}" />
                                                         </p:commandButton>
                                                     </p:column>
+                                                    -->
+
                                                     <p:column headerText="Teléfono" >
                                                         <h:outputText value="#{promesa.telefono}" />
                                                     </p:column>
