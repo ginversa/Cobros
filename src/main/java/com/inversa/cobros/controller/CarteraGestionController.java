@@ -2016,88 +2016,144 @@ Arreglo de Pago
      */
     public void recalcularCuotas(String pOperacion, BigDecimal pmtoPago, Date pFechaPago, String tipoarreglopago, String codigoMoneda) {
 
-        BigDecimal coutasInt = new BigDecimal(this.cuotas);
-        BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
-        BigDecimal sumar = new BigDecimal(BigInteger.ZERO);
-        BigDecimal contador = new BigDecimal(BigInteger.ZERO);
+        if (tipoarreglopago.equals("CTC") && codigoMoneda.equals("CRC")) {
 
-        if (pmtoPago.compareTo(this.mtoSaldoPromesa) > 0) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto digitado es mayor al Monto Promesa!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            BigDecimal coutasInt = new BigDecimal(this.cuotas);
+            BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
+            BigDecimal sumar = new BigDecimal(BigInteger.ZERO);
+            BigDecimal contador = new BigDecimal(BigInteger.ZERO);
 
-            saldo = this.mtoSaldoPromesa.divide(coutasInt, 6, RoundingMode.HALF_UP);
+            if (pmtoPago.compareTo(this.mtoSaldoPromesa) > 0) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto digitado es mayor al Monto Promesa!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
 
-            for (int index = 0; index < this.promesaList.size(); index++) {
+                saldo = this.mtoSaldoPromesa.divide(coutasInt, 6, RoundingMode.HALF_UP);
 
-                String operacion = this.promesaList.get(index).getOperacion();
-                Date fechaPago = this.promesaList.get(index).getFechaPago();
-                String arregloPago = this.promesaList.get(index).getTipoarreglopago();
-                String codigoMonedaString = this.promesaList.get(index).getIdMoneda().getCodigo();
+                for (int index = 0; index < this.promesaList.size(); index++) {
 
-                boolean isTrueOperacion = pOperacion.equals(operacion);
-                boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
-                boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
-                boolean isArregloPago = arregloPago.equals(tipoarreglopago);
-                boolean isMoneda = codigoMoneda.equals(codigoMonedaString);
-                contador = contador.add(BigDecimal.ONE);
-
-                if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoEquals && index == 0) {
-                    this.promesaList.get(index).setMtopago(saldo);
-
-                } else if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoEquals && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
-                    this.promesaList.get(index).setMtopago(saldo);
-
-                } else if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoAfter) {
-                    this.promesaList.get(index).setMtopago(saldo);
-
-                } else if (isArregloPago && isMoneda && coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
-                    BigDecimal mtoUltimo = this.mtoSaldoPromesa.subtract(sumar);
-                    this.promesaList.get(index).setMtopago(mtoUltimo);
-
-                } else if (isArregloPago && isMoneda && isTrueOperacion) {
-                    sumar = sumar.add(this.promesaList.get(index).getMtopago());
-                    BigDecimal saldoRestante = this.mtoSaldoPromesa.subtract(sumar);
-                    if (isArregloPago && isMoneda && isTrueOperacion && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
-                        saldo = saldoRestante.divide(coutasInt.subtract(contador), 6, RoundingMode.HALF_UP);
-                    }
-                }
-
-            }//for
-
-        } else {
-
-            for (int index = 0; index < this.promesaList.size(); index++) {
-                if (sumar.compareTo(this.mtoSaldoPromesa) > 0) {
-                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "La suma de las cuotas es mayor al Monto Promesa!");
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                    break;
-
-                } else {
                     String operacion = this.promesaList.get(index).getOperacion();
                     Date fechaPago = this.promesaList.get(index).getFechaPago();
+                    String monedaString = this.promesaList.get(index).getIdMoneda().getCodigo();
+                    String arreglopago = this.promesaList.get(index).getTipoarreglopago();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
+                    boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
                     boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
-                    contador = contador.add(BigDecimal.ONE);
+                    boolean isMoneda = codigoMoneda.equals(monedaString);
 
-                    if (isTrueOperacion && isFechaPagoAfter) {
+                    boolean isArregloPago = arreglopago.equals(tipoarreglopago);
+                    if (isArregloPago) {
+                        contador = contador.add(BigDecimal.ONE);
+                    }
+
+                    if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoEquals && index == 0) {
                         this.promesaList.get(index).setMtopago(saldo);
 
-                    } else if (coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                    } else if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoEquals && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                        this.promesaList.get(index).setMtopago(saldo);
+
+                    } else if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoAfter) {
+                        this.promesaList.get(index).setMtopago(saldo);
+
+                    } else if (isArregloPago && isMoneda && isTrueOperacion && coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
                         BigDecimal mtoUltimo = this.mtoSaldoPromesa.subtract(sumar);
                         this.promesaList.get(index).setMtopago(mtoUltimo);
 
-                    } else {
+                    } else if (isArregloPago && isMoneda && isTrueOperacion) {
                         sumar = sumar.add(this.promesaList.get(index).getMtopago());
                         BigDecimal saldoRestante = this.mtoSaldoPromesa.subtract(sumar);
-                        if (!coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                        if (isArregloPago && isMoneda && isTrueOperacion && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
                             saldo = saldoRestante.divide(coutasInt.subtract(contador), 6, RoundingMode.HALF_UP);
                         }
                     }
+                }//for
 
-                }//else
-            }//for
-        }//else
+            } else {
+
+                for (int index = 0; index < this.promesaList.size(); index++) {
+
+                    String operacion = this.promesaList.get(index).getOperacion();
+                    Date fechaPago = this.promesaList.get(index).getFechaPago();
+                    String monedaString = this.promesaList.get(index).getIdMoneda().getCodigo();
+                    String arreglopago = this.promesaList.get(index).getTipoarreglopago();
+
+                    boolean isTrueOperacion = pOperacion.equals(operacion);
+                    boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
+                    boolean isMoneda = codigoMoneda.equals(monedaString);
+                    boolean isArregloPago = arreglopago.equals(tipoarreglopago);
+                    if (isArregloPago) {
+                        contador = contador.add(BigDecimal.ONE);
+                    }
+
+                    if (sumar.compareTo(this.mtoSaldoPromesa) > 0) {
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "La suma de las cuotas es mayor al Monto Promesa!");
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+
+                        BigDecimal mtoPagoSiguiente = BigDecimal.ZERO;
+                        boolean isTrue = (this.promesaList.size() - index) >= 1;
+                        if (isTrue) {
+                            BigDecimal indexMenosUno = new BigDecimal(index - 1);
+                            BigDecimal mtoPagoAnterior = this.promesaList.get(indexMenosUno.intValue()).getMtopago();
+                            sumar = sumar.subtract(mtoPagoAnterior);
+                            BigDecimal saldoRestante = this.mtoSaldoPromesa.subtract(sumar);
+                            BigDecimal contar = BigDecimal.ZERO;
+                            for (int i = 0; i < this.promesaList.size(); i++) {
+                                String isCTCString = this.promesaList.get(i).getTipoarreglopago();
+                                String isUSDString = this.promesaList.get(i).getIdMoneda().getCodigo();
+                                String isOperacionString = this.promesaList.get(i).getOperacion();
+                                boolean isCTC = tipoarreglopago.equals(isCTCString);
+                                boolean isUSD = codigoMoneda.equals(isUSDString);
+                                boolean isOperacion = pOperacion.equals(isOperacionString);
+
+                                if (isCTC && isUSD && isOperacion) {
+                                    contar = contar.add(BigDecimal.ONE);
+                                }
+                            }
+
+                            BigDecimal promesaSize = new BigDecimal(this.promesaList.size());
+                            // contar = promesaSize.subtract(contar);
+
+                            BigDecimal cantidaRestante = contar.subtract(BigDecimal.ONE);
+                            saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
+                            index = indexMenosUno.intValue();
+                            while (index < this.promesaList.size()) {
+                                String isCTCString = this.promesaList.get(index).getTipoarreglopago();
+                                String isUSDString = this.promesaList.get(index).getIdMoneda().getCodigo();
+                                String isOperacionString = this.promesaList.get(index).getOperacion();
+                                boolean isCTC = tipoarreglopago.equals(isCTCString);
+                                boolean isUSD = codigoMoneda.equals(isUSDString);
+                                boolean isOperacion = pOperacion.equals(isOperacionString);
+
+                                if (isCTC && isUSD && isOperacion) {
+                                    this.promesaList.get(index).setMtopago(saldoRestante);
+                                }
+
+                                index++;
+                            }
+                        }
+
+                        break;
+
+                    } else {
+
+                        if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoAfter) {
+                            this.promesaList.get(index).setMtopago(saldo);
+
+                        } else if (isArregloPago && isMoneda && isTrueOperacion && coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                            BigDecimal mtoUltimo = this.mtoSaldoPromesa.subtract(sumar);
+                            this.promesaList.get(index).setMtopago(mtoUltimo);
+
+                        } else if (isArregloPago && isMoneda && isTrueOperacion) {
+                            sumar = sumar.add(this.promesaList.get(index).getMtopago());
+                            BigDecimal saldoRestante = this.mtoSaldoPromesa.subtract(sumar);
+                            if (isArregloPago && isMoneda && isTrueOperacion && !coutasInt.subtract(contador).equals(BigDecimal.ZERO)) {
+                                saldo = saldoRestante.divide(coutasInt.subtract(contador), 6, RoundingMode.HALF_UP);
+                            }
+                        }
+                    }//else
+                }//for
+            }//else
+        }// if CTC
     }
 
     /**
@@ -2169,7 +2225,7 @@ Arreglo de Pago
                         BigDecimal mtoPagoSiguiente = BigDecimal.ZERO;
                         boolean isTrue = (this.promesaList.size() - index) >= 1;
                         if (isTrue) {
-                            int indexMenosUno = index-1;
+                            int indexMenosUno = index - 1;
                             BigDecimal mtoPagoAnterior = this.promesaList.get(indexMenosUno).getMtopago();
                             sumar = sumar.subtract(mtoPagoAnterior);
                             BigDecimal saldoRestante = this.mtoSaldoOperacion.subtract(sumar);
@@ -2177,7 +2233,7 @@ Arreglo de Pago
                             BigDecimal cantidaRestante = new BigDecimal(cantida);
                             saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
                             index = indexMenosUno;
-                            while(index < this.promesaList.size()){
+                            while (index < this.promesaList.size()) {
                                 this.promesaList.get(index).setMtopago(saldoRestante);
                                 index++;
                             }
@@ -2330,8 +2386,11 @@ Arreglo de Pago
                     boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
                     boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
                     boolean isMoneda = codigoMoneda.equals(monedaString);
+
                     boolean isArregloPago = arreglopago.equals(tipoarreglopago);
-                    contador = contador.add(BigDecimal.ONE);
+                    if (isArregloPago) {
+                        contador = contador.add(BigDecimal.ONE);
+                    }
 
                     if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoEquals && index == 0) {
                         this.promesaList.get(index).setMtopago(saldo);
@@ -2358,22 +2417,70 @@ Arreglo de Pago
             } else {
 
                 for (int index = 0; index < this.promesaList.size(); index++) {
+
+                    String operacion = this.promesaList.get(index).getOperacion();
+                    Date fechaPago = this.promesaList.get(index).getFechaPago();
+                    String monedaString = this.promesaList.get(index).getIdMoneda().getCodigo();
+                    String arreglopago = this.promesaList.get(index).getTipoarreglopago();
+
+                    boolean isTrueOperacion = pOperacion.equals(operacion);
+                    boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
+                    boolean isMoneda = codigoMoneda.equals(monedaString);
+                    boolean isArregloPago = arreglopago.equals(tipoarreglopago);
+                    if (isArregloPago) {
+                        contador = contador.add(BigDecimal.ONE);
+                    }
+
                     if (sumar.compareTo(this.mtoSaldoPromesaUSD) > 0) {
                         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "La suma de las cuotas es mayor al Monto Promesa!");
                         FacesContext.getCurrentInstance().addMessage(null, msg);
+
+                        BigDecimal mtoPagoSiguiente = BigDecimal.ZERO;
+                        boolean isTrue = (this.promesaList.size() - index) >= 1;
+                        if (isTrue) {
+                            BigDecimal indexMenosUno = new BigDecimal(index - 1);
+                            BigDecimal mtoPagoAnterior = this.promesaList.get(indexMenosUno.intValue()).getMtopago();
+                            sumar = sumar.subtract(mtoPagoAnterior);
+                            BigDecimal saldoRestante = this.mtoSaldoPromesaUSD.subtract(sumar);
+                            BigDecimal contar = BigDecimal.ZERO;
+                            for (int i = 0; i < this.promesaList.size(); i++) {
+                                String isCTCString = this.promesaList.get(i).getTipoarreglopago();
+                                String isUSDString = this.promesaList.get(i).getIdMoneda().getCodigo();
+                                String isOperacionString = this.promesaList.get(i).getOperacion();
+                                boolean isCTC = tipoarreglopago.equals(isCTCString);
+                                boolean isUSD = codigoMoneda.equals(isUSDString);
+                                boolean isOperacion = pOperacion.equals(isOperacionString);
+
+                                if (isCTC && isUSD && isOperacion) {
+                                    contar = contar.add(BigDecimal.ONE);
+                                }
+                            }
+
+                            BigDecimal promesaSize = new BigDecimal(this.promesaList.size());
+                            // contar = promesaSize.subtract(contar);
+
+                            BigDecimal cantidaRestante = contar.subtract(BigDecimal.ONE);
+                            saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
+                            index = indexMenosUno.intValue();
+                            while (index < this.promesaList.size()) {
+                                String isCTCString = this.promesaList.get(index).getTipoarreglopago();
+                                String isUSDString = this.promesaList.get(index).getIdMoneda().getCodigo();
+                                String isOperacionString = this.promesaList.get(index).getOperacion();
+                                boolean isCTC = tipoarreglopago.equals(isCTCString);
+                                boolean isUSD = codigoMoneda.equals(isUSDString);
+                                boolean isOperacion = pOperacion.equals(isOperacionString);
+
+                                if (isCTC && isUSD && isOperacion) {
+                                    this.promesaList.get(index).setMtopago(saldoRestante);
+                                }
+
+                                index++;
+                            }
+                        }
+
                         break;
 
                     } else {
-                        String operacion = this.promesaList.get(index).getOperacion();
-                        Date fechaPago = this.promesaList.get(index).getFechaPago();
-                        String monedaString = this.promesaList.get(index).getIdMoneda().getCodigo();
-                        String arreglopago = this.promesaList.get(index).getTipoarreglopago();
-
-                        boolean isTrueOperacion = pOperacion.equals(operacion);
-                        boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
-                        boolean isMoneda = codigoMoneda.equals(monedaString);
-                        boolean isArregloPago = arreglopago.equals(tipoarreglopago);
-                        contador = contador.add(BigDecimal.ONE);
 
                         if (isArregloPago && isMoneda && isTrueOperacion && isFechaPagoAfter) {
                             this.promesaList.get(index).setMtopago(saldo);
