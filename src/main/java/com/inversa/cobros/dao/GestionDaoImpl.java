@@ -118,8 +118,8 @@ public class GestionDaoImpl implements GestionDao {
     @Override
     public void insert(TblGestion obj) {
         em.persist(obj);
-        //em.flush();
-        //em.refresh(obj);
+        em.flush();
+        em.refresh(obj);
         System.out.println("Gestion ID: " + obj.getIdGestion());
 
     }
@@ -127,7 +127,7 @@ public class GestionDaoImpl implements GestionDao {
     @Override
     public void update(TblGestion obj) {
         em.merge(obj);
-        //em.flush();
+        em.flush();
         //em.refresh(obj);
         System.out.println("Gestion ID: " + obj.getIdGestion());
     }

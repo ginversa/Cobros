@@ -35,12 +35,9 @@
                                              reflow="true" scrollable="true" scrollHeight="1050"
                                              styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                              emptyMessage="No se encontraron registros." >
-
-                                    <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
-                                        <h:outputText value="#{promesa.idGestion.codigoCartera}" />
-                                    </p:column>
-                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.documento}" filterMatchMode="contains" sortBy="#{promesa.idGestion.documento}" >
-                                        <h:outputText value="#{promesa.idGestion.documento}" />
+                                    
+                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >
+                                        <h:outputText value="#{promesa.idGestion.identificacion}" />
                                     </p:column>
                                     <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
                                         <h:outputText value="#{promesa.idGestion.nombreCliente}" />
@@ -60,7 +57,10 @@
                                         <h:outputText value="#{promesa.fechaPago}" >
                                             <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
                                         </h:outputText>
-                                    </p:column>                                                        
+                                    </p:column>
+                                    <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
+                                        <h:outputText value="#{promesa.idGestion.codigoCartera}" />
+                                    </p:column>
                                     <p:column headerText="Fecha Ingreso" filterBy="#{promesa.fechaingreso}" sortBy="#{promesa.fechaingreso}" >
                                         <h:outputText value="#{promesa.fechaingreso}" >
                                             <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy HH:mm:ss" />
@@ -77,12 +77,9 @@
                                              reflow="true" scrollable="true" scrollHeight="1050"
                                              styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                              emptyMessage="No se encontraron registros." >
-
-                                    <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
-                                        <h:outputText value="#{promesa.idGestion.codigoCartera}" />
-                                    </p:column>
-                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.documento}" filterMatchMode="contains" sortBy="#{promesa.idGestion.documento}" >
-                                        <h:outputText value="#{promesa.idGestion.documento}" />
+                                    
+                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >
+                                        <h:outputText value="#{promesa.idGestion.identificacion}" />
                                     </p:column>
                                     <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
                                         <h:outputText value="#{promesa.idGestion.nombreCliente}" />
@@ -102,7 +99,10 @@
                                         <h:outputText value="#{promesa.fechaPago}" >
                                             <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
                                         </h:outputText>
-                                    </p:column>                                                        
+                                    </p:column>
+                                    <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
+                                        <h:outputText value="#{promesa.idGestion.codigoCartera}" />
+                                    </p:column>
                                     <p:column headerText="Fecha Ingreso" filterBy="#{promesa.fechaingreso}" sortBy="#{promesa.fechaingreso}" >
                                         <h:outputText value="#{promesa.fechaingreso}" >
                                             <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy HH:mm:ss" />

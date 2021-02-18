@@ -18,6 +18,7 @@ import com.inversa.cobros.model.TblCartera;
 import com.inversa.cobros.model.TblCentral;
 import com.inversa.cobros.model.TblCliente;
 import com.inversa.cobros.model.TblContacto;
+import com.inversa.cobros.model.TblCorreo;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblGestionsaldo;
 import com.inversa.cobros.model.TblLlamada;
@@ -138,6 +139,7 @@ public class CarteraGestionController implements Serializable {
 
         this.promesaList = new ArrayList<TblPromesa>();
         this.telefono = new TblTelefono();
+        this.correoElectronico = new TblCorreo();
         this.tipificacionController.setIsDisabledPromesa(true);
 
         this.mtoSaldoOperacion = new BigDecimal(BigInteger.ZERO);
@@ -260,6 +262,16 @@ public class CarteraGestionController implements Serializable {
     private TblTelefono telefono;
     private Tipotelefono tipo;
     private List<Tipotelefono> tipoList;
+
+    private TblCorreo correoElectronico;
+
+    public TblCorreo getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void setCorreoElectronico(TblCorreo correoElectronico) {
+        this.correoElectronico = correoElectronico;
+    }
 
     public TblContacto getContacto() {
         return contacto;
@@ -568,6 +580,7 @@ public class CarteraGestionController implements Serializable {
                     this.ejbLocal.insert(this.gestion);
                     this.actualizarTelefonoContacto(llamadaConDatosList);
                     this.cargarGestionActual(this.gestion);
+                    System.out.println("guardarGestion --> this.gestion.getIdGestion(): " + this.gestion.getIdGestion());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Registrada. Correcto!"));
 
                 } else {// actualizar gestion...
@@ -584,6 +597,7 @@ public class CarteraGestionController implements Serializable {
                     this.ejbLocal.update(this.gestion);
                     this.actualizarTelefonoContacto(llamadaConDatosList);
                     this.cargarGestionActual(this.gestion);
+                    System.out.println("guardarGestion --> this.gestion.getIdGestion(): " + this.gestion.getIdGestion());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Actulizar. Correcto!"));
                 }
 
@@ -1029,6 +1043,42 @@ public class CarteraGestionController implements Serializable {
 
         } catch (NumberFormatException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "Error registrando Teléfono. Error!"));
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     */
+    public void addCorreoElectronico() {
+        try {
+
+            System.out.println("addCorreoElectronico ==> "+this.correoElectronico.getCorreo());
+            
+            TblCorreo objT = new TblCorreo();
+            objT.setCorreo(this.correoElectronico.getCorreo());
+
+            this.contacto = this.ejbContactoLocal.findById(this.contacto);
+
+            objT.setIdContacto(this.contacto);
+            objT.setRanking(Integer.valueOf("0"));
+            objT.setUsuarioingreso(this.usuario.getUsuario());
+            objT.setFechaingreso(this.fechaHoy.getTime());
+            objT.setEstado("ACT");
+
+            this.contacto.getTblCorreoList().add(objT);
+            this.contacto.setFechamodifico(this.fechaHoy.getTime());
+            this.contacto.setUsuariomodifico(this.usuario.getUsuario());
+            this.ejbContactoLocal.update(this.contacto);
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Correo electrónico Registrado. Correcto!"));
+            PrimeFaces.current().executeScript("PF('manageCorreoDialog').hide()");
+            PrimeFaces.current().ajax().update("formGestion:messages");
+
+            this.correoElectronico.setCorreo("");
+          
+        } catch (NumberFormatException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "Error registrando Correo electrónico. Error!"));
             System.out.println(e.getMessage());
         }
     }
@@ -1589,8 +1639,8 @@ Arreglo de Pago
             } else if (this.mtoSaldoOperacionUSD.compareTo(this.mtoSaldoPromesaUSD) < 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser menor o igual al saldo de la operación!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
-                return false;                
-            } 
+                return false;
+            }
         }
 
         if (this.fechaPagoPromesa == null) {

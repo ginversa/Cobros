@@ -47,7 +47,7 @@
                                         <p:password id="textClave" placeholder="Contraseña" autocomplete="off" feedback="false" value="#{loginController.usuario.clave}" required="true" requiredMessage="Campo requerido!" />
                                         <p:message for="textUsuario"/>
 
-                                        <p:commandButton action="#{loginController.iniciarSesion}" value="Acceder" icon="pi pi-check" update="gridLoggin, messages" />
+                                        <p:commandButton action="#{loginController.iniciarSesion()}" value="Acceder" icon="pi pi-check" update="gridLoggin, messages" />
                                         <p:link></p:link>
                                     </h:panelGrid>
                                 </div>

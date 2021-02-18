@@ -518,12 +518,12 @@ DAT - Datos
 
 -- Estados de una promesa.
 SEG - Seguimiento, antes de recordatorio
-PRO - Promesa, si cuando lo llame recordando, dice que si paga maÃƒÆ’Ã‚Â±ana.
+PRO - Promesa, si cuando lo llame recordando, dice que si paga maÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â±ana.
 INC - Incumplida, al resivir los pago, se comprueba que no pago.
 EFE - Efectiva, al resivir los pago, se comprueba que si pago.
 DEL - Registro borrado
 REP - Reprogramada
-HIS - HistÃ³rico
+HIS - HistÃƒÂ³rico
 select * from Estado
 */
 
@@ -539,7 +539,7 @@ insert into estado(codigo,descripcion,usuarioingreso) VALUES('INC','Incumplida',
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('EFE','Efectiva','hbonilla');
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('DEL','Registro borrado','hbonilla');
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('REP','Reprogramada','hbonilla');
-insert into estado(codigo,descripcion,usuarioingreso) VALUES('HIS','Histórico','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('HIS','HistÃ³rico','hbonilla');
 
 
 /*
@@ -614,7 +614,7 @@ insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIn
  
  --	Contacto sin Promesa 
 insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente sin interes de pagar',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente no reconoce obligación',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente no reconoce obligaciÃ³n',null,'hbonilla');
 insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente colgó la llamada',null,'hbonilla');
 
 -- ILOCALIZADO TELEFONICAMENTE
@@ -788,10 +788,12 @@ INSERT INTO public.tbl_url_llamada
 (id_central,servicio, parametro, descripcion)
 VALUES(1,'consultar.php?call_log_id=', '&bajar=1', 'descargar');
 
+
 /*
 *************************************************************************************************
 *************************************************************************************************
 */
+
 create table if not EXISTS tbl_pagos_historial (
 	"id" serial not null,
   	"codigo_cartera" varchar(6) not null,
@@ -810,8 +812,8 @@ create table if not EXISTS tbl_pagos_historial (
 
 /*
 *************************************************************************************************
-*************************************************************************************************
 */
+
 CREATE TABLE IF NOT EXISTS tbl_GestionSaldo (
     id_GestionSaldo SERIAL PRIMARY KEY,
     id_gestion BIGSERIAL references tbl_gestion(id_gestion),
@@ -823,6 +825,47 @@ CREATE TABLE IF NOT EXISTS tbl_GestionSaldo (
     usuarioModifico varchar(50),
 	fechaModifico timestamp
 );
+
+/*
+*************************************************************************************************
+*/
+
+create table if not EXISTS tbl_carga_cartera (
+	"id" serial not null,
+  	"codigo_cliente" varchar(10) not null ,
+  	"codigo_cartera" varchar(10) not null,
+  	"codigo_gestor" varchar(10)  not null,
+  	"numero_cliente_cif" varchar(30) ,
+  	"nombre_cliente" varchar(80) not null,
+  	"identificacion" varchar(20) ,
+  	"numero_cuenta" varchar(30) ,
+  	"numero_tarjeta" varchar(30) ,
+  	"monto_principal_colones" varchar(20) ,
+  	"intereses_colones" varchar(20) ,
+	"codigo_moneda1" varchar(3) ,
+	"saldo_colones" varchar(20) ,
+	"saldo_dolares" varchar(20) ,
+	"codigo_moneda2" varchar(3) ,
+	"intereses_dolares" varchar(20) ,
+  	"tipo_producto" varchar(20) ,
+  	"bucket" varchar(15) ,
+  	"dias_mora" varchar(15) ,
+  	"placement" varchar(15) ,
+  	"fecha_asignacion" varchar(20) ,
+ 	"telefono01" varchar(20) ,
+ 	"telefono02" varchar(20) ,
+ 	"telefono03" varchar(20) ,
+  	"telefono04" varchar(20) ,
+   	"telefono05" varchar(20) ,
+    "estado_carga" varchar(3) not null default '0',
+ 	"usuario_ingreso" varchar(30) not null,
+ 	"fecha_ingreso" timestamp not null default current_timestamp,
+ 	"usuario_modifico" varchar(30) default '' ,
+ 	"fecha_modifico" timestamp default null ,
+	primary key ("id")
+ ); 
+
+
 /******************************************************************************
 ************************************** fin ************************************
 *******************************************************************************/
