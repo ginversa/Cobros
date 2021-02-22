@@ -76,7 +76,7 @@ public class CarteraGestionController implements Serializable {
     private String servicio;
     private String parametro;
 
-    private static String telefonoDefault = "87356220";// 64801981
+    private static String telefonoDefault = "64801981";// 64801981
 
     private String ext = null;
     private String numeroSalida = null;
