@@ -5,7 +5,6 @@
  */
 package com.inversa.cobros.controller;
 
-
 import com.inversa.cobros.model.TblUsuario;
 import java.io.IOException;
 import java.io.Serializable;
@@ -49,7 +48,7 @@ public class SesionController implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get("usuario");
         if (obj != null) {
-            nombre = obj.getTblPersona().getNombre()+" - "+obj.getCodigoGestor();
+            nombre = obj.getTblPersona().getNombre() + " - " + obj.getCodigoGestor();
         }
 
         return nombre;
@@ -59,11 +58,21 @@ public class SesionController implements Serializable {
      *
      */
     public void cerrarSesion() {
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().invalidateSession();
+        
+        try {
+            
+            context.getExternalContext().redirect("faces/login.xhtml");
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     /**
-     * 
+     *
      */
     public void verificarSesion() {
         try {
@@ -72,7 +81,7 @@ public class SesionController implements Serializable {
             TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get("usuario");
 
             if (obj == null) {
-                context.getExternalContext().redirect("../login.xhtml");
+                context.getExternalContext().redirect("faces/login.xhtml");
 
             }
 
@@ -81,7 +90,6 @@ public class SesionController implements Serializable {
         }
     }
 
-    
     public TblUsuario getUsuario() {
         return usuario;
     }

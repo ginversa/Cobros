@@ -132,7 +132,7 @@ public class CarteraController implements Serializable {
                                         if (fechaUltimaPromesa == null && operacion.equals(operacionPromesa)) {
                                             fechaUltimaPromesa = fechaPago;
                                             montoUltimaPromesa = promesa.getMtopago();
-                                        } else if (fechaUltimaPromesa.before(fechaPago) && operacion.equals(operacionPromesa)) {
+                                        } else if (fechaPago != null && fechaUltimaPromesa.before(fechaPago) && operacion.equals(operacionPromesa)) {
                                             fechaUltimaPromesa = fechaPago;
                                             montoUltimaPromesa = promesa.getMtopago();
                                         }

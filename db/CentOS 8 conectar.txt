@@ -1,0 +1,22 @@
+/*
+Conectar a maquina virtual.
+WinSCP
+Conectar al servidor de tomEE desarrollo.
+CentOS 8 desarrollo
+ip 209.126.13.228
+puerto 33024
+usuario root
+password : GDataC3nt3r01y
+
+Apache TomEE 7.1.1
+/opt/tomee/
+--********************************************************************
+
+WinSCP
+Conectar al servidor de tomEE PRODUCCION.
+CentOS 8 PRODUCCION
+ip 209.126.13.228
+puerto 33029
+usuario root
+password : GDataC3nt3r01y
+*/
