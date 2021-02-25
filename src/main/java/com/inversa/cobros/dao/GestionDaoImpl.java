@@ -152,4 +152,14 @@ public class GestionDaoImpl implements GestionDao {
         }
     }
 
+    @Override
+    public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj) {
+        Query query = em.createNamedQuery("TblGestion.findByIdentificacionANDCodigoCartera");
+        query.setParameter("identificacion", obj.getIdentificacion());
+        query.setParameter("codigoCartera", obj.getCodigoCartera());
+        List<TblGestion> results = query.getResultList();
+        return results;
+    }
+
 }
+                                                                                                                                                    

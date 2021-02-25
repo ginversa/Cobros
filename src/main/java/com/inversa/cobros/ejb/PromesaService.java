@@ -6,6 +6,8 @@
 package com.inversa.cobros.ejb;
 
 import com.inversa.cobros.model.TblPromesa;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -13,7 +15,6 @@ import javax.ejb.Local;
  *
  * @author Z420WK
  */
-
 @Local
 public interface PromesaService {
 
@@ -34,7 +35,7 @@ public interface PromesaService {
     public List<TblPromesa> findByUsuariomodifico(TblPromesa obj);
 
     public List<TblPromesa> findByFechamodifico(TblPromesa obj);
-    
+
     public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj);
 
     public void insert(TblPromesa obj);
@@ -42,5 +43,7 @@ public interface PromesaService {
     public void update(TblPromesa obj);
 
     public void delete(TblPromesa obj);
+
+    public TblPromesa findPromesaUltimoPago(Long idGestion,Long idLlamada);
 
 }

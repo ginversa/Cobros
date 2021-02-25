@@ -13,14 +13,11 @@ import com.inversa.cobros.model.TblUsuario;
 import com.inversa.cobros.model.Tipotelefono;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -69,6 +66,7 @@ public class ContactoController implements Serializable {
 
     }
 
+    /*
     public void addTelefono() {
         try {
 
@@ -104,6 +102,7 @@ public class ContactoController implements Serializable {
             System.out.println(e.getMessage());
         }
     }
+*/
 
     public TblContacto getContacto() {
         return contacto;

@@ -47,5 +47,7 @@ public interface GestionServiceRemote {
     public void update(TblGestion obj);
 
     public void delete(TblGestion obj);
+    
+    public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj);// las gestiones de un cliente en la cartera.
 
 }

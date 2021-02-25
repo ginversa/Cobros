@@ -6,6 +6,7 @@
 package com.inversa.cobros.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -24,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -120,6 +122,9 @@ public class TblLlamada implements Serializable {
     private Tipotelefono idTipotelefono;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLlamada", fetch = FetchType.EAGER)
     private List<TblPromesa> tblPromesaList;
+    
+    @Transient    
+    private TblPromesa ultimaPromesa;
 
     public TblLlamada() {
     }
@@ -295,6 +300,14 @@ public class TblLlamada implements Serializable {
     public void setIdTipotelefono(Tipotelefono idTipotelefono) {
         this.idTipotelefono = idTipotelefono;
     }
+
+    public TblPromesa getUltimaPromesa() {
+        return ultimaPromesa;
+    }
+
+    public void setUltimaPromesa(TblPromesa ultimaPromesa) {
+        this.ultimaPromesa = ultimaPromesa;
+    }   
 
     @XmlTransient
     public List<TblPromesa> getTblPromesaList() {

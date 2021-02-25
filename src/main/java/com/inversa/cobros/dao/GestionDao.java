@@ -38,12 +38,14 @@ public interface GestionDao {
 
     public List<TblGestion> findByFechamodifico(TblGestion obj);
     
-    public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj);
+    public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj);//ultima gestion
 
     public void insert(TblGestion obj);
 
     public void update(TblGestion obj);
 
     public void delete(TblGestion obj);
+    
+    public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj);// las gestiones de un cliente en la cartera.
 
 }

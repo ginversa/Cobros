@@ -109,4 +109,11 @@ public class PromesaServiceImpl implements PromesaService, PromesaServiceRemote 
         return dao.findByFechaPagoAndUsuarioIngreso(obj);
     }
 
+    @Override
+    public TblPromesa findPromesaUltimoPago(Long idGestion, Long idLlamada) {
+        return dao.findPromesaUltimoPago(idGestion, idLlamada);
+    }
+
+    
+
 }

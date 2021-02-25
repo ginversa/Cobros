@@ -195,6 +195,7 @@ public class FindmeController implements Serializable {
         this.arbolFamiliarList = arbolFamiliarList;
     }
 
+    /*
     private Integer activeTabIndex = 0;
 
     public Integer getActiveTabIndex() {
@@ -216,11 +217,11 @@ public class FindmeController implements Serializable {
             cargarFindme();
         }
     }
-
+*/
     /**
      *
      */
-    private void cargarFindme() {
+    public void cargarFindme() {
         if (cedula != null && !cedula.trim().equals("")) {
             this.historialTelefonoList = this.ejbLocal.historial_telefonos(cedula);
             this.historialCorreoList = this.ejbLocal.historial_correos(cedula);
@@ -335,9 +336,7 @@ public class FindmeController implements Serializable {
         }// if
     }
 
-    /**
-     *
-     */
+/*
     public void onAddNewPromesa() {
         // Add one new promesa to the list:
         if (this.selectedLlamada != null) {
@@ -365,7 +364,8 @@ public class FindmeController implements Serializable {
 
         }
     }
-
+*/
+    
     public List<TblLlamada> getLlamadaList() {
         return llamadaList;
     }

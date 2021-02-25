@@ -23,7 +23,7 @@
                         <p:autoUpdate/>
                     </p:growl>                        
                     <p:tabView id="idTabView" >
-                        <p:ajax event="tabChange" listener="#{findmeController.onTabViewChange}" />
+                        <p:ajax event="tabChange" listener="#{carteraGestionController.onTabViewChange}" />
                         <p:tab title="Gestión">                            
                             <div class="card">
                                 <h1>Gestión</h1>
@@ -48,7 +48,7 @@
                                     <p:panelGrid id="pgDeudor" columns="5" layout="grid">
                                         <p:panelGrid columns="2" >
                                             <p:outputLabel for="txtCartera" value="Cartera" />
-                                            <h:outputText id="txtCartera" value="#{carteraGestionController.gestion.codigoCartera}" />
+                                            <h:outputText id="txtCartera" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
 
                                             <p:outputLabel for="txtDocumento" value="Identificación" />
                                             <h:outputText id="txtDocumento" value="#{carteraGestionController.gestion.identificacion}" />
@@ -502,7 +502,146 @@
                                     </p:fieldset>
                                 </p:panelGrid>
                             </div>                        
+                        </p:tab>                        
+                        <p:tab title="Pagos">
+                            <div class="card">
+                                <h4>Pagos</h4>
+                                <p:panelGrid id="idPGOperacionPago" columns="2" layout="grid">
+                                    <p:panelGrid id="idPGPagos01" columns="2">
+                                        <p:outputLabel for="txtCarteraPago01" value="Cartera" />
+                                        <h:outputText id="txtCarteraPago01" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
+
+                                        <p:outputLabel for="txtDocumentoPago01" value="Identificación" />
+                                        <h:outputText id="txtDocumentoPago01" value="#{carteraGestionController.gestion.identificacion}" />
+
+                                        <p:outputLabel for="txtNombrePago01" value="Nombre" />
+                                        <h:outputText id="txtNombrePago01" value="#{carteraGestionController.gestion.nombreCliente}" />
+
+                                        <p:outputLabel for="txtOperacionPago01" value="Operación" />
+                                        <p:selectOneMenu id="txtOperacionPago01" value="#{carteraGestionController.clienteOperacion}">
+                                            <f:selectItem itemLabel="----------------------------" itemValue="" noSelectionOption="true" />
+                                            <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
+                                            <p:ajax listener="#{pagosHistorialController.onOperacionChange(carteraGestionController.clienteOperacion)}" event="change" update="idTablePagos,txtOperacionSaldoCRC,txtOperacionInteresesCRC,txtOperacionSaldoUSD,txtOperacionInteresesUSD" process="@this" />
+                                        </p:selectOneMenu>
+
+                                    </p:panelGrid>
+                                    <p:panelGrid id="idPGPagos02" columns="2">
+                                        <p:outputLabel for="txtOperacionSaldoCRC" value="Saldo CRC" />
+                                        <h:outputText id="txtOperacionSaldoCRC" value="#{pagosHistorialController.saldoCRC}">
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        </h:outputText>
+
+                                        <p:outputLabel for="txtOperacionInteresesCRC" value="Intereses CRC" />
+                                        <h:outputText id="txtOperacionInteresesCRC" value="#{pagosHistorialController.interesesCRC}">
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        </h:outputText>
+
+                                        <p:outputLabel for="txtOperacionSaldoUSD" value="Saldo USD" />
+                                        <h:outputText id="txtOperacionSaldoUSD" value="#{pagosHistorialController.saldoUSD}">
+                                            <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        </h:outputText>
+
+                                        <p:outputLabel for="txtOperacionInteresesUSD" value="Intereses USD" />
+                                        <h:outputText id="txtOperacionInteresesUSD" value="#{pagosHistorialController.interesesUSD}">
+                                            <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        </h:outputText>
+                                    </p:panelGrid>
+                                </p:panelGrid>
+
+                                <p:dataTable id="idTablePagos" widgetVar="customersDT21" var="pago" value="#{pagosHistorialController.pagoLst}"
+                                             paginator="true" rows="20" paginatorPosition="top"
+                                             reflow="true" scrollable="true" scrollHeight="1050"
+                                             styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                             emptyMessage="No se encontraron registros." >
+
+                                    <p:column headerText="#Cuenta" filterBy="#{pago.numeroCuenta}" filterMatchMode="contains" sortBy="#{pago.numeroCuenta}" >
+                                        <h:outputText value="#{pago.numeroCuenta}" />
+                                    </p:column>                                               
+                                    <p:column headerText="Fecha Pago" filterBy="#{pago.fechaPago}" sortBy="#{pago.fechaPago}" >
+                                        <h:outputText value="#{pago.fechaPago}" >
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>                                    
+                                    <p:column headerText="Monto CRC" filterBy="#{pago.totalColones}" filterMatchMode="contains" sortBy="#{pago.totalColones}" >
+                                        <h:outputText value="#{pago.totalColones}" >
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Monto USD" filterBy="#{pago.totalDolares}" filterMatchMode="contains" sortBy="#{pago.totalDolares}" >
+                                        <h:outputText value="#{pago.totalDolares}" >
+                                            <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        </h:outputText>
+                                    </p:column>                                    
+                                    <p:column headerText="Tipo Pago" filterBy="#{pago.tipoPago}" filterMatchMode="contains" sortBy="#{pago.tipoPago}" >
+                                        <h:outputText value="#{pago.tipoPago}" />
+                                    </p:column>
+                                    <p:column headerText="Código Gestor" filterBy="#{pago.codigoGestor}" filterMatchMode="contains" sortBy="#{pago.codigoGestor}" >
+                                        <h:outputText value="#{pago.codigoGestor}" />
+                                    </p:column>
+                                    <p:column headerText="Cartera" filterBy="#{pago.codigoCartera}" filterMatchMode="contains" sortBy="#{pago.codigoCartera}" >
+                                        <h:outputText value="#{pago.codigoCartera}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
                         </p:tab>
+                        
+                        <p:tab title="Gestiones Histórico">
+                            <div class="card">
+                                <h4>Pagos</h4>
+                                <p:panelGrid id="idPGOperacionGH" columns="2" layout="grid">
+                                    <p:panelGrid id="idPGGH01" columns="2">
+                                        <p:outputLabel for="txtCarteraGH01" value="Cartera" />
+                                        <h:outputText id="txtCarteraGH01" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
+
+                                        <p:outputLabel for="txtDocumentoGH01" value="Identificación" />
+                                        <h:outputText id="txtDocumentoGH01" value="#{carteraGestionController.gestion.identificacion}" />
+
+                                        <p:outputLabel for="txtNombreGH01" value="Nombre" />
+                                        <h:outputText id="txtNombreGH01" value="#{carteraGestionController.gestion.nombreCliente}" />
+                                    </p:panelGrid>                                    
+                                </p:panelGrid>
+
+                                <p:dataTable id="idTableGH" widgetVar="customersDT21" var="llamada" value="#{gestionController.llamadaList}"
+                                             paginator="true" rows="20" paginatorPosition="top"
+                                             reflow="true" scrollable="true" scrollHeight="1050"
+                                             styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                             emptyMessage="No se encontraron registros." >
+
+                                    <p:column headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >
+                                        <h:outputText value="#{llamada.callToNumber}" />
+                                    </p:column>
+                                    <p:column headerText="#Cuenta" filterBy="#{llamada.idGestion.operacion}" filterMatchMode="contains" sortBy="#{llamada.idGestion.operacion}" >
+                                        <h:outputText value="#{llamada.idGestion.operacion}" />
+                                    </p:column>                                               
+                                    <p:column headerText="Tipificación" filterBy="#{llamada.idTipificacion.descripcion}" sortBy="#{llamada.idTipificacion.descripcion}" >
+                                        <h:outputText value="#{llamada.idTipificacion.descripcion}" />
+                                    </p:column>                                    
+                                    <p:column headerText="Sub-Tipificación" filterBy="#{llamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idSubtipificacion.descripcion}" >
+                                        <h:outputText value="#{llamada.idSubtipificacion.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="Resultado Gestión" filterBy="#{llamada.idResultadogestion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadogestion.descripcion}" >
+                                        <h:outputText value="#{llamada.idResultadogestion.descripcion}" />
+                                    </p:column>                                    
+                                    <p:column headerText="Respuesta" filterBy="#{llamada.idResultadotercero.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadotercero.descripcion}" >
+                                        <h:outputText value="#{llamada.idResultadotercero.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
+                                        <h:outputText value="#{llamada.idrazonmora.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="Última Promesa" filterBy="#{llamada.ultimaPromesa.mtopago}" filterMatchMode="contains" sortBy="#{llamada.ultimaPromesa.mtopago}" >
+                                        <h:outputText value="#{llamada.ultimaPromesa.mtopago}" >
+                                            <f:convertNumber type="currency" currencySymbol="#{llamada.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Fecha Última Promesa" filterBy="#{llamada.ultimaPromesa.fechaPago}" sortBy="#{llamada.ultimaPromesa.fechaPago}" >
+                                        <h:outputText value="#{llamada.ultimaPromesa.fechaPago}" >
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column> 
+                                </p:dataTable>
+                            </div>
+                        </p:tab>
+
                     </p:tabView>
 
                     <p:confirmDialog widgetVar="deleteTelefonoDialog" showEffect="fade" width="300" message="Eliminar este Teléfono?" header="Confirmar" severity="warn">
@@ -591,6 +730,7 @@
                                 <p:tabView id="idtabViewPromesa" >
                                     <p:tab id="apCRC" title="Arreglo de pago CRC">
                                         <p:tabView id="idtabViewPromesaCRC">
+                                            <p:ajax event="tabChange" listener="#{carteraGestionController.onTabChanged}" ></p:ajax>
                                             <p:tab id="idCancelacionTotal" title="Cancelación Total CRC" >
                                                 <div class="container">
                                                     <div class="row">
@@ -1084,6 +1224,7 @@
                                     </p:tab>
                                     <p:tab id="apUSD" title="Arreglo de pago USD">
                                         <p:tabView id="idtabViewPromesaUSD">
+                                            <p:ajax event="tabChange" listener="#{carteraGestionController.onTabChanged}" ></p:ajax>
                                             <p:tab id="idCancelacionTotalUSD" title="Cancelación Total USD" >
                                                 <div class="container">
                                                     <div class="row">

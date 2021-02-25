@@ -6,6 +6,8 @@
 package com.inversa.cobros.dao;
 
 import com.inversa.cobros.model.TblPromesa;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,5 +40,7 @@ public interface PromesaDao {
 
     public void update(TblPromesa obj);
 
-    public void delete(TblPromesa obj);
+    public void delete(TblPromesa obj);    
+    
+    public TblPromesa findPromesaUltimoPago(Long idGestion,Long idLlamada);
 }

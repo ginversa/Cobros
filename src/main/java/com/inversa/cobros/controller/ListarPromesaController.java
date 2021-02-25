@@ -53,21 +53,6 @@ public class ListarPromesaController implements Serializable {
 
         // Usuario de session...
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        /*
-        TblGestion gestion = new TblGestion();
-        gestion.setCodigoGestor(usuario.getCodigoGestor());
-        this.gestionList = this.ejbLocal.findByCodigoGestor(gestion);
-        
-        for(int index=0; index< this.gestionList.size();index++){
-            List<TblLlamada> llamadas = this.gestionList.get(index).getTblLlamadaList();
-            if(llamadas != null && !llamadas.isEmpty() && llamadas.size()>0){
-                for(int i =0;i<llamadas.size();i++){
-                    TblLlamada llamada = llamadas.get(i);
-                    promesasList.addAll(llamada.getTblPromesaList());
-                }                
-            }            
-        }
-         */
 
         this.fechaHoy = Calendar.getInstance();
         this.fechaAyer = Calendar.getInstance();
@@ -76,12 +61,12 @@ public class ListarPromesaController implements Serializable {
         TblPromesa promesaHoy = new TblPromesa();
         promesaHoy.setFechaPago(this.fechaHoy.getTime());
         promesaHoy.setUsuarioingreso(this.usuario.getUsuario());
-        this.promesasFechaHoyList = this.ejbLocal.findByUsuarioingreso(promesaHoy);//.findByFechaPagoAndUsuarioIngreso(promesa);
+        this.promesasFechaHoyList = this.ejbLocal.findByFechaPagoAndUsuarioIngreso(promesaHoy);
 
         TblPromesa promesaAyer = new TblPromesa();
-        promesaAyer.setFechaPago(this.fechaHoy.getTime());
+        promesaAyer.setFechaPago(this.fechaAyer.getTime());
         promesaAyer.setUsuarioingreso(this.usuario.getUsuario());
-        this.promesasFechaAyerList = this.ejbLocal.findByUsuarioingreso(promesaAyer);//.findByFechaPagoAndUsuarioIngreso(promesa);
+        this.promesasFechaAyerList = this.ejbLocal.findByFechaPagoAndUsuarioIngreso(promesaAyer);
 
     }
 

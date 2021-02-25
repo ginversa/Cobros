@@ -30,6 +30,7 @@ import com.inversa.cobros.model.TblUsuario;
 import com.inversa.cobros.model.Tipificacion;
 import com.inversa.cobros.model.Tipotelefono;
 import com.inversa.cobros.util.FechaOperacion;
+import com.inversa.findme.controller.FindmeController;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -50,9 +51,11 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import org.primefaces.PrimeFaces;
+import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.shaded.json.JSONObject;
 
@@ -76,7 +79,7 @@ public class CarteraGestionController implements Serializable {
     private String servicio;
     private String parametro;
 
-    private static String telefonoDefault = "64801981";// 64801981
+    private static String telefonoDefault = "87356220";// 64801981
 
     private String ext = null;
     private String numeroSalida = null;
@@ -84,6 +87,9 @@ public class CarteraGestionController implements Serializable {
     private static Client cliente;
     private static WebTarget webTarget;
     private TblLlamada llamada_En_Proceso;
+    
+    @Inject
+    private GestionController gestionController;
 
     @Inject
     private GestionService ejbLocal;
@@ -105,6 +111,12 @@ public class CarteraGestionController implements Serializable {
 
     @Inject
     private TipificacionController tipificacionController;
+
+    @Inject
+    private FindmeController findmeController;
+
+    @Inject
+    private PagosHistorialController pagosHistorialController;
 
     @Inject
     private MonedaService ejbMonedaService;
@@ -876,7 +888,7 @@ public class CarteraGestionController implements Serializable {
                 //this.selectedLlamada.setIdLlamada(null);
                 this.selectedLlamada = callToNumber;// llamada seleccionada...
                 String telefono = callToNumber.getCallToNumber();
-                
+
                 if (this.validarURL()) {
 
                     String URL_LLAMAR = this.crearUrlLlamada(this.telefonoDefault);
@@ -1462,7 +1474,30 @@ Arreglo de Pago
      */
     public void cleanFormArregloPago(String codigoMoneda) {
         String operacion = this.getClienteOperacion();
+        this.cleanFormAP();
+        this.deleteArregloPago(operacion, codigoMoneda);
+    }
 
+    /**
+     *
+     * @param e
+     */
+    public void onTabChanged(TabChangeEvent e) {
+        //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Tab With Index :: " + e.getTab().getTitle() + " Is Changed"));        
+        this.cleanFormAP();
+        /*
+        formGestion:idtabViewPromesa:idtabViewPromesaCRC:idCancelacionTotal:txtOperacionPromesa,
+        formGestion:idtabViewPromesa:idtabViewPromesaCRC:idCancelacionTotalCuotas
+        ,formGestion:idtabViewPromesa:idtabViewPromesaCRC:idRefinanciamiento
+        ,formGestion:idtabViewPromesa:idtabViewPromesaCRC:idPagoParcial
+         */
+        //PrimeFaces.current().ajax().update("formGestion:idtabViewPromesa:idtabViewPromesaCRC:idCancelacionTotal:txtOperacionPromesa");
+    }
+
+    /**
+     *
+     */
+    public void cleanFormAP() {
         this.setClienteOperacion(null); //clienteOperacion;
         this.setMtoSaldoOperacion(BigDecimal.ZERO); //mtoSaldoOperacion;
         this.setTipoDescuentoPromesa(null); //tipoDescuentoPromesa;
@@ -1474,8 +1509,6 @@ Arreglo de Pago
         this.setMtoSaldoOperacionUSD(BigDecimal.ZERO);
         this.setMtoDescuentoPromesaUSD(BigDecimal.ZERO);
         this.setMtoSaldoPromesaUSD(BigDecimal.ZERO);
-
-        this.deleteArregloPago(operacion, codigoMoneda);
     }
 
     /**
@@ -1649,6 +1682,11 @@ Arreglo de Pago
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
+
+        } else if (this.fechaPagoPromesa.before(this.fechaHoy.getTime())) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha Pago debe ser mayor a la fecha de hoy!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
         }
 
         return true;
@@ -1803,6 +1841,11 @@ Arreglo de Pago
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
+
+        } else if (this.fechaPagoPromesa.before(this.fechaHoy.getTime())) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha Pago debe ser mayor a la fecha de hoy!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
         }
 
         return true;
@@ -1914,6 +1957,11 @@ Arreglo de Pago
 
         if (this.fechaPagoPromesa == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago Inicial!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+
+        } else if (this.fechaPagoPromesa.before(this.fechaHoy.getTime())) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha Pago debe ser mayor a la fecha de hoy!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
@@ -2721,8 +2769,8 @@ Arreglo de Pago
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     private boolean validarURL() {
         TblCentral central = this.prefijoSalidaList.get(0).getTblCentral();
@@ -2767,31 +2815,60 @@ Arreglo de Pago
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
                 }
-                
+
                 this.servicio = urlLlamar.getServicio();
                 this.ext = this.usuario.getExtEnsion();
                 this.parametro = urlLlamar.getParametro();
-                
+
                 if (this.servicio == null || this.servicio.trim().equals("")) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Falta el servicio que publica la central!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
-                    
-                } else if(this.ext == null || this.ext.trim().equals("")){
+
+                } else if (this.ext == null || this.ext.trim().equals("")) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe asignar una extensión al usuario!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
-                    
-                } else if(this.parametro == null || this.parametro.trim().equals("")){
+
+                } else if (this.parametro == null || this.parametro.trim().equals("")) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "URL Llamada debe tener configurado un parametro!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
                 }
             }
         }
-        
-        return true;
 
+        return true;
+    }
+
+    public void onTabViewChange(TabChangeEvent event) {
+        TabView tv = (TabView) event.getComponent();
+        this.activeTabIndex = tv.getActiveIndex();
+        System.out.println("ActiveIndex                             : " + tv.getActiveIndex());
+        System.out.println("event.getTab().getId()                  : " + event.getTab().getId());
+        System.out.println("tv.getChildren().indexOf(event.getTab()): " + tv.getChildren().indexOf(event.getTab()));
+        int index = tv.getChildren().indexOf(event.getTab());
+        if (index == 1) {
+            this.findmeController.cargarFindme();
+
+        } else if (index == 2) {
+            this.pagosHistorialController.cargarPagos(this.gestion.getCodigoCartera(), this.gestion.getOperacion(), this.gestion.getIdentificacion());
+            PrimeFaces.current().ajax().update("formGestion:idTabView:idTablePagos");
+            
+        }else if(index == 3){
+            this.gestionController.cargarGestiones(this.gestion.getCodigoCartera(), this.gestion.getIdentificacion());
+            PrimeFaces.current().ajax().update("formGestion:idTabView:idTableGH");
+        }
+    }
+
+    private Integer activeTabIndex = 0;
+
+    public Integer getActiveTabIndex() {
+        return activeTabIndex;
+    }
+
+    public void setActiveTabIndex(Integer activeTabIndex) {
+        this.activeTabIndex = activeTabIndex;
     }
 
 }//end

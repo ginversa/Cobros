@@ -10,6 +10,8 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 /**
@@ -110,10 +112,21 @@ public class PromesaDaoImpl implements PromesaDao{
     @Override
     public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj) {
         TypedQuery<TblPromesa> query = em.createNamedQuery("TblPromesa.findByFechaPagoAndUsuarioIngreso", TblPromesa.class);
-        query.setParameter("fechaPago", obj.getFechaPago());
+        query.setParameter("fechaPago", obj.getFechaPago(),TemporalType.DATE);
         query.setParameter("usuarioingreso", obj.getUsuarioingreso());
         List<TblPromesa> results = query.getResultList();
         return results;
+    }
+    
+    @Override
+    public TblPromesa findPromesaUltimoPago(Long idGestion, Long idLlamada){
+        Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.id_llamada = ?2 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?3 and tp.id_llamada = ?4)",TblPromesa.class);
+        Object obj = query.setParameter(1, idGestion).setParameter(2, idLlamada).setParameter(3, idGestion).setParameter(4, idLlamada).getSingleResult();
+        if(obj != null){
+            TblPromesa ultimoPago = (TblPromesa) obj;
+            return ultimoPago;
+        }
+        return null;
     }
     
 }

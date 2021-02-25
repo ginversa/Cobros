@@ -39,8 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblGestion.findByIdGestion", query = "SELECT t FROM TblGestion t WHERE t.idGestion = :idGestion"),
     @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblGestion.findByNombreCliente", query = "SELECT t FROM TblGestion t WHERE t.nombreCliente = :nombreCliente"),
-    @NamedQuery(name = "TblGestion.findByIdentificacion", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion"),
-
+    @NamedQuery(name = "TblGestion.findByIdentificacion", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion"),    
+    @NamedQuery(name = "TblGestion.findByIdentificacionANDCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion AND t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblGestion.findByCodigoCarteraANDIdentificacion", query = "SELECT t FROM TblGestion t\n"
             + " WHERE t.codigoCartera = :codigoCartera\n"
             + "   and t.identificacion = :identificacion\n"
@@ -48,7 +48,6 @@ import javax.xml.bind.annotation.XmlTransient;
             + "						    from TblGestion gestion\n"
             + "						   where gestion.codigoCartera = t.codigoCartera\n"
             + "                             and gestion.identificacion = t.identificacion)"),
-
     @NamedQuery(name = "TblGestion.findByCodigoGestor", query = "SELECT t FROM TblGestion t WHERE t.codigoGestor = :codigoGestor order by t.fechaingreso desc"),    
     @NamedQuery(name = "TblGestion.findByFechaGestion", query = "SELECT t FROM TblGestion t WHERE t.fechaGestion = :fechaGestion order by t.fechaingreso desc"),
     @NamedQuery(name = "TblGestion.findByDescripcion", query = "SELECT t FROM TblGestion t WHERE t.descripcion = :descripcion"),
