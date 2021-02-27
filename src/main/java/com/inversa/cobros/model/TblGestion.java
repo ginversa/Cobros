@@ -6,7 +6,6 @@
 package com.inversa.cobros.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -23,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -57,7 +57,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblGestion.findByUsuariomodifico", query = "SELECT t FROM TblGestion t WHERE t.usuariomodifico = :usuariomodifico"),
     @NamedQuery(name = "TblGestion.findByFechamodifico", query = "SELECT t FROM TblGestion t WHERE t.fechamodifico = :fechamodifico")})
 public class TblGestion implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -87,16 +87,13 @@ public class TblGestion implements Serializable {
     @Column(name = "leyusura")
     private String leyusura;
     
-    @Column(name = "mtosaldocobrar")
-    private BigDecimal mtosaldocobrar;
-    
     @Size(max = 5)
     @Column(name = "codigo_gestor")
     private String codigoGestor;
     
     @Column(name = "fecha_gestion")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaGestion;    
+    private Date fechaGestion; 
     
     @Size(max = 2147483647)
     @Column(name = "descripcion")
@@ -109,12 +106,15 @@ public class TblGestion implements Serializable {
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    @Size(max = 50)
-    @Column(name = "usuariomodifico")
-    private String usuariomodifico;    
+    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+    
+    @Size(max = 50)
+    @Column(name = "usuariomodifico")
+    private String usuariomodifico;    
+    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
@@ -127,6 +127,9 @@ public class TblGestion implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.EAGER)
     private List<TblPromesa> tblPromesaList;
+    
+    @Transient
+    private String codigo_cliente;
     
 
     public TblGestion() {
@@ -236,15 +239,6 @@ public class TblGestion implements Serializable {
         this.leyusura = leyusura;
     }
 
-    public BigDecimal getMtosaldocobrar() {
-        return mtosaldocobrar;
-    }
-
-    public void setMtosaldocobrar(BigDecimal mtosaldocobrar) {
-        this.mtosaldocobrar = mtosaldocobrar;
-    }
-    
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -269,6 +263,24 @@ public class TblGestion implements Serializable {
     public String toString() {
         return "com.inversa.cobros.model.TblGestion[ idGestion=" + idGestion + " ]";
     } 
+
+
+    @XmlTransient
+    public List<TblGestionsaldo> getTblGestionsaldoList() {
+        return tblGestionsaldoList;
+    }
+
+    public void setTblGestionsaldoList(List<TblGestionsaldo> tblGestionsaldoList) {
+        this.tblGestionsaldoList = tblGestionsaldoList;
+    }
+
+    public String getCodigo_cliente() {
+        return codigo_cliente;
+    }
+
+    public void setCodigo_cliente(String codigo_cliente) {
+        this.codigo_cliente = codigo_cliente;
+    }   
 
     public String getIdentificacion() {
         return identificacion;
@@ -309,14 +321,5 @@ public class TblGestion implements Serializable {
     public void setUsuariomodifico(String usuariomodifico) {
         this.usuariomodifico = usuariomodifico;
     }
-
-    @XmlTransient
-    public List<TblGestionsaldo> getTblGestionsaldoList() {
-        return tblGestionsaldoList;
-    }
-
-    public void setTblGestionsaldoList(List<TblGestionsaldo> tblGestionsaldoList) {
-        this.tblGestionsaldoList = tblGestionsaldoList;
-    }
-
+    
 }

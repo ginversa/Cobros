@@ -5,7 +5,9 @@
  */
 package com.inversa.cobros.controller;
 
+import com.inversa.cobros.constantecomun.ConstanteComun;
 import com.inversa.cobros.ejb.CarteraService;
+import com.inversa.cobros.ejb.ClienteService;
 import com.inversa.cobros.ejb.ContactoService;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.MonedaService;
@@ -30,6 +32,7 @@ import com.inversa.cobros.model.TblUsuario;
 import com.inversa.cobros.model.Tipificacion;
 import com.inversa.cobros.model.Tipotelefono;
 import com.inversa.cobros.util.FechaOperacion;
+import com.inversa.cobros.model.TipoDescuento;
 import com.inversa.findme.controller.FindmeController;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -79,15 +82,14 @@ public class CarteraGestionController implements Serializable {
     private String servicio;
     private String parametro;
 
-    private static String telefonoDefault = "87356220";// 64801981
-
+    //private static String telefonoDefault = "87356220";// 64801981
     private String ext = null;
     private String numeroSalida = null;
 
     private static Client cliente;
     private static WebTarget webTarget;
     private TblLlamada llamada_En_Proceso;
-    
+
     @Inject
     private GestionController gestionController;
 
@@ -105,6 +107,9 @@ public class CarteraGestionController implements Serializable {
 
     @Inject
     private TelefonoService ejbTelefonoLocal;
+
+    @Inject
+    private ClienteService ejbClienteLocal;
 
     @Inject
     private CarteraController carteraController;
@@ -136,6 +141,11 @@ public class CarteraGestionController implements Serializable {
     // Saldo a cobrar, es requerido si aplica ley de usuara.
     private boolean leyusuraIsRequired;
     private boolean leyusuraDisabled;
+    private BigDecimal mtoSaldoGestionCRC;
+
+    private List<TipoDescuento> tipoDescuentoList;
+
+    private boolean isVisibleCancelacionTotalPorCuotas = false;
 
     @PostConstruct
     public void init() {
@@ -169,6 +179,30 @@ public class CarteraGestionController implements Serializable {
 
         this.leyusuraIsRequired = false;
         this.leyusuraDisabled = true;
+        this.mtoSaldoGestionCRC = BigDecimal.ZERO;
+
+        this.tipoDescuentoList = new ArrayList<>();
+        String codigo_cliente = this.gestion.getCodigo_cliente();
+        if (codigo_cliente != null && !codigo_cliente.trim().equals("")) {
+            if (codigo_cliente.trim().equals(ConstanteComun.Credomatic)) {// Credomatic
+                TipoDescuento tdFij = new TipoDescuento("FIJ", "Monto Fijo");
+                TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
+                this.tipoDescuentoList.add(tdFij);
+                this.tipoDescuentoList.add(tdPor);
+                this.isVisibleCancelacionTotalPorCuotas = true;
+
+            } else if (codigo_cliente.trim().equals(ConstanteComun.Davivienda)) {//Davivienda                
+                TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
+                this.tipoDescuentoList.add(tdPor);
+                this.isVisibleCancelacionTotalPorCuotas = false;// desavilita el tab, Cancelación total por cuotas
+
+            } else {
+                this.isVisibleCancelacionTotalPorCuotas = true;
+            }
+
+        } else {
+            this.isVisibleCancelacionTotalPorCuotas = true;
+        }
 
     }
 
@@ -265,6 +299,29 @@ public class CarteraGestionController implements Serializable {
         this.leyusuraDisabled = leyusuraDisabled;
     }
 
+    public List<TipoDescuento> getTipoDescuentoList() {
+        return tipoDescuentoList;
+    }
+
+    public void setTipoDescuentoList(List<TipoDescuento> tipoDescuentoList) {
+        this.tipoDescuentoList = tipoDescuentoList;
+    }
+
+    public boolean isIsVisibleCancelacionTotalPorCuotas() {
+        return isVisibleCancelacionTotalPorCuotas;
+    }
+
+    public void setIsVisibleCancelacionTotalPorCuotas(boolean isVisibleCancelacionTotalPorCuotas) {
+        this.isVisibleCancelacionTotalPorCuotas = isVisibleCancelacionTotalPorCuotas;
+    }
+
+    public BigDecimal getMtoSaldoGestionCRC() {
+        return mtoSaldoGestionCRC;
+    }
+
+    public void setMtoSaldoGestionCRC(BigDecimal mtoSaldoGestionCRC) {
+        this.mtoSaldoGestionCRC = mtoSaldoGestionCRC;
+    }
 
     /*
     ***************************************************************************
@@ -396,7 +453,10 @@ public class CarteraGestionController implements Serializable {
             this.gestion.setCodigoCartera(codigoCartera);
             if (objCartera.getIdCliente() != null) {
                 this.gestion.setNombre_cartera(objCartera.getIdCliente().getNombre());
+                this.gestion.setNombreCliente(objCartera.getIdCliente().getNombre());
+                this.gestion.setCodigo_cliente(objCartera.getIdCliente().getCodigo());
             }
+
             this.gestion.setIdentificacion(identificacion);
             this.gestion.setNombreCliente(objCartera.getNombreCliente());
             this.gestion.setOperacion(objCartera.getNumeroCuenta());
@@ -407,7 +467,6 @@ public class CarteraGestionController implements Serializable {
             this.gestion.setUsuarioingreso(this.usuario.getUsuario());
             this.gestion.setFechaingreso(this.fechaHoy.getTime());// fecha Hoy...
             this.gestion.setLeyusura(objCartera.getLeyusura());
-            this.gestion.setMtosaldocobrar(BigDecimal.ZERO);
 
             if (this.gestion.getLeyusura() != null && this.gestion.getLeyusura().equals("1")) {
                 this.setLeyusuraIsRequired(true);
@@ -418,12 +477,51 @@ public class CarteraGestionController implements Serializable {
                 this.setLeyusuraDisabled(true);
             }
 
+            // Agrega los saldos...
+/*
+            BigDecimal saldo_colones = objCartera.getSaldoColones();
+            BigDecimal intereses_colones = objCartera.getInteresesColones();
+            BigDecimal saldo_dolares = objCartera.getSaldoDolares();
+            BigDecimal intereses_dolares = objCartera.getInteresesDolares();
+            
+            if(saldo_colones == null || saldo_colones.compareTo(BigDecimal.ZERO)==0){
+                saldo_colones = BigDecimal.ZERO;
+            }
+            
+            if(intereses_colones == null || intereses_colones.compareTo(BigDecimal.ZERO)==0){
+                intereses_colones = BigDecimal.ZERO;
+            }
+            
+            if(saldo_dolares == null || saldo_dolares.compareTo(BigDecimal.ZERO)==0){
+                saldo_dolares = BigDecimal.ZERO;
+            }
+            
+            if(intereses_dolares == null || intereses_dolares.compareTo(BigDecimal.ZERO)==0){
+                intereses_dolares = BigDecimal.ZERO;
+            }
+            
+            TblGestionsaldo saldoColones = new TblGestionsaldo();
+            saldoColones.setSaldoCartera(saldo_colones);
+            saldoColones.setIntereses(intereses_colones);
+            saldoColones.setSaldoGestion(BigDecimal.ZERO);
+            saldoColones.setSaldoRestante(BigDecimal.ZERO);
+            saldoColones.setIdMoneda(objCartera.getIdMonedaColones());
+            
+            TblGestionsaldo saldoDolares = new TblGestionsaldo();
+            saldoDolares.setSaldoCartera(saldo_dolares);
+            saldoDolares.setIntereses(intereses_dolares);
+            saldoDolares.setSaldoGestion(BigDecimal.ZERO);
+            saldoDolares.setSaldoRestante(BigDecimal.ZERO);
+            saldoDolares.setIdMoneda(objCartera.getIdMonedaDolares());            
+             */
             //***************************************
             TblCartera obj = new TblCartera();
             obj.setCodigoCartera(codigoCartera);
             obj.setCodigoGestor(codigoGestor);
             obj.setIdentificacion(identificacion);
             this.carteraList = this.ejbCarteraLocal.findByCarteraGestorIdentificacion(obj);
+            this.buscarGestion();
+
         }
     }
 
@@ -716,12 +814,12 @@ public class CarteraGestionController implements Serializable {
                                     String call_from_number = obj.getString("call_from_number");
                                     llamadaConDatos.setCallFromNumber(call_from_number);
                                 }
-                                /*
-                            if (!obj.isNull("call_to_number")) {
-                                String call_to_number = obj.getString("call_to_number");
-                                llamadaConDatos.setCallToNumber(call_to_number);
-                            }
-                                 */
+
+                                if (!obj.isNull("call_to_number")) {
+                                    String call_to_number = obj.getString("call_to_number");
+                                    llamadaConDatos.setCallToNumber(call_to_number);
+                                }
+
                                 if (!obj.isNull("dialstatus")) {
                                     String dialstatus = obj.getString("dialstatus");
                                     llamadaConDatos.setDialstatus(dialstatus);
@@ -891,7 +989,7 @@ public class CarteraGestionController implements Serializable {
 
                 if (this.validarURL()) {
 
-                    String URL_LLAMAR = this.crearUrlLlamada(this.telefonoDefault);
+                    String URL_LLAMAR = this.crearUrlLlamada(telefono);//this.telefonoDefault
 
                     cliente = ClientBuilder.newClient();
 
@@ -1198,7 +1296,7 @@ public class CarteraGestionController implements Serializable {
 
         String operacion = this.gestion.getOperacion();
         String leyUsuara = this.gestion.getLeyusura();
-        BigDecimal mtosaldocobrar = this.gestion.getMtosaldocobrar();
+        BigDecimal mtosaldocobrar = this.mtoSaldoGestionCRC;// Monto digitado...
 
         if (this.clienteOperacion != null && !this.clienteOperacion.trim().equals("")) {
 
@@ -1224,12 +1322,18 @@ public class CarteraGestionController implements Serializable {
         BigDecimal mtoSaldo = this.mtoSaldoOperacion;
         BigDecimal mtoPort = this.mtoDescuentoPromesa;
 
-        if (this.tipoDescuentoPromesa.equals("FIJ")) {
-            newSaldo = mtoSaldo.subtract(mtoPort);
+        if (this.tipoDescuentoPromesa != null) {
+            if (this.tipoDescuentoPromesa.equals("FIJ")) {
+                newSaldo = mtoSaldo.subtract(mtoPort);
 
-        } else {
-            BigDecimal porcentage = mtoSaldo.multiply(mtoPort).divide(cien);
-            newSaldo = mtoSaldo.subtract(porcentage);
+            } else if (this.tipoDescuentoPromesa.equals("POR")) {
+                if (mtoPort != null && mtoPort.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal porcentage = mtoSaldo.multiply(mtoPort).divide(cien);
+                    newSaldo = mtoSaldo.subtract(porcentage);
+                } else {
+                    newSaldo = mtoSaldo;
+                }
+            }
         }
 
         this.mtoSaldoPromesa = newSaldo;
@@ -1678,19 +1782,49 @@ Arreglo de Pago
             }
         }
 
-        if (this.fechaPagoPromesa == null) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return false;
-
-        } else if (this.fechaPagoPromesa.before(this.fechaHoy.getTime())) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha Pago debe ser mayor a la fecha de hoy!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+        if (!this.validarfechaPagoPromesa()) {
             return false;
         }
 
         return true;
 
+    }
+
+    /**
+     *
+     * @return
+     */
+    private boolean validarfechaPagoPromesa() {
+
+        if (this.fechaPagoPromesa == null) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+        }
+
+        Calendar fechaPP = Calendar.getInstance();
+        fechaPP.setTime(this.fechaPagoPromesa);
+
+        Calendar fechaH = Calendar.getInstance();
+        fechaH.setTime(this.fechaHoy.getTime());
+
+        fechaPP.set(Calendar.HOUR_OF_DAY, 0);
+        fechaPP.set(Calendar.MINUTE, 0);
+        fechaPP.set(Calendar.SECOND, 0);
+        fechaPP.set(Calendar.MILLISECOND, 0);
+
+        fechaH.set(Calendar.HOUR_OF_DAY, 0);
+        fechaH.set(Calendar.MINUTE, 0);
+        fechaH.set(Calendar.SECOND, 0);
+        fechaH.set(Calendar.MILLISECOND, 0);
+
+        if (fechaPP.before(fechaH)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha Pago debe ser mayor igual a la fecha de hoy!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -1807,29 +1941,35 @@ Arreglo de Pago
         }
 
         if (this.tipoDescuentoPromesa == null || this.tipoDescuentoPromesa.equals("")) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Tipo Descuento!");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar un Tipo Descuento!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
         }
 
         if (codigoMoneda.equals("CRC")) {
+            /*
             if (this.mtoDescuentoPromesa == null || this.mtoDescuentoPromesa.equals(BigDecimal.ZERO)) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe digitar Monto o %!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return false;
-            } else if (this.mtoSaldoPromesa == null || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == -1) {
+            } else 
+             */
+            if (this.mtoSaldoPromesa == null || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == -1) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return false;
             }
 
         } else if (codigoMoneda.equals("USD")) {
+            /*
             if (this.mtoDescuentoPromesaUSD == null || this.mtoDescuentoPromesaUSD.equals(BigDecimal.ZERO)) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe digitar Monto o %!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return false;
 
-            } else if (this.mtoSaldoPromesaUSD == null || this.mtoSaldoPromesaUSD.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesaUSD.compareTo(BigDecimal.ZERO) == -1) {
+            } else 
+             */
+            if (this.mtoSaldoPromesaUSD == null || this.mtoSaldoPromesaUSD.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesaUSD.compareTo(BigDecimal.ZERO) == -1) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return false;
@@ -1837,6 +1977,10 @@ Arreglo de Pago
             }
         }
 
+        if (!this.validarfechaPagoPromesa()) {
+            return false;
+        }
+        /*
         if (this.fechaPagoPromesa == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -1847,7 +1991,7 @@ Arreglo de Pago
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
         }
-
+         */
         return true;
     }
 
@@ -1960,12 +2104,13 @@ Arreglo de Pago
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
 
-        } else if (this.fechaPagoPromesa.before(this.fechaHoy.getTime())) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha Pago debe ser mayor a la fecha de hoy!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return false;
+        }
 
-        } else if (this.cuotas == null || this.cuotas.trim().equals("")) {
+        if (!this.validarfechaPagoPromesa()) {
+            return false;
+        }
+
+        if (this.cuotas == null || this.cuotas.trim().equals("")) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una cuota!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return false;
@@ -2091,22 +2236,26 @@ Arreglo de Pago
         Moneda monedaDolares = this.selectedCartera.getIdMonedaDolares();
 
         TblGestionsaldo colones = new TblGestionsaldo();
-        colones.setSaldo(saldoColones);
+        colones.setSaldoCartera(saldoColones);
         colones.setIntereses(interesesColones);
         colones.setIdMoneda(monedaColones);
 
         if (this.gestion.getLeyusura() != null && this.gestion.getLeyusura().equals("1")) {
-            if (this.gestion.getMtosaldocobrar() != null) {
-                colones.setSaldo(this.gestion.getMtosaldocobrar());
+            if (this.mtoSaldoGestionCRC != null) {
+                colones.setSaldoGestion(this.mtoSaldoGestionCRC);
+                colones.setSaldoRestante(this.mtoSaldoGestionCRC);
             } else {
-                colones.setSaldo(BigDecimal.ZERO);
+                colones.setSaldoGestion(BigDecimal.ZERO);
+                colones.setSaldoRestante(BigDecimal.ZERO);
             }
         }
         colones.setIdGestion(this.gestion);
 
         TblGestionsaldo dolares = new TblGestionsaldo();
-        dolares.setSaldo(saldoDolares);
+        dolares.setSaldoCartera(saldoDolares);
         dolares.setIntereses(interesesDolares);
+        dolares.setSaldoGestion(BigDecimal.ZERO);
+        dolares.setSaldoRestante(saldoDolares);
         dolares.setIdMoneda(monedaDolares);
         dolares.setIdGestion(this.gestion);
 
@@ -2461,12 +2610,18 @@ Arreglo de Pago
         BigDecimal mtoSaldo = this.mtoSaldoOperacionUSD;
         BigDecimal mtoPort = this.mtoDescuentoPromesaUSD;
 
-        if (this.tipoDescuentoPromesa.equals("FIJ")) {
-            newSaldo = mtoSaldo.subtract(mtoPort);
+        if (this.tipoDescuentoPromesa != null) {
+            if (this.tipoDescuentoPromesa.equals("FIJ")) {
+                newSaldo = mtoSaldo.subtract(mtoPort);
 
-        } else {
-            BigDecimal porcentage = mtoSaldo.multiply(mtoPort).divide(cien);
-            newSaldo = mtoSaldo.subtract(porcentage);
+            } else if (this.tipoDescuentoPromesa.equals("POR")) {
+                if (mtoPort != null && mtoPort.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal porcentage = mtoSaldo.multiply(mtoPort).divide(cien);
+                    newSaldo = mtoSaldo.subtract(porcentage);
+                } else {
+                    newSaldo = mtoSaldo;
+                }
+            }
         }
 
         this.mtoSaldoPromesaUSD = newSaldo;
@@ -2854,8 +3009,8 @@ Arreglo de Pago
         } else if (index == 2) {
             this.pagosHistorialController.cargarPagos(this.gestion.getCodigoCartera(), this.gestion.getOperacion(), this.gestion.getIdentificacion());
             PrimeFaces.current().ajax().update("formGestion:idTabView:idTablePagos");
-            
-        }else if(index == 3){
+
+        } else if (index == 3) {
             this.gestionController.cargarGestiones(this.gestion.getCodigoCartera(), this.gestion.getIdentificacion());
             PrimeFaces.current().ajax().update("formGestion:idTabView:idTableGH");
         }
@@ -2870,5 +3025,35 @@ Arreglo de Pago
     public void setActiveTabIndex(Integer activeTabIndex) {
         this.activeTabIndex = activeTabIndex;
     }
+
+    /**
+     * Fecha Ultima Gestion Fecha Ultima Promesa Monto Ultima Promesa
+     */
+    private void buscarGestion() {
+
+        if (this.carteraList != null && !this.carteraList.isEmpty()) {
+            for (int index = 0; index < this.carteraList.size(); index++) {
+                String codigoCartera = this.carteraList.get(index).getCodigoCartera();
+                String identificacion = this.carteraList.get(index).getIdentificacion();
+                String operacion = this.carteraList.get(index).getNumeroCuenta();
+
+                TblGestion gestion = new TblGestion();
+                gestion.setCodigoCartera(codigoCartera);
+                gestion.setIdentificacion(identificacion);
+
+                gestion = this.ejbLocal.findByCodigoCarteraANDIdentificacion(gestion);
+                if (gestion != null) {
+
+                    Date fechaUltimaGestion = gestion.getFechaGestion();
+                    String razonMora = "";
+                    TblPromesa ultimaPromesa = this.ejbPromesaLocal.findPromesaUltimoPago(gestion.getIdGestion());
+
+                    this.carteraList.get(index).setFechaUltimaGestion(fechaUltimaGestion);
+                    this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);
+                    this.carteraList.get(index).setRazonMora(razonMora);
+                }// if Gestion
+            }
+        }
+    }//buscarGestion
 
 }//end

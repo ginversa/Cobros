@@ -7,13 +7,13 @@ package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.GestionService;
+import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.TblCartera;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +36,9 @@ public class CarteraController implements Serializable {
 
     @Inject
     private GestionService ejbGestionLocal;
+    
+    @Inject
+    private PromesaService ejbPromesaLocal;
 
     private TblCartera cartera;
     private String observaciones;
@@ -107,10 +110,10 @@ public class CarteraController implements Serializable {
                 if (gestion != null) {
 
                     Date fechaUltimaGestion = gestion.getFechaGestion();
-                    Date fechaUltimaPromesa = null;
-                    BigDecimal montoUltimaPromesa = BigDecimal.ZERO;
                     String razonMora = "";
-
+                    
+                    TblPromesa ultimaPromesa = this.ejbPromesaLocal.findPromesaUltimoPago(gestion.getIdGestion());
+                            
                     List<TblLlamada> llamadaList = gestion.getTblLlamadaList();
                     if (llamadaList != null && !llamadaList.isEmpty()) {
                         Date fechaingresoMax = null;
@@ -122,7 +125,7 @@ public class CarteraController implements Serializable {
                                 if (llamada.getIdrazonmora() != null) {
                                     razonMora = llamada.getIdrazonmora().getDescripcion();
                                 }
-
+/*
                                 List<TblPromesa> promesaList = llamada.getTblPromesaList();
                                 if (promesaList != null && !promesaList.isEmpty()) {
                                     for (int indexPromesa = 0; indexPromesa < promesaList.size(); indexPromesa++) {
@@ -138,13 +141,14 @@ public class CarteraController implements Serializable {
                                         }
                                     }
                                 }
+*/
 
                             } else if (fechaingresoMax.before(fechaingreso)) {// fechaingresoMax is before fechaingreso. fecha es mayor
                                 fechaingresoMax = fechaingreso;
                                 if (llamada.getIdrazonmora() != null) {
                                     razonMora = llamada.getIdrazonmora().getDescripcion();
                                 }
-
+/*
                                 List<TblPromesa> promesaList = llamada.getTblPromesaList();
                                 if (promesaList != null && !promesaList.isEmpty()) {
                                     for (int indexPromesa = 0; indexPromesa < promesaList.size(); indexPromesa++) {
@@ -159,14 +163,13 @@ public class CarteraController implements Serializable {
                                         }
                                     }
                                 }
-
+*/
                             }
                         }
                     }
 
                     this.carteraList.get(index).setFechaUltimaGestion(fechaUltimaGestion);
-                    this.carteraList.get(index).setFechaUltimaPromesa(fechaUltimaPromesa);
-                    this.carteraList.get(index).setMontoUltimaPromesa(montoUltimaPromesa);
+                    this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);                    
                     this.carteraList.get(index).setRazonMora(razonMora);
                 }// if Gestion
             }

@@ -152,7 +152,6 @@ CREATE TABLE IF NOT EXISTS tbl_gestion (
   	nombre_cliente varchar(50),
   	operacion varchar(50),
   	leyUsura varchar(1) default '0',--?????
-  	mtoSaldoCobrar decimal(18,6) default 0,--????
   	codigo_gestor varchar(5),  	  	
   	fecha_gestion timestamp,
   	descripcion text,
@@ -539,7 +538,7 @@ insert into estado(codigo,descripcion,usuarioingreso) VALUES('INC','Incumplida',
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('EFE','Efectiva','hbonilla');
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('DEL','Registro borrado','hbonilla');
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('REP','Reprogramada','hbonilla');
-insert into estado(codigo,descripcion,usuarioingreso) VALUES('HIS','HistÃ³rico','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('HIS','Histórico','hbonilla');
 
 
 /*
@@ -614,7 +613,7 @@ insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIn
  
  --	Contacto sin Promesa 
 insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente sin interes de pagar',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente no reconoce obligaciÃ³n',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente no reconoce obligación',null,'hbonilla');
 insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente colgó la llamada',null,'hbonilla');
 
 -- ILOCALIZADO TELEFONICAMENTE
@@ -817,8 +816,10 @@ create table if not EXISTS tbl_pagos_historial (
 CREATE TABLE IF NOT EXISTS tbl_GestionSaldo (
     id_GestionSaldo SERIAL PRIMARY KEY,
     id_gestion BIGSERIAL references tbl_gestion(id_gestion),
-    saldo decimal(18,6) default 0,
+    saldo_cartera decimal(18,6) default 0,
     intereses decimal(18,6) default 0,
+    saldo_gestion decimal(18,6) default 0,
+    saldo_restante decimal(18,6) default 0,
     id_Moneda SERIAL references moneda(id_Moneda),
 	usuarioIngreso varchar(50),
 	fechaIngreso timestamp default CURRENT_TIMESTAMP,

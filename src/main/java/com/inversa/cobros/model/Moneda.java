@@ -7,19 +7,24 @@ package com.inversa.cobros.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Moneda.findByUsuariomodifico", query = "SELECT m FROM Moneda m WHERE m.usuariomodifico = :usuariomodifico"),
     @NamedQuery(name = "Moneda.findByFechamodifico", query = "SELECT m FROM Moneda m WHERE m.fechamodifico = :fechamodifico")})
 public class Moneda implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -64,13 +69,13 @@ public class Moneda implements Serializable {
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
     
-    @Size(max = 50)
-    @Column(name = "usuariomodifico")
-    private String usuariomodifico;
-
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+    
+    @Size(max = 50)
+    @Column(name = "usuariomodifico")
+    private String usuariomodifico;   
 
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
@@ -171,5 +176,5 @@ public class Moneda implements Serializable {
     public void setUsuariomodifico(String usuariomodifico) {
         this.usuariomodifico = usuariomodifico;
     }
-
+    
 }

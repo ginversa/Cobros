@@ -26,7 +26,7 @@
             <div class="p-grid table-demo">
                 <div class="p-col-12">
 
-                    <p:tabView id="idTabViewDeudor" onTabChange="">
+                    <p:tabView id="idTabViewDeudor">
                         <p:tab title="Promesas">
                             <div class="card">
                                 <h4>Promesas</h4>
@@ -45,18 +45,23 @@
                                     <p:column headerText="#Cuenta" filterBy="#{promesa.operacion}" filterMatchMode="contains" sortBy="#{promesa.operacion}" >
                                         <h:outputText value="#{promesa.operacion}" />
                                     </p:column>
+                                    
                                     <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
                                         <h:outputText value="#{promesa.mtopago}" >
-                                            <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
+                                            <f:convertNumber type="currency" currencySymbol="#{promesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                         </h:outputText>
                                     </p:column>
-                                    <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
-                                        <h:outputText value="#{promesa.telefono}" />                                    
+                                    <p:column headerText="Moneda" filterBy="#{promesa.idMoneda.codigo}" sortBy="#{promesa.idMoneda.codigo}" >
+                                        <h:outputText value="#{promesa.idMoneda.codigo}" />
                                     </p:column>
                                     <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
                                         <h:outputText value="#{promesa.fechaPago}" >
                                             <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
                                         </h:outputText>
+                                    </p:column>
+                                    
+                                    <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
+                                        <h:outputText value="#{promesa.telefono}" />                                    
                                     </p:column>
                                     <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
                                         <h:outputText value="#{promesa.idGestion.codigoCartera}" />
@@ -87,18 +92,23 @@
                                     <p:column headerText="#Cuenta" filterBy="#{promesa.operacion}" filterMatchMode="contains" sortBy="#{promesa.operacion}" >
                                         <h:outputText value="#{promesa.operacion}" />
                                     </p:column>
+                                    
                                     <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
                                         <h:outputText value="#{promesa.mtopago}" >
-                                            <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
+                                            <f:convertNumber type="currency" currencySymbol="#{promesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true"/>
                                         </h:outputText>
                                     </p:column>
-                                    <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
-                                        <h:outputText value="#{promesa.telefono}" />                                    
+                                    <p:column headerText="Moneda" filterBy="#{promesa.idMoneda.codigo}" sortBy="#{promesa.idMoneda.codigo}" >
+                                        <h:outputText value="#{promesa.idMoneda.codigo}" />
                                     </p:column>
                                     <p:column headerText="Fecha Pago" filterBy="#{promesa.fechaPago}" sortBy="#{promesa.fechaPago}" >
                                         <h:outputText value="#{promesa.fechaPago}" >
                                             <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
                                         </h:outputText>
+                                    </p:column>
+                                    
+                                    <p:column headerText="Teléfono" filterBy="#{promesa.telefono}" sortBy="#{promesa.telefono}" >
+                                        <h:outputText value="#{promesa.telefono}" />                                    
                                     </p:column>
                                     <p:column headerText="Código Cartera" filterBy="#{promesa.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{promesa.idGestion.codigoCartera}" >
                                         <h:outputText value="#{promesa.idGestion.codigoCartera}" />
@@ -131,49 +141,51 @@
                                     <p:column id="idNumeroCuenta" headerText="#Cuenta" filterBy="#{cartera.numeroCuenta}" filterMatchMode="contains" sortBy="#{cartera.numeroCuenta}" >
                                         <h:outputText value="#{cartera.numeroCuenta}" />
                                     </p:column>
-                                    <p:column id="idSaldoColones" headerText="Saldo Colones" filterBy="#{cartera.saldoColones}" sortBy="#{cartera.saldoColones}" >
-                                        <h:outputText value="#{cartera.saldoColones}" >
-                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                    
+                                    <p:column id="idSaldoColones" headerText="Saldo Colones" filterBy="#{cartera.saldoColones}" sortBy="#{cartera.saldoColones}" >                                        
+                                        <h:outputText value="#{cartera.saldoColones}" >                                            
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true"/>
                                         </h:outputText>
                                     </p:column>                                    
                                     <p:column id="idInterecesColones" headerText="Intereses Colones" filterBy="#{cartera.interesesColones}" sortBy="#{cartera.interesesColones}" >
                                         <h:outputText value="#{cartera.interesesColones}" >
-                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true"/>
                                         </h:outputText>
                                     </p:column>                                    
                                     <p:column headerText="Saldo Dolares" filterBy="#{cartera.saldoDolares}" sortBy="#{cartera.saldoDolares}" >
                                         <h:outputText value="#{cartera.saldoDolares}" >
-                                            <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true"/>
                                         </h:outputText>
                                     </p:column>                                    
                                     <p:column headerText="Intereses Dolares" filterBy="#{cartera.interesesDolares}" sortBy="#{cartera.interesesDolares}" >
                                         <h:outputText value="#{cartera.interesesDolares}" >
-                                            <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true"/>
                                         </h:outputText>
-                                    </p:column>                                    
-                                    <p:column headerText="Última Gestión" filterBy="#{cartera.fechaUltimaGestion}" sortBy="#{cartera.fechaUltimaGestion}" >
+                                    </p:column>
+                                    
+                                    <p:column headerText="Fecha Última Gestión" filterBy="#{cartera.fechaUltimaGestion}" sortBy="#{cartera.fechaUltimaGestion}" >
                                         <h:outputText value="#{cartera.fechaUltimaGestion}" >
                                             <f:convertDateTime pattern="dd/MM/yyyy" />
                                         </h:outputText>
                                     </p:column>
-                                    <p:column headerText="Última Promesa" filterBy="#{cartera.fechaUltimaPromesa}" sortBy="#{cartera.fechaUltimaPromesa}" >
-                                        <h:outputText value="#{cartera.fechaUltimaPromesa}" >
+                                    
+                                    <p:column headerText="Última Promesa" filterBy="#{cartera.ultimaPromesa.mtopago}" sortBy="#{cartera.ultimaPromesa.mtopago}" >
+                                        <h:outputText value="#{cartera.ultimaPromesa.mtopago}" >
+                                            <f:convertNumber type="currency" currencySymbol="#{cartera.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true"/>
+                                        </h:outputText>
+                                    </p:column>                                    
+                                    <p:column headerText="Moneda Promesa" filterBy="#{cartera.ultimaPromesa.idMoneda.codigo}" sortBy="#{cartera.ultimaPromesa.idMoneda.codigo}" >
+                                        <h:outputText value="#{cartera.ultimaPromesa.idMoneda.codigo}" />
+                                    </p:column>                                    
+                                    <p:column headerText="Fecha Última Promesa" filterBy="#{cartera.ultimaPromesa.fechaPago}" sortBy="#{cartera.ultimaPromesa.fechaPago}" >
+                                        <h:outputText value="#{cartera.ultimaPromesa.fechaPago}" >
                                             <f:convertDateTime pattern="dd/MM/yyyy" />
                                         </h:outputText>
                                     </p:column>
-                                    <p:column headerText="Última Promesa" filterBy="#{cartera.montoUltimaPromesa}" sortBy="#{cartera.montoUltimaPromesa}" >
-                                        <h:outputText value="#{cartera.montoUltimaPromesa}" >                                            
-                                            <f:convertNumber type="currency" currencySymbol="#{cartera.idMonedaDolares.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                        </h:outputText>
-                                    </p:column>
+                                    
                                     <p:column headerText="Razón Mora" filterBy="#{cartera.razonMora}" sortBy="#{cartera.razonMora}" >
                                         <h:outputText value="#{cartera.razonMora}" />
                                     </p:column>
-                                    <!-- 
-                                    <p:column id="idCodigoCartera" headerText="Cartera" filterBy="#{cartera.codigoCartera}" filterMatchMode="contains" sortBy="#{cartera.codigoCartera}" >
-                                        <h:outputText value="#{cartera.codigoCartera} - #{cartera.idCliente.nombre}" />
-                                    </p:column>
-                                    -->
                                 </p:dataTable>
                             </div>
                         </p:tab>

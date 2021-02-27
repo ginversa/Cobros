@@ -1,0 +1,213 @@
+
+/*
+select * from tipificacion t;
+select * from subtipificacion s;
+select * from tbl_resultadogestion tr;
+select * from tbl_resultadotercero tr;
+*/
+
+
+-- select * from Tipificacion
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Promesa de pago',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Recordatorio de pago',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Contacto familiar',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Titular No contesta',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Contacto tercero',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Contacto sin promesa',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Ilocalizado telefonicamente',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Escalar',null,'hbonilla');
+
+/*
+***************************************************************************************************************************************
+* SUB-TIPIFICACIONES *
+***************************************************************************************************************************************
+*/
+
+-- Promesa de pago
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago total',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago por cuota',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago parcial',null,'hbonilla');
+
+
+-- Recordatorio de pago
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago total',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago por cuota',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago parcial',null,'hbonilla');
+
+
+-- Contacto familiar
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Esposo(a)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Madre',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Padre',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Hermano(a)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Abuelo(a)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Hijo(a)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Tío',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Primo',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Suegro(a)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Otro',null,'hbonilla');
+
+
+-- Titular No contesta
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Sin buzón',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Mensaje grabadora',null,'hbonilla');
+
+-- Contacto tercero
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Tomo mensaje',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'No tomo mensaje',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Informó salida del país del titular',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Informó enfermedad del titular',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Cambio de trabajo',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Informó privacidad de libertad del titular',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Informó fallecimiento del titular',null,'hbonilla');
+
+-- Contacto sin promesa
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(6,'Cliente colgó la llamada',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(6,'Cliente fuera del país',null,'hbonilla');
+
+-- Ilocalizado telefonicamente
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Número reasignado',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Número equivocado',null,'hbonilla');
+
+-- Escalar
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(8,'Supervisor',null,'hbonilla');
+
+
+/*
+***************************************************************************************************************************************
+* RESULTADO GESTION *
+***************************************************************************************************************************************
+*/
+
+/*
+select * from tipificacion t; 8
+select * from subtipificacion s; 30
+select * from tbl_resultadogestion tr;
+select * from tbl_resultadotercero tr;
+*/
+
+/*
+3 - Contacto familiar
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Tomo mensaje','TMJ',3,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No tomo mensaje','NTM',3,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Informó salida del país del titular','SPT',3,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Informó enfermedad del titular','IET',3,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Informó privacidad de libertad del titular','PLT',3,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Informó fallecimiento del titular','IFT',3,null,'hbonilla');
+
+
+/*
+4 - Titular No contesta
+select * from subtipificacion s where s.id_tipificacion = 4;
+18 - Mensaje grabadora
+*/
+
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Mensaje en buzón','MBZ',4,18,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Buzón lleno','BLL',4,18,'hbonilla');
+
+/*
+5 - Contacto tercero
+select * from subtipificacion s where s.id_tipificacion = 5;
+*/
+
+-- 19 - Tomo mensaje
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo número del titular','BNN',5,19,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo email del titular','BNE',5,19,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo hora para localización','BHL',5,19,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No brindo información adicional del titular','NBI',5,19,'hbonilla');
+
+-- 20 - No tomo mensaje
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo número del titular','BNN',5,20,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo email del titular','BNE',5,20,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo hora para localización','BHL',5,20,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No brindo información adicional del titular','NBI',5,20,'hbonilla');
+
+-- 21 - Informó salida del país del titular
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo número del titular','BNN',5,21,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo email del titular','BNE',5,21,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo hora para localización','BHL',5,21,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No brindo información adicional del titular','NBI',5,21,'hbonilla');
+
+
+-- 22 - Informó enfermedad del titular
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo número del titular','BNN',5,22,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo email del titular','BNE',5,22,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo hora para localización','BHL',5,22,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No brindo información adicional del titular','NBI',5,22,'hbonilla');
+
+-- 23 - Cambio de trabajo
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo número del titular','BNN',5,23,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo nuevo email del titular','BNE',5,23,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Brindo hora para localización','BHL',5,23,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No brindo información adicional del titular','NBI',5,23,'hbonilla');
+
+
+/*
+6 - Contacto sin promesa
+select * from subtipificacion s where s.id_tipificacion = 6;
+27 - Cliente fuera del país
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Indico fecha de retorno','IFR',6,27,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No indico información adicional','NII',6,27,'hbonilla');
+
+/*
+8 - Escalar
+select * from subtipificacion s where s.id_tipificacion = 8;
+*/
+
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Cliente sin interés de pagar','SIP',8,30,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Cliente no reconoce obligación','NRO',8,30,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Solicito llamada con Supervisor','SLS',8,30,'hbonilla');
+
+/*
+***************************************************************************************************************************************
+* RESULTADO TERCERO --- RESPUESTA *
+***************************************************************************************************************************************
+*/
+
+/*
+select * from tipificacion t;
+select * from subtipificacion s;
+select * from tbl_resultadogestion tr;
+select * from tbl_resultadotercero tr;
+*/
+
+/*
+Contacto familiar = 3
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 3
+*/
+
+-- 1 - Tomo mensaje
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(1,3,'Brindo nuevo número del titular','NNT','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(1,3,'Brindo nuevo email del titular','NET','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(1,3,'Brindo hora para localización','BHL','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(1,3,'No brindo información adicional del titular','NIA','hbonilla');
+
+-- 2 - No tomo mensaje
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(2,3,'Brindo nuevo número del titular','NNT','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(2,3,'Brindo nuevo email del titular','NET','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(2,3,'Brindo hora para localización','BHL','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(2,3,'No brindo información adicional del titular','NIA','hbonilla');
+
+-- 3 - Informó salida del país del titular
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(3,3,'Brindo nuevo número del titular','NNT','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(3,3,'Brindo nuevo email del titular','NET','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(3,3,'Brindo hora para localización','BHL','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(3,3,'No brindo información adicional del titular','NIA','hbonilla');
+
+-- 4 - Informó enfermedad del titular
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(4,3,'Brindo nuevo número del titular','NNT','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(4,3,'Brindo nuevo email del titular','NET','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(4,3,'Brindo hora para localización','BHL','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(4,3,'No brindo información adicional del titular','NIA','hbonilla');
+
+/*
+Escalar
+select * from subtipificacion s where s.id_tipificacion = 8;
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 8;
+*/
+ -- 32 - Cliente no reconoce obligación
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(32,8,'Ya cancelo la deuda','YCD','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(32,8,'Nunca adquirió deuda','NAD','hbonilla');
+

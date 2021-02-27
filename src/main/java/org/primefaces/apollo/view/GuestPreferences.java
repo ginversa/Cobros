@@ -99,7 +99,7 @@ public class GuestPreferences implements Serializable {
         return layoutThemes;
     }
     
-    public class LayoutTheme {
+    public class LayoutTheme implements Serializable{
         String name;
         String file;
         String color;

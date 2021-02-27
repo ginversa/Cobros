@@ -24,7 +24,7 @@ public interface PromesaDao {
 
     public List<TblPromesa> findByTelefono(TblPromesa obj);
 
-    public List<TblPromesa> findByFechaPago(TblPromesa obj);    
+    public List<TblPromesa> findByFechaPago(TblPromesa obj);
 
     public List<TblPromesa> findByUsuarioingreso(TblPromesa obj);
 
@@ -33,14 +33,16 @@ public interface PromesaDao {
     public List<TblPromesa> findByUsuariomodifico(TblPromesa obj);
 
     public List<TblPromesa> findByFechamodifico(TblPromesa obj);
-    
+
     public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj);
 
     public void insert(TblPromesa obj);
 
     public void update(TblPromesa obj);
 
-    public void delete(TblPromesa obj);    
-    
-    public TblPromesa findPromesaUltimoPago(Long idGestion,Long idLlamada);
+    public void delete(TblPromesa obj);
+
+    public TblPromesa findPromesaUltimoPago(Long idGestion, Long idLlamada);
+
+    public TblPromesa findPromesaUltimoPago(Long idGestion);
 }

@@ -8,6 +8,7 @@ package com.inversa.cobros.controller;
 import com.inversa.cobros.ejb.UsuarioService;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -42,17 +43,30 @@ public class LoginController implements Serializable{
         this.usuario = usuario;
     }
     
+    private String localeSelectedString;
+    
     /**
      * 
      * @return 
      */
     public String iniciarSesion(){
         String redireccion = null;
+        
         try{
             TblUsuario obj = this.ejbLocal.findByUsuarioAndClave(usuario);
             if(obj!=null){                
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", obj);
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.getExternalContext().getSessionMap().put("usuario", obj);
                 redireccion = "operario/cartera";
+                
+                Locale locale = facesContext.getExternalContext().getRequestLocale();
+                localeSelectedString = locale.getLanguage();                
+                System.out.println("localeSelectedString: "+localeSelectedString);
+                
+                facesContext.getViewRoot().setLocale(new java.util.Locale("en", "US"));
+                locale = facesContext.getExternalContext().getRequestLocale();
+                localeSelectedString = locale.getLanguage();                
+                System.out.println("localeSelectedString: "+localeSelectedString);
                 
             }else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Aviso","Credenciales incorrectas!"));

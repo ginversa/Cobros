@@ -1,0 +1,94 @@
+
+CREATE TABLE IF NOT EXISTS Tipificacion (
+    id_tipificacion SERIAL PRIMARY KEY,
+    descripcion varchar(50),
+    codigo varchar(5),
+	codigo_cartera varchar(5),			
+	estado varchar(3) default 'ACT',
+	usuarioIngreso varchar(50),
+	fechaIngreso timestamp default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico timestamp
+);
+
+CREATE TABLE IF NOT EXISTS SubTipificacion (
+    id_subtipificacion SERIAL primary key,
+    id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+    descripcion varchar(50),
+    codigo varchar(5),
+	codigo_cartera varchar(5),			
+	estado varchar(3) default 'ACT',
+	usuarioIngreso varchar(50),
+	fechaIngreso timestamp default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico timestamp
+);
+
+CREATE TABLE IF NOT EXISTS tbl_resultadogestion (
+	id_resultadogestion SERIAL PRIMARY KEY,
+  	descripcion varchar(250),
+  	codigo varchar(5),
+  	codigo_cartera varchar(5),
+    id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+  	id_subtipificacion int4 references SubTipificacion(id_subtipificacion),
+  	usuarioIngreso varchar(50),
+	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tbl_resultadotercero (
+	id_resultadotercero SERIAL PRIMARY KEY,
+	id_resultadogestion SERIAL references tbl_resultadogestion(id_resultadogestion),
+	id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+  	descripcion varchar(250),
+  	codigo varchar(5),
+  	codigo_cartera varchar(5),
+  	usuarioIngreso varchar(50),
+	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico TIMESTAMP
+);
+
+create table if not exists tbl_llamada(
+	id_Llamada BIGSERIAL primary key,
+	id_gestion BIGSERIAL references tbl_gestion(id_gestion),
+	call_log_id text,
+	date_ini timestamp,
+	date_end timestamp,
+	call_from_number varchar(5),
+	call_to_number varchar(50),
+	dialstatus varchar(50),
+	call_length timestamp,
+	conversation_length int4,
+	estado varchar(3) default 'ING', --INGRESAR
+	id_tipificacion SERIAL references Tipificacion(id_tipificacion),
+	id_subtipificacion SERIAL references SubTipificacion(id_subtipificacion),    
+	idRazonMora int8 references RazonMora(idRazonMora),
+	id_resultadogestion INT4 references tbl_resultadogestion(id_resultadogestion),
+    id_resultadotercero INT4 references tbl_resultadotercero(id_resultadotercero),
+	id_tipotelefono int8 references TipoTelefono(id_tipotelefono),
+	usuarioIngreso varchar(50),
+	fechaIngreso timestamp default CURRENT_TIMESTAMP,
+	usuarioModifico varchar(50),
+	fechaModifico timestamp
+);
+
+CREATE TABLE IF NOT EXISTS tbl_promesa (
+  	id_promesa BIGSERIAL primary key,
+  	id_llamada BIGSERIAL references tbl_llamada(id_llamada),
+  	id_gestion BIGSERIAL references tbl_gestion(id_gestion),  	
+  	operacion varchar(50),
+  	telefono varchar(50),
+  	tipoDescuento VARCHAR(3),
+  	mtoPorcentaje DECIMAL(19,4) default 0,
+  	mtoPago DECIMAL(19,4) default 0,
+  	id_Moneda SERIAL references moneda(id_Moneda),
+  	fecha_pago timestamp,
+  	tipoArregloPago VARCHAR(3),  	
+  	estado varchar(3) default 'ING', --INGRESAR
+  	usuarioIngreso varchar(50),
+	fechaIngreso timestamp default CURRENT_TIMESTAMP,
+    usuarioModifico varchar(50),
+	fechaModifico timestamp
+);

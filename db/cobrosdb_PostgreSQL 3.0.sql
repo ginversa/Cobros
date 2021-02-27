@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS tbl_pago (
 CREATE TABLE IF NOT EXISTS Tipificacion (
     id_tipificacion SERIAL PRIMARY KEY,
     descripcion varchar(50),
+    codigo varchar(5),
 	codigo_cartera varchar(5),			
 	estado varchar(3) default 'ACT',
 	usuarioIngreso varchar(50),
@@ -125,6 +126,7 @@ CREATE TABLE IF NOT EXISTS SubTipificacion (
     id_subtipificacion SERIAL primary key,
     id_tipificacion SERIAL references Tipificacion(id_tipificacion),
     descripcion varchar(50),
+    codigo varchar(5),
 	codigo_cartera varchar(5),			
 	estado varchar(3) default 'ACT',
 	usuarioIngreso varchar(50),
@@ -151,8 +153,7 @@ CREATE TABLE IF NOT EXISTS tbl_gestion (
   	identificacion varchar(50),
   	nombre_cliente varchar(50),
   	operacion varchar(50),
-  	leyUsura varchar(1) default '0',--?????
-  	mtoSaldoCobrar decimal(18,6) default 0,--????
+  	leyUsura varchar(1) default '0',  	
   	codigo_gestor varchar(5),  	  	
   	fecha_gestion timestamp,
   	descripcion text,
@@ -180,7 +181,8 @@ CREATE TABLE IF NOT EXISTS TipoTelefono (
 CREATE TABLE IF NOT EXISTS tbl_resultadogestion (
 	id_resultadogestion SERIAL PRIMARY KEY,
   	descripcion varchar(250),
-  	codigo varchar(3),
+  	codigo varchar(5),
+  	codigo_cartera varchar(5),
     id_tipificacion SERIAL references Tipificacion(id_tipificacion),
   	id_subtipificacion int4 references SubTipificacion(id_subtipificacion),
   	usuarioIngreso varchar(50),
@@ -194,7 +196,8 @@ CREATE TABLE IF NOT EXISTS tbl_resultadotercero (
 	id_resultadogestion SERIAL references tbl_resultadogestion(id_resultadogestion),
 	id_tipificacion SERIAL references Tipificacion(id_tipificacion),
   	descripcion varchar(250),
-  	codigo varchar(3),
+  	codigo varchar(5),
+  	codigo_cartera varchar(5),
   	usuarioIngreso varchar(50),
 	fechaIngreso TIMESTAMP default CURRENT_TIMESTAMP,
     usuarioModifico varchar(50),
@@ -518,16 +521,17 @@ DAT - Datos
 
 -- Estados de una promesa.
 SEG - Seguimiento, antes de recordatorio
-PRO - Promesa, si cuando lo llame recordando, dice que si paga maÃƒÆ’Ã‚Â±ana.
+PRO - Promesa, si cuando lo llame recordando, dice que si paga maÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â±ana.
 INC - Incumplida, al resivir los pago, se comprueba que no pago.
 EFE - Efectiva, al resivir los pago, se comprueba que si pago.
 DEL - Registro borrado
 REP - Reprogramada
-HIS - HistÃ³rico
+HIS - HistÃƒÂ³rico
 select * from Estado
 */
 
 insert into tbl_cliente(nombre,codigo,estado,usuarioIngreso) values('Credomatic','00017','ACT','hbonilla');
+insert into tbl_cliente(nombre,codigo,estado,usuarioIngreso) values('Davivienda','00005','ACT','hbonilla');
 
 insert into Estado(codigo,descripcion,usuarioIngreso) values('ING','Ingresar','hbonilla');
 insert into Estado(codigo,descripcion,usuarioIngreso) values('ACT','Activo','hbonilla');
@@ -539,7 +543,7 @@ insert into estado(codigo,descripcion,usuarioingreso) VALUES('INC','Incumplida',
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('EFE','Efectiva','hbonilla');
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('DEL','Registro borrado','hbonilla');
 insert into estado(codigo,descripcion,usuarioingreso) VALUES('REP','Reprogramada','hbonilla');
-insert into estado(codigo,descripcion,usuarioingreso) VALUES('HIS','Histórico','hbonilla');
+insert into estado(codigo,descripcion,usuarioingreso) VALUES('HIS','HistÃ³rico','hbonilla');
 
 
 /*
@@ -560,85 +564,6 @@ insert  into TipoTelefono(descripcion,codigo,usuarioIngreso) values('Movil Clien
 insert  into TipoTelefono(descripcion,codigo,usuarioIngreso) values('Trabajo Cliente','TTC','hbonilla');
 insert  into TipoTelefono(descripcion,codigo,usuarioIngreso) values('Casa Cliente','TCC','hbonilla');
 
--- select * from Tipificacion
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Promesa de pago',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Recordatorio de pago',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Mensaje grabadora',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Mensaje familiar',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Mensaje compañero',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('No contesta',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Contacto sin promesa',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Ilocalizado telefonicamente',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Retirar de cartera',null,'hbonilla');
-insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Escalar',null,'hbonilla');
-
-
-
-/*
- PROMESA DE PAGO
- select * from SubTipificacion
- */
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago total',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago cuotas',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago parcial',null,'hbonilla');
-
-
--- RECORDATORIO DE PAGO
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago total',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago cuotas',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago parcial',null,'hbonilla');
-
-
-
--- MENSAJE GRABADORA
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Titular no responde llamada',null,'hbonilla');
-
-
--- MENSAJE FAMILIAR
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Esposo(A)',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Madre',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Padre',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Hermano(A)',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Abuelo(A)',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Hijo(A)',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Tio(A)',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Primo(A)',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Suegro(A)',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Mensaje compañero',null,'hbonilla');
-
-
-
--- NO CONTESTA
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(6,'Titular no responde llamada',null,'hbonilla');
-
- 
- --	Contacto sin Promesa 
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente sin interes de pagar',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente no reconoce obligación',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente colgó la llamada',null,'hbonilla');
-
--- ILOCALIZADO TELEFONICAMENTE
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(8,'Número reasignado',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(8,'Cambio de trabajo',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(8,'Número equivocado',null,'hbonilla');
-
-/*
- Retirar de cartera 
- */
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(9,'Fallecidos',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(9,'Privados de libertad',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(9,'Solicitud del banco',null,'hbonilla');
-
-
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(10,'Supervisor',null,'hbonilla');
-
-
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Fuera del país',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Fuera del país',null,'hbonilla');
-insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Fuera del país',null,'hbonilla');
-
-
-
 
 
 -- MONEDAS
@@ -649,81 +574,6 @@ insert into moneda(codigo,simbolo,descripcion,usuarioIngreso) values('USD','$','
 insert into tbl_rolusuario (nombre,descripcion,usuarioIngreso) values('Gestor','Gestiona llamadas y promesas','hbonilla');
 insert into tbl_rolusuario (nombre,descripcion,usuarioIngreso) values('Supervisor','Supervisa la gestion de llamadas y promesas','hbonilla');
 
-
---*****************************************************************************************
-/*
- --- Mensage en Grabadora - 3
-MENSAJE EN BUZON - MEB
-BUZON LLENO - BLL
- */
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Mensaje en buzon','MEB',3,null,'hbonilla');
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Buzon lleno','BLL',3,null,'hbonilla');
-
-/*
---- Mesaje Familiar - 4
-NO TOMO MESAJE - NTM *** 
-TOMO MENSAJE - TMJ   ***
-*/
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No tomo mensaje','NTM',4,null,'hbonilla');
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Tomo mensaje','TMJ',4,null,'hbonilla');
-
-/*
- -- Mensaje Companero - 5
-NO TOMO MESAJE - NTM
-TOMO MENSAJE - TMJ
-*/
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No tomo mensaje','NTM',5,null,'hbonilla');
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Tomo mensaje','TMJ',5,null,'hbonilla');
-
-/*
--- Ilocalizado Telefonicamente - 8
--- Numero Reasignado - 22
-NO CONOCE A TITULAR
-*/
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No conoce a titular','NCT',8,22,'hbonilla');
-
-/*
--- Ilocalizado Telefonicamente - 8
--- Cambio de Trabajo - 23
-NO TOMO MESAJE - NTM ***
-TOMO MENSAJE - TMJ   ***
-*/
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No tomo mensaje','NTM',8,23,'hbonilla');
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Tomo mensaje','TMJ',8,23,'hbonilla');
-
-
-/*
--- Ilocalizado Telefonicamente - 8
--- Numero Equivocado - 24
-NO CONOCE A TITULAR - NCT
-*/
-insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No conoce a titular','NCT',8,24,'hbonilla');
-
-/*
-select * from tbl_resultadotercero
--- TOMO MENSAJE
-NO BRINDO HORA PARA LOCALIZAR - NBH
-BRINDO TELEFONO o CORREO PARA LOCALIZAR AL TITULAR BTC ***
-BRINDO TELEFONO DE LOCALIZAR - BTL
-BRINDO EMAIL DE TITULAR - BET
-NO BRINDO TELEFONO, NI EMAIL PARA LOCALIZAR A TITULAR - NTE
-
-select * from tbl_resultadogestion tr where tr.id_tipificacion = 4;
-select * from tbl_resultadogestion tr where tr.id_tipificacion = 5;
-select * from tbl_resultadogestion tr where tr.id_tipificacion = 8;
-*/
-
-insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(3,4,'No brindo hora para localizar','NBH','hbonilla');
-insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(4,4,'Brindo teléfono o correo para localizar al titular','BTC','hbonilla');
-
-insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(5,5,'No brindo hora para localizar','NBH','hbonilla');
-insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(6,5,'Brindo teléfono o correo para localizar al titular','BTC','hbonilla');
-
-insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(8,8,'No brindo hora para localizar','NBH','hbonilla');
-insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(9,8,'Brindo teléfono o correo para localizar al titular','BTC','hbonilla');
-
-/******************************************************************************
-******************************************************************************/
 
 /*
 ******************************************************************************************************** 
@@ -788,10 +638,12 @@ INSERT INTO public.tbl_url_llamada
 (id_central,servicio, parametro, descripcion)
 VALUES(1,'consultar.php?call_log_id=', '&bajar=1', 'descargar');
 
+
 /*
 *************************************************************************************************
 *************************************************************************************************
 */
+
 create table if not EXISTS tbl_pagos_historial (
 	"id" serial not null,
   	"codigo_cartera" varchar(6) not null,
@@ -810,19 +662,62 @@ create table if not EXISTS tbl_pagos_historial (
 
 /*
 *************************************************************************************************
-*************************************************************************************************
 */
+
 CREATE TABLE IF NOT EXISTS tbl_GestionSaldo (
     id_GestionSaldo SERIAL PRIMARY KEY,
     id_gestion BIGSERIAL references tbl_gestion(id_gestion),
-    saldo decimal(18,6) default 0,
+    saldo_cartera decimal(18,6) default 0,
     intereses decimal(18,6) default 0,
+    saldo_gestion decimal(18,6) default 0,
+    saldo_restante decimal(18,6) default 0,
     id_Moneda SERIAL references moneda(id_Moneda),
 	usuarioIngreso varchar(50),
 	fechaIngreso timestamp default CURRENT_TIMESTAMP,
     usuarioModifico varchar(50),
 	fechaModifico timestamp
 );
+
+/*
+*************************************************************************************************
+*/
+
+create table if not EXISTS tbl_carga_cartera (
+	"id" serial not null,
+  	"codigo_cliente" varchar(10) not null ,
+  	"codigo_cartera" varchar(10) not null,
+  	"codigo_gestor" varchar(10)  not null,
+  	"numero_cliente_cif" varchar(30) ,
+  	"nombre_cliente" varchar(80) not null,
+  	"identificacion" varchar(20) ,
+  	"numero_cuenta" varchar(30) ,
+  	"numero_tarjeta" varchar(30) ,
+  	"monto_principal_colones" varchar(20) ,
+  	"intereses_colones" varchar(20) ,
+	"codigo_moneda1" varchar(3) ,
+	"saldo_colones" varchar(20) ,
+	"saldo_dolares" varchar(20) ,
+	"codigo_moneda2" varchar(3) ,
+	"intereses_dolares" varchar(20) ,
+  	"tipo_producto" varchar(20) ,
+  	"bucket" varchar(15) ,
+  	"dias_mora" varchar(15) ,
+  	"placement" varchar(15) ,
+  	"fecha_asignacion" varchar(20) ,
+ 	"telefono01" varchar(20) ,
+ 	"telefono02" varchar(20) ,
+ 	"telefono03" varchar(20) ,
+  	"telefono04" varchar(20) ,
+   	"telefono05" varchar(20) ,
+    "estado_carga" varchar(3) not null default '0',
+ 	"usuario_ingreso" varchar(30) not null,
+ 	"fecha_ingreso" timestamp not null default current_timestamp,
+ 	"usuario_modifico" varchar(30) default '' ,
+ 	"fecha_modifico" timestamp default null ,
+	primary key ("id")
+ ); 
+
+
 /******************************************************************************
 ************************************** fin ************************************
 *******************************************************************************/

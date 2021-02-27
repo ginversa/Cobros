@@ -1,0 +1,155 @@
+
+/*
+Ttipificaciones Anteriores.
+*/
+
+-- select * from Tipificacion
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Promesa de pago',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Recordatorio de pago',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Mensaje grabadora',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Mensaje familiar',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Mensaje compaÃ±ero',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('No contesta',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Contacto sin promesa',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Ilocalizado telefonicamente',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Retirar de cartera',null,'hbonilla');
+insert  into Tipificacion(descripcion,codigo_cartera,usuarioIngreso) values('Escalar',null,'hbonilla');
+
+
+
+/*
+ PROMESA DE PAGO
+ select * from SubTipificacion
+ */
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago total',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago cuotas',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(1,'Pago parcial',null,'hbonilla');
+
+
+-- RECORDATORIO DE PAGO
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago total',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago cuotas',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(2,'Pago parcial',null,'hbonilla');
+
+
+
+-- MENSAJE GRABADORA
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(3,'Titular no responde llamada',null,'hbonilla');
+
+
+-- MENSAJE FAMILIAR
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Esposo(A)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Madre',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Padre',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Hermano(A)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Abuelo(A)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Hijo(A)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Tio(A)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Primo(A)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Suegro(A)',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Mensaje compaÃ±ero',null,'hbonilla');
+
+
+
+-- NO CONTESTA
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(6,'Titular no responde llamada',null,'hbonilla');
+
+ 
+ --	Contacto sin Promesa 
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente sin interes de pagar',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente no reconoce obligaciÃƒÂ³n',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Cliente colgÃ³ la llamada',null,'hbonilla');
+
+-- ILOCALIZADO TELEFONICAMENTE
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(8,'NÃºmero reasignado',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(8,'Cambio de trabajo',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(8,'NÃºmero equivocado',null,'hbonilla');
+
+/*
+ Retirar de cartera 
+ */
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(9,'Fallecidos',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(9,'Privados de libertad',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(9,'Solicitud del banco',null,'hbonilla');
+
+
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(10,'Supervisor',null,'hbonilla');
+
+
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(4,'Fuera del paÃ­s',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(7,'Fuera del paÃ­s',null,'hbonilla');
+insert into SubTipificacion(id_tipificacion,descripcion,codigo_cartera,usuarioIngreso) values(5,'Fuera del paÃ­s',null,'hbonilla');
+
+--*****************************************************************************************
+/*
+ --- Mensage en Grabadora - 3
+MENSAJE EN BUZON - MEB
+BUZON LLENO - BLL
+ */
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Mensaje en buzon','MEB',3,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Buzon lleno','BLL',3,null,'hbonilla');
+
+/*
+--- Mesaje Familiar - 4
+NO TOMO MESAJE - NTM *** 
+TOMO MENSAJE - TMJ   ***
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No tomo mensaje','NTM',4,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Tomo mensaje','TMJ',4,null,'hbonilla');
+
+/*
+ -- Mensaje Companero - 5
+NO TOMO MESAJE - NTM
+TOMO MENSAJE - TMJ
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No tomo mensaje','NTM',5,null,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Tomo mensaje','TMJ',5,null,'hbonilla');
+
+/*
+-- Ilocalizado Telefonicamente - 8
+-- Numero Reasignado - 22
+NO CONOCE A TITULAR
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No conoce a titular','NCT',8,22,'hbonilla');
+
+/*
+-- Ilocalizado Telefonicamente - 8
+-- Cambio de Trabajo - 23
+NO TOMO MESAJE - NTM ***
+TOMO MENSAJE - TMJ   ***
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No tomo mensaje','NTM',8,23,'hbonilla');
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('Tomo mensaje','TMJ',8,23,'hbonilla');
+
+
+/*
+-- Ilocalizado Telefonicamente - 8
+-- Numero Equivocado - 24
+NO CONOCE A TITULAR - NCT
+*/
+insert into tbl_resultadogestion(descripcion,codigo,id_tipificacion,id_subtipificacion,usuarioIngreso) values('No conoce a titular','NCT',8,24,'hbonilla');
+
+/*
+select * from tbl_resultadotercero
+-- TOMO MENSAJE
+NO BRINDO HORA PARA LOCALIZAR - NBH
+BRINDO TELEFONO o CORREO PARA LOCALIZAR AL TITULAR BTC ***
+BRINDO TELEFONO DE LOCALIZAR - BTL
+BRINDO EMAIL DE TITULAR - BET
+NO BRINDO TELEFONO, NI EMAIL PARA LOCALIZAR A TITULAR - NTE
+
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 4;
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 5;
+select * from tbl_resultadogestion tr where tr.id_tipificacion = 8;
+*/
+
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(3,4,'No brindo hora para localizar','NBH','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(4,4,'Brindo telÃ©fono o correo para localizar al titular','BTC','hbonilla');
+
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(5,5,'No brindo hora para localizar','NBH','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(6,5,'Brindo telÃ©fono o correo para localizar al titular','BTC','hbonilla');
+
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(8,8,'No brindo hora para localizar','NBH','hbonilla');
+insert into tbl_resultadotercero(id_resultadogestion,id_tipificacion,descripcion,codigo,usuarioIngreso) values(9,8,'Brindo telÃ©fono o correo para localizar al titular','BTC','hbonilla');
+
+/******************************************************************************

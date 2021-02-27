@@ -35,8 +35,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "TblGestionsaldo.findAll", query = "SELECT t FROM TblGestionsaldo t"),
     @NamedQuery(name = "TblGestionsaldo.findByIdGestionsaldo", query = "SELECT t FROM TblGestionsaldo t WHERE t.idGestionsaldo = :idGestionsaldo"),
-    @NamedQuery(name = "TblGestionsaldo.findBySaldo", query = "SELECT t FROM TblGestionsaldo t WHERE t.saldo = :saldo"),
+    @NamedQuery(name = "TblGestionsaldo.findBySaldoCartera", query = "SELECT t FROM TblGestionsaldo t WHERE t.saldoCartera = :saldoCartera"),
     @NamedQuery(name = "TblGestionsaldo.findByIntereses", query = "SELECT t FROM TblGestionsaldo t WHERE t.intereses = :intereses"),
+    @NamedQuery(name = "TblGestionsaldo.findBySaldoGestion", query = "SELECT t FROM TblGestionsaldo t WHERE t.saldoGestion = :saldoGestion"),
+    @NamedQuery(name = "TblGestionsaldo.findBySaldoRestante", query = "SELECT t FROM TblGestionsaldo t WHERE t.saldoRestante = :saldoRestante"),
     @NamedQuery(name = "TblGestionsaldo.findByUsuarioingreso", query = "SELECT t FROM TblGestionsaldo t WHERE t.usuarioingreso = :usuarioingreso"),
     @NamedQuery(name = "TblGestionsaldo.findByFechaingreso", query = "SELECT t FROM TblGestionsaldo t WHERE t.fechaingreso = :fechaingreso"),
     @NamedQuery(name = "TblGestionsaldo.findByUsuariomodifico", query = "SELECT t FROM TblGestionsaldo t WHERE t.usuariomodifico = :usuariomodifico"),
@@ -44,17 +46,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class TblGestionsaldo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_gestionsaldo")
     private Integer idGestionsaldo;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "saldo")
-    private BigDecimal saldo;
+    @Column(name = "saldo_cartera")
+    private BigDecimal saldoCartera;
     @Column(name = "intereses")
     private BigDecimal intereses;
+    @Column(name = "saldo_gestion")
+    private BigDecimal saldoGestion;
+    @Column(name = "saldo_restante")
+    private BigDecimal saldoRestante;
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
@@ -89,12 +94,12 @@ public class TblGestionsaldo implements Serializable {
         this.idGestionsaldo = idGestionsaldo;
     }
 
-    public BigDecimal getSaldo() {
-        return saldo;
+    public BigDecimal getSaldoCartera() {
+        return saldoCartera;
     }
 
-    public void setSaldo(BigDecimal saldo) {
-        this.saldo = saldo;
+    public void setSaldoCartera(BigDecimal saldoCartera) {
+        this.saldoCartera = saldoCartera;
     }
 
     public BigDecimal getIntereses() {
@@ -103,6 +108,22 @@ public class TblGestionsaldo implements Serializable {
 
     public void setIntereses(BigDecimal intereses) {
         this.intereses = intereses;
+    }
+
+    public BigDecimal getSaldoGestion() {
+        return saldoGestion;
+    }
+
+    public void setSaldoGestion(BigDecimal saldoGestion) {
+        this.saldoGestion = saldoGestion;
+    }
+
+    public BigDecimal getSaldoRestante() {
+        return saldoRestante;
+    }
+
+    public void setSaldoRestante(BigDecimal saldoRestante) {
+        this.saldoRestante = saldoRestante;
     }
 
     public String getUsuarioingreso() {

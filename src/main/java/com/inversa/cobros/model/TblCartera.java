@@ -148,19 +148,16 @@ public class TblCartera implements Serializable {
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private TblCliente idCliente;
-    
-        /* datos a buscar */
-    @Transient    
+
+    /* datos a buscar */
+    @Transient
     private Date fechaUltimaGestion;
-    
+
     @Transient
-    private Date fechaUltimaPromesa;
-    
+    private TblPromesa ultimaPromesa;
+
     @Transient
-    private BigDecimal montoUltimaPromesa;
-    
-    @Transient
-    private String razonMora;  
+    private String razonMora;
 
     public TblCartera() {
     }
@@ -409,8 +406,8 @@ public class TblCartera implements Serializable {
     public String toString() {
         return "com.inversa.cobros.model.TblCartera[ id=" + id + " ]";
     }
-    
-        public Date getFechaUltimaGestion() {
+
+    public Date getFechaUltimaGestion() {
         return fechaUltimaGestion;
     }
 
@@ -418,20 +415,12 @@ public class TblCartera implements Serializable {
         this.fechaUltimaGestion = fechaUltimaGestion;
     }
 
-    public Date getFechaUltimaPromesa() {
-        return fechaUltimaPromesa;
+    public TblPromesa getUltimaPromesa() {
+        return ultimaPromesa;
     }
 
-    public void setFechaUltimaPromesa(Date fechaUltimaPromesa) {
-        this.fechaUltimaPromesa = fechaUltimaPromesa;
-    }
-
-    public BigDecimal getMontoUltimaPromesa() {
-        return montoUltimaPromesa;
-    }
-
-    public void setMontoUltimaPromesa(BigDecimal montoUltimaPromesa) {
-        this.montoUltimaPromesa = montoUltimaPromesa;
+    public void setUltimaPromesa(TblPromesa ultimaPromesa) {
+        this.ultimaPromesa = ultimaPromesa;
     }
 
     public String getRazonMora() {
@@ -441,5 +430,5 @@ public class TblCartera implements Serializable {
     public void setRazonMora(String razonMora) {
         this.razonMora = razonMora;
     }
-    
+
 }

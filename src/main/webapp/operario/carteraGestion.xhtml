@@ -30,21 +30,6 @@
                                 <p>Sistema de Cobros.</p>
                                 <!-- class="ui-fluid" -->
                                 <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
-                                    <p:toolbar styleClass="">
-                                        <f:facet name="right">
-                                            <h:panelGrid columns="4">
-                                                <p:selectOneMenu id="txtPrefijo" value="#{carteraGestionController.prefijoSalidaSelected}" converter="prefijoSalidaConverter" required="true" requiredMessage="Prefijo Salida requerido!" styleClass="secondary-button p-mr-2 p-mb-2" >
-                                                    <f:selectItem itemLabel="--- Prefijo Salida ---" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{carteraGestionController.prefijoSalidaList}" var="prefijoSalida" itemLabel="#{prefijoSalida.prefijo} - #{prefijoSalida.nombre}" itemValue="#{prefijoSalida}" />
-                                                    <p:ajax listener="#{carteraGestionController.onPrefijoSalidaChange()}" event="change" />
-                                                </p:selectOneMenu>
-                                                <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Agregar Correo" update="formGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
-                                            </h:panelGrid>
-                                        </f:facet>
-                                    </p:toolbar>
-
                                     <p:panelGrid id="pgDeudor" columns="5" layout="grid">
                                         <p:panelGrid columns="2" >
                                             <p:outputLabel for="txtCartera" value="Cartera" />
@@ -75,7 +60,7 @@
                                                 <f:selectItem itemLabel="--- No ---" itemValue="0" />
                                             </p:selectOneMenu>                                            
                                             <p:outputLabel for="txtSaldo" value="Saldo a cobrar" />
-                                            <p:inputNumber id="txtSaldo" value="#{carteraGestionController.gestion.mtosaldocobrar}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" disabled="#{carteraGestionController.leyusuraDisabled}" required="#{carteraGestionController.leyusuraIsRequired}" requiredMessage="Saldo a cobrar, requerido!" />
+                                            <p:inputNumber id="txtSaldo" value="#{carteraGestionController.mtoSaldoGestionCRC}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" disabled="#{carteraGestionController.leyusuraDisabled}" required="#{carteraGestionController.leyusuraIsRequired}" requiredMessage="Saldo a cobrar, requerido!" />
                                         </p:panelGrid>
 
                                         <p:panelGrid columns="2" >
@@ -100,10 +85,10 @@
 
                                         <p:panelGrid columns="2" >
                                             <p:outputLabel for="txtFechaUltimoPromesa" value="Fecha Último Promesa" />
-                                            <p:calendar id="txtFechaUltimoPromesa" pattern="dd/MM/yyyy" value="#{carteraGestionController.selectedCartera.fechaUltimaPromesa}" readonly="true" disabled="true" />
+                                            <p:calendar id="txtFechaUltimoPromesa" pattern="dd/MM/yyyy" value="#{carteraGestionController.selectedCartera.ultimaPromesa.fechaPago}" readonly="true" disabled="true" />
 
                                             <p:outputLabel for="txtMontoUltimoPromesa" value="Monto Último Promesa" />
-                                            <h:outputText id="txtMontoUltimoPromesa" value="#{carteraGestionController.selectedCartera.montoUltimaPromesa}" >
+                                            <h:outputText id="txtMontoUltimoPromesa" value="#{carteraGestionController.selectedCartera.ultimaPromesa.mtopago}" >
                                                 <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
                                             <p:outputLabel for="txtRazonMora" value="Última Razón Mora" />
@@ -114,6 +99,21 @@
                                             <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" />                                        
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
+
+                                    <p:toolbar styleClass="">
+                                        <f:facet name="right">
+                                            <h:panelGrid columns="4">
+                                                <p:selectOneMenu id="txtPrefijo" value="#{carteraGestionController.prefijoSalidaSelected}" converter="prefijoSalidaConverter" required="true" requiredMessage="Prefijo Salida requerido!" styleClass="secondary-button p-mr-2 p-mb-2" >
+                                                    <f:selectItem itemLabel="--- Prefijo Salida ---" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{carteraGestionController.prefijoSalidaList}" var="prefijoSalida" itemLabel="#{prefijoSalida.prefijo} - #{prefijoSalida.nombre}" itemValue="#{prefijoSalida}" />
+                                                    <p:ajax listener="#{carteraGestionController.onPrefijoSalidaChange()}" event="change" />
+                                                </p:selectOneMenu>
+                                                <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                                <p:commandButton value="Agregar Correo" update="formGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                                <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                            </h:panelGrid>
+                                        </f:facet>
+                                    </p:toolbar>
 
                                     <p:fieldset legend="Llamar" class="ui-fluid" >                                        
                                         <!-- paginator="true" paginatorPosition="top" rows="5" -->
@@ -258,15 +258,18 @@
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:outputText>
                                         </p:column>
-                                        <p:column headerText="Última Promesa" filterBy="#{cartera.fechaUltimaPromesa}" sortBy="#{cartera.fechaUltimaPromesa}" >
-                                            <h:outputText value="#{cartera.fechaUltimaPromesa}" >
+                                        <p:column headerText="Última Promesa" filterBy="#{cartera.ultimaPromesa.fechaPago}" sortBy="#{cartera.ultimaPromesa.fechaPago}" >
+                                            <h:outputText value="#{cartera.ultimaPromesa.fechaPago}" >
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:outputText>
                                         </p:column>
-                                        <p:column headerText="Última Promesa" filterBy="#{cartera.montoUltimaPromesa}" sortBy="#{cartera.montoUltimaPromesa}" >
-                                            <h:outputText value="#{cartera.montoUltimaPromesa}" >                                            
-                                                <f:convertNumber type="currency" currencySymbol="#{cartera.idMonedaDolares.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                        <p:column headerText="Última Promesa" filterBy="#{cartera.ultimaPromesa.mtopago}" sortBy="#{cartera.ultimaPromesa.mtopago}" >
+                                            <h:outputText value="#{cartera.ultimaPromesa.mtopago}" >
+                                                <f:convertNumber type="currency" currencySymbol="#{cartera.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Moneda Promesa" filterBy="#{cartera.ultimaPromesa.idMoneda.codigo}" sortBy="#{cartera.ultimaPromesa.idMoneda.codigo}" >
+                                            <h:outputText value="#{cartera.ultimaPromesa.idMoneda.codigo}" />
                                         </p:column>
                                         <p:column headerText="Razón Mora" filterBy="#{cartera.razonMora}" sortBy="#{cartera.razonMora}" >
                                             <h:outputText value="#{cartera.razonMora}" />
@@ -584,7 +587,6 @@
                                 </p:dataTable>
                             </div>
                         </p:tab>
-                        
                         <p:tab title="Gestiones Histórico">
                             <div class="card">
                                 <h4>Pagos</h4>
@@ -632,6 +634,9 @@
                                         <h:outputText value="#{llamada.ultimaPromesa.mtopago}" >
                                             <f:convertNumber type="currency" currencySymbol="#{llamada.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                         </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Moneda Promesa" filterBy="#{llamada.ultimaPromesa.idMoneda.codigo}" sortBy="#{llamada.ultimaPromesa.idMoneda.codigo}" >
+                                        <h:outputText value="#{llamada.ultimaPromesa.idMoneda.codigo}" />
                                     </p:column>
                                     <p:column headerText="Fecha Última Promesa" filterBy="#{llamada.ultimaPromesa.fechaPago}" sortBy="#{llamada.ultimaPromesa.fechaPago}" >
                                         <h:outputText value="#{llamada.ultimaPromesa.fechaPago}" >
@@ -755,9 +760,8 @@
                                                                 <p:outputLabel for="txtTipoDescuento" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
                                                                     <p:selectOneMenu id="txtTipoDescuento" value="#{carteraGestionController.tipoDescuentoPromesa}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItem itemLabel="Monto Fijo" itemValue="FIJ"/>
-                                                                        <f:selectItem itemLabel="Porcentaje" itemValue="POR"/>
+                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />                                                                        
+                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
                                                                         <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesa" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>
@@ -855,7 +859,7 @@
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
-                                            <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas CRC" >
+                                            <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas CRC" rendered="#{carteraGestionController.isVisibleCancelacionTotalPorCuotas}" >
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-sm">
@@ -880,8 +884,7 @@
                                                                 <div class="p-col-6 p-md-10">
                                                                     <p:selectOneMenu id="txtTipoDescuentoCTC" value="#{carteraGestionController.tipoDescuentoPromesa}" >
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItem itemLabel="Monto Fijo" itemValue="FIJ"/>
-                                                                        <f:selectItem itemLabel="Porcentaje" itemValue="POR"/>
+                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
                                                                         <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesaCTC" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>                                                            
@@ -1250,8 +1253,7 @@
                                                                 <div class="p-col-6 p-md-10">
                                                                     <p:selectOneMenu id="txtTipoDescuentoUSD" value="#{carteraGestionController.tipoDescuentoPromesa}">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItem itemLabel="Monto Fijo" itemValue="FIJ"/>
-                                                                        <f:selectItem itemLabel="Porcentaje" itemValue="POR"/>
+                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
                                                                         <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaUSD" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>
@@ -1349,7 +1351,7 @@
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
-                                            <p:tab id="idCancelacionTotalCuotasUSD" title="Cancelación total por cuotas USD" >
+                                            <p:tab id="idCancelacionTotalCuotasUSD" title="Cancelación total por cuotas USD" rendered="#{carteraGestionController.isVisibleCancelacionTotalPorCuotas}" >
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-sm">
@@ -1374,8 +1376,7 @@
                                                                 <div class="p-col-6 p-md-10">
                                                                     <p:selectOneMenu id="txtTipoDescuentoCTCUSD" value="#{carteraGestionController.tipoDescuentoPromesa}" >
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItem itemLabel="Monto Fijo" itemValue="FIJ"/>
-                                                                        <f:selectItem itemLabel="Porcentaje" itemValue="POR"/>
+                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
                                                                         <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaCTCUSD" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>                                                            
