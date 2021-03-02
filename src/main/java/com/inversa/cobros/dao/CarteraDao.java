@@ -51,5 +51,7 @@ public interface CarteraDao {
     public void delete(TblCartera obj);
 
     public List<TblCartera> findByCarteraGestorIdentificacion(TblCartera objCartera);
+    
+    public List<TblCartera> findByCodigoGestorANDCodigoCartera(TblCartera objCartera);
 
 }

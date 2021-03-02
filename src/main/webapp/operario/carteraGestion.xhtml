@@ -295,9 +295,12 @@
                                                          styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                                 <p:column headerText="Teléfono" >
+                                                    <h:outputText value="#{historialTelefono.telefono}" />
+                                                    <!-- 
                                                     <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" process="@this" >
                                                         <f:setPropertyActionListener value="#{historialTelefono}" target="#{findmeController.selectedHistorialTelefono}" />
                                                     </p:commandLink>
+                                                    comment -->
                                                 </p:column>
                                             </p:dataTable>
                                         </p:fieldset>
@@ -666,7 +669,7 @@
                                         <h:outputText id="txtCedulaContacto" value="#{carteraGestionController.contacto.cedula}" />
                                         <p:column />
                                         <p:outputLabel for="txtTelefonoContacto" value="Teléfono" />
-                                        <p:inputMask id="txtTelefonoContacto" value="#{carteraGestionController.telefono.telefono}" mask="9999-9999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
+                                        <p:inputMask id="txtTelefonoContacto" value="#{carteraGestionController.telefono.telefono}" mask="99999999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
                                         <p:message for="txtTelefonoContacto" />
                                         <p:outputLabel for="txtTipotelefono" value="Tipo Teléfono" />
                                         <p:selectOneMenu id="txtTipotelefono" value="#{carteraGestionController.tipo}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >

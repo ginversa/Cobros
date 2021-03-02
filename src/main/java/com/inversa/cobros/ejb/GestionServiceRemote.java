@@ -52,5 +52,7 @@ public interface GestionServiceRemote {
     public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj);// las gestiones de un cliente en la cartera.
     
     public List<Cartera> findCarteraByDistinc();
+    
+    public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj);
 
 }

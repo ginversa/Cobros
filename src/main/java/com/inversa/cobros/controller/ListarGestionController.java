@@ -6,6 +6,7 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
+import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
@@ -36,9 +37,22 @@ public class ListarGestionController implements Serializable{
         // Usuario de session...
         TblUsuario usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         
+        String codigoCartera = null;
+        List<TblClienteUsuario> clienteUsuarioList = usuario.getTblClienteUsuarioList();
+        if(clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size()>0){
+            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
+        }
+        
         TblGestion gestion = new TblGestion();
         gestion.setCodigoGestor(usuario.getCodigoGestor());
-        this.gestionList = this.ejbLocal.findByCodigoGestor(gestion);
+        gestion.setCodigoCartera(codigoCartera);
+        
+        if(codigoCartera != null && !codigoCartera.trim().equals("")){
+            this.gestionList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(gestion);
+        }else{
+            this.gestionList = this.ejbLocal.findByCodigoGestor(gestion);
+        }
+        
     }
 
     public List<TblGestion> getGestionList() {

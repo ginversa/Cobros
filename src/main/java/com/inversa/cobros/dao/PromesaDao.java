@@ -45,4 +45,6 @@ public interface PromesaDao {
     public TblPromesa findPromesaUltimoPago(Long idGestion, Long idLlamada);
 
     public TblPromesa findPromesaUltimoPago(Long idGestion);
+    
+    public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj,String codigo_gestor, String codigo_cartera);
 }

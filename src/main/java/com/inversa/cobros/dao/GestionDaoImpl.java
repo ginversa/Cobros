@@ -173,4 +173,13 @@ public class GestionDaoImpl implements GestionDao {
         return null;
     }
 
+    @Override
+    public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj) {
+        Query query = em.createNamedQuery("TblGestion.findByCodigoGestorANDCodigoCartera",TblGestion.class);
+        query.setParameter("codigoGestor", obj.getCodigoGestor());
+        query.setParameter("codigoCartera", obj.getCodigoCartera());
+        List<TblGestion> results = query.getResultList();
+        return results;
+    }
+
 }

@@ -9,6 +9,7 @@ import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.TblCartera;
+import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;
@@ -53,7 +54,13 @@ public class CarteraController implements Serializable {
         this.fechaHoy = Calendar.getInstance();
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         String codigoGestor = this.usuario.getCodigoGestor();
-
+        
+        String codigoCartera = null;
+        List<TblClienteUsuario> clienteUsuarioList = this.usuario.getTblClienteUsuarioList();
+        if(clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size()>0){
+            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
+        }
+        
         if(codigoGestor != null){
             this.cartera = new TblCartera();
             this.cartera.setCodigoGestor(codigoGestor);
@@ -61,7 +68,13 @@ public class CarteraController implements Serializable {
             this.fechaHoy.set(Calendar.MONTH, 11);
             this.fechaHoy.set(Calendar.DAY_OF_MONTH, 30);
             this.cartera.setFechaIngreso(this.fechaHoy.getTime());
-            this.carteraList = this.ejbLocal.findByCodigoGestor(this.cartera);
+            if(codigoCartera != null && !codigoCartera.trim().equals("")){
+                this.cartera.setCodigoCartera(codigoCartera);
+                this.carteraList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(this.cartera);
+            }else{
+                this.carteraList = this.ejbLocal.findByCodigoGestor(this.cartera);
+            }
+            
             this.buscarGestion();
         }
 

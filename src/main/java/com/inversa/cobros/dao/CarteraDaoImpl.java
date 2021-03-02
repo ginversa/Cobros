@@ -164,4 +164,13 @@ public class CarteraDaoImpl implements CarteraDao {
         return results;
     }
 
+    @Override
+    public List<TblCartera> findByCodigoGestorANDCodigoCartera(TblCartera objCartera) {
+        TypedQuery<TblCartera> query = em.createNamedQuery("TblCartera.findByCodigoGestorANDCodigoCartera", TblCartera.class);
+        query.setParameter("codigoGestor", objCartera.getCodigoGestor());
+        query.setParameter("codigoCartera", objCartera.getCodigoCartera());
+        List<TblCartera> results = query.getResultList();
+        return results;
+    }
+
 }

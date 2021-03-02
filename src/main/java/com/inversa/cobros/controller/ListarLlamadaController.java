@@ -6,6 +6,7 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
+import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblUsuario;
@@ -42,9 +43,16 @@ public class ListarLlamadaController implements Serializable {
         // Usuario de session...
         TblUsuario usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
 
+        String codigoCartera = null;
+        List<TblClienteUsuario> clienteUsuarioList = usuario.getTblClienteUsuarioList();
+        if (clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size() > 0) {
+            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
+        }
+
         TblGestion gestion = new TblGestion();
         gestion.setCodigoGestor(usuario.getCodigoGestor());
-        this.gestionList = this.ejbLocal.findByCodigoGestor(gestion);
+        gestion.setCodigoCartera(codigoCartera);
+        this.gestionList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(gestion);
 
         for (int index = 0; index < this.gestionList.size(); index++) {
             List<TblLlamada> llamadas = this.gestionList.get(index).getTblLlamadaList();
@@ -65,6 +73,7 @@ public class ListarLlamadaController implements Serializable {
     /**
      * call_length; es el tiempo total de la llamada. Ese tiemoo es desde que
      * entra al sistema y hace ring
+     *
      * @param date_ini
      * @param date_end
      * @return call_length
@@ -72,10 +81,10 @@ public class ListarLlamadaController implements Serializable {
     public Date restarFechar(Date date_ini, Date date_end) {
 
         Long call_length = Long.valueOf(0);
-        
-        boolean isTrue_date_ini = date_ini != null ? true:false;
-        boolean isTrue_date_end = date_end != null ? true:false;
-        
+
+        boolean isTrue_date_ini = date_ini != null ? true : false;
+        boolean isTrue_date_end = date_end != null ? true : false;
+
         if (isTrue_date_ini && isTrue_date_end) {
             call_length = date_end.getTime() - date_ini.getTime();
         }

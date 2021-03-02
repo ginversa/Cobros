@@ -60,7 +60,7 @@ public class TblCliente implements Serializable {
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
     private List<TblCartera> tblCarteraList;
 
     private static final long serialVersionUID = 1L;
@@ -75,7 +75,7 @@ public class TblCliente implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
     private List<TblPrefijoSalida> tblPrefijoSalidaList;
 
     public TblCliente() {

@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TblCartera.findById", query = "SELECT t FROM TblCartera t WHERE t.id = :id"),
     @NamedQuery(name = "TblCartera.findByCodigoCartera", query = "SELECT t FROM TblCartera t WHERE t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblCartera.findByCodigoGestor", query = "SELECT t FROM TblCartera t WHERE t.codigoGestor = :codigoGestor"),
+    @NamedQuery(name = "TblCartera.findByCodigoGestorANDCodigoCartera", query = "SELECT t FROM TblCartera t WHERE t.codigoGestor = :codigoGestor AND t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblCartera.findByCarteraGestorIdentificacion", query = "SELECT t FROM TblCartera t WHERE t.codigoCartera = :codigoCartera AND t.codigoGestor = :codigoGestor AND t.identificacion = :identificacion"),
     @NamedQuery(name = "TblCartera.findByNumeroClienteCif", query = "SELECT t FROM TblCartera t WHERE t.numeroClienteCif = :numeroClienteCif"),
     @NamedQuery(name = "TblCartera.findByNombreCliente", query = "SELECT t FROM TblCartera t WHERE t.nombreCliente = :nombreCliente"),
@@ -146,7 +147,7 @@ public class TblCartera implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Moneda idMonedaDolares;
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblCliente idCliente;
 
     /* datos a buscar */

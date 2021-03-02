@@ -7,6 +7,7 @@ package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.PromesaService;
+import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;
@@ -42,8 +43,8 @@ public class ListarPromesaController implements Serializable {
 
     private TblUsuario usuario;
     private Calendar fechaHoy;
-    private Calendar fechaAyer;
-    private int dias = -1;// dias a restar...
+    private Calendar fechaManana;
+    private int dias = 1;// dias a sumar...
 
     @PostConstruct
     public void init() {
@@ -53,20 +54,26 @@ public class ListarPromesaController implements Serializable {
 
         // Usuario de session...
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        String codigoGestor = this.usuario.getCodigoGestor();
+        String codigoCartera = null;
+        List<TblClienteUsuario> clienteUsuarioList = this.usuario.getTblClienteUsuarioList();
+        if (clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size() > 0) {
+            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
+        }
 
         this.fechaHoy = Calendar.getInstance();
-        this.fechaAyer = Calendar.getInstance();
-        this.fechaAyer.add(Calendar.DAY_OF_YEAR, dias);// resta 
+        this.fechaManana = Calendar.getInstance();
+        this.fechaManana.add(Calendar.DAY_OF_YEAR, dias);// sumar 
 
         TblPromesa promesaHoy = new TblPromesa();
         promesaHoy.setFechaPago(this.fechaHoy.getTime());
         promesaHoy.setUsuarioingreso(this.usuario.getUsuario());
-        this.promesasFechaHoyList = this.ejbLocal.findByFechaPagoAndUsuarioIngreso(promesaHoy);
+        this.promesasFechaHoyList = this.ejbLocal.findByFechaPagoAndUsuarioIngreso(promesaHoy,codigoGestor,codigoCartera);
 
         TblPromesa promesaAyer = new TblPromesa();
-        promesaAyer.setFechaPago(this.fechaAyer.getTime());
+        promesaAyer.setFechaPago(this.fechaManana.getTime());
         promesaAyer.setUsuarioingreso(this.usuario.getUsuario());
-        this.promesasFechaAyerList = this.ejbLocal.findByFechaPagoAndUsuarioIngreso(promesaAyer);
+        this.promesasFechaAyerList = this.ejbLocal.findByFechaPagoAndUsuarioIngreso(promesaAyer,codigoGestor,codigoCartera);
 
     }
 

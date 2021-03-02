@@ -8,13 +8,16 @@ package com.inversa.cobros.controller;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.Cartera;
+import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;
+import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,14 +39,17 @@ public class BuscarGestionController implements Serializable {
     private List<TblGestion> gestionList;
     private TblGestion gestion;
     private List<TblLlamada> llamadaList;
-    private String codigoCartera;
-    private List<Cartera> codigoCarteraList;
+    //private String codigoCartera;
+    //private List<Cartera> codigoCarteraList;
+    
+    private TblUsuario usuario;
 
     @PostConstruct
     public void init() {
-        this.codigoCarteraList = ejbLocal.findCarteraByDistinc();
+        //this.codigoCarteraList = ejbLocal.findCarteraByDistinc();
         this.llamadaList = new ArrayList<TblLlamada>();
-        this.gestion = new TblGestion();
+        this.gestion = new TblGestion();        
+        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
     }    
 
     /**
@@ -55,7 +61,13 @@ public class BuscarGestionController implements Serializable {
             this.llamadaList.clear();
         }
         
-        this.gestion.setCodigoCartera(this.codigoCartera);
+        String codigoCartera = null;
+        List<TblClienteUsuario> clienteUsuarioList = this.usuario.getTblClienteUsuarioList();
+        if(clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size()>0){
+            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
+        }
+        
+        this.gestion.setCodigoCartera(codigoCartera);
 
         this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCartera(this.gestion);//findByIdentificacion(this.gestion);
 
@@ -99,6 +111,7 @@ public class BuscarGestionController implements Serializable {
         this.llamadaList = llamadaList;
     }
 
+    /*
     public String getCodigoCartera() {
         return codigoCartera;
     }
@@ -114,5 +127,6 @@ public class BuscarGestionController implements Serializable {
     public void setCodigoCarteraList(List<Cartera> codigoCarteraList) {
         this.codigoCarteraList = codigoCarteraList;
     }
+    */
 
 }

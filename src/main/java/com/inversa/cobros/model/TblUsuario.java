@@ -92,7 +92,7 @@ public class TblUsuario implements Serializable {
     @OneToMany(mappedBy = "idUsuariosupervisor", fetch = FetchType.EAGER)
     private List<TblUsuario> tblUsuarioList;
     @JoinColumn(name = "id_usuariosupervisor", referencedColumnName = "id_persona")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TblUsuario idUsuariosupervisor;
     @OneToMany(mappedBy = "idPersona", fetch = FetchType.EAGER)
     private List<TblClienteUsuario> tblClienteUsuarioList;

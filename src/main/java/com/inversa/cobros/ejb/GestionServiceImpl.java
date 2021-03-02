@@ -136,4 +136,9 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
         return dao.findCarteraByDistinc();
     }
 
+    @Override
+    public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj) {
+        return dao.findByCodigoGestorANDCodigoCartera(obj);
+    }
+
 }

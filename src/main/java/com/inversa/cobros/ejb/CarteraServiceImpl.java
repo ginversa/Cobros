@@ -139,4 +139,9 @@ public class CarteraServiceImpl implements CarteraService, CarteraServiceRemote 
         return dao.findByCarteraGestorIdentificacion(objCartera);
     }
 
+    @Override
+    public List<TblCartera> findByCodigoGestorANDCodigoCartera(TblCartera objCartera) {
+        return dao.findByCodigoGestorANDCodigoCartera(objCartera);
+    }
+
 }

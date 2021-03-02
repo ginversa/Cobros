@@ -47,6 +47,8 @@ public interface CarteraServiceRemote {
     public List<TblCartera> findByUsuarioIngreso(TblCartera obj);
     
     public List<TblCartera> findByCarteraGestorIdentificacion(TblCartera objCartera);
+    
+    public List<TblCartera> findByCodigoGestorANDCodigoCartera(TblCartera objCartera);
 
     public void insert(TblCartera obj);
 

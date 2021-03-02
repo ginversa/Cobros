@@ -32,23 +32,16 @@
                         <h4>Buscar Gestión</h4>
                         <p:fieldset legend="Buscar por Identificación">                            
                             <h:panelGrid id="idPGGH01" columns="3">
-                                <p:outputLabel for="txtCartera" value="Cartera" />
-                                <p:selectOneMenu id="txtCartera" value="#{buscarGestionController.codigoCartera}" required="true" requiredMessage="Cartera requerido!" >
-                                    <f:selectItem itemLabel="------------------------------" itemValue="" noSelectionOption="true" />
-                                    <f:selectItems value="#{buscarGestionController.codigoCarteraList}" var="cartera" itemLabel="#{cartera.codigo_cartera} - #{cartera.nombre_cartera}" itemValue="#{cartera.codigo_cartera}" />
-                                </p:selectOneMenu>
-                                <p:message for="txtCartera" />
-
                                 <p:outputLabel for="txtDocumentoGH01" value="Identificación" />
                                 <p:inputText id="txtDocumentoGH01" value="#{buscarGestionController.gestion.identificacion}" required="true" requiredMessage="Identificación requerida!" />
                                 <p:message for="txtDocumentoGH01"/>
 
                                 <p:outputLabel for="txtNombreGH01" value="Nombre" />
-                                <p:inputText id="txtNombreGH01" value="#{buscarGestionController.gestion.nombreCliente}" disabled="true" />
-                                <p:message for="txtNombreGH01"/>
+                                <h:outputText id="txtNombreGH01" value="#{buscarGestionController.gestion.nombreCliente}" />
+                                <p:column/>
 
                                 <p:column/>
-                                <p:commandButton id="idBuscarIdentificacion" value="Buscar" icon="pi pi-check" actionListener="#{buscarGestionController.buscarGestion()}" update="formBuscarGestion:idTableGestion,txtDocumentoGH01,txtNombreGH01" />
+                                <p:commandButton id="idBuscarIdentificacion" value="Buscar" icon="pi pi-check" actionListener="#{buscarGestionController.buscarGestion()}" update="formBuscarGestion:idTableGestion,txtDocumentoGH01,txtNombreGH01,messages" />
                                 <p:column/>
                             </h:panelGrid>
                         </p:fieldset>                        

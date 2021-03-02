@@ -59,10 +59,10 @@ public class TblClienteUsuario implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TblCliente idCliente;
     @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TblUsuario idPersona;
     
     @Size(max = 5)
