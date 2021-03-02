@@ -54,7 +54,7 @@ public class LoginController implements Serializable{
         
         try{
             TblUsuario obj = this.ejbLocal.findByUsuarioAndClave(usuario);
-            if(obj!=null){                
+            if(obj!=null){
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 facesContext.getExternalContext().getSessionMap().put("usuario", obj);
                 redireccion = "operario/cartera";
@@ -73,7 +73,7 @@ public class LoginController implements Serializable{
             }
             
         }catch(Exception e){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Aviso","Error!"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Aviso","Error: "+e.getMessage()));
             e.getStackTrace();
         }
         

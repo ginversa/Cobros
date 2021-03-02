@@ -64,6 +64,10 @@ public class TblClienteUsuario implements Serializable {
     @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
     @ManyToOne(fetch = FetchType.EAGER)
     private TblUsuario idPersona;
+    
+    @Size(max = 5)
+    @Column(name = "codigo_cartera")    
+    private String codigo_cartera;
 
     public TblClienteUsuario() {
     }
@@ -127,6 +131,14 @@ public class TblClienteUsuario implements Serializable {
     public void setIdPersona(TblUsuario idPersona) {
         this.idPersona = idPersona;
     }
+
+    public String getCodigo_cartera() {
+        return codigo_cartera;
+    }
+
+    public void setCodigo_cartera(String codigo_cartera) {
+        this.codigo_cartera = codigo_cartera;
+    }    
 
     @Override
     public int hashCode() {

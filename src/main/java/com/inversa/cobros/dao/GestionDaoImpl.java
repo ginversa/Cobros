@@ -5,6 +5,7 @@
  */
 package com.inversa.cobros.dao;
 
+import com.inversa.cobros.model.Cartera;
 import com.inversa.cobros.model.TblGestion;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -161,5 +162,15 @@ public class GestionDaoImpl implements GestionDao {
         return results;
     }
 
+    @Override
+    public List<Cartera> findCarteraByDistinc() {
+        Query query = em.createNativeQuery("select distinct tg.codigo_cartera, tg.nombre_cartera from tbl_gestion tg", Cartera.class);
+        List<Cartera> results = query.getResultList();
+        if (results != null && !results.isEmpty() && results.size()>0) {
+            return results;
+        }
+
+        return null;
+    }
+
 }
-                                                                                                                                                    

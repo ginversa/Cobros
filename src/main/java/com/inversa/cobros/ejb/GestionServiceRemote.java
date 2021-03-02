@@ -5,6 +5,7 @@
  */
 package com.inversa.cobros.ejb;
 
+import com.inversa.cobros.model.Cartera;
 import com.inversa.cobros.model.TblGestion;
 import java.util.List;
 import javax.ejb.Remote;
@@ -49,5 +50,7 @@ public interface GestionServiceRemote {
     public void delete(TblGestion obj);
     
     public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj);// las gestiones de un cliente en la cartera.
+    
+    public List<Cartera> findCarteraByDistinc();
 
 }

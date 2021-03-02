@@ -6,6 +6,7 @@
 package com.inversa.cobros.ejb;
 
 import com.inversa.cobros.dao.GestionDao;
+import com.inversa.cobros.model.Cartera;
 import com.inversa.cobros.model.TblGestion;
 import java.util.List;
 import javax.annotation.Resource;
@@ -128,6 +129,11 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
     @Override
     public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj) {
         return dao.findByIdentificacionANDCodigoCartera(obj);
+    }
+    
+    @Override
+    public List<Cartera> findCarteraByDistinc(){
+        return dao.findCarteraByDistinc();
     }
 
 }

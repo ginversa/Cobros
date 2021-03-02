@@ -120,37 +120,42 @@ public class PromesaDaoImpl implements PromesaDao {
 
     @Override
     public TblPromesa findPromesaUltimoPago(Long idGestion, Long idLlamada) {
-        Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.id_llamada = ?2 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?3 and tp.id_llamada = ?4)", TblPromesa.class);
-        Object obj = query.setParameter(1, idGestion).setParameter(2, idLlamada).setParameter(3, idGestion).setParameter(4, idLlamada).getSingleResult();
-        if (obj != null) {
-            TblPromesa ultimoPago = (TblPromesa) obj;
-            return ultimoPago;
-        }
-        return null;
-    }
 
-    /**
-     * 
-     * @param idGestion
-     * @return 
-     */
-    public TblPromesa findPromesaUltimoPago(Long idGestion) {
-        
         try {
-            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?2)", TblPromesa.class);
-            Query sql = query.setParameter(1, idGestion).setParameter(2, idGestion);
-            if (sql != null) {
-                Object obj = sql.getSingleResult();
-                if (obj != null) {
-                    TblPromesa ultimoPago = (TblPromesa) obj;
-                    return ultimoPago;
-                }
+            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.id_llamada = ?2 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?3 and tp.id_llamada = ?4) order by tp.id_promesa desc", TblPromesa.class);
+            query.setParameter(1, idGestion);
+            query.setParameter(2, idLlamada);
+            query.setParameter(3, idGestion);
+            query.setParameter(4, idLlamada);
+            List<TblPromesa> found = query.getResultList();
+
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
             }
         } catch (NoResultException e) {
             return null;
         }
+    }
 
-        return null;
+    @Override
+    public TblPromesa findPromesaUltimoPago(Long idGestion) {
+
+        try {
+            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?2) order by tp.id_promesa desc", TblPromesa.class);
+            query.setParameter(1, idGestion);
+            query.setParameter(2, idGestion);
+            List<TblPromesa> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
 }

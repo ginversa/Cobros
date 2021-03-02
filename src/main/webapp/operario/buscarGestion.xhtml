@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/flags/flags.css" library="demo" />
+    </ui:define>
+
+    <ui:define name="title">Mi Gestión</ui:define>
+
+    <ui:define name="viewname">
+        <li>Gestiones</li>
+        <li>/</li>
+        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+    </ui:define>
+
+    <ui:param name="viewname" value="Mi Gestión" />
+
+    <ui:define name="content">
+        <h:form id="formBuscarGestion">
+            <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
+                <p:autoUpdate/>
+            </p:growl>
+            <div class="p-grid table-demo">
+                <div class="p-col-12">
+                    <div class="card">
+                        <h4>Buscar Gestión</h4>
+                        <p:fieldset legend="Buscar por Identificación">                            
+                            <h:panelGrid id="idPGGH01" columns="3">
+                                <p:outputLabel for="txtCartera" value="Cartera" />
+                                <p:selectOneMenu id="txtCartera" value="#{buscarGestionController.codigoCartera}" required="true" requiredMessage="Cartera requerido!" >
+                                    <f:selectItem itemLabel="------------------------------" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{buscarGestionController.codigoCarteraList}" var="cartera" itemLabel="#{cartera.codigo_cartera} - #{cartera.nombre_cartera}" itemValue="#{cartera.codigo_cartera}" />
+                                </p:selectOneMenu>
+                                <p:message for="txtCartera" />
+
+                                <p:outputLabel for="txtDocumentoGH01" value="Identificación" />
+                                <p:inputText id="txtDocumentoGH01" value="#{buscarGestionController.gestion.identificacion}" required="true" requiredMessage="Identificación requerida!" />
+                                <p:message for="txtDocumentoGH01"/>
+
+                                <p:outputLabel for="txtNombreGH01" value="Nombre" />
+                                <p:inputText id="txtNombreGH01" value="#{buscarGestionController.gestion.nombreCliente}" disabled="true" />
+                                <p:message for="txtNombreGH01"/>
+
+                                <p:column/>
+                                <p:commandButton id="idBuscarIdentificacion" value="Buscar" icon="pi pi-check" actionListener="#{buscarGestionController.buscarGestion()}" update="formBuscarGestion:idTableGestion,txtDocumentoGH01,txtNombreGH01" />
+                                <p:column/>
+                            </h:panelGrid>
+                        </p:fieldset>                        
+
+                        <p:dataTable id="idTableGestion" widgetVar="customersDT21" var="llamada" value="#{buscarGestionController.llamadaList}"
+                                     paginator="true" rows="20" paginatorPosition="top"
+                                     reflow="true" scrollable="true" scrollHeight="1050"
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                     emptyMessage="No se encontraron registros." >
+
+                            <p:column headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >
+                                <h:outputText value="#{llamada.callToNumber}" />
+                            </p:column>
+                            <p:column headerText="#Cuenta" filterBy="#{llamada.idGestion.operacion}" filterMatchMode="contains" sortBy="#{llamada.idGestion.operacion}" >
+                                <h:outputText value="#{llamada.idGestion.operacion}" />
+                            </p:column>                                               
+                            <p:column headerText="Tipificación" filterBy="#{llamada.idTipificacion.descripcion}" sortBy="#{llamada.idTipificacion.descripcion}" >
+                                <h:outputText value="#{llamada.idTipificacion.descripcion}" />
+                            </p:column>                                    
+                            <p:column headerText="Sub-Tipificación" filterBy="#{llamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idSubtipificacion.descripcion}" >
+                                <h:outputText value="#{llamada.idSubtipificacion.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Resultado Gestión" filterBy="#{llamada.idResultadogestion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadogestion.descripcion}" >
+                                <h:outputText value="#{llamada.idResultadogestion.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Respuesta" filterBy="#{llamada.idResultadotercero.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadotercero.descripcion}" >
+                                <h:outputText value="#{llamada.idResultadotercero.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
+                                <h:outputText value="#{llamada.idrazonmora.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Última Promesa" filterBy="#{llamada.ultimaPromesa.mtopago}" filterMatchMode="contains" sortBy="#{llamada.ultimaPromesa.mtopago}" >
+                                <h:outputText value="#{llamada.ultimaPromesa.mtopago}" >
+                                    <f:convertNumber type="currency" currencySymbol="#{llamada.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Moneda Promesa" filterBy="#{llamada.ultimaPromesa.idMoneda.codigo}" sortBy="#{llamada.ultimaPromesa.idMoneda.codigo}" >
+                                <h:outputText value="#{llamada.ultimaPromesa.idMoneda.codigo}" />
+                            </p:column>
+                            <p:column headerText="Fecha Última Promesa" filterBy="#{llamada.ultimaPromesa.fechaPago}" sortBy="#{llamada.ultimaPromesa.fechaPago}" >
+                                <h:outputText value="#{llamada.ultimaPromesa.fechaPago}" >
+                                    <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Cartera" filterBy="#{llamada.idGestion.codigoCartera} - #{llamada.idGestion.nombre_cartera}" filterMatchMode="contains" sortBy="#{llamada.idGestion.codigoCartera} - #{llamada.idGestion.nombre_cartera}" >
+                                <h:outputText value="#{llamada.idGestion.codigoCartera} - #{llamada.idGestion.nombre_cartera}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

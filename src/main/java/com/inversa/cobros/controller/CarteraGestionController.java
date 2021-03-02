@@ -5,7 +5,7 @@
  */
 package com.inversa.cobros.controller;
 
-import com.inversa.cobros.constantecomun.ConstanteComun;
+import com.inversa.cobros.constante.comun.ConstanteComun;
 import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.ClienteService;
 import com.inversa.cobros.ejb.ContactoService;
@@ -177,8 +177,10 @@ public class CarteraGestionController implements Serializable {
             //prefijoSalidaSelected = this.prefijoSalidaList.get(0);
         }
 
+        /*
         this.leyusuraIsRequired = false;
         this.leyusuraDisabled = true;
+        */
         this.mtoSaldoGestionCRC = BigDecimal.ZERO;
 
         this.tipoDescuentoList = new ArrayList<>();

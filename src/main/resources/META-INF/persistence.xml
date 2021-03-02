@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="cobrosPU" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/cobrosPool</jta-data-source>
         <class>com.inversa.cobros.model.TblContacto</class>
         <class>com.inversa.cobros.model.TblDireccion</class>
@@ -25,6 +26,10 @@
         <class>com.inversa.cobros.model.TblResultadotercero</class>
         <class>com.inversa.cobros.model.TblResultadogestion</class>
         <properties>
+            <property name="eclipselink.target-database" value="PostgreSQL"/>
+            <property name="eclipselink.jdbc.cache-statements" value="true" />
+            <property name="eclipselink.jdbc.cache-statements.size" value="100"/>
+            <property name="eclipselink.logging.parameters" value="false" />
             <property name="eclipselink.canonicalmodel.subpackage" value="one"/>
         </properties>
     </persistence-unit>
@@ -33,6 +38,10 @@
         <jta-data-source>jdbc/findmePool</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
+            <property name="eclipselink.target-database" value="PostgreSQL"/>
+            <property name="eclipselink.jdbc.cache-statements" value="true" />
+            <property name="eclipselink.jdbc.cache-statements.size" value="100"/>
+            <property name="eclipselink.logging.parameters" value="false" />
             <property name="eclipselink.canonicalmodel.subpackage" value="two"/>
         </properties>
     </persistence-unit> 
