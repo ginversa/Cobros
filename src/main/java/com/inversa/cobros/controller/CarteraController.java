@@ -9,7 +9,6 @@ import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.TblCartera;
-import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;

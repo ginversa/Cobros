@@ -6,7 +6,6 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
-import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;

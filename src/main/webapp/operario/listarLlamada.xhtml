@@ -34,10 +34,7 @@
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >
-
-                            <p:column headerText="Código Cartera" filterBy="#{llamada.idGestion.codigoCartera}" filterMatchMode="contains" sortBy="#{llamada.idGestion.codigoCartera}" >
-                                <h:outputText value="#{llamada.idGestion.codigoCartera}" />
-                            </p:column>
+                            
                             <p:column headerText="Nombre" filterBy="#{llamada.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{llamada.idGestion.nombreCliente}" >
                                 <h:outputText value="#{llamada.idGestion.nombreCliente}" />
                             </p:column>
@@ -94,14 +91,7 @@
                             </p:column>
                             <p:column headerText="Call_Log_Id" filterBy="#{llamada.callLogId}" filterMatchMode="contains" sortBy="#{llamada.callLogId}" >
                                 <h:outputText value="#{llamada.callLogId}" />
-                            </p:column>
-                            <!-- 
-                            <p:column headerText="Fecha Ingreso" filterBy="#{llamada.fechaingreso}" sortBy="#{llamada.fechaingreso}" >
-                                <h:outputText value="#{llamada.fechaingreso}" >
-                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                                </h:outputText>
-                            </p:column>
-                            -->
+                            </p:column>                            
                         </p:dataTable>
                     </div>
                 </div>
