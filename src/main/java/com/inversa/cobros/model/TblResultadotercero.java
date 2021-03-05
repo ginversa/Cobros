@@ -70,12 +70,12 @@ public class TblResultadotercero implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     @JoinColumn(name = "id_resultadogestion", referencedColumnName = "id_resultadogestion")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TblResultadogestion idResultadogestion;
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tipificacion idTipificacion;
-    @OneToMany(mappedBy = "idResultadotercero", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idResultadotercero", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
 
     public TblResultadotercero() {

@@ -57,10 +57,10 @@ public class TblPrefijoSalida implements Serializable {
     @JoinColumns({
         @JoinColumn(name = "id_central", referencedColumnName = "id"),
         @JoinColumn(name = "id_central", referencedColumnName = "id")})
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblCentral tblCentral;
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblCliente idCliente;
 
     public TblPrefijoSalida() {

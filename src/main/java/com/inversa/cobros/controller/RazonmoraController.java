@@ -10,7 +10,7 @@ import com.inversa.cobros.model.Razonmora;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -19,7 +19,7 @@ import javax.inject.Named;
  * @author Z420WK
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class RazonmoraController implements Serializable {
 
     @Inject

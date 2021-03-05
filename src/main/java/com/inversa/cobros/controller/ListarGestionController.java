@@ -35,13 +35,8 @@ public class ListarGestionController implements Serializable{
     public void init(){
         
         // Usuario de session...
-        TblUsuario usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        
-        String codigoCartera = null;
-        List<TblClienteUsuario> clienteUsuarioList = usuario.getTblClienteUsuarioList();
-        if(clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size()>0){
-            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
-        }
+        TblUsuario usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");        
+        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
         
         TblGestion gestion = new TblGestion();
         gestion.setCodigoGestor(usuario.getCodigoGestor());

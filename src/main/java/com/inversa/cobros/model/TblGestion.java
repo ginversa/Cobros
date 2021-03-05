@@ -120,13 +120,13 @@ public class TblGestion implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.LAZY)
     private List<TblGestionsaldo> tblGestionsaldoList;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.LAZY)
     private List<TblPromesa> tblPromesaList;
     
     @Transient

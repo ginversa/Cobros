@@ -72,13 +72,13 @@ public class Tipificacion implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<TblResultadotercero> tblResultadoterceroList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<Subtipificacion> subtipificacionList;
-    @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<TblResultadogestion> tblResultadogestionList;
 
     public Tipificacion() {

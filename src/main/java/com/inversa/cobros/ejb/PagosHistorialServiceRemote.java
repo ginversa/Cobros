@@ -29,5 +29,7 @@ public interface PagosHistorialServiceRemote {
     public List<TblPagosHistorial> findByCodigoGestor(TblPagosHistorial entity);
 
     public List<TblPagosHistorial> findByTipoPago(TblPagosHistorial entity);
+    
+    public List<TblPagosHistorial> findByNumeroCuentaANDCodigoCartera(TblPagosHistorial entity);
 
 }

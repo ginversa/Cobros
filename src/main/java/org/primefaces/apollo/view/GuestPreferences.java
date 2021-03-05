@@ -25,29 +25,29 @@ import javax.enterprise.context.SessionScoped;
 @Named
 @SessionScoped
 public class GuestPreferences implements Serializable {
-    
+
     private String color = "blue";
-    
+
     private String darkMode = "dim";
-        
+
     private String layoutMode = "layout-static";
-    
+
     private String inputStyle = "outlined";
 
     private List<LayoutTheme> layoutThemes = new ArrayList<LayoutTheme>();
 
     private boolean lightLogo = true;
-    
+
     @PostConstruct
     public void init() {
-        layoutThemes.add(new LayoutTheme("Blue", "blue","#39a3f4"));
-        layoutThemes.add(new LayoutTheme("Green", "green","#6ebc3b"));
-        layoutThemes.add(new LayoutTheme("Cyan", "cyan","#26C6DA"));
-        layoutThemes.add(new LayoutTheme("Purple", "purple","#7E57C2"));
-        layoutThemes.add(new LayoutTheme("Indigo", "indigo","#5C6BC0"));
-        layoutThemes.add(new LayoutTheme("Yellow", "yellow","#ffc800"));
-        layoutThemes.add(new LayoutTheme("Pink", "pink","#EC407A"));
-        layoutThemes.add(new LayoutTheme("Orange", "orange","#f6a821"));
+        layoutThemes.add(new LayoutTheme("Blue", "blue", "#39a3f4"));
+        layoutThemes.add(new LayoutTheme("Green", "green", "#6ebc3b"));
+        layoutThemes.add(new LayoutTheme("Cyan", "cyan", "#26C6DA"));
+        layoutThemes.add(new LayoutTheme("Purple", "purple", "#7E57C2"));
+        layoutThemes.add(new LayoutTheme("Indigo", "indigo", "#5C6BC0"));
+        layoutThemes.add(new LayoutTheme("Yellow", "yellow", "#ffc800"));
+        layoutThemes.add(new LayoutTheme("Pink", "pink", "#EC407A"));
+        layoutThemes.add(new LayoutTheme("Orange", "orange", "#f6a821"));
     }
 
     public String getDarkMode() {
@@ -57,19 +57,19 @@ public class GuestPreferences implements Serializable {
     public boolean isLightLogo() {
         return lightLogo;
     }
-  
+
     public void setDarkMode(String darkMode) {
         this.darkMode = darkMode;
     }
-    
+
     public String getTheme() {
-        return this.color + "-" +  this.darkMode;
+        return this.color + "-" + this.darkMode;
     }
 
     public String getLayoutMode() {
         return this.layoutMode;
     }
-    
+
     public void setLayoutMode(String value) {
         this.layoutMode = value;
     }
@@ -98,8 +98,9 @@ public class GuestPreferences implements Serializable {
     public List<LayoutTheme> getLayoutThemes() {
         return layoutThemes;
     }
-    
+
     public class LayoutTheme implements Serializable{
+
         String name;
         String file;
         String color;
@@ -118,7 +119,7 @@ public class GuestPreferences implements Serializable {
             return this.file;
         }
 
-         public String getColor() {
+        public String getColor() {
             return this.color;
         }
     }

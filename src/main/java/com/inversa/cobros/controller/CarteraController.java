@@ -53,13 +53,8 @@ public class CarteraController implements Serializable {
         
         this.fechaHoy = Calendar.getInstance();
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        String codigoGestor = this.usuario.getCodigoGestor();
-        
-        String codigoCartera = null;
-        List<TblClienteUsuario> clienteUsuarioList = this.usuario.getTblClienteUsuarioList();
-        if(clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size()>0){
-            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
-        }
+        String codigoGestor = this.usuario.getCodigoGestor();        
+        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
         
         if(codigoGestor != null){
             this.cartera = new TblCartera();

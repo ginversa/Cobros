@@ -94,4 +94,13 @@ public class PagosHistorialDaoImpl implements PagosHistorialDao {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public List<TblPagosHistorial> findByNumeroCuentaANDCodigoCartera(TblPagosHistorial entity) {
+        TypedQuery<TblPagosHistorial> query = em.createNamedQuery("TblPagosHistorial.findByNumeroCuentaANDCodigoCartera", TblPagosHistorial.class);
+        query.setParameter("numeroCuenta", entity.getNumeroCuenta());
+        query.setParameter("codigoCartera", entity.getCodigoCartera());
+        List<TblPagosHistorial> results = query.getResultList();
+        return results;
+    }
+
 }

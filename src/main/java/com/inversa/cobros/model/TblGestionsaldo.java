@@ -73,10 +73,10 @@ public class TblGestionsaldo implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     @JoinColumn(name = "id_moneda", referencedColumnName = "id_moneda")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMoneda;
     @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblGestion idGestion;
 
     public TblGestionsaldo() {

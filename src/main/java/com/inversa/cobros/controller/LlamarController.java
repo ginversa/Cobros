@@ -6,18 +6,14 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.llamar.Llamada;
-import com.inversa.cobros.model.TblLlamada;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,7 +22,7 @@ import javax.ws.rs.core.Response;
  * @author Z420WK
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class LlamarController implements Serializable {
 
     /*    

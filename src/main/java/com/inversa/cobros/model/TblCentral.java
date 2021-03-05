@@ -60,10 +60,10 @@ public class TblCentral implements Serializable {
     private String directorio;
     
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblCentral", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tblCentral", fetch = FetchType.LAZY)
     private List<TblPrefijoSalida> tblPrefijoSalidaList;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCentral", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCentral", fetch = FetchType.LAZY)
     private List<TblUrlLlamada> tblUrlLlamadaList;
 
     public TblCentral() {

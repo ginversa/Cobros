@@ -72,7 +72,7 @@ public class TblCarteramapa implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCarteramapa", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCarteramapa", fetch = FetchType.LAZY)
     private List<TblPerfilcartera> tblPerfilcarteraList;
 
     public TblCarteramapa() {

@@ -141,10 +141,10 @@ public class TblCartera implements Serializable {
     @Column(name = "leyusura")
     private String leyusura;
     @JoinColumn(name = "id_moneda_colones", referencedColumnName = "id_moneda")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMonedaColones;
     @JoinColumn(name = "id_moneda_dolares", referencedColumnName = "id_moneda")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMonedaDolares;
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

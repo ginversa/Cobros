@@ -105,15 +105,15 @@ public class TblPromesa implements Serializable {
     private Date fechamodifico;
     
     @JoinColumn(name = "id_moneda", referencedColumnName = "id_moneda")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMoneda;
     
     @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblGestion idGestion;
     
     @JoinColumn(name = "id_llamada", referencedColumnName = "id_llamada")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblLlamada idLlamada;
 
     public TblPromesa() {

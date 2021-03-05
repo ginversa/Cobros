@@ -122,9 +122,7 @@
                                                      reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                                      style="margin-bottom:20px"
-                                                     emptyMessage="No se encontraron registros." >
-
-                                            <p:ajax event="cellEdit" listener="#{carteraGestionController.onCellEdit}" update="formGestion:messages" />
+                                                     emptyMessage="No se encontraron registros." >                                            
 
                                             <p:column exportable="false">
                                                 <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deleteTelefonoDialog').show()" title="Eliminar Teléfono!"  >
@@ -213,7 +211,9 @@
                                             </p:column>
                                             <p:column headerText="Guardar" >
                                                 <p:commandButton actionListener="#{carteraGestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" />
-                                            </p:column>                                          
+                                            </p:column>
+                                            
+                                            <p:ajax event="cellEdit" listener="#{carteraGestionController.onCellEdit}" update="formGestion:messages" />
                                         </p:dataTable> 
                                     </p:fieldset>
                                 </p:panelGrid>
@@ -225,10 +225,7 @@
                                                  reflow="true"
                                                  styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                                  style="margin-bottom:20px"
-                                                 emptyMessage="No se encontraron registros." >
-
-                                        <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
-                                        <p:ajax event="rowUnselect" listener="#{carteraGestionController.onRowUnselect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
+                                                 emptyMessage="No se encontraron registros." >                                        
 
                                         <p:column headerText="Operación" filterBy="#{cartera.numeroCuenta}" filterMatchMode="contains" sortBy="#{cartera.numeroCuenta}" >
                                             <h:outputText value="#{cartera.numeroCuenta}" />                                
@@ -273,14 +270,17 @@
                                         </p:column>
                                         <p:column headerText="Razón Mora" filterBy="#{cartera.razonMora}" sortBy="#{cartera.razonMora}" >
                                             <h:outputText value="#{cartera.razonMora}" />
-                                        </p:column>                                        
+                                        </p:column>
+                                        
+                                        <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
+                                        <p:ajax event="rowUnselect" listener="#{carteraGestionController.onRowUnselect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
                                     </p:dataTable>
                                 </p:fieldset>
 
                             </div>
                         </p:tab>
                         <p:tab title="Findme">
-                            <p:commandButton value="Imprimir" type="button" icon="pi pi-print" style="margin-bottom: 2rem">
+                            <p:commandButton value="Imprimir" type="button" icon="pi pi-print" style="margin-bottom: 2rem" process="@this">
                                 <p:printer target="pgFindme" />
                             </p:commandButton>
                             <div class="card">
@@ -654,7 +654,7 @@
 
                     <p:confirmDialog widgetVar="deleteTelefonoDialog" showEffect="fade" width="300" message="Eliminar este Teléfono?" header="Confirmar" severity="warn">
                         <p:commandButton value="Si" icon="pi pi-check" actionListener="#{carteraGestionController.deleteTelefono()}" process="@this" update="formGestion:idTabView:tblTelefono" oncomplete="PF('deleteTelefonoDialog').hide()" />
-                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" process="@this" />
                     </p:confirmDialog>
 
                     <p:dialog header="Agregar Teléfono" width="900" showEffect="fade" modal="true" widgetVar="manageTelefonoDialog" responsive="true" >
@@ -683,7 +683,7 @@
                         </p:outputPanel>
                         <f:facet name="footer">    
                             <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{carteraGestionController.addTelefono()}" update="manage-Telefono-content, formGestion:idTabView:tblTelefono" process="manage-Telefono-content @this" ajax="true" />
-                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageTelefonoDialog').hide()" class="secondary-button" />
+                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageTelefonoDialog').hide()" class="secondary-button" process="@this" />
                         </f:facet>
                     </p:dialog>
 
@@ -710,7 +710,7 @@
                         </p:outputPanel>
                         <f:facet name="footer">    
                             <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{carteraGestionController.addCorreoElectronico()}" update="manage-Correo-content" process="manage-Correo-content @this" ajax="true" />
-                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageCorreoDialog').hide()" class="secondary-button" />
+                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageCorreoDialog').hide()" class="secondary-button" process="@this" />
                         </f:facet>
                     </p:dialog>
 
@@ -806,10 +806,7 @@
                                                              scrollable="true" rows="5"
                                                              widgetVar="tblPromesaArregloPago"
                                                              reflow="true" 
-                                                             editable="true">
-
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                             editable="true">                                                    
 
                                                     <!--
                                                                                                         <p:column exportable="false">                                            
@@ -860,6 +857,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
+                                                    
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas CRC" rendered="#{carteraGestionController.isVisibleCancelacionTotalPorCuotas}" >
@@ -938,10 +938,7 @@
                                                              scrollable="true" rows="5"                                                             
                                                              widgetVar="tblPromesaArregloPagoCTC"
                                                              reflow="true"
-                                                             editable="true">
-
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                             editable="true">                                                    
 
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
@@ -1000,6 +997,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
+                                                    
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idRefinanciamiento" title="Refinanciamiento CRC" >
@@ -1078,9 +1078,6 @@
                                                              reflow="true"
                                                              editable="true" >
 
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
-
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
                                                     </p:column>
@@ -1133,6 +1130,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
+                                                    
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idPagoParcial" title="Pago Parcial CRC">
@@ -1186,9 +1186,6 @@
                                                              reflow="true"
                                                              editable="true">
 
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
-
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
                                                     </p:column>
@@ -1224,6 +1221,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
@@ -1298,10 +1297,7 @@
                                                              scrollable="true" rows="5"
                                                              widgetVar="tblPromesaArregloPagoUSD"
                                                              reflow="true" 
-                                                             editable="true">
-
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                             editable="true">                                                    
 
                                                     <!--
                                                                                                         <p:column exportable="false">                                            
@@ -1352,6 +1348,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
+                                                    
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idCancelacionTotalCuotasUSD" title="Cancelación total por cuotas USD" rendered="#{carteraGestionController.isVisibleCancelacionTotalPorCuotas}" >
@@ -1430,10 +1429,7 @@
                                                              scrollable="true" rows="5"                                                             
                                                              widgetVar="tblPromesaArregloPagoCTCUSD"
                                                              reflow="true"
-                                                             editable="true">
-
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                             editable="true">                                                    
 
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
@@ -1491,7 +1487,10 @@
 
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
-                                                    </p:column>                                                    
+                                                    </p:column>
+                                                    
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idRefinanciamientoUSD" title="Refinanciamiento USD" >
@@ -1568,10 +1567,7 @@
                                                              paginator="true" paginatorPosition="top"
                                                              widgetVar="tblPromesaArregloPagoREFUSD"
                                                              reflow="true"
-                                                             editable="true" >
-
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                             editable="true" >                                                    
 
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
@@ -1625,6 +1621,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
+                                                    
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idPagoParcial" title="Pago Parcial USD">
@@ -1676,10 +1675,7 @@
                                                              scrollable="true" rows="5"                                                             
                                                              widgetVar="tblPromesaArregloPagoPAPUSD"
                                                              reflow="true"
-                                                             editable="true">
-
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                             editable="true">                                                    
 
                                                     <!-- comment 
                                                     <p:column exportable="false">
@@ -1722,7 +1718,10 @@
 
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
-                                                    </p:column>                                                    
+                                                    </p:column>
+                                                    
+                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
@@ -1737,7 +1736,7 @@
 
                     <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
                         <p:commandButton value="Si" icon="pi pi-check" actionListener="#{carteraGestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
-                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" process="@this"/>
                     </p:confirmDialog>
                 </div>
             </div>

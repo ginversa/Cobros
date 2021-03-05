@@ -70,10 +70,10 @@ public class TblTelefono implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     @JoinColumn(name = "id_contacto", referencedColumnName = "id_contacto")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblContacto idContacto;
     @JoinColumn(name = "id_tipotelefono", referencedColumnName = "id_tipotelefono")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tipotelefono idTipotelefono;
 
     public TblTelefono() {

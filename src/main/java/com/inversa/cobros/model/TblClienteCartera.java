@@ -7,7 +7,9 @@ package com.inversa.cobros.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,42 +20,45 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Z420WK
  */
 @Entity
-@Table(name = "tbl_perfilcartera")
+@Table(name = "tbl_cliente_cartera")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TblPerfilcartera.findAll", query = "SELECT t FROM TblPerfilcartera t"),
-    @NamedQuery(name = "TblPerfilcartera.findByIdPerfilcartera", query = "SELECT t FROM TblPerfilcartera t WHERE t.idPerfilcartera = :idPerfilcartera"),
-    @NamedQuery(name = "TblPerfilcartera.findByCodigoCartera", query = "SELECT t FROM TblPerfilcartera t WHERE t.codigoCartera = :codigoCartera"),
-    @NamedQuery(name = "TblPerfilcartera.findByColumnaExcel", query = "SELECT t FROM TblPerfilcartera t WHERE t.columnaExcel = :columnaExcel"),
-    @NamedQuery(name = "TblPerfilcartera.findByEstado", query = "SELECT t FROM TblPerfilcartera t WHERE t.estado = :estado"),
-    @NamedQuery(name = "TblPerfilcartera.findByUsuarioingreso", query = "SELECT t FROM TblPerfilcartera t WHERE t.usuarioingreso = :usuarioingreso"),
-    @NamedQuery(name = "TblPerfilcartera.findByFechaingreso", query = "SELECT t FROM TblPerfilcartera t WHERE t.fechaingreso = :fechaingreso"),
-    @NamedQuery(name = "TblPerfilcartera.findByUsuariomodifico", query = "SELECT t FROM TblPerfilcartera t WHERE t.usuariomodifico = :usuariomodifico"),
-    @NamedQuery(name = "TblPerfilcartera.findByFechamodifico", query = "SELECT t FROM TblPerfilcartera t WHERE t.fechamodifico = :fechamodifico")})
-public class TblPerfilcartera implements Serializable {
+    @NamedQuery(name = "TblClienteCartera.findAll", query = "SELECT t FROM TblClienteCartera t"),
+    @NamedQuery(name = "TblClienteCartera.findByIdClienteCartera", query = "SELECT t FROM TblClienteCartera t WHERE t.idClienteCartera = :idClienteCartera"),
+    @NamedQuery(name = "TblClienteCartera.findByCodigoCartera", query = "SELECT t FROM TblClienteCartera t WHERE t.codigoCartera = :codigoCartera"),
+    @NamedQuery(name = "TblClienteCartera.findByNombre", query = "SELECT t FROM TblClienteCartera t WHERE t.nombre = :nombre"),
+    @NamedQuery(name = "TblClienteCartera.findByEstado", query = "SELECT t FROM TblClienteCartera t WHERE t.estado = :estado"),
+    @NamedQuery(name = "TblClienteCartera.findByUsuarioingreso", query = "SELECT t FROM TblClienteCartera t WHERE t.usuarioingreso = :usuarioingreso"),
+    @NamedQuery(name = "TblClienteCartera.findByFechaingreso", query = "SELECT t FROM TblClienteCartera t WHERE t.fechaingreso = :fechaingreso"),
+    @NamedQuery(name = "TblClienteCartera.findByUsuariomodifico", query = "SELECT t FROM TblClienteCartera t WHERE t.usuariomodifico = :usuariomodifico"),
+    @NamedQuery(name = "TblClienteCartera.findByFechamodifico", query = "SELECT t FROM TblClienteCartera t WHERE t.fechamodifico = :fechamodifico")})
+public class TblClienteCartera implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_perfilcartera")
-    private Integer idPerfilcartera;
+    @Column(name = "id_cliente_cartera")
+    private Integer idClienteCartera;
     @Size(max = 5)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
-    @Column(name = "columna_excel")
-    private Integer columnaExcel;
+    @Size(max = 50)
+    @Column(name = "nombre")
+    private String nombre;
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
@@ -69,26 +74,25 @@ public class TblPerfilcartera implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @JoinColumn(name = "id_carteramapa", referencedColumnName = "id_carteramapa")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private TblCarteramapa idCarteramapa;
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblCliente idCliente;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idClienteCartera", fetch = FetchType.LAZY)
+    private List<TblClienteUsuario> tblClienteUsuarioList;
 
-    public TblPerfilcartera() {
+    public TblClienteCartera() {
     }
 
-    public TblPerfilcartera(Integer idPerfilcartera) {
-        this.idPerfilcartera = idPerfilcartera;
+    public TblClienteCartera(Integer idClienteCartera) {
+        this.idClienteCartera = idClienteCartera;
     }
 
-    public Integer getIdPerfilcartera() {
-        return idPerfilcartera;
+    public Integer getIdClienteCartera() {
+        return idClienteCartera;
     }
 
-    public void setIdPerfilcartera(Integer idPerfilcartera) {
-        this.idPerfilcartera = idPerfilcartera;
+    public void setIdClienteCartera(Integer idClienteCartera) {
+        this.idClienteCartera = idClienteCartera;
     }
 
     public String getCodigoCartera() {
@@ -99,12 +103,12 @@ public class TblPerfilcartera implements Serializable {
         this.codigoCartera = codigoCartera;
     }
 
-    public Integer getColumnaExcel() {
-        return columnaExcel;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setColumnaExcel(Integer columnaExcel) {
-        this.columnaExcel = columnaExcel;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getEstado() {
@@ -147,14 +151,6 @@ public class TblPerfilcartera implements Serializable {
         this.fechamodifico = fechamodifico;
     }
 
-    public TblCarteramapa getIdCarteramapa() {
-        return idCarteramapa;
-    }
-
-    public void setIdCarteramapa(TblCarteramapa idCarteramapa) {
-        this.idCarteramapa = idCarteramapa;
-    }
-
     public TblCliente getIdCliente() {
         return idCliente;
     }
@@ -163,21 +159,30 @@ public class TblPerfilcartera implements Serializable {
         this.idCliente = idCliente;
     }
 
+    @XmlTransient
+    public List<TblClienteUsuario> getTblClienteUsuarioList() {
+        return tblClienteUsuarioList;
+    }
+
+    public void setTblClienteUsuarioList(List<TblClienteUsuario> tblClienteUsuarioList) {
+        this.tblClienteUsuarioList = tblClienteUsuarioList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idPerfilcartera != null ? idPerfilcartera.hashCode() : 0);
+        hash += (idClienteCartera != null ? idClienteCartera.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TblPerfilcartera)) {
+        if (!(object instanceof TblClienteCartera)) {
             return false;
         }
-        TblPerfilcartera other = (TblPerfilcartera) object;
-        if ((this.idPerfilcartera == null && other.idPerfilcartera != null) || (this.idPerfilcartera != null && !this.idPerfilcartera.equals(other.idPerfilcartera))) {
+        TblClienteCartera other = (TblClienteCartera) object;
+        if ((this.idClienteCartera == null && other.idClienteCartera != null) || (this.idClienteCartera != null && !this.idClienteCartera.equals(other.idClienteCartera))) {
             return false;
         }
         return true;
@@ -185,7 +190,7 @@ public class TblPerfilcartera implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.TblPerfilcartera[ idPerfilcartera=" + idPerfilcartera + " ]";
+        return "com.inversa.cobros.model.TblClienteCartera[ idClienteCartera=" + idClienteCartera + " ]";
     }
     
 }

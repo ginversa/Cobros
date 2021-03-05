@@ -52,7 +52,7 @@ public class TblUrlLlamada implements Serializable {
     @Column(name = "descripcion")
     private String descripcion;
     @JoinColumn(name = "id_central", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblCentral idCentral;
 
     public TblUrlLlamada() {

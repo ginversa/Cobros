@@ -50,29 +50,38 @@ public class TblRolusuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_rolusuario")
     private Integer idRolusuario;
+    
     @Size(max = 50)
     @Column(name = "nombre")
     private String nombre;
+    
     @Size(max = 250)
     @Column(name = "descripcion")
     private String descripcion;
+    
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
+    
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    @Column(name = "fechaingreso")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaingreso;
+    
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
+    
+    @Column(name = "fechaingreso")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaingreso;
+    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(mappedBy = "idRolusuario", fetch = FetchType.EAGER)
-    private List<TblUsuario> tblUsuarioList;
+    
+    @OneToMany(mappedBy = "idRolusuario", fetch = FetchType.LAZY)
+    private List<TblUsuario> tblUsuarioList;    
+    
 
     public TblRolusuario() {
     }
@@ -89,37 +98,6 @@ public class TblRolusuario implements Serializable {
         this.idRolusuario = idRolusuario;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getUsuarioingreso() {
-        return usuarioingreso;
-    }
-
-    public void setUsuarioingreso(String usuarioingreso) {
-        this.usuarioingreso = usuarioingreso;
-    }
 
     public Date getFechaingreso() {
         return fechaingreso;
@@ -129,13 +107,6 @@ public class TblRolusuario implements Serializable {
         this.fechaingreso = fechaingreso;
     }
 
-    public String getUsuariomodifico() {
-        return usuariomodifico;
-    }
-
-    public void setUsuariomodifico(String usuariomodifico) {
-        this.usuariomodifico = usuariomodifico;
-    }
 
     public Date getFechamodifico() {
         return fechamodifico;
@@ -177,6 +148,46 @@ public class TblRolusuario implements Serializable {
     @Override
     public String toString() {
         return "com.inversa.cobros.model.TblRolusuario[ idRolusuario=" + idRolusuario + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getUsuarioingreso() {
+        return usuarioingreso;
+    }
+
+    public void setUsuarioingreso(String usuarioingreso) {
+        this.usuarioingreso = usuarioingreso;
+    }
+
+    public String getUsuariomodifico() {
+        return usuariomodifico;
+    }
+
+    public void setUsuariomodifico(String usuariomodifico) {
+        this.usuariomodifico = usuariomodifico;
     }
     
 }

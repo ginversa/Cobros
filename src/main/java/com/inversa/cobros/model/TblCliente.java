@@ -45,6 +45,14 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblCliente.findByFechamodifico", query = "SELECT t FROM TblCliente t WHERE t.fechamodifico = :fechamodifico")})
 public class TblCliente implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id_cliente")
+    private Integer idCliente;
+
     @Size(max = 50)
     @Column(name = "nombre")
     private String nombre;
@@ -60,21 +68,21 @@ public class TblCliente implements Serializable {
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
-    private List<TblCartera> tblCarteraList;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_cliente")
-    private Integer idCliente;
+    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
+    private List<TblClienteCartera> tblClienteCarteraList;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
+    private List<TblCartera> tblCarteraList;    
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
     private List<TblPrefijoSalida> tblPrefijoSalidaList;
 
@@ -93,7 +101,6 @@ public class TblCliente implements Serializable {
         this.idCliente = idCliente;
     }
 
-
     public Date getFechaingreso() {
         return fechaingreso;
     }
@@ -101,7 +108,6 @@ public class TblCliente implements Serializable {
     public void setFechaingreso(Date fechaingreso) {
         this.fechaingreso = fechaingreso;
     }
-
 
     public Date getFechamodifico() {
         return fechamodifico;
@@ -145,6 +151,15 @@ public class TblCliente implements Serializable {
         return "com.inversa.cobros.model.TblCliente[ idCliente=" + idCliente + " ]";
     }
 
+    @XmlTransient
+    public List<TblCartera> getTblCarteraList() {
+        return tblCarteraList;
+    }
+
+    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
+        this.tblCarteraList = tblCarteraList;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -186,12 +201,12 @@ public class TblCliente implements Serializable {
     }
 
     @XmlTransient
-    public List<TblCartera> getTblCarteraList() {
-        return tblCarteraList;
+    public List<TblClienteCartera> getTblClienteCarteraList() {
+        return tblClienteCarteraList;
     }
 
-    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
-        this.tblCarteraList = tblCarteraList;
+    public void setTblClienteCarteraList(List<TblClienteCartera> tblClienteCarteraList) {
+        this.tblClienteCarteraList = tblClienteCarteraList;
     }
-    
+
 }

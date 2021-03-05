@@ -49,7 +49,7 @@
                             <p:column headerText="#Cuenta" filterBy="#{promesa.operacion}" filterMatchMode="contains" sortBy="#{promesa.operacion}" >
                                 <h:outputText value="#{promesa.operacion}" />
                             </p:column>
-                             <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
+                            <p:column headerText="Monto Pago" filterBy="#{promesa.mtopago}" filterMatchMode="contains" sortBy="#{promesa.mtopago}" >
                                 <h:outputText value="#{promesa.mtopago}" >
                                     <f:convertNumber type="currency" currencySymbol="₡" maxIntegerDigits="20" maxFractionDigits="2" />
                                 </h:outputText>

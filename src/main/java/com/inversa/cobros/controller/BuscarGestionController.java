@@ -7,7 +7,6 @@ package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.PromesaService;
-import com.inversa.cobros.model.Cartera;
 import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
@@ -61,11 +60,7 @@ public class BuscarGestionController implements Serializable {
             this.llamadaList.clear();
         }
         
-        String codigoCartera = null;
-        List<TblClienteUsuario> clienteUsuarioList = this.usuario.getTblClienteUsuarioList();
-        if(clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size()>0){
-            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
-        }
+        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");        
         
         this.gestion.setCodigoCartera(codigoCartera);
 

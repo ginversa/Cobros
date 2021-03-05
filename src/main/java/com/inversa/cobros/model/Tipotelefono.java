@@ -71,7 +71,7 @@ public class Tipotelefono implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(mappedBy = "idTipotelefono", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idTipotelefono", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
 
     public Tipotelefono() {

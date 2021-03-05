@@ -8,11 +8,14 @@ package com.inversa.cobros.controller;
 import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.PagosHistorialService;
 import com.inversa.cobros.model.TblCartera;
+import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblPagosHistorial;
+import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -38,6 +41,9 @@ public class PagosHistorialController implements Serializable {
     private BigDecimal interesesCRC;
     private BigDecimal saldoUSD;
     private BigDecimal interesesUSD;
+    
+    private TblUsuario usuario;
+    private String codigoCartera = null;
 
     @PostConstruct
     public void init() {
@@ -45,6 +51,8 @@ public class PagosHistorialController implements Serializable {
         this.interesesCRC = BigDecimal.ZERO;
         this.saldoUSD = BigDecimal.ZERO;
         this.interesesUSD = BigDecimal.ZERO;
+        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");        
+        this.codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
     }
 
     public List<TblPagosHistorial> getPagoLst() {
@@ -104,12 +112,13 @@ public class PagosHistorialController implements Serializable {
     public void cargarPagos(String cartera, String operacion, String identificacion) {
         TblPagosHistorial obj = new TblPagosHistorial();
         obj.setNumeroCuenta(operacion);
+        obj.setCodigoCartera(this.codigoCartera);
         this.pagoLst = this.ejbLocal.findByNumeroCuenta(obj);
     }
 
     /**
      *
-     * @param clienteOperacion
+     * @param operacion
      */
     public void onOperacionChange(String operacion) {
 
@@ -127,6 +136,7 @@ public class PagosHistorialController implements Serializable {
 
             TblPagosHistorial obj = new TblPagosHistorial();
             obj.setNumeroCuenta(operacion);
+            obj.setCodigoCartera(this.codigoCartera);
             this.pagoLst = this.ejbLocal.findByNumeroCuenta(obj);
 
         } //if

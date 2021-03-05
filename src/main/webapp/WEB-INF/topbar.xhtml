@@ -20,8 +20,20 @@
         </a>
 
         <span class="topbar-search">
-            <input type="text" placeholder="Search"/>
+            <h:form id="idSelectedCartera">
+                <h:panelGrid columns="3">
+                    <p:outputLabel for="idClienteCartera" value="Cartera" />
+                    <p:selectOneMenu id="idClienteCartera" value="#{clienteCarteraController.codigoCarteraSelected}" required="true" requiredMessage="Cartera requerido!" >                                    
+                        <f:selectItems value="#{clienteCarteraController.clienteCarteraList}" var="clienteCartera" itemLabel="#{clienteCartera.codigoCartera} - #{clienteCartera.nombre}" itemValue="#{clienteCartera.codigoCartera}" />
+                        <p:ajax listener="#{clienteCarteraController.onCarteraChange()}" event="change" />
+                    </p:selectOneMenu>
+                    <p:message for="idClienteCartera" />                            
+                </h:panelGrid>
+            </h:form>    
+            <!--
+            <input type="text" placeholder="hola"/>
             <span class="pi pi-search"></span>
+            -->            
         </span>
 
         <span class="topbar-themeswitcher">

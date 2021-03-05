@@ -53,13 +53,10 @@ public class ListarPromesaController implements Serializable {
         this.promesasFechaAyerList = new ArrayList<TblPromesa>();
 
         // Usuario de session...
-        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        String codigoGestor = this.usuario.getCodigoGestor();
-        String codigoCartera = null;
-        List<TblClienteUsuario> clienteUsuarioList = this.usuario.getTblClienteUsuarioList();
-        if (clienteUsuarioList != null && !clienteUsuarioList.isEmpty() && clienteUsuarioList.size() > 0) {
-            codigoCartera = clienteUsuarioList.get(0).getCodigo_cartera();
-        }
+        FacesContext contexto = FacesContext.getCurrentInstance();
+        this.usuario = (TblUsuario) contexto.getExternalContext().getSessionMap().get("usuario");
+        String codigoCartera = (String) contexto.getExternalContext().getSessionMap().get("codigo_cartera");
+        String codigoGestor = this.usuario.getCodigoGestor();        
 
         this.fechaHoy = Calendar.getInstance();
         this.fechaManana = Calendar.getInstance();

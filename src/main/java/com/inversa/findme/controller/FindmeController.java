@@ -23,7 +23,6 @@ import com.inversa.findme.model.PropiedadRegistrada;
 import com.inversa.findme.model.SociedadAnonima;
 import com.inversa.findme.model.Vehiculo;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,9 +37,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import org.primefaces.PrimeFaces;
-import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.TabChangeEvent;
 
 /**
  *

@@ -100,27 +100,27 @@ public class TblLlamada implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     @JoinColumn(name = "idrazonmora", referencedColumnName = "idrazonmora")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Razonmora idrazonmora;
     @JoinColumn(name = "id_subtipificacion", referencedColumnName = "id_subtipificacion")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Subtipificacion idSubtipificacion;
     @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblGestion idGestion;
     @JoinColumn(name = "id_resultadogestion", referencedColumnName = "id_resultadogestion")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TblResultadogestion idResultadogestion;
     @JoinColumn(name = "id_resultadotercero", referencedColumnName = "id_resultadotercero")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TblResultadotercero idResultadotercero;
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Tipificacion idTipificacion;
     @JoinColumn(name = "id_tipotelefono", referencedColumnName = "id_tipotelefono")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tipotelefono idTipotelefono;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLlamada", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLlamada", fetch = FetchType.LAZY)
     private List<TblPromesa> tblPromesaList;
     
     @Transient    

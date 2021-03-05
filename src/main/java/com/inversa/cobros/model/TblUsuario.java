@@ -84,17 +84,17 @@ public class TblUsuario implements Serializable {
     @Column(name = "ext_ension")
     private String extEnsion;
     @JoinColumn(name = "id_persona", referencedColumnName = "id_persona", insertable = false, updatable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private TblPersona tblPersona;
     @JoinColumn(name = "id_rolusuario", referencedColumnName = "id_rolusuario")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private TblRolusuario idRolusuario;
-    @OneToMany(mappedBy = "idUsuariosupervisor", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idUsuariosupervisor", fetch = FetchType.LAZY)
     private List<TblUsuario> tblUsuarioList;
     @JoinColumn(name = "id_usuariosupervisor", referencedColumnName = "id_persona")
     @ManyToOne(fetch = FetchType.LAZY)
     private TblUsuario idUsuariosupervisor;
-    @OneToMany(mappedBy = "idPersona", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idPersona", fetch = FetchType.LAZY)
     private List<TblClienteUsuario> tblClienteUsuarioList;
 
     public TblUsuario() {

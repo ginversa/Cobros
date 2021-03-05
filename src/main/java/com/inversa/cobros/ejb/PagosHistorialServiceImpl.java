@@ -61,4 +61,9 @@ public class PagosHistorialServiceImpl implements PagosHistorialService, PagosHi
         return dao.findByTipoPago(entity);
     }
 
+    @Override
+    public List<TblPagosHistorial> findByNumeroCuentaANDCodigoCartera(TblPagosHistorial entity) {
+        return dao.findByNumeroCuentaANDCodigoCartera(entity);
+    }
+
 }

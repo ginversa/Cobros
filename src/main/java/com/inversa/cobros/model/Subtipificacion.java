@@ -74,12 +74,12 @@ public class Subtipificacion implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubtipificacion", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubtipificacion", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Tipificacion idTipificacion;
-    @OneToMany(mappedBy = "idSubtipificacion", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idSubtipificacion", fetch = FetchType.LAZY)
     private List<TblResultadogestion> tblResultadogestionList;
 
     public Subtipificacion() {

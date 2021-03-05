@@ -35,5 +35,7 @@ public interface PagosHistorialDao {
     public List<TblPagosHistorial> findByUsuarioModifico(TblPagosHistorial entity);
 
     public List<TblPagosHistorial> findByFechaModifico(TblPagosHistorial entity);
+    
+    public List<TblPagosHistorial> findByNumeroCuentaANDCodigoCartera(TblPagosHistorial entity);
 
 }

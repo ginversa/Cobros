@@ -43,30 +43,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class TblPersona implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_persona")
     private Integer idPersona;
+    
     @Size(max = 100)
     @Column(name = "nombre")
     private String nombre;
+    
     @Size(max = 50)
     @Column(name = "cedula")
     private String cedula;
+    
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
+    
+    @Size(max = 50)
+    @Column(name = "usuariomodifico")
+    private String usuariomodifico;    
+    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
-    @Size(max = 50)
-    @Column(name = "usuariomodifico")
-    private String usuariomodifico;
+    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "tblPersona", fetch = FetchType.EAGER)
+    
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "tblPersona", fetch = FetchType.LAZY)
     private TblUsuario tblUsuario;
 
     public TblPersona() {
@@ -84,29 +92,6 @@ public class TblPersona implements Serializable {
         this.idPersona = idPersona;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
-    public String getUsuarioingreso() {
-        return usuarioingreso;
-    }
-
-    public void setUsuarioingreso(String usuarioingreso) {
-        this.usuarioingreso = usuarioingreso;
-    }
 
     public Date getFechaingreso() {
         return fechaingreso;
@@ -116,13 +101,6 @@ public class TblPersona implements Serializable {
         this.fechaingreso = fechaingreso;
     }
 
-    public String getUsuariomodifico() {
-        return usuariomodifico;
-    }
-
-    public void setUsuariomodifico(String usuariomodifico) {
-        this.usuariomodifico = usuariomodifico;
-    }
 
     public Date getFechamodifico() {
         return fechamodifico;
@@ -163,6 +141,38 @@ public class TblPersona implements Serializable {
     @Override
     public String toString() {
         return "com.inversa.cobros.model.TblPersona[ idPersona=" + idPersona + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public String getUsuarioingreso() {
+        return usuarioingreso;
+    }
+
+    public void setUsuarioingreso(String usuarioingreso) {
+        this.usuarioingreso = usuarioingreso;
+    }
+
+    public String getUsuariomodifico() {
+        return usuariomodifico;
+    }
+
+    public void setUsuariomodifico(String usuariomodifico) {
+        this.usuariomodifico = usuariomodifico;
     }
     
 }

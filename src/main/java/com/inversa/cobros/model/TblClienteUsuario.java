@@ -46,6 +46,7 @@ public class TblClienteUsuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_cliente_usuario")
     private Integer idClienteUsuario;
+    
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
@@ -58,16 +59,14 @@ public class TblClienteUsuario implements Serializable {
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private TblCliente idCliente;
-    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private TblUsuario idPersona;
     
-    @Size(max = 5)
-    @Column(name = "codigo_cartera")    
-    private String codigo_cartera;
+    @JoinColumn(name = "id_cliente_cartera", referencedColumnName = "id_cliente_cartera")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private TblClienteCartera idClienteCartera;
+    
+    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private TblUsuario idPersona;
 
     public TblClienteUsuario() {
     }
@@ -116,12 +115,12 @@ public class TblClienteUsuario implements Serializable {
         this.fechamodifico = fechamodifico;
     }
 
-    public TblCliente getIdCliente() {
-        return idCliente;
+    public TblClienteCartera getIdClienteCartera() {
+        return idClienteCartera;
     }
 
-    public void setIdCliente(TblCliente idCliente) {
-        this.idCliente = idCliente;
+    public void setIdClienteCartera(TblClienteCartera idClienteCartera) {
+        this.idClienteCartera = idClienteCartera;
     }
 
     public TblUsuario getIdPersona() {
@@ -131,14 +130,6 @@ public class TblClienteUsuario implements Serializable {
     public void setIdPersona(TblUsuario idPersona) {
         this.idPersona = idPersona;
     }
-
-    public String getCodigo_cartera() {
-        return codigo_cartera;
-    }
-
-    public void setCodigo_cartera(String codigo_cartera) {
-        this.codigo_cartera = codigo_cartera;
-    }    
 
     @Override
     public int hashCode() {
