@@ -43,6 +43,9 @@ public class TipificacionController implements Serializable {
     @Inject
     private CarteraGestionController carteraGestionController;
 
+    @Inject
+    private UpdateGestionController updateGestionController;
+
     @PostConstruct
     public void init() {
 
@@ -128,7 +131,101 @@ public class TipificacionController implements Serializable {
             this.carteraGestionController.setResultadoGestionNullonLlamada(selectedLlamada);
             this.carteraGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
         }
+    }
 
+    /**
+     *
+     * @param selectedLlamada
+     */
+    public void onTipificacionChange_UG(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            Tipificacion selectedTipificacion = selectedLlamada.getIdTipificacion();
+            if (selectedTipificacion != null) {
+                this.subtipificacionList = selectedTipificacion.getSubtipificacionList();
+                this.resultadogestionList = selectedTipificacion.getTblResultadogestionList();
+                this.resultadoterceroList = selectedTipificacion.getTblResultadoterceroList();
+
+                if (selectedTipificacion.getIdTipificacion() == 1 || selectedTipificacion.getIdTipificacion() == 2) {
+                    this.setIsDisabledPromesa(false);
+                } else {
+                    this.setIsDisabledPromesa(true);
+                }
+
+            } else {
+                this.subtipificacionList = new ArrayList<Subtipificacion>();
+                this.setIsDisabledPromesa(true);
+            }
+
+            this.updateGestionController.setSubtipificacionNullonLlamada(selectedLlamada);
+            this.updateGestionController.setResultadoGestionNullonLlamada(selectedLlamada);
+            this.updateGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
+    }
+
+    /**
+     *
+     * @param selectedLlamada
+     */
+    public void onSub_TipificacionChange(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            Tipificacion selectedTipificacion = selectedLlamada.getIdTipificacion();
+            Subtipificacion selectedSubTipificacion = selectedLlamada.getIdSubtipificacion();
+
+            if (selectedTipificacion != null) {
+                if (selectedSubTipificacion != null) {
+                    List<TblResultadogestion> resultadoList = selectedSubTipificacion.getTblResultadogestionList();
+                    if (resultadoList != null && !resultadoList.isEmpty() && resultadoList.size() > 0) {
+                        this.resultadogestionList = resultadoList;
+                    }
+                }
+
+                if (selectedTipificacion.getIdTipificacion() == 1) {
+                    this.setIsDisabledPromesa(false);
+                } else {
+                    this.setIsDisabledPromesa(true);
+                }
+
+            } else {
+                this.subtipificacionList = new ArrayList<Subtipificacion>();
+                this.setIsDisabledPromesa(true);
+            }
+
+            this.carteraGestionController.setResultadoGestionNullonLlamada(selectedLlamada);
+            this.carteraGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
+    }
+
+    /**
+     *
+     * @param selectedLlamada
+     */
+    public void onSub_TipificacionChange_UG(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            Tipificacion selectedTipificacion = selectedLlamada.getIdTipificacion();
+            Subtipificacion selectedSubTipificacion = selectedLlamada.getIdSubtipificacion();
+
+            if (selectedTipificacion != null) {
+                if (selectedSubTipificacion != null) {
+                    List<TblResultadogestion> resultadoList = selectedSubTipificacion.getTblResultadogestionList();
+                    if (resultadoList != null && !resultadoList.isEmpty() && resultadoList.size() > 0) {
+                        this.resultadogestionList = resultadoList;
+                    }
+                }
+
+                if (selectedTipificacion.getIdTipificacion() == 1 || selectedTipificacion.getIdTipificacion() == 2) {
+                    this.setIsDisabledPromesa(false);
+                } else {
+                    this.setIsDisabledPromesa(true);
+                }
+
+            } else {
+                this.subtipificacionList = new ArrayList<Subtipificacion>();
+                this.setIsDisabledPromesa(true);
+            }
+
+            this.updateGestionController.setResultadoGestionNullonLlamada(selectedLlamada);
+            this.updateGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
     }
 
     /**
@@ -139,13 +236,37 @@ public class TipificacionController implements Serializable {
         if (selectedLlamada != null) {
             TblResultadogestion selectedResultadogestion = selectedLlamada.getIdResultadogestion();
             if (selectedResultadogestion != null) {
-                this.resultadoterceroList = selectedResultadogestion.getTblResultadoterceroList();
+                List<TblResultadotercero> respuestaList = selectedResultadogestion.getTblResultadoterceroList();
+                if (respuestaList != null && !respuestaList.isEmpty() && respuestaList.size() > 0) {
+                    this.resultadoterceroList = respuestaList;
+                }
 
             } else {
                 this.resultadoterceroList = new ArrayList<TblResultadotercero>();
             }
-            
+
             this.carteraGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
+    }
+
+    /**
+     *
+     * @param selectedLlamada
+     */
+    public void onResultadogestionChange_UG(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            TblResultadogestion selectedResultadogestion = selectedLlamada.getIdResultadogestion();
+            if (selectedResultadogestion != null) {
+                List<TblResultadotercero> respuestaList = selectedResultadogestion.getTblResultadoterceroList();
+                if (respuestaList != null && !respuestaList.isEmpty() && respuestaList.size() > 0) {
+                    this.resultadoterceroList = respuestaList;
+                }
+
+            } else {
+                this.resultadoterceroList = new ArrayList<TblResultadotercero>();
+            }
+
+            this.updateGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
         }
     }
 

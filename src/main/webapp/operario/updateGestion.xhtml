@@ -8,7 +8,7 @@
     <ui:define name="title">Gestión</ui:define>
 
     <ui:define name="viewname">
-        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
+        <li><p:link outcome="/operario/cartera">Gestión</p:link></li>
         <li>/</li>
         <li>Gestión</li>
     </ui:define>
@@ -23,103 +23,116 @@
                         <p:autoUpdate/>
                     </p:growl>                        
                     <p:tabView id="idTabView" >
-                        <p:ajax event="tabChange" listener="#{carteraGestionController.onTabViewChange}" />
+                        <p:ajax event="tabChange" listener="#{updateGestionController.onTabViewChange}" />
                         <p:tab title="Gestión">                            
                             <div class="card">
-                                <h1>Gestión</h1>
-                                <p>Sistema de Cobros.</p>
-                                <!-- class="ui-fluid" -->
+                                <h1>Gestión, Seguimiento.</h1>
+                                <p>Sistema de Cobros.</p>   
                                 <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
-                                    <p:panelGrid id="pgDeudor" columns="5" layout="grid">
-                                        <p:panelGrid columns="2" >
+
+                                    <p:panelGrid id="pgDeudor" columns="2" layout="grid">
+                                        <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtCartera" value="Cartera" />
-                                            <h:outputText id="txtCartera" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
+                                            <h:outputText id="txtCartera" value="#{updateGestionController.gestion.codigoCartera} - #{updateGestionController.gestion.nombre_cartera}" />
 
                                             <p:outputLabel for="txtDocumento" value="Identificación" />
-                                            <h:outputText id="txtDocumento" value="#{carteraGestionController.gestion.identificacion}" />
+                                            <h:outputText id="txtDocumento" value="#{updateGestionController.gestion.identificacion}" />
 
                                             <p:outputLabel for="txtNombre" value="Nombre" />
-                                            <h:outputText id="txtNombre" value="#{carteraGestionController.gestion.nombreCliente}" />
+                                            <h:outputText id="txtNombre" value="#{updateGestionController.gestion.nombreCliente}" />
 
                                             <p:outputLabel for="txtOperacion" value="Operación" />
-                                            <h:outputText id="txtOperacion" value="#{carteraGestionController.gestion.operacion}" />
-                                        </p:panelGrid>
+                                            <h:outputText id="txtOperacion" value="#{updateGestionController.gestion.operacion}" />                                             
+                                        </p:panelGrid>                                       
 
-                                        <p:panelGrid columns="2">
-                                            <p:outputLabel for="txtSaldoColones" value="Saldo Colones" />
-                                            <h:outputText id="txtSaldoColones" value="#{carteraGestionController.selectedCartera.saldoColones}" >
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                            <p:outputLabel for="txtInteresesColones" value="Intereses Colones" />
-                                            <h:outputText id="txtInteresesColones" value="#{carteraGestionController.selectedCartera.interesesColones}" >
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
+                                        <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
-                                            <p:selectOneMenu id="txtLeyUsura" disabled="true" value="#{carteraGestionController.gestion.leyusura}" >
+                                            <p:selectOneMenu id="txtLeyUsura" disabled="true" value="#{updateGestionController.gestion.leyusura}" >
                                                 <f:selectItem itemLabel="--- Si ---" itemValue="1" />
                                                 <f:selectItem itemLabel="--- No ---" itemValue="0" />
-                                            </p:selectOneMenu>                                            
-                                            <p:outputLabel for="txtSaldo" value="Saldo a cobrar" />
-                                            <p:inputNumber id="txtSaldo" value="#{carteraGestionController.mtoSaldoGestionCRC}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" disabled="#{carteraGestionController.leyusuraDisabled}" required="#{carteraGestionController.leyusuraIsRequired}" requiredMessage="Saldo a cobrar, requerido!" />
-                                        </p:panelGrid>
+                                            </p:selectOneMenu>
 
-                                        <p:panelGrid columns="2" >
-                                            <p:outputLabel for="txtSaldoDolares" value="Saldo Dolares" />
-                                            <h:outputText id="txtSaldoDolares" value="#{carteraGestionController.selectedCartera.saldoDolares}" >
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-
-                                            <p:outputLabel for="txtInteresesDolares" value="Intereses Dolares" />
-                                            <h:outputText id="txtInteresesDolares" value="#{carteraGestionController.selectedCartera.interesesDolares}" >
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                            
-                                            <h:outputText id="txtFechaUltimoPago">
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                                            </h:outputText>
-
-                                            <p:outputLabel for="txtMontoUltimoPago" value="Monto Último Pago" />
-                                            <h:outputText id="txtMontoUltimoPago" >
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:panelGrid>
-
-                                        <p:panelGrid columns="2" >
                                             <p:outputLabel for="txtFechaUltimoPromesa" value="Fecha Último Promesa" />
-                                            <h:outputText id="txtFechaUltimoPromesa" value="#{carteraGestionController.selectedCartera.ultimaPromesa.fechaPago}" >
+                                            <h:outputText id="txtFechaUltimoPromesa" value="#{updateGestionController.gestion.ultimaPromesa.fechaPago}" >
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:outputText>
 
                                             <p:outputLabel for="txtMontoUltimoPromesa" value="Monto Último Promesa" />
-                                            <h:outputText id="txtMontoUltimoPromesa" value="#{carteraGestionController.selectedCartera.ultimaPromesa.mtopago}" >
+                                            <h:outputText id="txtMontoUltimoPromesa" value="#{updateGestionController.gestion.ultimaPromesa.mtopago}" >
                                                 <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
+
                                             <p:outputLabel for="txtRazonMora" value="Última Razón Mora" />
-                                            <h:outputText id="txtRazonMora" value="#{carteraGestionController.selectedCartera.razonMora}" >
+                                            <h:outputText id="txtRazonMora" value="#{updateGestionController.gestion.ultimaRazonMora.descripcion}">
                                                 <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                            <p:outputLabel for="txtdescripcion" value="Observación" />
-                                            <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" />                                        
+                                            </h:outputText>                                            
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
+
+                                    <p:panelGrid columns="2" layout="grid">
+                                        <p:outputLabel for="txtdescripcion" value="Observación" />
+                                        <p:inputTextarea id="txtdescripcion" value="#{updateGestionController.gestion.descripcion}" />
+                                    </p:panelGrid>
+
+                                    <p:fieldset legend="Saldos" class="ui-fluid" >
+                                        <p:dataTable id="tblSaldoGestion" value="#{updateGestionController.gestion.tblGestionsaldoList}" var="saldo"
+                                                     editMode="cell" editable="true" widgetVar="tblSaldoGestion"                                                     
+                                                     reflow="true"
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                     style="margin-bottom:20px"
+                                                     emptyMessage="No se encontraron registros." >
+
+                                            <p:column headerText="Saldo Cartera" >
+                                                <h:outputText value="#{saldo.saldoCartera}">
+                                                    <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Intereses" >
+                                                <h:outputText value="#{saldo.intereses}">
+                                                    <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                </h:outputText>
+                                            </p:column>                                                
+                                            <p:column headerText="Saldo Gestión" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output">                                                
+                                                        <h:outputText value="#{saldo.saldoGestion}">
+                                                            <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                        </h:outputText>
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <h:inputText value="#{saldo.saldoGestion}" />
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Saldo Restante" >
+                                                <h:outputText value="#{saldo.saldoRestante}" >
+                                                    <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                </h:outputText>
+                                            </p:column>                                                
+                                            <p:column headerText="Moneda" >
+                                                <h:outputText value="#{saldo.idMoneda.codigo}" />
+                                            </p:column>
+                                            <p:ajax event="cellEdit" listener="#{updateGestionController.onCellEdit}" update="formGestion:messages" />
+                                        </p:dataTable> 
+                                    </p:fieldset>
 
                                     <p:toolbar styleClass="">
                                         <f:facet name="right">
                                             <h:panelGrid columns="4">
-                                                <p:selectOneMenu id="txtPrefijo" value="#{carteraGestionController.prefijoSalidaSelected}" converter="prefijoSalidaConverter" required="true" requiredMessage="Prefijo Salida requerido!" styleClass="secondary-button p-mr-2 p-mb-2" >
+                                                <p:selectOneMenu id="txtPrefijo" value="#{updateGestionController.prefijoSalidaSelected}" converter="prefijoSalidaConverter" required="true" requiredMessage="Prefijo Salida requerido!" styleClass="secondary-button p-mr-2 p-mb-2" >
                                                     <f:selectItem itemLabel="--- Prefijo Salida ---" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{carteraGestionController.prefijoSalidaList}" var="prefijoSalida" itemLabel="#{prefijoSalida.prefijo} - #{prefijoSalida.nombre}" itemValue="#{prefijoSalida}" />
-                                                    <p:ajax listener="#{carteraGestionController.onPrefijoSalidaChange()}" event="change" />
+                                                    <f:selectItems value="#{updateGestionController.prefijoSalidaList}" var="prefijoSalida" itemLabel="#{prefijoSalida.prefijo} - #{prefijoSalida.nombre}" itemValue="#{prefijoSalida}" />
+                                                    <p:ajax listener="#{updateGestionController.onPrefijoSalidaChange()}" event="change" />
                                                 </p:selectOneMenu>
                                                 <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
                                                 <p:commandButton value="Agregar Correo" update="formGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                                <p:commandButton value="Finalizar" actionListener="#{updateGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
                                             </h:panelGrid>
                                         </f:facet>
                                     </p:toolbar>
 
-                                    <p:fieldset legend="Llamar" class="ui-fluid" >
-                                        <p:dataTable id="tblTelefono" value="#{carteraGestionController.llamadaList}" var="llamada"
+                                    <p:fieldset legend="Llamar" class="ui-fluid">                                        
+                                        <p:dataTable id="tblTelefono" value="#{updateGestionController.llamadaList}" var="llamada"
                                                      editMode="cell" editable="true" widgetVar="tblTelefono"                                                     
                                                      reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
@@ -128,12 +141,12 @@
 
                                             <p:column exportable="false">
                                                 <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deleteTelefonoDialog').show()" title="Eliminar Teléfono!"  >
-                                                    <f:setPropertyActionListener value="#{llamada}" target="#{carteraGestionController.selectedLlamada}" />
+                                                    <f:setPropertyActionListener value="#{llamada}" target="#{updateGestionController.selectedLlamada}" />
                                                 </p:commandButton>
                                             </p:column>                                    
                                             <p:column headerText="Teléfono" >                                        
-                                                <p:commandLink value="#{llamada.callToNumber}" actionListener="#{carteraGestionController.generarLlamada(llamada)}" process="@this" >
-                                                    <f:setPropertyActionListener value="#{llamada}" target="#{carteraGestionController.selectedLlamada}" />
+                                                <p:commandLink value="#{llamada.callToNumber}" actionListener="#{updateGestionController.generarLlamada(llamada)}" process="@this" >
+                                                    <f:setPropertyActionListener value="#{llamada}" target="#{updateGestionController.selectedLlamada}" />
                                                 </p:commandLink>                                        
                                             </p:column>
                                             <p:column headerText="Tipo Teléfono" >
@@ -156,7 +169,7 @@
                                                         <h:selectOneMenu id="idTipificacion" value="#{llamada.idTipificacion}" converter="tipificacionConverter" required="true" requiredMessage="Tipificación requerido!" >
                                                             <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                             <f:selectItems value="#{tipificacionController.tipificacionList}" var="tipificacion" itemLabel="#{tipificacion.descripcion}" itemValue="#{tipificacion}" />
-                                                            <p:ajax listener="#{tipificacionController.onTipificacionChange(llamada)}" event="change" update="idOutputTextSubtipificacion,idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa" />
+                                                            <p:ajax listener="#{tipificacionController.onTipificacionChange_UG(llamada)}" event="change" update="idOutputTextSubtipificacion,idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa" />
                                                         </h:selectOneMenu>
                                                     </f:facet>
                                                 </p:cellEditor>
@@ -168,7 +181,7 @@
                                                         <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
                                                             <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                             <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
-                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange(llamada)}" event="change" update="idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa" />
+                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange_UG(llamada)}" event="change" update="idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa" />
                                                         </h:selectOneMenu>
                                                     </f:facet>
                                                 </p:cellEditor>
@@ -180,7 +193,7 @@
                                                         <h:selectOneMenu id="txtResultadogestion" value="#{llamada.idResultadogestion}" converter="resultadogestionConverter" >
                                                             <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                             <f:selectItems value="#{tipificacionController.resultadogestionList}" var="resultadogestion" itemLabel="#{resultadogestion.descripcion}" itemValue="#{resultadogestion}" />
-                                                            <p:ajax listener="#{tipificacionController.onResultadogestionChange(llamada)}" event="change" update="txtidResultadotercero" process="@this" />
+                                                            <p:ajax listener="#{tipificacionController.onResultadogestionChange_UG(llamada)}" event="change" update="txtidResultadotercero,idOutputTextResultadotercero" process="@this" />
                                                         </h:selectOneMenu>
                                                     </f:facet>
                                                 </p:cellEditor>
@@ -208,84 +221,125 @@
                                                 </p:cellEditor>
                                             </p:column>
                                             <p:column headerText="Promesa" >
-                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :formGestion:idTabView:pgDeudor" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
-                                                    <f:setPropertyActionListener value="#{llamada}" target="#{carteraGestionController.selectedLlamada}"  />
+                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" actionListener="#{updateGestionController.calcArragloPago(llamada)}" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :formGestion:idTabView:pgDeudor" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
+                                                    <f:setPropertyActionListener value="#{llamada}" target="#{updateGestionController.selectedLlamada}" />
                                                 </p:commandButton>
                                             </p:column>
                                             <p:column headerText="Guardar" >
-                                                <p:commandButton actionListener="#{carteraGestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" />
+                                                <p:commandButton actionListener="#{updateGestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" />
                                             </p:column>
-                                            
-                                            <p:ajax event="cellEdit" listener="#{carteraGestionController.onCellEdit}" update="formGestion:messages" />
+
+                                            <p:ajax event="cellEdit" listener="#{updateGestionController.onCellEdit}" update="formGestion:messages" />
                                         </p:dataTable> 
                                     </p:fieldset>
+
+                                    <p:panelGrid columns="2" layout="grid">                                        
+                                        <p:fieldset legend="Operaciones" class="ui-fluid">
+                                            <p:dataTable id="idTableGestion" value="#{updateGestionController.gestionList}" var="gestion"
+                                                         selectionMode="single" selection="#{updateGestionController.selectedGestion}" rowKey="#{gestion.idGestion}"
+                                                         widgetVar="idTableGestion"
+                                                         rows="20"
+                                                         reflow="true"
+                                                         styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                         style="margin-bottom:20px"
+                                                         emptyMessage="No se encontraron registros." >                                                
+
+                                                <p:column id="idCuentaOP" headerText="#Cuenta" filterBy="#{gestion.operacion}" filterMatchMode="contains" sortBy="#{gestion.operacion}" >
+                                                    <h:outputText value="#{gestion.operacion}" />
+                                                </p:column>
+                                                <p:column id="idFechaPagoOP" headerText="Fecha" filterBy="#{gestion.fechaGestion}" filterMatchMode="contains" sortBy="#{gestion.fechaGestion}" >
+                                                    <h:outputText value="#{gestion.fechaGestion}">
+                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                    </h:outputText>
+                                                </p:column>                                                
+                                                <p:column id="idDescripcionOP" headerText="Descripción" filterBy="#{gestion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.descripcion}" >
+                                                    <h:outputText value="#{gestion.descripcion}" />
+                                                </p:column>
+
+                                                <p:column id="idTipificacionOP" headerText="Tipificación" filterBy="#{gestion.ultimaLLamada.idTipificacion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idTipificacion.descripcion}" >
+                                                    <h:outputText value="#{gestion.ultimaLLamada.idTipificacion.descripcion}" />
+                                                </p:column>
+
+                                                <p:column id="idSubTipificacionOP" headerText="Sub-Tipificación" filterBy="#{gestion.ultimaLLamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idSubtipificacion.descripcion}" >
+                                                    <h:outputText value="#{gestion.ultimaLLamada.idSubtipificacion.descripcion}" />
+                                                </p:column>
+
+                                                <p:column id="idRazonMoraBG" headerText="Razón Mora" filterBy="#{gestion.ultimaLLamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idrazonmora.descripcion}" >
+                                                    <h:outputText value="#{gestion.ultimaLLamada.idrazonmora.descripcion}" />
+                                                </p:column>
+
+                                                <p:ajax event="rowSelect" listener="#{updateGestionController.onRowSelect}" update=":formGestion:messages, formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion, :formGestion:idTabView:idTablePromesaLlamada"/>
+                                                <p:ajax event="rowUnselect" listener="#{updateGestionController.onRowUnselect}" update=":formGestion:messages, formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion, :formGestion:idTabView:idTablePromesaLlamada"/>
+                                            </p:dataTable>
+                                        </p:fieldset>
+                                        <p:fieldset legend="Promesas" class="ui-fluid">
+                                            <p:dataTable id="idTablePromesaLlamada" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"                                                     
+                                                         widgetVar="idTablePromesaLlamada"
+                                                         rows="20"
+                                                         reflow="true"
+                                                         styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                         style="margin-bottom:20px"
+                                                         emptyMessage="No se encontraron registros."
+                                                         editable="true" >
+
+                                                <p:column id="idTipoDescuentoTPL" headerText="Tipo Descuento" filterBy="#{promesa.tipodescuento}" filterMatchMode="contains" sortBy="#{promesa.tipodescuento}" >
+                                                    <h:outputText value="#{promesa.tipodescuento}" />
+                                                </p:column>
+
+                                                <p:column id="idPorcentajeTPL" headerText="Porcentaje" filterBy="#{promesa.mtoporcentaje}" filterMatchMode="contains" sortBy="#{promesa.mtoporcentaje}" >
+                                                    <h:outputText value="#{promesa.mtoporcentaje}" />
+                                                </p:column>                                               
+                                                <p:column id="idMontoPgoTMP" headerText="Monto Pago" filterBy="#{promesa.mtopago}" sortBy="#{promesa.mtopago}" >
+                                                    <h:outputText value="#{promesa.mtopago}">
+                                                        <f:convertNumber type="currency" currencySymbol="#{promesa.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                    </h:outputText>
+                                                </p:column>                                    
+                                                <p:column id="idMonedaTMP" headerText="Moneda" filterBy="#{promesa.idMoneda.codigo}" filterMatchMode="contains" sortBy="#{promesa.idMoneda.codigo}" >
+                                                    <h:outputText value="#{promesa.idMoneda.codigo}" />
+                                                </p:column>
+                                                <p:column id="idFechaPagoTFP" headerText="Fecha" filterBy="#{promesa.fechaPago}" filterMatchMode="contains" sortBy="#{promesa.fechaPago}" >
+                                                    <p:cellEditor>
+                                                        <f:facet name="output">
+                                                            <h:outputText value="#{promesa.fechaPago}" >
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                            </h:outputText>
+                                                        </f:facet>
+                                                        <f:facet name="input">
+                                                            <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" />
+                                                        </f:facet>
+                                                    </p:cellEditor>
+                                                </p:column>
+                                                <p:column id="idArregloPagoTAP" headerText="Arreglo Pago" filterBy="#{promesa.tipoarreglopago}" filterMatchMode="contains" sortBy="#{promesa.tipoarreglopago}" >
+                                                    <h:outputText value="#{promesa.tipoarreglopago}" />
+                                                </p:column>                                                
+                                                <p:column headerText="Estado" filterBy="#{promesa.estado}" filterMatchMode="contains" sortBy="#{promesa.estado}">
+                                                    <p:cellEditor>
+                                                        <f:facet name="output">
+                                                            <h:outputText value="#{promesa.estado}" />
+                                                        </f:facet>
+                                                        <f:facet name="input">
+                                                            <p:selectOneMenu id="idEstadoPromesa" value="#{promesa.estado}" >                                                                        
+                                                                <f:selectItems value="#{estadoPromesaController.estadoPromesaList}" var="estadoPromesa" itemLabel="#{estadoPromesa.nombre}" itemValue="#{estadoPromesa.codigo}"/>                                                                    
+                                                            </p:selectOneMenu>
+                                                        </f:facet>
+                                                    </p:cellEditor>
+                                                </p:column>
+
+                                                <p:column headerText="Editar" style="width:32px">
+                                                    <p:rowEditor />
+                                                </p:column>
+
+                                                <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                            </p:dataTable>
+                                        </p:fieldset>
+                                    </p:panelGrid>
+
                                 </p:panelGrid>
-
-                                <p:fieldset legend="Operaciones">
-                                    <p:dataTable id="tblOperaciones" value="#{carteraGestionController.carteraList}" var="cartera"
-                                                 selectionMode="single" selection="#{carteraGestionController.selectedCartera}" rowKey="#{cartera.id}"
-                                                 widgetVar="tblOperaciones"
-                                                 reflow="true"
-                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
-                                                 style="margin-bottom:20px"
-                                                 emptyMessage="No se encontraron registros." >
-
-                                        <p:column headerText="Operación" filterBy="#{cartera.numeroCuenta}" filterMatchMode="contains" sortBy="#{cartera.numeroCuenta}" >
-                                            <h:outputText value="#{cartera.numeroCuenta}" />                                
-                                        </p:column>
-                                        <p:column headerText="Saldo Colones" filterBy="#{cartera.saldoColones}" sortBy="#{cartera.saldoColones}" >
-                                            <h:outputText value="#{cartera.saldoColones}">
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Intereses Colones" filterBy="#{cartera.interesesColones}" sortBy="#{cartera.interesesColones}" >
-                                            <h:outputText value="#{cartera.interesesColones}">
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Saldo Dolares" filterBy="#{cartera.saldoDolares}" sortBy="#{cartera.saldoDolares}" >
-                                            <h:outputText value="#{cartera.saldoDolares}">
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Intereses Dolares" filterBy="#{cartera.interesesDolares}" sortBy="#{cartera.interesesDolares}" >
-                                            <h:outputText value="#{cartera.interesesDolares}">
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Última Gestión" filterBy="#{cartera.fechaUltimaGestion}" sortBy="#{cartera.fechaUltimaGestion}" >
-                                            <h:outputText value="#{cartera.fechaUltimaGestion}" >
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Última Promesa" filterBy="#{cartera.ultimaPromesa.fechaPago}" sortBy="#{cartera.ultimaPromesa.fechaPago}" >
-                                            <h:outputText value="#{cartera.ultimaPromesa.fechaPago}" >
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Última Promesa" filterBy="#{cartera.ultimaPromesa.mtopago}" sortBy="#{cartera.ultimaPromesa.mtopago}" >
-                                            <h:outputText value="#{cartera.ultimaPromesa.mtopago}" >
-                                                <f:convertNumber type="currency" currencySymbol="#{cartera.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Moneda Promesa" filterBy="#{cartera.ultimaPromesa.idMoneda.codigo}" sortBy="#{cartera.ultimaPromesa.idMoneda.codigo}" >
-                                            <h:outputText value="#{cartera.ultimaPromesa.idMoneda.codigo}" />
-                                        </p:column>
-                                        <p:column headerText="Razón Mora" filterBy="#{cartera.razonMora}" sortBy="#{cartera.razonMora}" >
-                                            <h:outputText value="#{cartera.razonMora}" />
-                                        </p:column>
-                                        
-                                        <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
-                                        <p:ajax event="rowUnselect" listener="#{carteraGestionController.onRowUnselect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
-                                    </p:dataTable>
-                                </p:fieldset>
-
                             </div>
                         </p:tab>
-                        <p:tab title="Findme">
-                            <p:commandButton value="Imprimir" type="button" icon="pi pi-print" style="margin-bottom: 2rem" process="@this">
-                                <p:printer target="pgFindme" />
-                            </p:commandButton>
+
+                        <p:tab title="Findme">                            
                             <div class="card">
                                 <p:panelGrid id="pgFindme" columns="1" layout="grid">
                                     <h2>Datos adicionales para la gestión.</h2>
@@ -511,25 +565,26 @@
                                     </p:fieldset>
                                 </p:panelGrid>
                             </div>                        
-                        </p:tab>                        
+                        </p:tab>
+
                         <p:tab title="Pagos">
                             <div class="card">
                                 <h4>Pagos</h4>
                                 <p:panelGrid id="idPGOperacionPago" columns="2" layout="grid">
                                     <p:panelGrid id="idPGPagos01" columns="2">
                                         <p:outputLabel for="txtCarteraPago01" value="Cartera" />
-                                        <h:outputText id="txtCarteraPago01" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
+                                        <h:outputText id="txtCarteraPago01" value="#{updateGestionController.gestion.codigoCartera} - #{updateGestionController.gestion.nombre_cartera}" />
 
                                         <p:outputLabel for="txtDocumentoPago01" value="Identificación" />
-                                        <h:outputText id="txtDocumentoPago01" value="#{carteraGestionController.gestion.identificacion}" />
+                                        <h:outputText id="txtDocumentoPago01" value="#{updateGestionController.gestion.identificacion}" />
 
                                         <p:outputLabel for="txtNombrePago01" value="Nombre" />
-                                        <h:outputText id="txtNombrePago01" value="#{carteraGestionController.gestion.nombreCliente}" />
+                                        <h:outputText id="txtNombrePago01" value="#{updateGestionController.gestion.nombreCliente}" />
 
-                                        <p:outputLabel for="txtOperacionPago01" value="Operación" />
-                                        <p:selectOneMenu id="txtOperacionPago01" value="#{carteraGestionController.clienteOperacion}">
+                                        <p:outputLabel for="txtOperacionPago01" value="#Cuenta" />
+                                        <p:selectOneMenu id="txtOperacionPago01" value="#{updateGestionController.clienteOperacion}">
                                             <f:selectItem itemLabel="----------------------------" itemValue="" noSelectionOption="true" />
-                                            <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
+                                            <f:selectItems value="#{updateGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
                                             <p:ajax listener="#{pagosHistorialController.onOperacionChange(carteraGestionController.clienteOperacion)}" event="change" update="idTablePagos,txtOperacionSaldoCRC,txtOperacionInteresesCRC,txtOperacionSaldoUSD,txtOperacionInteresesUSD" process="@this" />
                                         </p:selectOneMenu>
 
@@ -593,23 +648,24 @@
                                 </p:dataTable>
                             </div>
                         </p:tab>
+
                         <p:tab title="Gestiones Histórico">
                             <div class="card">
                                 <h4>Pagos</h4>
                                 <p:panelGrid id="idPGOperacionGH" columns="2" layout="grid">
                                     <p:panelGrid id="idPGGH01" columns="2">
                                         <p:outputLabel for="txtCarteraGH01" value="Cartera" />
-                                        <h:outputText id="txtCarteraGH01" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
+                                        <h:outputText id="txtCarteraGH01" value="#{updateGestionController.gestion.codigoCartera} - #{updateGestionController.gestion.nombre_cartera}" />
 
                                         <p:outputLabel for="txtDocumentoGH01" value="Identificación" />
-                                        <h:outputText id="txtDocumentoGH01" value="#{carteraGestionController.gestion.identificacion}" />
+                                        <h:outputText id="txtDocumentoGH01" value="#{updateGestionController.gestion.identificacion}" />
 
                                         <p:outputLabel for="txtNombreGH01" value="Nombre" />
-                                        <h:outputText id="txtNombreGH01" value="#{carteraGestionController.gestion.nombreCliente}" />
+                                        <h:outputText id="txtNombreGH01" value="#{updateGestionController.gestion.nombreCliente}" />
                                     </p:panelGrid>                                    
                                 </p:panelGrid>
 
-                                <p:dataTable id="idTableGH" widgetVar="customersDT21" var="llamada" value="#{gestionController.llamadaList}"
+                                <p:dataTable id="idTableGH" widgetVar="customersDT21" var="llamada" value="#{updateGestionController.llamadaOperacionList}"
                                              paginator="true" rows="20" paginatorPosition="top"
                                              reflow="true" scrollable="true" scrollHeight="1050"
                                              styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
@@ -652,11 +708,10 @@
                                 </p:dataTable>
                             </div>
                         </p:tab>
-
                     </p:tabView>
 
                     <p:confirmDialog widgetVar="deleteTelefonoDialog" showEffect="fade" width="300" message="Eliminar este Teléfono?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{carteraGestionController.deleteTelefono()}" process="@this" update="formGestion:idTabView:tblTelefono" oncomplete="PF('deleteTelefonoDialog').hide()" />
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deleteTelefono()}" process="@this" update="formGestion:idTabView:tblTelefono" oncomplete="PF('deleteTelefonoDialog').hide()" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" process="@this" />
                     </p:confirmDialog>
 
@@ -666,16 +721,16 @@
                                 <div class="p-field">                                        
                                     <p:panelGrid id="pgTelefono01" columns="3" layout="grid">
                                         <p:outputLabel for="txtNonbreContacto" value="Nombre: " />
-                                        <h:outputText id="txtNonbreContacto" value="#{carteraGestionController.contacto.nombre}" />
+                                        <h:outputText id="txtNonbreContacto" value="#{updateGestionController.contacto.nombre}" />
                                         <p:column />
                                         <p:outputLabel for="txtCedulaContacto" value="Identificación: " />
-                                        <h:outputText id="txtCedulaContacto" value="#{carteraGestionController.contacto.cedula}" />
+                                        <h:outputText id="txtCedulaContacto" value="#{updateGestionController.contacto.cedula}" />
                                         <p:column />
                                         <p:outputLabel for="txtTelefonoContacto" value="Teléfono" />
-                                        <p:inputMask id="txtTelefonoContacto" value="#{carteraGestionController.telefono.telefono}" mask="99999999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
+                                        <p:inputMask id="txtTelefonoContacto" value="#{updateGestionController.telefono.telefono}" mask="99999999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
                                         <p:message for="txtTelefonoContacto" />
                                         <p:outputLabel for="txtTipotelefono" value="Tipo Teléfono" />
-                                        <p:selectOneMenu id="txtTipotelefono" value="#{carteraGestionController.tipo}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
+                                        <p:selectOneMenu id="txtTipotelefono" value="#{updateGestionController.tipo}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
                                             <f:selectItem itemLabel="--------------------" itemValue="" noSelectionOption="true" />
                                             <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
                                         </p:selectOneMenu>
@@ -685,7 +740,7 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">    
-                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{carteraGestionController.addTelefono()}" update="manage-Telefono-content, formGestion:idTabView:tblTelefono" process="manage-Telefono-content @this" ajax="true" />
+                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{updateGestionController.addTelefono()}" update="manage-Telefono-content, formGestion:idTabView:tblTelefono" process="manage-Telefono-content @this" ajax="true" />
                             <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageTelefonoDialog').hide()" class="secondary-button" process="@this" />
                         </f:facet>
                     </p:dialog>
@@ -696,13 +751,13 @@
                                 <div class="p-field">                                        
                                     <p:panelGrid id="pgCorreo01" columns="3" layout="grid">
                                         <p:outputLabel for="txtNonbreContactoCorreo" value="Nombre: " />
-                                        <h:outputText id="txtNonbreContactoCorreo" value="#{carteraGestionController.contacto.nombre}" />
+                                        <h:outputText id="txtNonbreContactoCorreo" value="#{updateGestionController.contacto.nombre}" />
                                         <p:column />
                                         <p:outputLabel for="txtCedulaContactoCorreo" value="Identificación: " />
-                                        <h:outputText id="txtCedulaContactoCorreo" value="#{carteraGestionController.contacto.cedula}" />
+                                        <h:outputText id="txtCedulaContactoCorreo" value="#{updateGestionController.contacto.cedula}" />
                                         <p:column />
                                         <p:outputLabel for="txtCorreoContacto" value="Correo electrónico" />
-                                        <p:inputText id="txtCorreoContacto" value="#{carteraGestionController.correoElectronico.correo}" label="email" maxlength="100" required="true" requiredMessage="Por favor, introduzca su dirección de correo electrónico." validatorMessage="Formato de correo inválido" >
+                                        <p:inputText id="txtCorreoContacto" value="#{updateGestionController.correoElectronico.correo}" label="email" maxlength="100" required="true" requiredMessage="Por favor, introduzca su dirección de correo electrónico." validatorMessage="Formato de correo inválido" >
                                             <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
                                         </p:inputText>
                                         <p:watermark for="txtCorreoContacto" value="Dirección de correo electrónico *" />
@@ -712,7 +767,7 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">    
-                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{carteraGestionController.addCorreoElectronico()}" update="manage-Correo-content" process="manage-Correo-content @this" ajax="true" />
+                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{updateGestionController.addCorreoElectronico()}" update="manage-Correo-content" process="manage-Correo-content @this" ajax="true" />
                             <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageCorreoDialog').hide()" class="secondary-button" process="@this" />
                         </f:facet>
                     </p:dialog>
@@ -724,100 +779,88 @@
                                 <div class="p-field p-grid">
                                     <p:outputLabel for="txtNombrePromesa" value="Nombre" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                     <div class="p-col-12 p-md-10">
-                                        <h:outputText id="txtNombrePromesa" value="#{carteraGestionController.gestion.nombreCliente}" />
+                                        <h:outputText id="txtNombrePromesa" value="#{updateGestionController.gestion.nombreCliente}" />
                                     </div>
 
                                     <p:outputLabel for="txtDocPromesa" value="Identificación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                     <div class="p-col-12 p-md-10">
-                                        <h:outputText id="txtDocPromesa" value="#{carteraGestionController.gestion.identificacion}" />
+                                        <h:outputText id="txtDocPromesa" value="#{updateGestionController.gestion.identificacion}" />
                                     </div>
 
                                     <p:outputLabel for="txtTelefonoPromesa" value="Teléfono" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                     <div class="p-col-12 p-md-10">
-                                        <h:outputText id="txtTelefonoPromesa" value="#{carteraGestionController.selectedLlamada.callToNumber}" />
+                                        <h:outputText id="txtTelefonoPromesa" value="#{updateGestionController.selectedLlamada.callToNumber}" />
                                     </div>
                                 </div>
 
                                 <p:tabView id="idtabViewPromesa" >
                                     <p:tab id="apCRC" title="Arreglo de pago CRC">
                                         <p:tabView id="idtabViewPromesaCRC">
-                                            <p:ajax event="tabChange" listener="#{carteraGestionController.onTabChanged}" ></p:ajax>
+                                            <p:ajax event="tabChange" listener="#{updateGestionController.onTabChanged}" ></p:ajax>
                                             <p:tab id="idCancelacionTotal" title="Cancelación Total CRC" >
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesa" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
+                                                                <p:outputLabel for="txtIdOperacionCAT" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesa" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacion, tblPromesaArregloPago" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionCAT" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacion" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacion" value="#{carteraGestionController.mtoSaldoOperacion}">
+                                                                    <h:outputText id="txtSaldoOperacion" value="#{updateGestionController.mtoSaldoOperacion}">
                                                                         <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </h:outputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtTipoDescuento" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuento" value="#{carteraGestionController.tipoDescuentoPromesa}">
+                                                                    <p:selectOneMenu id="txtTipoDescuento" value="#{updateGestionController.tipoDescuentoPromesa}">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />                                                                        
-                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
-                                                                        <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesa" process="@this" />
+                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesa" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtDescuentoPromesa" value="Monto o %" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtDescuentoPromesa" value="#{carteraGestionController.mtoDescuentoPromesa}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
-                                                                        <p:ajax event="blur" update="txtNewSaldoPromesa" listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}"/>
+                                                                    <p:inputNumber id="txtDescuentoPromesa" value="#{updateGestionController.mtoDescuentoPromesa}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
+                                                                        <p:ajax event="blur" update="txtNewSaldoPromesa" listener="#{updateGestionController.calcNuevoMontoSegunDescuento()}" process="@this"/>
                                                                     </p:inputNumber>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtNewSaldoPromesa" value="Monto Promesa" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputText id="txtNewSaldoPromesa" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true" >
+                                                                    <p:inputText id="txtNewSaldoPromesa" value="#{updateGestionController.mtoSaldoPromesa}" readonly="true" >
                                                                         <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </p:inputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPago" value="Fecha Pago" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPago" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPago" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm">
                                                             <p:panelGrid columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoCAT" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotal('CRC')}" process="@this" update="tblPromesaArregloPago" />
-                                                                <p:commandButton id="idBorrarArregloPago" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPago,txtOperacionPromesa,txtSaldoOperacion,txtTipoDescuento,txtDescuentoPromesa,txtNewSaldoPromesa,txtFechaPago" />
+                                                                <p:commandButton id="idGuardarArreglodepagoCAT" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotal('CRC')}" process="@this" update="tblPromesaArregloPago" />
+                                                                <p:commandButton id="idBorrarArregloPago" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPago,txtSaldoOperacion,txtTipoDescuento,txtDescuentoPromesa,txtNewSaldoPromesa,txtFechaPago" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPago" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPago" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"
                                                              widgetVar="tblPromesaArregloPago"
                                                              reflow="true" 
-                                                             editable="true">                                                    
-
-                                                    <!--
-                                                                                                        <p:column exportable="false">                                            
-                                                                                                            <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
-                                                                                                                <f:setPropertyActionListener value="#{promesa}" target="#{carteraGestionController.selectedPromesa}" />
-                                                                                                            </p:commandButton>
-                                                                                                        </p:column>
-                                                    -->
+                                                             editable="true">
 
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
@@ -827,9 +870,16 @@
                                                         <h:outputText value="#{promesa.tipodescuento}" />
                                                     </p:column>
                                                     <p:column headerText="Fecha Pago" >
-                                                        <h:outputText value="#{promesa.fechaPago}" >
-                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                        </h:outputText>
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.fechaPago}" >
+                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                                </h:outputText>
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" />
+                                                            </f:facet>
+                                                        </p:cellEditor>
                                                     </p:column>                                                                                                       
                                                     <p:column headerText="Monto o %" >
                                                         <h:outputText value="#{promesa.mtoporcentaje}" />
@@ -860,65 +910,61 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
-                                            <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas CRC" rendered="#{carteraGestionController.isVisibleCancelacionTotalPorCuotas}" >
+                                            <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas CRC" rendered="#{updateGestionController.isVisibleCancelacionTotalPorCuotas}" >
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesaCTC" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
+                                                                <p:outputLabel for="txtIdOperacionCTC" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaCTC" value="#{carteraGestionController.clienteOperacion}" >
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="carteraList" itemLabel="#{carteraList.numeroCuenta}" itemValue="#{carteraList.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionCTC, tblPromesaArregloPagoCTC" process="@this :formGestion:idTabView:pgDeudor" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionCTC" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionCTC" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacionCTC" value="#{carteraGestionController.mtoSaldoOperacion}" >
+                                                                    <h:outputText id="txtSaldoOperacionCTC" value="#{updateGestionController.mtoSaldoOperacion}" >
                                                                         <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </h:outputText>
                                                                 </div>                                                            
 
                                                                 <p:outputLabel for="txtTipoDescuentoCTC" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuentoCTC" value="#{carteraGestionController.tipoDescuentoPromesa}" >
+                                                                    <p:selectOneMenu id="txtTipoDescuentoCTC" value="#{updateGestionController.tipoDescuentoPromesa}" >
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
-                                                                        <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesaCTC" process="@this" />
+                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesaCTC" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>                                                            
 
                                                                 <p:outputLabel for="txtDescuentoPromesaCTC" value="Monto o %" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtDescuentoPromesaCTC" value="#{carteraGestionController.mtoDescuentoPromesa}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
-                                                                        <p:ajax event="blur" update="txtNewSaldoPromesaCTC" listener="#{carteraGestionController.calcNuevoMontoSegunDescuento()}"/>
+                                                                    <p:inputNumber id="txtDescuentoPromesaCTC" value="#{updateGestionController.mtoDescuentoPromesa}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
+                                                                        <p:ajax event="blur" update="txtNewSaldoPromesaCTC" listener="#{updateGestionController.calcNuevoMontoSegunDescuento()}"/>
                                                                     </p:inputNumber>
                                                                 </div>                                                            
 
                                                                 <p:outputLabel for="txtNewSaldoPromesaCTC" value="Monto Promesa" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputText id="txtNewSaldoPromesaCTC" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true" >
+                                                                    <p:inputText id="txtNewSaldoPromesaCTC" value="#{updateGestionController.mtoSaldoPromesa}" readonly="true" >
                                                                         <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </p:inputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPagoCTC" value="Fecha Pago" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPagoCTC" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPagoCTC" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtCuotasCTC" value="Cuotas" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtCuotasCTC" value="#{carteraGestionController.cuotas}">
+                                                                    <p:selectOneMenu id="txtCuotasCTC" value="#{updateGestionController.cuotas}">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                                         <f:selectItem itemLabel="Dos" itemValue="002"/>
                                                                         <f:selectItem itemLabel="Tres" itemValue="003"/>                                                                    
@@ -928,14 +974,14 @@
                                                         </div>
                                                         <div class="col-sm">                                                
                                                             <p:panelGrid id="btpgArregloPagoCTC" columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoCTC" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotalPorCuotas('CRC')}" process="@this txtOperacionPromesaCTC txtSaldoOperacionCTC txtTipoDescuentoCTC txtDescuentoPromesaCTC txtNewSaldoPromesaCTC txtFechaPagoCTC txtCuotasCTC" update="tblPromesaArregloPagoCTC" />
-                                                                <p:commandButton id="idBorrarArregloPagoCTC" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoCTC,txtOperacionPromesaCTC,txtSaldoOperacionCTC,txtTipoDescuentoCTC,txtDescuentoPromesaCTC,txtNewSaldoPromesaCTC,txtFechaPagoCTC,txtCuotasCTC" />
+                                                                <p:commandButton id="idGuardarArreglodepagoCTC" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotalPorCuotas('CRC')}" process="@this txtSaldoOperacionCTC txtTipoDescuentoCTC txtDescuentoPromesaCTC txtNewSaldoPromesaCTC txtFechaPagoCTC txtCuotasCTC" update="tblPromesaArregloPagoCTC" />
+                                                                <p:commandButton id="idBorrarArregloPagoCTC" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoCTC,txtSaldoOperacionCTC,txtTipoDescuentoCTC,txtDescuentoPromesaCTC,txtNewSaldoPromesaCTC,txtFechaPagoCTC,txtCuotasCTC" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPagoCTC" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPagoCTC" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"                                                             
@@ -974,7 +1020,7 @@
                                                             </f:facet>
                                                             <f:facet name="input">
                                                                 <p:inputNumber value="#{promesa.mtopago}" symbol="#{promesa.idMoneda.simbolo}" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto requerido!" >
-                                                                    <p:ajax listener="#{carteraGestionController.recalcularCuotas(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoCTC" />
+                                                                    <p:ajax listener="#{updateGestionController.recalcularCuotas(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoCTC" />
                                                                 </p:inputNumber>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1000,9 +1046,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idRefinanciamiento" title="Refinanciamiento CRC" >
@@ -1010,46 +1056,42 @@
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesaREF" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
+                                                                <p:outputLabel for="txtIdOperacionREF" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaREF" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionREF, tblPromesaArregloPagoREF" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionREF" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionREF" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacionREF" value="#{carteraGestionController.mtoSaldoOperacion}" >
+                                                                    <h:outputText id="txtSaldoOperacionREF" value="#{updateGestionController.mtoSaldoOperacion}" >
                                                                         <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" /> 
                                                                     </h:outputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtDescuentoPromesaREF" value="Primer Tracto" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtDescuentoPromesaREF" value="#{carteraGestionController.mtoDescuentoPromesa}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Primer Tracto!">
-                                                                        <p:ajax event="blur" listener="#{carteraGestionController.calcSaldoRestanteREF('CRC')}" update="txtNewSaldoPromesaREF"/>
+                                                                    <p:inputNumber id="txtDescuentoPromesaREF" value="#{updateGestionController.mtoDescuentoPromesa}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Primer Tracto!">
+                                                                        <p:ajax event="blur" listener="#{updateGestionController.calcSaldoRestanteREF('CRC')}" update="txtNewSaldoPromesaREF"/>
                                                                     </p:inputNumber>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtNewSaldoPromesaREF" value="Saldo restante" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputText id="txtNewSaldoPromesaREF" value="#{carteraGestionController.mtoSaldoPromesa}" readonly="true">
+                                                                    <p:inputText id="txtNewSaldoPromesaREF" value="#{updateGestionController.mtoSaldoPromesa}" readonly="true">
                                                                         <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </p:inputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPagoREF" value="Fecha Pago Inicial" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPagoREF" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy">
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPagoREF" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy">
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtCuotasREF" value="Cuotas" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtCuotasREF" value="#{carteraGestionController.cuotas}">
+                                                                    <p:selectOneMenu id="txtCuotasREF" value="#{updateGestionController.cuotas}">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                                         <f:selectItem itemLabel="Seis (06)" itemValue="006"/>
                                                                         <f:selectItem itemLabel="Doce (12)" itemValue="012"/>                                                        
@@ -1065,14 +1107,14 @@
                                                         </div>
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPago" columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoREF" value="Generar" actionListener="#{carteraGestionController.agregarRefinanciamiento('CRC')}" process="@this txtCuotasREF" update="tblPromesaArregloPagoREF" />
-                                                                <p:commandButton id="idBorrarArregloPagoREF" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoREF,txtOperacionPromesaREF,txtSaldoOperacionREF,txtDescuentoPromesaREF,txtNewSaldoPromesaREF,txtFechaPagoREF,txtCuotasREF" />
+                                                                <p:commandButton id="idGuardarArreglodepagoREF" value="Generar" actionListener="#{updateGestionController.agregarRefinanciamiento('CRC')}" process="@this txtCuotasREF" update="tblPromesaArregloPagoREF" />
+                                                                <p:commandButton id="idBorrarArregloPagoREF" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoREF,txtSaldoOperacionREF,txtDescuentoPromesaREF,txtNewSaldoPromesaREF,txtFechaPagoREF,txtCuotasREF" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPagoREF" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPagoREF" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"
@@ -1107,7 +1149,7 @@
                                                             </f:facet>
                                                             <f:facet name="input">
                                                                 <p:inputNumber value="#{promesa.mtopago}" symbol="#{promesa.idMoneda.simbolo}" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto requerido!" >                                                                    
-                                                                    <p:ajax listener="#{carteraGestionController.recalcularCuotasREF(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoREF" />
+                                                                    <p:ajax listener="#{updateGestionController.recalcularCuotasREF(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoREF" />
                                                                 </p:inputNumber>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1133,9 +1175,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idPagoParcial" title="Pago Parcial CRC">
@@ -1143,45 +1185,41 @@
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesaPAP" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
+                                                                <p:outputLabel for="txtIdOperacionPAP" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaPAP" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionPAP, tblPromesaArregloPagoPAP" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionPAP" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionPAP" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacionPAP" value="#{carteraGestionController.mtoSaldoOperacion}">
+                                                                    <h:outputText id="txtSaldoOperacionPAP" value="#{updateGestionController.mtoSaldoOperacion}">
                                                                         <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" /> 
                                                                     </h:outputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtNewSaldoPromesaPAP" value="Monto Promesa" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtNewSaldoPromesaPAP" value="#{carteraGestionController.mtoSaldoPromesa}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto Promesa!"/>
+                                                                    <p:inputNumber id="txtNewSaldoPromesaPAP" value="#{updateGestionController.mtoSaldoPromesa}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto Promesa!"/>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPagoPAP" value="Fecha Pago" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPagoPAP" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPagoPAP" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
                                                             </div>
                                                         </div>                                                
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPagoPAP" columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoPAP" value="Generar" actionListener="#{carteraGestionController.agregarPagoParcial('CRC')}" process="@this txtNewSaldoPromesaPAP" update="tblPromesaArregloPagoPAP" />
-                                                                <p:commandButton id="idBorrarArregloPagoPAP" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoPAP,txtOperacionPromesaPAP,txtSaldoOperacionPAP,txtNewSaldoPromesaPAP,txtFechaPagoPAP" />
+                                                                <p:commandButton id="idGuardarArreglodepagoPAP" value="Generar" actionListener="#{updateGestionController.agregarPagoParcial('CRC')}" process="@this txtNewSaldoPromesaPAP" update="tblPromesaArregloPagoPAP,:formGestion:idTabView:idTablePromesaLlamada" />
+                                                                <p:commandButton id="idBorrarArregloPagoPAP" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoPAP,txtSaldoOperacionPAP,txtNewSaldoPromesaPAP,txtFechaPagoPAP" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPagoPAP" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPagoPAP" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"                                                             
@@ -1224,91 +1262,79 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
                                     </p:tab>
                                     <p:tab id="apUSD" title="Arreglo de pago USD">
                                         <p:tabView id="idtabViewPromesaUSD">
-                                            <p:ajax event="tabChange" listener="#{carteraGestionController.onTabChanged}" ></p:ajax>
+                                            <p:ajax event="tabChange" listener="#{updateGestionController.onTabChanged}" ></p:ajax>
                                             <p:tab id="idCancelacionTotalUSD" title="Cancelación Total USD" >
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesaUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
+                                                                <p:outputLabel for="txtIdOperacionCAT_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaUSD" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionUSD, tblPromesaArregloPagoUSD" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionCAT_USD" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacionUSD" value="#{carteraGestionController.mtoSaldoOperacionUSD}">
+                                                                    <h:outputText id="txtSaldoOperacionUSD" value="#{updateGestionController.mtoSaldoOperacionUSD}">
                                                                         <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </h:outputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtTipoDescuentoUSD" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuentoUSD" value="#{carteraGestionController.tipoDescuentoPromesa}">
+                                                                    <p:selectOneMenu id="txtTipoDescuentoUSD" value="#{updateGestionController.tipoDescuentoPromesa}">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
-                                                                        <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaUSD" process="@this" />
+                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaUSD" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtDescuentoPromesaUSD" value="Monto o %" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtDescuentoPromesaUSD" value="#{carteraGestionController.mtoDescuentoPromesaUSD}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
-                                                                        <p:ajax event="blur" update="txtNewSaldoPromesaUSD" listener="#{carteraGestionController.calcNuevoMontoSegunDescuentoUSD()}"/>
+                                                                    <p:inputNumber id="txtDescuentoPromesaUSD" value="#{updateGestionController.mtoDescuentoPromesaUSD}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
+                                                                        <p:ajax event="blur" update="txtNewSaldoPromesaUSD" listener="#{updateGestionController.calcNuevoMontoSegunDescuentoUSD()}"/>
                                                                     </p:inputNumber>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtNewSaldoPromesaUSD" value="Monto Promesa" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputText id="txtNewSaldoPromesaUSD" value="#{carteraGestionController.mtoSaldoPromesaUSD}" readonly="true" >
+                                                                    <p:inputText id="txtNewSaldoPromesaUSD" value="#{updateGestionController.mtoSaldoPromesaUSD}" readonly="true" >
                                                                         <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </p:inputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPagoUSD" value="Fecha Pago" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPagoUSD" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPagoUSD" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm">
                                                             <p:panelGrid columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoCATUSD" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotal('USD')}" process="@this" update="tblPromesaArregloPagoUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoUSD,txtOperacionPromesaUSD,txtSaldoOperacionUSD,txtTipoDescuentoUSD,txtDescuentoPromesaUSD,txtNewSaldoPromesaUSD,txtFechaPagoUSD" />
+                                                                <p:commandButton id="idGuardarArreglodepagoCATUSD" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotal('USD')}" process="@this" update="tblPromesaArregloPagoUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoUSD,txtSaldoOperacionUSD,txtTipoDescuentoUSD,txtDescuentoPromesaUSD,txtNewSaldoPromesaUSD,txtFechaPagoUSD" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPagoUSD" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPagoUSD" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"
                                                              widgetVar="tblPromesaArregloPagoUSD"
                                                              reflow="true" 
                                                              editable="true">                                                    
-
-                                                    <!--
-                                                                                                        <p:column exportable="false">                                            
-                                                                                                            <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
-                                                                                                                <f:setPropertyActionListener value="#{promesa}" target="#{carteraGestionController.selectedPromesa}" />
-                                                                                                            </p:commandButton>
-                                                                                                        </p:column>
-                                                    -->
 
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
@@ -1318,9 +1344,16 @@
                                                         <h:outputText value="#{promesa.tipodescuento}" />
                                                     </p:column>                                                    
                                                     <p:column headerText="Fecha Pago" >
-                                                        <h:outputText value="#{promesa.fechaPago}" >
-                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                        </h:outputText>
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:outputText value="#{promesa.fechaPago}" >
+                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                                </h:outputText>
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" />
+                                                            </f:facet>
+                                                        </p:cellEditor>                                                        
                                                     </p:column>                                                                                                       
                                                     <p:column headerText="Monto o %" >
                                                         <h:outputText value="#{promesa.mtoporcentaje}" />
@@ -1351,65 +1384,61 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
-                                            <p:tab id="idCancelacionTotalCuotasUSD" title="Cancelación total por cuotas USD" rendered="#{carteraGestionController.isVisibleCancelacionTotalPorCuotas}" >
+                                            <p:tab id="idCancelacionTotalCuotasUSD" title="Cancelación total por cuotas USD" rendered="#{updateGestionController.isVisibleCancelacionTotalPorCuotas}" >
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesaCTCUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
+                                                                <p:outputLabel for="txtIdOperacionCTC_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaCTCUSD" value="#{carteraGestionController.clienteOperacion}" >
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="carteraList" itemLabel="#{carteraList.numeroCuenta}" itemValue="#{carteraList.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionCTCUSD, tblPromesaArregloPagoCTCUSD" process="@this :formGestion:idTabView:pgDeudor" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionCTC_USD" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionCTCUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacionCTCUSD" value="#{carteraGestionController.mtoSaldoOperacionUSD}" >
+                                                                    <h:outputText id="txtSaldoOperacionCTCUSD" value="#{updateGestionController.mtoSaldoOperacionUSD}" >
                                                                         <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </h:outputText>
                                                                 </div>                                                            
 
                                                                 <p:outputLabel for="txtTipoDescuentoCTCUSD" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuentoCTCUSD" value="#{carteraGestionController.tipoDescuentoPromesa}" >
+                                                                    <p:selectOneMenu id="txtTipoDescuentoCTCUSD" value="#{updateGestionController.tipoDescuentoPromesa}" >
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
-                                                                        <p:ajax listener="#{carteraGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaCTCUSD" process="@this" />
+                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaCTCUSD" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>                                                            
 
                                                                 <p:outputLabel for="txtDescuentoPromesaCTCUSD" value="Monto o %" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtDescuentoPromesaCTCUSD" value="#{carteraGestionController.mtoDescuentoPromesaUSD}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
-                                                                        <p:ajax event="blur" update="txtNewSaldoPromesaCTCUSD" listener="#{carteraGestionController.calcNuevoMontoSegunDescuentoUSD()}"/>
+                                                                    <p:inputNumber id="txtDescuentoPromesaCTCUSD" value="#{updateGestionController.mtoDescuentoPromesaUSD}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto o % requerido!">
+                                                                        <p:ajax event="blur" update="txtNewSaldoPromesaCTCUSD" listener="#{updateGestionController.calcNuevoMontoSegunDescuentoUSD()}"/>
                                                                     </p:inputNumber>
                                                                 </div>                                                            
 
                                                                 <p:outputLabel for="txtNewSaldoPromesaCTCUSD" value="Monto Promesa" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputText id="txtNewSaldoPromesaCTCUSD" value="#{carteraGestionController.mtoSaldoPromesaUSD}" readonly="true" >
+                                                                    <p:inputText id="txtNewSaldoPromesaCTCUSD" value="#{updateGestionController.mtoSaldoPromesaUSD}" readonly="true" >
                                                                         <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </p:inputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPagoCTCUSD" value="Fecha Pago" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPagoCTCUSD" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPagoCTCUSD" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtCuotasCTCUSD" value="Cuotas" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtCuotasCTCUSD" value="#{carteraGestionController.cuotas}">
+                                                                    <p:selectOneMenu id="txtCuotasCTCUSD" value="#{updateGestionController.cuotas}">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                                         <f:selectItem itemLabel="Dos" itemValue="002"/>
                                                                         <f:selectItem itemLabel="Tres" itemValue="003"/>                                                                    
@@ -1419,14 +1448,14 @@
                                                         </div>
                                                         <div class="col-sm">                                                
                                                             <p:panelGrid id="btpgArregloPagoCTCUSD" columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoCTCUSD" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotalPorCuotas('USD')}" process="@this txtOperacionPromesaCTCUSD txtSaldoOperacionCTCUSD txtTipoDescuentoCTCUSD txtDescuentoPromesaCTCUSD txtNewSaldoPromesaCTCUSD txtFechaPagoCTCUSD txtCuotasCTCUSD" update="tblPromesaArregloPagoCTCUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoCTCUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoCTCUSD,txtOperacionPromesaCTCUSD,txtSaldoOperacionCTCUSD,txtTipoDescuentoCTCUSD,txtDescuentoPromesaCTCUSD,txtNewSaldoPromesaCTCUSD,txtFechaPagoCTCUSD,txtCuotasCTCUSD" />
+                                                                <p:commandButton id="idGuardarArreglodepagoCTCUSD" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotalPorCuotas('USD')}" process="@this txtSaldoOperacionCTCUSD txtTipoDescuentoCTCUSD txtDescuentoPromesaCTCUSD txtNewSaldoPromesaCTCUSD txtFechaPagoCTCUSD txtCuotasCTCUSD" update="tblPromesaArregloPagoCTCUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoCTCUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoCTCUSD,txtSaldoOperacionCTCUSD,txtTipoDescuentoCTCUSD,txtDescuentoPromesaCTCUSD,txtNewSaldoPromesaCTCUSD,txtFechaPagoCTCUSD,txtCuotasCTCUSD" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPagoCTCUSD" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPagoCTCUSD" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"                                                             
@@ -1465,7 +1494,7 @@
                                                             </f:facet>
                                                             <f:facet name="input">
                                                                 <p:inputNumber value="#{promesa.mtopago}" symbol="#{promesa.idMoneda.simbolo}" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto requerido!" >                                                                    
-                                                                    <p:ajax listener="#{carteraGestionController.recalcularCuotasUSD(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoCTCUSD" />
+                                                                    <p:ajax listener="#{updateGestionController.recalcularCuotasUSD(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoCTCUSD" />
                                                                 </p:inputNumber>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1491,9 +1520,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idRefinanciamientoUSD" title="Refinanciamiento USD" >
@@ -1501,46 +1530,42 @@
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesaREFUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
+                                                                <p:outputLabel for="txtIdOperacionREF_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaREFUSD" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionREFUSD, tblPromesaArregloPagoREFUSD" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionREF_USD" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionREFUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacionREFUSD" value="#{carteraGestionController.mtoSaldoOperacionUSD}" >
+                                                                    <h:outputText id="txtSaldoOperacionREFUSD" value="#{updateGestionController.mtoSaldoOperacionUSD}" >
                                                                         <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" /> 
                                                                     </h:outputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtDescuentoPromesaREFUSD" value="Primer Tracto" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtDescuentoPromesaREFUSD" value="#{carteraGestionController.mtoDescuentoPromesaUSD}" symbol="$" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Primer Tracto!">
-                                                                        <p:ajax event="blur" listener="#{carteraGestionController.calcSaldoRestanteREF('USD')}" update="txtNewSaldoPromesaREFUSD"/>
+                                                                    <p:inputNumber id="txtDescuentoPromesaREFUSD" value="#{updateGestionController.mtoDescuentoPromesaUSD}" symbol="$" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Primer Tracto!">
+                                                                        <p:ajax event="blur" listener="#{updateGestionController.calcSaldoRestanteREF('USD')}" update="txtNewSaldoPromesaREFUSD"/>
                                                                     </p:inputNumber>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtNewSaldoPromesaREFUSD" value="Saldo restante" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputText id="txtNewSaldoPromesaREFUSD" value="#{carteraGestionController.mtoSaldoPromesaUSD}" readonly="true">
+                                                                    <p:inputText id="txtNewSaldoPromesaREFUSD" value="#{updateGestionController.mtoSaldoPromesaUSD}" readonly="true">
                                                                         <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                                                     </p:inputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPagoREFUSD" value="Fecha Pago Inicial" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPagoREFUSD" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy">
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPagoREFUSD" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy">
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtCuotasREFUSD" value="Cuotas" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtCuotasREFUSD" value="#{carteraGestionController.cuotas}">
+                                                                    <p:selectOneMenu id="txtCuotasREFUSD" value="#{updateGestionController.cuotas}">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                                         <f:selectItem itemLabel="Seis (06)" itemValue="006"/>
                                                                         <f:selectItem itemLabel="Doce (12)" itemValue="012"/>                                                        
@@ -1556,14 +1581,14 @@
                                                         </div>
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPago" columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoREFUSD" value="Generar" actionListener="#{carteraGestionController.agregarRefinanciamiento('USD')}" process="@this txtCuotasREFUSD" update="tblPromesaArregloPagoREFUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoREFUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoREFUSD,txtOperacionPromesaREFUSD,txtSaldoOperacionREFUSD,txtDescuentoPromesaREFUSD,txtNewSaldoPromesaREFUSD,txtFechaPagoREFUSD,txtCuotasREFUSD" />
+                                                                <p:commandButton id="idGuardarArreglodepagoREFUSD" value="Generar" actionListener="#{updateGestionController.agregarRefinanciamiento('USD')}" process="@this txtCuotasREFUSD" update="tblPromesaArregloPagoREFUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoREFUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoREFUSD,txtSaldoOperacionREFUSD,txtDescuentoPromesaREFUSD,txtNewSaldoPromesaREFUSD,txtFechaPagoREFUSD,txtCuotasREFUSD" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPagoREFUSD" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPagoREFUSD" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"
@@ -1598,7 +1623,7 @@
                                                             </f:facet>
                                                             <f:facet name="input">
                                                                 <p:inputNumber value="#{promesa.mtopago}" symbol="#{promesa.idMoneda.simbolo}" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto requerido!" >                                                                    
-                                                                    <p:ajax listener="#{carteraGestionController.recalcularCuotasREFUSD(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoREFUSD" />
+                                                                    <p:ajax listener="#{updateGestionController.recalcularCuotasREFUSD(promesa.operacion,promesa.mtopago,promesa.fechaPago,promesa.tipoarreglopago,promesa.idMoneda.codigo)}" event="change" update="tblPromesaArregloPagoREFUSD" />
                                                                 </p:inputNumber>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1624,9 +1649,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idPagoParcial" title="Pago Parcial USD">
@@ -1634,59 +1659,47 @@
                                                     <div class="row">
                                                         <div class="col-sm">
                                                             <div class="p-field p-grid">
-                                                                <p:outputLabel for="txtOperacionPromesaPAPUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
+                                                                <p:outputLabel for="txtIdOperacionPAP_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaPAPUSD" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionPAPUSD, tblPromesaArregloPagoPAPUSD" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtIdOperacionPAP_USD" value="#{updateGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionPAPUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtSaldoOperacionPAPUSD" value="#{carteraGestionController.mtoSaldoOperacionUSD}">
+                                                                    <h:outputText id="txtSaldoOperacionPAPUSD" value="#{updateGestionController.mtoSaldoOperacionUSD}">
                                                                         <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" /> 
                                                                     </h:outputText>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtNewSaldoPromesaPAPUSD" value="Monto Promesa" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:inputNumber id="txtNewSaldoPromesaPAPUSD" value="#{carteraGestionController.mtoSaldoPromesaUSD}" symbol="$" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto Promesa!"/>
+                                                                    <p:inputNumber id="txtNewSaldoPromesaPAPUSD" value="#{updateGestionController.mtoSaldoPromesaUSD}" symbol="$" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" required="true" requiredMessage="Monto Promesa!"/>
                                                                 </div>
 
                                                                 <p:outputLabel for="txtFechaPagoPAPUSD" value="Fecha Pago" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:calendar id="txtFechaPagoPAPUSD" value="#{carteraGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
-                                                                        <p:ajax event="dateSelect" listener="#{carteraGestionController.fechaPagoChanged}" />
+                                                                    <p:calendar id="txtFechaPagoPAPUSD" value="#{updateGestionController.fechaPagoPromesa}" pattern="dd/MM/yyyy" >
+                                                                        <p:ajax event="dateSelect" listener="#{updateGestionController.fechaPagoChanged}" />
                                                                     </p:calendar>
                                                                 </div>
                                                             </div>
                                                         </div>                                                
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPagoPAPUSD" columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoPAPUSD" value="Generar" actionListener="#{carteraGestionController.agregarPagoParcial('USD')}" process="@this txtNewSaldoPromesaPAPUSD" update="tblPromesaArregloPagoPAPUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoPAPUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoPAPUSD,txtOperacionPromesaPAPUSD,txtSaldoOperacionPAPUSD,txtNewSaldoPromesaPAPUSD,txtFechaPagoPAPUSD" />
+                                                                <p:commandButton id="idGuardarArreglodepagoPAPUSD" value="Generar" actionListener="#{updateGestionController.agregarPagoParcial('USD')}" process="@this txtNewSaldoPromesaPAPUSD" update="tblPromesaArregloPagoPAPUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoPAPUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoPAPUSD,txtSaldoOperacionPAPUSD,txtNewSaldoPromesaPAPUSD,txtFechaPagoPAPUSD" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
                                                 </div>
 
-                                                <p:dataTable id="tblPromesaArregloPagoPAPUSD" value="#{carteraGestionController.promesaList}" var="promesa"
+                                                <p:dataTable id="tblPromesaArregloPagoPAPUSD" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
                                                              style="margin-bottom:20px"
                                                              emptyMessage="No se encontraron registros."
                                                              scrollable="true" rows="5"                                                             
                                                              widgetVar="tblPromesaArregloPagoPAPUSD"
                                                              reflow="true"
-                                                             editable="true">                                                    
-
-                                                    <!-- comment 
-                                                    <p:column exportable="false">
-                                                        <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deletePromesaDialog').show()" >
-                                                            <f:setPropertyActionListener value="#{promesa}" target="#{carteraGestionController.selectedPromesa}" />
-                                                        </p:commandButton>
-                                                    </p:column>
-                                                    -->
+                                                             editable="true">
 
                                                     <p:column headerText="Operación" >
                                                         <h:outputText value="#{promesa.operacion}" />
@@ -1722,9 +1735,9 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
-                                                    <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
@@ -1733,12 +1746,12 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">
-                            <p:commandButton value="Cerrar" icon="pi pi-check" update="manage-llamarPromesaArregloPago-content" process="manage-llamarPromesaArregloPago-content @this" onclick="PF('manageLlamarPromesaArregloPagoDialog').hide()" />                                        
+                            <p:commandButton value="Aceptar" icon="pi pi-check" update="manage-llamarPromesaArregloPago-content, :formGestion:idTabView:idTablePromesaLlamada" process="manage-llamarPromesaArregloPago-content @this" onclick="PF('manageLlamarPromesaArregloPagoDialog').hide()" />
                         </f:facet>
                     </p:dialog>
 
                     <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{carteraGestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" process="@this"/>
                     </p:confirmDialog>
                 </div>

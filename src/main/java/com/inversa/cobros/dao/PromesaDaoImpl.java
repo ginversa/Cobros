@@ -96,6 +96,9 @@ public class PromesaDaoImpl implements PromesaDao {
     @Override
     public void insert(TblPromesa obj) {
         em.persist(obj);
+        em.flush();
+        em.refresh(obj);
+        System.out.println("Promesa ID: " + obj.getIdPromesa());
     }
 
     @Override
@@ -167,6 +170,21 @@ public class PromesaDaoImpl implements PromesaDao {
         query.setParameter(4, codigo_cartera);
         List<TblPromesa> results = query.getResultList();
         return results;
+    }
+
+    /**
+     *
+     * @param idGestion
+     * @param estado
+     * @return
+     */
+    @Override
+    public int updateEstadoPromesa(Long idGestion, String estado) {
+        Query query = em.createQuery("UPDATE TblPromesa SET estado = :estado WHERE idGestion.idGestion = :idGestion");
+        query.setParameter("estado", estado);
+        query.setParameter("idGestion", idGestion);
+        int updateCount = query.executeUpdate();
+        return updateCount;
     }
 
 }

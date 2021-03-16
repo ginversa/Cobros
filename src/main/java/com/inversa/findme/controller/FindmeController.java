@@ -233,6 +233,22 @@ public class FindmeController implements Serializable {
 
         PrimeFaces.current().ajax().update("formGestion:idTabView:idHistorialTelefonos", "formGestion:idTabView:idHistorialDireccion", "formGestion:idTabView:idArbolFamiliar", "formGestion:idTabView:idAnalisisLaboral", "formGestion:idTabView:idSociedadAnonima", "formGestion:idTabView:idPropiedadRegistrada", "formGestion:idTabView:idVehiculo", "formGestion:idTabView:idHistorialJudicial");
     }
+    
+    public void cargarFindme(String identificacion) {
+        if (identificacion != null && !identificacion.trim().equals("")) {
+            this.historialTelefonoList = this.ejbLocal.historial_telefonos(identificacion);
+            this.historialCorreoList = this.ejbLocal.historial_correos(identificacion);
+            this.historialDireccionList = this.ejbLocal.historial_direcciones(identificacion);
+            this.arbolFamiliarList = this.ejbLocal.arbol_familiar(identificacion);
+            this.historialLaboralList = this.ejbLocal.analisis_laboral(identificacion);
+            this.sociedadAnonimaList = this.ejbLocal.sociedades_anonimas(identificacion);
+            this.propiedadRegistradaList = this.ejbLocal.propiedades_registradas(identificacion);
+            this.vehiculoList = this.ejbLocal.consulta_vehiculos(identificacion);
+            this.historialJudicialList = this.ejbLocal.historial_judicial(identificacion);
+        }
+
+        PrimeFaces.current().ajax().update("formGestion:idTabView:idHistorialTelefonos", "formGestion:idTabView:idHistorialDireccion", "formGestion:idTabView:idArbolFamiliar", "formGestion:idTabView:idAnalisisLaboral", "formGestion:idTabView:idSociedadAnonima", "formGestion:idTabView:idPropiedadRegistrada", "formGestion:idTabView:idVehiculo", "formGestion:idTabView:idHistorialJudicial");
+    }
 
     /*
 ***************************************************************************    

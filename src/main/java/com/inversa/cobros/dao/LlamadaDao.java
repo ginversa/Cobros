@@ -40,6 +40,8 @@ public interface LlamadaDao {
     public List<TblLlamada> findByUsuariomodifico(TblLlamada obj);
 
     public List<TblLlamada> findByFechamodifico(TblLlamada obj);
+    
+    public TblLlamada findUltimaLlamada(Long idGestion);
 
     public void insert(TblLlamada obj);
 

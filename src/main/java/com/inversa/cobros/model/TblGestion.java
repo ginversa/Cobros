@@ -39,8 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblGestion.findByIdGestion", query = "SELECT t FROM TblGestion t WHERE t.idGestion = :idGestion"),
     @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblGestion.findByNombreCliente", query = "SELECT t FROM TblGestion t WHERE t.nombreCliente = :nombreCliente"),
-    @NamedQuery(name = "TblGestion.findByIdentificacion", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion"),    
-    @NamedQuery(name = "TblGestion.findByIdentificacionANDCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion AND t.codigoCartera = :codigoCartera"),
+    @NamedQuery(name = "TblGestion.findByIdentificacion", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion ORDER BY t.idGestion desc"),    
+    @NamedQuery(name = "TblGestion.findByIdentificacionANDCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion AND t.codigoCartera = :codigoCartera ORDER BY t.idGestion desc"),
     @NamedQuery(name = "TblGestion.findByCodigoCarteraANDIdentificacion", query = "SELECT t FROM TblGestion t\n"
             + " WHERE t.codigoCartera = :codigoCartera\n"
             + "   and t.identificacion = :identificacion\n"
@@ -131,6 +131,15 @@ public class TblGestion implements Serializable {
     
     @Transient
     private String codigo_cliente;
+    
+    @Transient
+    private TblPromesa ultimaPromesa;
+
+    @Transient
+    private Razonmora ultimaRazonMora;
+
+    @Transient
+    private TblLlamada ultimaLLamada;
     
 
     public TblGestion() {
@@ -239,6 +248,31 @@ public class TblGestion implements Serializable {
     public void setLeyusura(String leyusura) {
         this.leyusura = leyusura;
     }
+
+    public TblPromesa getUltimaPromesa() {
+        return ultimaPromesa;
+    }
+
+    public void setUltimaPromesa(TblPromesa ultimaPromesa) {
+        this.ultimaPromesa = ultimaPromesa;
+    }    
+
+    public Razonmora getUltimaRazonMora() {
+        return ultimaRazonMora;
+    }
+
+    public void setUltimaRazonMora(Razonmora ultimaRazonMora) {
+        this.ultimaRazonMora = ultimaRazonMora;
+    }
+
+
+    public TblLlamada getUltimaLLamada() {
+        return ultimaLLamada;
+    }
+
+    public void setUltimaLLamada(TblLlamada ultimaLLamada) {
+        this.ultimaLLamada = ultimaLLamada;
+    }    
 
     @Override
     public int hashCode() {

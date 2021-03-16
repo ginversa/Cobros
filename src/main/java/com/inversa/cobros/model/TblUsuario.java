@@ -248,7 +248,7 @@ public class TblUsuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.TblUsuario[ idPersona=" + idPersona + " ]";
-    }
+        return "TblUsuario{" + "idPersona=" + idPersona + ", usuario=" + usuario + ", clave=" + clave + ", codigoGestor=" + codigoGestor + ", estado=" + estado + ", extEnsion=" + extEnsion + '}';
+    }    
     
 }

@@ -124,4 +124,9 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
         } 
     }
 
+    @Override
+    public TblLlamada findUltimaLlamada(Long idGestion) {
+        return dao.findUltimaLlamada(idGestion);
+    }
+
 }

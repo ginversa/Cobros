@@ -152,6 +152,11 @@
                                             <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true"/>
                                         </h:outputText>
                                     </p:column>
+                                    <p:column headerText="Fecha Asignación" filterBy="#{cartera.fechaAsignacion}" sortBy="#{cartera.fechaAsignacion}" >
+                                        <h:outputText value="#{cartera.fechaAsignacion}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
                                     <p:column headerText="Fecha Última Gestión" filterBy="#{cartera.fechaUltimaGestion}" sortBy="#{cartera.fechaUltimaGestion}" >
                                         <h:outputText value="#{cartera.fechaUltimaGestion}" >
                                             <f:convertDateTime pattern="dd/MM/yyyy" />

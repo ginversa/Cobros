@@ -124,4 +124,9 @@ public class PromesaServiceImpl implements PromesaService, PromesaServiceRemote 
         return dao.findByFechaPagoAndUsuarioIngreso(obj, codigo_gestor, codigo_cartera);
     }
 
+    @Override
+    public int updateEstadoPromesa(Long idGestion, String estado) {
+        return dao.updateEstadoPromesa(idGestion, estado);
+    }
+
 }

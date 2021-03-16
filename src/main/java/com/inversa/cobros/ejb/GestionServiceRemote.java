@@ -54,5 +54,7 @@ public interface GestionServiceRemote {
     public List<Cartera> findCarteraByDistinc();
     
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj);
+    
+    public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj);
 
 }

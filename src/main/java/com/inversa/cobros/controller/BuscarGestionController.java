@@ -7,17 +7,15 @@ package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.PromesaService;
-import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPromesa;
-import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -26,7 +24,8 @@ import javax.inject.Named;
  * @author Z420WK
  */
 @Named
-@ViewScoped
+@SessionScoped
+
 public class BuscarGestionController implements Serializable {
 
     @Inject
@@ -36,19 +35,16 @@ public class BuscarGestionController implements Serializable {
     private PromesaService ejbPromesaServiceLocal;
 
     private List<TblGestion> gestionList;
-    private TblGestion gestion;
-    private List<TblLlamada> llamadaList;
-    //private String codigoCartera;
-    //private List<Cartera> codigoCarteraList;
+    private TblGestion searchGestion;
+    private TblGestion selectedGestion;
     
-    private TblUsuario usuario;
+    private List<TblLlamada> llamadaList;    
 
     @PostConstruct
-    public void init() {
-        //this.codigoCarteraList = ejbLocal.findCarteraByDistinc();
-        this.llamadaList = new ArrayList<TblLlamada>();
-        this.gestion = new TblGestion();        
-        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+    public void init() {        
+        this.llamadaList = new ArrayList<TblLlamada>();        
+        this.searchGestion = new TblGestion();
+        this.selectedGestion = new TblGestion();
     }    
 
     /**
@@ -61,13 +57,12 @@ public class BuscarGestionController implements Serializable {
         }
         
         String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");        
-        
-        this.gestion.setCodigoCartera(codigoCartera);
+        this.searchGestion.setCodigoCartera(codigoCartera);
 
-        this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCartera(this.gestion);//findByIdentificacion(this.gestion);
+        this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCartera(this.searchGestion);
 
         if (this.gestionList != null && !this.gestionList.isEmpty() && this.gestionList.size() > 0) {
-            this.gestion = this.gestionList.get(0);
+            this.searchGestion = this.gestionList.get(0);
             for (int index = 0; index < this.gestionList.size(); index++) {
                 List<TblLlamada> llamadas = this.gestionList.get(index).getTblLlamadaList();
                 if (llamadas != null && !llamadas.isEmpty() && llamadas.size() > 0) {
@@ -90,14 +85,6 @@ public class BuscarGestionController implements Serializable {
         this.gestionList = gestionList;
     }
 
-    public TblGestion getGestion() {
-        return gestion;
-    }
-
-    public void setGestion(TblGestion gestion) {
-        this.gestion = gestion;
-    }
-
     public List<TblLlamada> getLlamadaList() {
         return llamadaList;
     }
@@ -106,22 +93,20 @@ public class BuscarGestionController implements Serializable {
         this.llamadaList = llamadaList;
     }
 
-    /*
-    public String getCodigoCartera() {
-        return codigoCartera;
+    public TblGestion getSearchGestion() {
+        return searchGestion;
     }
 
-    public void setCodigoCartera(String codigoCartera) {
-        this.codigoCartera = codigoCartera;
+    public void setSearchGestion(TblGestion searchGestion) {
+        this.searchGestion = searchGestion;
     }
 
-    public List<Cartera> getCodigoCarteraList() {
-        return codigoCarteraList;
+    public TblGestion getSelectedGestion() {
+        return selectedGestion;
     }
 
-    public void setCodigoCarteraList(List<Cartera> codigoCarteraList) {
-        this.codigoCarteraList = codigoCarteraList;
-    }
-    */
+    public void setSelectedGestion(TblGestion selectedGestion) {
+        this.selectedGestion = selectedGestion;
+    }    
 
 }

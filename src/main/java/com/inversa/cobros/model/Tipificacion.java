@@ -46,38 +46,54 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Tipificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_tipificacion")
     private Integer idTipificacion;
+
     @Size(max = 50)
     @Column(name = "descripcion")
     private String descripcion;
+
+    @Size(max = 5)
+    @Column(name = "codigo")
+    private String codigo;
+
     @Size(max = 5)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
+
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
+
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
+
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
+
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
+
     @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<TblResultadotercero> tblResultadoterceroList;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<Subtipificacion> subtipificacionList;
+
     @OneToMany(mappedBy = "idTipificacion", fetch = FetchType.LAZY)
     private List<TblResultadogestion> tblResultadogestionList;
 
@@ -188,6 +204,15 @@ public class Tipificacion implements Serializable {
         this.tblResultadogestionList = tblResultadogestionList;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -212,5 +237,5 @@ public class Tipificacion implements Serializable {
     public String toString() {
         return this.descripcion;
     }
-    
+
 }

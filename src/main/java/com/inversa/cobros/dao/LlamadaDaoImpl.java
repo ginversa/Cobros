@@ -9,17 +9,18 @@ import com.inversa.cobros.model.TblLlamada;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
  *
  * @author Z420WK
  */
-
 @Stateless
-public class LlamadaDaoImpl implements LlamadaDao{
-    
+public class LlamadaDaoImpl implements LlamadaDao {
+
     @PersistenceContext(unitName = "cobrosPU")
     EntityManager em;
 
@@ -126,6 +127,9 @@ public class LlamadaDaoImpl implements LlamadaDao{
     @Override
     public void insert(TblLlamada obj) {
         em.persist(obj);
+        em.flush();
+        em.refresh(obj);
+        System.out.println("Llamada ID: " + obj.getIdLlamada());
     }
 
     @Override
@@ -138,5 +142,22 @@ public class LlamadaDaoImpl implements LlamadaDao{
         em.merge(obj);
         em.remove(obj);
     }
-    
+
+    @Override
+    public TblLlamada findUltimaLlamada(Long idGestion) {
+        try {
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl where tl.id_gestion = ?1 order by tl.id_llamada desc limit 1", TblLlamada.class);
+            query.setParameter(1, idGestion);
+            List<TblLlamada> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

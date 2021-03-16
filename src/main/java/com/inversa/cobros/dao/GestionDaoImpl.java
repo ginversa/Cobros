@@ -9,6 +9,7 @@ import com.inversa.cobros.model.Cartera;
 import com.inversa.cobros.model.TblGestion;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.jms.Session;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;

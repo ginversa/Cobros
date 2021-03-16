@@ -42,6 +42,8 @@ public interface LlamadaService {
 
     public List<TblLlamada> findByFechamodifico(TblLlamada obj);
 
+    public TblLlamada findUltimaLlamada(Long idGestion);
+
     public void insert(TblLlamada obj);
 
     public void update(TblLlamada obj);

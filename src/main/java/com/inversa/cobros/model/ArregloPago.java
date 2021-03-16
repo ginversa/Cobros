@@ -11,30 +11,23 @@ import java.io.Serializable;
  *
  * @author Z420WK
  */
-public class TipoDescuento implements Serializable{
-    
+
+public class ArregloPago implements Serializable{
+ 
     private String codigo;
     private String nombre;
     private String codigo_cliente;
 
-    public TipoDescuento(String codigo, String nombre) {
+    public ArregloPago(String codigo, String nombre) {
         this.codigo = codigo;
         this.nombre = nombre;
     }
 
-    public TipoDescuento(String codigo, String nombre, String codigo_cliente) {
+    public ArregloPago(String codigo, String nombre, String codigo_cliente) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.codigo_cliente = codigo_cliente;
-    }       
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    }    
 
     public String getCodigo() {
         return codigo;
@@ -44,12 +37,20 @@ public class TipoDescuento implements Serializable{
         this.codigo = codigo;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getCodigo_cliente() {
         return codigo_cliente;
     }
 
     public void setCodigo_cliente(String codigo_cliente) {
         this.codigo_cliente = codigo_cliente;
-    }    
+    }
     
 }

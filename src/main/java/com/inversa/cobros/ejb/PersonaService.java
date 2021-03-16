@@ -37,4 +37,5 @@ public interface PersonaService {
     public void update(TblPersona obj);
 
     public void delete(TblPersona obj);
+    
 }

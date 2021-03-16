@@ -54,5 +54,7 @@ public interface GestionService {
     public List<Cartera> findCarteraByDistinc();
     
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj);
+    
+    public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj);
 
 }

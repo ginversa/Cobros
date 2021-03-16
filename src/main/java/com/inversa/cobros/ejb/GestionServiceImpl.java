@@ -8,6 +8,8 @@ package com.inversa.cobros.ejb;
 import com.inversa.cobros.dao.GestionDao;
 import com.inversa.cobros.model.Cartera;
 import com.inversa.cobros.model.TblGestion;
+import com.inversa.cobros.model.TblLlamada;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -26,6 +28,9 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
 
     @Inject
     private GestionDao dao;
+    
+    @Inject
+    private LlamadaService ejbLlamadaLocal;
 
     @Override
     public List<TblGestion> findAll() {
@@ -139,6 +144,31 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
     @Override
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj) {
         return dao.findByCodigoGestorANDCodigoCartera(obj);
+    }    
+    
+    @Override
+    public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj) {
+        List<TblGestion> resultList = new ArrayList<>();
+        List<TblGestion> gestionList = dao.findByIdentificacionANDCodigoCartera(obj);
+        if(gestionList != null){
+            for(int index = 0; index<gestionList.size();index++){
+                TblGestion gestion = gestionList.get(index);
+                String operacion = gestion.getOperacion();
+                boolean isFound = false;
+                for(int i=0; i<resultList.size();i++){
+                    if(resultList.get(i).getOperacion().trim().equals(operacion)){
+                        isFound = true;
+                    }                    
+                }
+                
+                if(!isFound){
+                    TblLlamada llamada = this.ejbLlamadaLocal.findUltimaLlamada(gestion.getIdGestion());                    
+                    gestion.setUltimaLLamada(llamada);
+                    resultList.add(gestion);
+                }                
+            }
+        }
+        return resultList;
     }
 
 }

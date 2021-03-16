@@ -40,9 +40,7 @@ public class LoginController implements Serializable {
 
     public void setUsuario(TblUsuario usuario) {
         this.usuario = usuario;
-    }
-
-    private String localeSelectedString;
+    }    
 
     /**
      *
@@ -57,18 +55,9 @@ public class LoginController implements Serializable {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 facesContext.getExternalContext().getSessionMap().put("usuario", obj);
                 redireccion = "operario/cartera";
-
-                Locale locale = facesContext.getExternalContext().getRequestLocale();
-                localeSelectedString = locale.getLanguage();
-                System.out.println("localeSelectedString: " + localeSelectedString);
-                System.out.println("====> Usuario             : " + obj.toString());
-
-                facesContext.getViewRoot().setLocale(new java.util.Locale("en", "US"));
-                locale = facesContext.getExternalContext().getRequestLocale();
-                localeSelectedString = locale.getLanguage();
-                System.out.println("localeSelectedString: " + localeSelectedString);
-                System.out.println("====> Usuario             : " + obj.toString());
-
+                
+                System.out.println("====> Usuario             : " + obj.toString());                
+                
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Credenciales incorrectas!"));
             }
