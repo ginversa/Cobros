@@ -265,7 +265,8 @@ public class UpdateGestionController implements Serializable {
     public void setSelectedLlamada(TblLlamada selectedLlamada) {
         this.selectedLlamada = selectedLlamada;
     }
-/*
+
+    /*
     public List<TblPromesa> getPromesaList() {
         return promesaList;
     }
@@ -273,7 +274,7 @@ public class UpdateGestionController implements Serializable {
     public void setPromesaList(List<TblPromesa> promesaList) {
         this.promesaList = promesaList;
     }
-*/
+     */
     public List<TblTelefono> getTelefonos() {
         return telefonos;
     }
@@ -329,7 +330,8 @@ public class UpdateGestionController implements Serializable {
     public void setMtoSaldoGestionCRC(BigDecimal mtoSaldoGestionCRC) {
         this.mtoSaldoGestionCRC = mtoSaldoGestionCRC;
     }
-/*
+
+    /*
     public List<TblGestionsaldo> getSaldoList() {
         return saldoList;
     }
@@ -337,7 +339,7 @@ public class UpdateGestionController implements Serializable {
     public void setSaldoList(List<TblGestionsaldo> saldoList) {
         this.saldoList = saldoList;
     }
-*/
+     */
     public List<TblGestion> getGestionList() {
         return gestionList;
     }
@@ -574,8 +576,7 @@ public class UpdateGestionController implements Serializable {
                             --- No Contesta
                             --- Mensaje Familiar
                          */
-                        
-                        /*
+ /*
                         if (!isNullIDTipificacion) {
                             boolean isPP = idTipificacion.equals(1) ? true : false;
                             
@@ -600,9 +601,7 @@ public class UpdateGestionController implements Serializable {
                                 }
                             }// Promesa de pago                                
                         }
-                        */
-                    
-
+                         */
                     }//for
 
                     // agregar promesas...
@@ -630,8 +629,7 @@ public class UpdateGestionController implements Serializable {
                             }
                         }
                     }// agregar promesas...
-                    */
-
+                     */
                     // agregar llamadas...
                     /*
                     if (llamadaConDatosList != null && !llamadaConDatosList.isEmpty() && llamadaConDatosList.size() > 0) {
@@ -639,7 +637,7 @@ public class UpdateGestionController implements Serializable {
                             this.gestion.getTblLlamadaList().add(llamadaConDatosList.get(index));
                         }
                     }
-                    */
+                     */
                 }
 
                 // actualizar gestion...
@@ -906,9 +904,9 @@ public class UpdateGestionController implements Serializable {
             }// index1
         }
     }
-    */
+     */
 
-    /*
+ /*
     ***************************************************************************
     ***************************************************************************
     **************************** Llamada **************************************
@@ -1610,9 +1608,9 @@ Arreglo de Pago
             }
             index++;
         }
-        
+
         int updateCount = this.ejbPromesaLocal.updateEstadoPromesa(this.gestion.getIdGestion(), "DEL");
-        System.out.println("Cantidad de registros actualizados, DEL: "+updateCount);
+        System.out.println("Cantidad de registros actualizados, DEL: " + updateCount);
     }
 
     /**
@@ -1789,7 +1787,7 @@ Arreglo de Pago
 
             boolean isOperacion = ope.trim().equals(pOperacion);
             boolean isTAP = tipoAP.trim().equals(pTipoAP);
-            boolean isCM = codigoMoneda.trim().equals(pCodigoMoneda);            
+            boolean isCM = codigoMoneda.trim().equals(pCodigoMoneda);
             boolean isDEL = estado.trim().equals(ConstanteComun.Registro_Borrado);
 
             if (isOperacion && isTAP && isCM && !isDEL) {
@@ -2150,7 +2148,7 @@ Arreglo de Pago
                 if (this.gestion.getTblPromesaList().get(index).getOperacion() != null) {
                     isTrueOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
                 }
-                
+
                 if (isTrueTelefono && isTrueOperacion && isTrueMtopago && isTrueFechaPago && isTrueEstado && isTrueTipoArreglo && isTrueMoneda) {
 
                     TblPromesa promesa = this.gestion.getTblPromesaList().get(index);
@@ -2334,7 +2332,7 @@ Arreglo de Pago
                                 }
                             }
 
-                            BigDecimal promesaSize = new BigDecimal(this.gestion.getTblPromesaList().size());                            
+                            BigDecimal promesaSize = new BigDecimal(this.gestion.getTblPromesaList().size());
 
                             BigDecimal cantidaRestante = contar.subtract(BigDecimal.ONE);
                             saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
@@ -2683,7 +2681,7 @@ Arreglo de Pago
                                 }
                             }
 
-                            BigDecimal promesaSize = new BigDecimal(this.gestion.getTblPromesaList().size());                            
+                            BigDecimal promesaSize = new BigDecimal(this.gestion.getTblPromesaList().size());
 
                             BigDecimal cantidaRestante = contar.subtract(BigDecimal.ONE);
                             saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
@@ -3014,13 +3012,14 @@ Arreglo de Pago
      */
     private void setGestionTOGestion(TblGestion pGestion) {
         this.gestion = pGestion;
+
         // Ultima Promesa.
         TblPromesa ultimaPromesa = this.ejbPromesaLocal.findPromesaUltimoPago(this.gestion.getIdGestion());
         if (ultimaPromesa != null) {
             this.gestion.setUltimaPromesa(ultimaPromesa);
         }
 
-        // Ultima llamada. Ultima Razon de Mora.
+        // Ultima llamada. Ultima Razon de Mora.        
         TblLlamada ultimaLlamada = this.ejbLlamadaLocal.findUltimaLlamada(this.gestion.getIdGestion());
         if (ultimaLlamada != null) {
             Razonmora ultimaRazonMora = ultimaLlamada.getIdrazonmora();
@@ -3029,9 +3028,14 @@ Arreglo de Pago
             }
         }
 
-        //this.saldoList = this.gestion.getTblGestionsaldoList();
         this.llamadaOperacionList = this.gestion.getTblLlamadaList();
-        //this.promesaList = this.gestion.getTblPromesaList();
+        if (this.llamadaOperacionList != null) {
+            for (int index = 0; index < this.llamadaOperacionList.size(); index++) {
+                TblLlamada llamada = this.llamadaOperacionList.get(index);
+                TblPromesa promesa = this.ejbPromesaLocal.findPromesaUltimoPago(this.gestion.getIdGestion(), llamada.getIdLlamada());
+                this.llamadaOperacionList.get(index).setUltimaPromesa(promesa);
+            }
+        }
 
         if (this.gestion.getLeyusura() != null && this.gestion.getLeyusura().equals("1")) {
             this.setLeyusuraIsRequired(true);
@@ -3041,7 +3045,6 @@ Arreglo de Pago
             this.setLeyusuraIsRequired(false);
             this.setLeyusuraDisabled(true);
         }
-
     }
 
     /**

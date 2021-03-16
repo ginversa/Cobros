@@ -7,6 +7,7 @@ package com.inversa.cobros.ejb;
 
 import com.inversa.cobros.dao.LlamadaDao;
 import com.inversa.cobros.model.TblLlamada;
+import com.inversa.cobros.model.TblPromesa;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -25,6 +26,9 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
 
     @Inject
     private LlamadaDao dao;
+
+    @Inject
+    private PromesaService ejbPromesaServiceLocal;
 
     @Override
     public List<TblLlamada> findAll() {
@@ -93,40 +97,52 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
 
     @Override
     public void insert(TblLlamada obj) {
-        try{
+        try {
             dao.insert(obj);
-            
-        }catch (Throwable t){
+
+        } catch (Throwable t) {
             contexto.setRollbackOnly();// hace rollback...
             t.printStackTrace(System.out);// imprime en consola el error
-        } 
+        }
     }
 
     @Override
     public void update(TblLlamada obj) {
-        try{
+        try {
             dao.update(obj);
-            
-        }catch (Throwable t){
+
+        } catch (Throwable t) {
             contexto.setRollbackOnly();// hace rollback...
             t.printStackTrace(System.out);// imprime en consola el error
-        } 
+        }
     }
 
     @Override
     public void delete(TblLlamada obj) {
-        try{
+        try {
             dao.delete(obj);
-            
-        }catch (Throwable t){
+
+        } catch (Throwable t) {
             contexto.setRollbackOnly();// hace rollback...
             t.printStackTrace(System.out);// imprime en consola el error
-        } 
+        }
     }
 
     @Override
     public TblLlamada findUltimaLlamada(Long idGestion) {
         return dao.findUltimaLlamada(idGestion);
+    }
+
+    @Override
+    public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera) {
+        List<TblLlamada> llamadas = dao.buscarLlamada(identificacion, codigoCartera);
+        
+        for (int i = 0; i < llamadas.size(); i++) {
+            TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
+            llamadas.get(i).setUltimaPromesa(promesaUltimoPago);            
+        }
+
+        return llamadas;
     }
 
 }

@@ -34,7 +34,15 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public TblGestion findById(TblGestion obj) {
-        return em.find(TblGestion.class, obj.getIdGestion());
+        Query query = em.createNamedQuery("TblGestion.findByIdGestion");
+        query.setParameter("idGestion", obj.getIdGestion());
+        List<TblGestion> found = query.getResultList();
+
+        if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {            
+            return found.get(0);
+        }
     }
 
     @Override
@@ -167,7 +175,7 @@ public class GestionDaoImpl implements GestionDao {
     public List<Cartera> findCarteraByDistinc() {
         Query query = em.createNativeQuery("select distinct tg.codigo_cartera, tg.nombre_cartera from tbl_gestion tg", Cartera.class);
         List<Cartera> results = query.getResultList();
-        if (results != null && !results.isEmpty() && results.size()>0) {
+        if (results != null && !results.isEmpty() && results.size() > 0) {
             return results;
         }
 
@@ -176,7 +184,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByCodigoGestorANDCodigoCartera",TblGestion.class);
+        Query query = em.createNamedQuery("TblGestion.findByCodigoGestorANDCodigoCartera", TblGestion.class);
         query.setParameter("codigoGestor", obj.getCodigoGestor());
         query.setParameter("codigoCartera", obj.getCodigoCartera());
         List<TblGestion> results = query.getResultList();

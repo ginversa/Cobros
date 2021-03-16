@@ -146,7 +146,7 @@ public class PromesaDaoImpl implements PromesaDao {
     public TblPromesa findPromesaUltimoPago(Long idGestion) {
 
         try {
-            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?2) order by tp.id_promesa desc", TblPromesa.class);
+            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?2 and tp.estado != 'DEL') and tp.estado != 'DEL' order by tp.id_promesa desc", TblPromesa.class);
             query.setParameter(1, idGestion);
             query.setParameter(2, idGestion);
             List<TblPromesa> found = query.getResultList();

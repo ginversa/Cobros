@@ -6,6 +6,7 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
+import com.inversa.cobros.ejb.LlamadaService;
 import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
@@ -32,7 +33,7 @@ public class BuscarGestionController implements Serializable {
     private GestionService ejbLocal;
 
     @Inject
-    private PromesaService ejbPromesaServiceLocal;
+    private LlamadaService ejbLlamadaServiceLocal;
 
     private List<TblGestion> gestionList;
     private TblGestion searchGestion;
@@ -56,24 +57,8 @@ public class BuscarGestionController implements Serializable {
             this.llamadaList.clear();
         }
         
-        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");        
-        this.searchGestion.setCodigoCartera(codigoCartera);
-
-        this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCartera(this.searchGestion);
-
-        if (this.gestionList != null && !this.gestionList.isEmpty() && this.gestionList.size() > 0) {
-            this.searchGestion = this.gestionList.get(0);
-            for (int index = 0; index < this.gestionList.size(); index++) {
-                List<TblLlamada> llamadas = this.gestionList.get(index).getTblLlamadaList();
-                if (llamadas != null && !llamadas.isEmpty() && llamadas.size() > 0) {
-                    for (int i = 0; i < llamadas.size(); i++) {
-                        TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(this.gestionList.get(index).getIdGestion(), llamadas.get(i).getIdLlamada());
-                        llamadas.get(i).setUltimaPromesa(promesaUltimoPago);
-                        this.llamadaList.add(llamadas.get(i));
-                    }
-                }
-            }
-        }
+        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
+        this.llamadaList = this.ejbLlamadaServiceLocal.buscarLlamada(this.searchGestion.getIdentificacion(), codigoCartera);
     }
     
 

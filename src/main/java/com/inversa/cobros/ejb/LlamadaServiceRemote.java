@@ -49,5 +49,7 @@ public interface LlamadaServiceRemote {
     public void update(TblLlamada obj);
 
     public void delete(TblLlamada obj);
+    
+    public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera);
 
 }

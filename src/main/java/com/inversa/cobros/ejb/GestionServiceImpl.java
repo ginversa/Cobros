@@ -7,8 +7,10 @@ package com.inversa.cobros.ejb;
 
 import com.inversa.cobros.dao.GestionDao;
 import com.inversa.cobros.model.Cartera;
+import com.inversa.cobros.model.Razonmora;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
+import com.inversa.cobros.model.TblPromesa;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -28,7 +30,10 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
 
     @Inject
     private GestionDao dao;
-    
+
+    @Inject
+    private PromesaService ejbPromesaService;
+
     @Inject
     private LlamadaService ejbLlamadaLocal;
 
@@ -39,7 +44,20 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
 
     @Override
     public TblGestion findById(TblGestion obj) {
-        return dao.findById(obj);
+        TblGestion entity = dao.findById(obj);
+/*
+        TblLlamada ultimaLLamada = this.ejbLlamadaLocal.findUltimaLlamada(entity.getIdGestion());
+        TblPromesa ultimaPromesa = this.ejbPromesaService.findPromesaUltimoPago(entity.getIdGestion());
+
+        entity.setUltimaLLamada(ultimaLLamada);
+        entity.setUltimaPromesa(ultimaPromesa);
+        if (ultimaLLamada != null && ultimaLLamada.getIdLlamada() != null) {
+            Razonmora ultimaRazonMora = ultimaLLamada.getIdrazonmora();
+            entity.setUltimaRazonMora(ultimaRazonMora);
+        }
+*/
+        return entity;
+
     }
 
     @Override
@@ -61,7 +79,6 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
     public List<TblGestion> findByCodigoGestor(TblGestion obj) {
         return dao.findByCodigoGestor(obj);
     }
-
 
     @Override
     public List<TblGestion> findByFechaGestion(TblGestion obj) {
@@ -135,37 +152,37 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
     public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj) {
         return dao.findByIdentificacionANDCodigoCartera(obj);
     }
-    
+
     @Override
-    public List<Cartera> findCarteraByDistinc(){
+    public List<Cartera> findCarteraByDistinc() {
         return dao.findCarteraByDistinc();
     }
 
     @Override
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj) {
         return dao.findByCodigoGestorANDCodigoCartera(obj);
-    }    
-    
+    }
+
     @Override
     public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj) {
         List<TblGestion> resultList = new ArrayList<>();
         List<TblGestion> gestionList = dao.findByIdentificacionANDCodigoCartera(obj);
-        if(gestionList != null){
-            for(int index = 0; index<gestionList.size();index++){
+        if (gestionList != null) {
+            for (int index = 0; index < gestionList.size(); index++) {
                 TblGestion gestion = gestionList.get(index);
                 String operacion = gestion.getOperacion();
                 boolean isFound = false;
-                for(int i=0; i<resultList.size();i++){
-                    if(resultList.get(i).getOperacion().trim().equals(operacion)){
+                for (int i = 0; i < resultList.size(); i++) {
+                    if (resultList.get(i).getOperacion().trim().equals(operacion)) {
                         isFound = true;
-                    }                    
+                    }
                 }
-                
-                if(!isFound){
-                    TblLlamada llamada = this.ejbLlamadaLocal.findUltimaLlamada(gestion.getIdGestion());                    
+
+                if (!isFound) {
+                    TblLlamada llamada = this.ejbLlamadaLocal.findUltimaLlamada(gestion.getIdGestion());
                     gestion.setUltimaLLamada(llamada);
                     resultList.add(gestion);
-                }                
+                }
             }
         }
         return resultList;

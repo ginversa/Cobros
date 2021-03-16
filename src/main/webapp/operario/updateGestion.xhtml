@@ -286,7 +286,7 @@
                                                     <h:outputText value="#{promesa.tipodescuento}" />
                                                 </p:column>
 
-                                                <p:column id="idPorcentajeTPL" headerText="Porcentaje" filterBy="#{promesa.mtoporcentaje}" filterMatchMode="contains" sortBy="#{promesa.mtoporcentaje}" >
+                                                <p:column id="idPorcentajeTPL" headerText="Monto o %*" filterBy="#{promesa.mtoporcentaje}" filterMatchMode="contains" sortBy="#{promesa.mtoporcentaje}" >
                                                     <h:outputText value="#{promesa.mtoporcentaje}" />
                                                 </p:column>                                               
                                                 <p:column id="idMontoPgoTMP" headerText="Monto Pago" filterBy="#{promesa.mtopago}" sortBy="#{promesa.mtopago}" >
@@ -847,73 +847,74 @@
                                                         </div>
                                                         <div class="col-sm">
                                                             <p:panelGrid columns="2" layout="grid">
-                                                                <p:commandButton id="idGuardarArreglodepagoCAT" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotal('CRC')}" process="@this" update="tblPromesaArregloPago" />
-                                                                <p:commandButton id="idBorrarArregloPago" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPago,txtSaldoOperacion,txtTipoDescuento,txtDescuentoPromesa,txtNewSaldoPromesa,txtFechaPago" />
+                                                                <p:commandButton id="idGuardarArreglodepagoCAT" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotal('CRC')}" process="@this" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago" />
+                                                                <p:commandButton id="idBorrarArregloPago" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                
                                                 <p:dataTable id="tblPromesaArregloPago" value="#{updateGestionController.gestion.tblPromesaList}" var="promesa"
-                                                             style="margin-bottom:20px"
-                                                             emptyMessage="No se encontraron registros."
-                                                             scrollable="true" rows="5"
-                                                             widgetVar="tblPromesaArregloPago"
-                                                             reflow="true" 
-                                                             editable="true">
+                                                     style="margin-bottom:20px"
+                                                     emptyMessage="No se encontraron registros."
+                                                     scrollable="true" rows="5"
+                                                     widgetVar="tblPromesaArregloPago"
+                                                     reflow="true" 
+                                                     editable="true">
 
-                                                    <p:column headerText="Operación" >
-                                                        <h:outputText value="#{promesa.operacion}" />
-                                                    </p:column>
+                                            <p:column headerText="Operación" >
+                                                <h:outputText value="#{promesa.operacion}" />
+                                            </p:column>
 
-                                                    <p:column headerText="Tipo Descuento" >
-                                                        <h:outputText value="#{promesa.tipodescuento}" />
-                                                    </p:column>
-                                                    <p:column headerText="Fecha Pago" >
-                                                        <p:cellEditor>
-                                                            <f:facet name="output">
-                                                                <h:outputText value="#{promesa.fechaPago}" >
-                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                                                </h:outputText>
-                                                            </f:facet>
-                                                            <f:facet name="input">
-                                                                <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" />
-                                                            </f:facet>
-                                                        </p:cellEditor>
-                                                    </p:column>                                                                                                       
-                                                    <p:column headerText="Monto o %" >
-                                                        <h:outputText value="#{promesa.mtoporcentaje}" />
-                                                    </p:column>
-                                                    <p:column headerText="Monto Promesa" >                                                
-                                                        <h:outputText value="#{promesa.mtopago}" >
-                                                            <f:convertNumber type="currency" currencySymbol="#{promesa.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                            <p:column headerText="Tipo Descuento" >
+                                                <h:outputText value="#{promesa.tipodescuento}" />
+                                            </p:column>
+                                            <p:column headerText="Fecha Pago" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output">
+                                                        <h:outputText value="#{promesa.fechaPago}" >
+                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                                         </h:outputText>
-                                                    </p:column>
-                                                    <p:column headerText="Moneda" >
-                                                        <h:outputText value="#{promesa.idMoneda.codigo}" />
-                                                    </p:column>
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" />
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>                                                                                                       
+                                            <p:column headerText="Monto o %" >
+                                                <h:outputText value="#{promesa.mtoporcentaje}" />
+                                            </p:column>
+                                            <p:column headerText="Monto Promesa" >                                                
+                                                <h:outputText value="#{promesa.mtopago}" >
+                                                    <f:convertNumber type="currency" currencySymbol="#{promesa.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Moneda" >
+                                                <h:outputText value="#{promesa.idMoneda.codigo}" />
+                                            </p:column>
 
-                                                    <p:column headerText="Estado" >
-                                                        <p:cellEditor>
-                                                            <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
-                                                            </f:facet>
-                                                            <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
-                                                                </p:selectOneMenu>
-                                                            </f:facet>
-                                                        </p:cellEditor>
-                                                    </p:column>
+                                            <p:column headerText="Estado" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output">
+                                                        <h:outputText value="#{promesa.estado}" />
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
+                                                            <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
+                                                            <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                        </p:selectOneMenu>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
 
-                                                    <p:column headerText="Editar" style="width:32px">
-                                                        <p:rowEditor />
-                                                    </p:column>
+                                            <p:column headerText="Editar" style="width:32px">
+                                                <p:rowEditor />
+                                            </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
-                                                </p:dataTable>
+                                            <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                            <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                        </p:dataTable>
+                                                
                                             </p:tab>
                                             <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas CRC" rendered="#{updateGestionController.isVisibleCancelacionTotalPorCuotas}" >
                                                 <div class="container">
@@ -975,7 +976,7 @@
                                                         <div class="col-sm">                                                
                                                             <p:panelGrid id="btpgArregloPagoCTC" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoCTC" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotalPorCuotas('CRC')}" process="@this txtSaldoOperacionCTC txtTipoDescuentoCTC txtDescuentoPromesaCTC txtNewSaldoPromesaCTC txtFechaPagoCTC txtCuotasCTC" update="tblPromesaArregloPagoCTC" />
-                                                                <p:commandButton id="idBorrarArregloPagoCTC" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoCTC,txtSaldoOperacionCTC,txtTipoDescuentoCTC,txtDescuentoPromesaCTC,txtNewSaldoPromesaCTC,txtFechaPagoCTC,txtCuotasCTC" />
+                                                                <p:commandButton id="idBorrarArregloPagoCTC" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1108,7 +1109,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPago" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoREF" value="Generar" actionListener="#{updateGestionController.agregarRefinanciamiento('CRC')}" process="@this txtCuotasREF" update="tblPromesaArregloPagoREF" />
-                                                                <p:commandButton id="idBorrarArregloPagoREF" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoREF,txtSaldoOperacionREF,txtDescuentoPromesaREF,txtNewSaldoPromesaREF,txtFechaPagoREF,txtCuotasREF" />
+                                                                <p:commandButton id="idBorrarArregloPagoREF" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1213,7 +1214,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPagoPAP" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoPAP" value="Generar" actionListener="#{updateGestionController.agregarPagoParcial('CRC')}" process="@this txtNewSaldoPromesaPAP" update="tblPromesaArregloPagoPAP,:formGestion:idTabView:idTablePromesaLlamada" />
-                                                                <p:commandButton id="idBorrarArregloPagoPAP" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoPAP,txtSaldoOperacionPAP,txtNewSaldoPromesaPAP,txtFechaPagoPAP" />
+                                                                <p:commandButton id="idBorrarArregloPagoPAP" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1322,7 +1323,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoCATUSD" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotal('USD')}" process="@this" update="tblPromesaArregloPagoUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoUSD,txtSaldoOperacionUSD,txtTipoDescuentoUSD,txtDescuentoPromesaUSD,txtNewSaldoPromesaUSD,txtFechaPagoUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>
@@ -1449,7 +1450,7 @@
                                                         <div class="col-sm">                                                
                                                             <p:panelGrid id="btpgArregloPagoCTCUSD" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoCTCUSD" value="Generar" actionListener="#{updateGestionController.agregarCancelacionTotalPorCuotas('USD')}" process="@this txtSaldoOperacionCTCUSD txtTipoDescuentoCTCUSD txtDescuentoPromesaCTCUSD txtNewSaldoPromesaCTCUSD txtFechaPagoCTCUSD txtCuotasCTCUSD" update="tblPromesaArregloPagoCTCUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoCTCUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoCTCUSD,txtSaldoOperacionCTCUSD,txtTipoDescuentoCTCUSD,txtDescuentoPromesaCTCUSD,txtNewSaldoPromesaCTCUSD,txtFechaPagoCTCUSD,txtCuotasCTCUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoCTCUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1582,7 +1583,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPago" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoREFUSD" value="Generar" actionListener="#{updateGestionController.agregarRefinanciamiento('USD')}" process="@this txtCuotasREFUSD" update="tblPromesaArregloPagoREFUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoREFUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoREFUSD,txtSaldoOperacionREFUSD,txtDescuentoPromesaREFUSD,txtNewSaldoPromesaREFUSD,txtFechaPagoREFUSD,txtCuotasREFUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoREFUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1687,7 +1688,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPagoPAPUSD" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoPAPUSD" value="Generar" actionListener="#{updateGestionController.agregarPagoParcial('USD')}" process="@this txtNewSaldoPromesaPAPUSD" update="tblPromesaArregloPagoPAPUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoPAPUSD" value="Limpiar" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoPAPUSD,txtSaldoOperacionPAPUSD,txtNewSaldoPromesaPAPUSD,txtFechaPagoPAPUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoPAPUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1753,6 +1754,64 @@
                     <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
                         <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" process="@this"/>
+                    </p:confirmDialog>
+
+                    <p:confirmDialog widgetVar="deletePromesaCRCDialog" showEffect="fade" width="300" message="Eliminar Arreglo de Pago?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacion
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuento
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesa
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesa
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPago                                                                                                                                                                     
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionCTC
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuentoCTC
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaCTC
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaCTC
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoCTC
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasCTC
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionREF
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaREF
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaREF
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoREF
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasREF
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionPAP
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaPAP
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoPAP
+                                                                                                                                                                     "
+                                                                                                                                                                     oncomplete="PF('deletePromesaCRCDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaCRCDialog').hide()" process="@this" />
+                    </p:confirmDialog>
+                    
+                    <p:confirmDialog widgetVar="deletePromesaUSDDialog" showEffect="fade" width="300" message="Eliminar Arreglo de Pago?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoUSD                                                                                                                                                                     
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionCTCUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoCTCUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaCTCUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaCTCUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoCTCUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasCTCUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionREFUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaREFUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaREFUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoREFUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasREFUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionPAPUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaPAPUSD
+                                                                                                                                                                     , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoPAPUSD
+                                                                                                                                                                     "
+                                                                                                                                                                     oncomplete="PF('deletePromesaUSDDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaUSDDialog').hide()" process="@this" />
                     </p:confirmDialog>
                 </div>
             </div>
