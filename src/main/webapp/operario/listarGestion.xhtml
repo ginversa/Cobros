@@ -33,8 +33,10 @@
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >
 
-                            <p:column headerText="Identificación" filterBy="#{gestion.identificacion}" filterMatchMode="contains" sortBy="#{gestion.identificacion}" >
-                                <h:outputText value="#{gestion.identificacion}" />
+                            <p:column headerText="Identificación" filterBy="#{gestion.identificacion}" filterMatchMode="contains" sortBy="#{gestion.identificacion}" >                                
+                                <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(gestion)}" >
+                                    <h:outputText value="#{gestion.identificacion}" />
+                                </p:commandLink>
                             </p:column>
                             <p:column headerText="Nombre" filterBy="#{gestion.nombreCliente}" filterMatchMode="contains" sortBy="#{gestion.nombreCliente}" >
                                 <h:outputText value="#{gestion.nombreCliente}" />

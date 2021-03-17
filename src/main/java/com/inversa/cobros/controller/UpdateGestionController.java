@@ -1615,10 +1615,10 @@ Arreglo de Pago
 
     /**
      * Remueve las promesas, segun operacion y tipo de arrglo de pago.
-     *
      * @param operacion
      * @param arregloPago
-     */
+     * @param codigoMoneda 
+     */     
     public void deleteByOperacionAndArregloPago(String operacion, String arregloPago, String codigoMoneda) {
         int index = 0;
         while (this.gestion.getTblPromesaList().size() > 0 && this.gestion.getTblPromesaList().size() > index) {

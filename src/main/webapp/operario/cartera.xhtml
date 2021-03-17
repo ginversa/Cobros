@@ -35,9 +35,12 @@
                                              styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                              emptyMessage="No se encontraron registros." >
 
-                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >
-                                        <h:outputText value="#{promesa.idGestion.identificacion}" />
+                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >                                        
+                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(promesa.idGestion)}" >
+                                            <h:outputText value="#{promesa.idGestion.identificacion}" />
+                                        </p:commandLink>
                                     </p:column>
+                                    
                                     <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
                                         <h:outputText value="#{promesa.idGestion.nombreCliente}" />
                                     </p:column>                                               
@@ -77,10 +80,13 @@
                                              reflow="true" scrollable="true" scrollHeight="1050"
                                              styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                              emptyMessage="No se encontraron registros." >
-
-                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >
-                                        <h:outputText value="#{promesa.idGestion.identificacion}" />
+                                    
+                                    <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >                                        
+                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(promesa.idGestion)}" >
+                                            <h:outputText value="#{promesa.idGestion.identificacion}" />
+                                        </p:commandLink>
                                     </p:column>
+                                    
                                     <p:column headerText="Nombre" filterBy="#{promesa.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{promesa.idGestion.nombreCliente}" >
                                         <h:outputText value="#{promesa.idGestion.nombreCliente}" />
                                     </p:column>                                               

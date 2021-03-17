@@ -163,7 +163,7 @@ public class PromesaDaoImpl implements PromesaDao {
 
     @Override
     public List<TblPromesa> findByFechaPagoAndUsuarioIngreso(TblPromesa obj, String codigo_gestor, String codigo_cartera) {
-        Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.fecha_pago = ?1 and tp.usuarioingreso = ?2 and EXISTS (select tg.id_gestion from tbl_gestion tg where tg.codigo_gestor = ?3 and tg.codigo_cartera = ?4)", TblPromesa.class);
+        Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.fecha_pago = ?1 and tp.usuarioingreso = ?2 and tp.estado != 'DEL' and EXISTS (select tg.id_gestion from tbl_gestion tg where tg.codigo_gestor = ?3 and tg.codigo_cartera = ?4) order by tp.id_promesa desc", TblPromesa.class);
         query.setParameter(1, obj.getFechaPago(), TemporalType.DATE);
         query.setParameter(2, obj.getUsuarioingreso());
         query.setParameter(3, codigo_gestor);

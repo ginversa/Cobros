@@ -132,48 +132,15 @@ public class CarteraController implements Serializable {
                                 if (llamada.getIdrazonmora() != null) {
                                     razonMora = llamada.getIdrazonmora().getDescripcion();
                                 }
-/*
-                                List<TblPromesa> promesaList = llamada.getTblPromesaList();
-                                if (promesaList != null && !promesaList.isEmpty()) {
-                                    for (int indexPromesa = 0; indexPromesa < promesaList.size(); indexPromesa++) {
-                                        TblPromesa promesa = promesaList.get(indexPromesa);
-                                        Date fechaPago = promesa.getFechaPago();
-                                        String operacionPromesa = promesa.getOperacion();
-                                        if (fechaUltimaPromesa == null && operacion.equals(operacionPromesa)) {
-                                            fechaUltimaPromesa = fechaPago;
-                                            montoUltimaPromesa = promesa.getMtopago();
-                                        } else if (fechaPago != null && fechaUltimaPromesa.before(fechaPago) && operacion.equals(operacionPromesa)) {
-                                            fechaUltimaPromesa = fechaPago;
-                                            montoUltimaPromesa = promesa.getMtopago();
-                                        }
-                                    }
-                                }
-*/
 
                             } else if (fechaingresoMax.before(fechaingreso)) {// fechaingresoMax is before fechaingreso. fecha es mayor
                                 fechaingresoMax = fechaingreso;
                                 if (llamada.getIdrazonmora() != null) {
                                     razonMora = llamada.getIdrazonmora().getDescripcion();
                                 }
-/*
-                                List<TblPromesa> promesaList = llamada.getTblPromesaList();
-                                if (promesaList != null && !promesaList.isEmpty()) {
-                                    for (int indexPromesa = 0; indexPromesa < promesaList.size(); indexPromesa++) {
-                                        TblPromesa promesa = promesaList.get(indexPromesa);
-                                        Date fechaPago = promesa.getFechaPago();
-                                        if (fechaUltimaPromesa == null) {
-                                            fechaUltimaPromesa = fechaPago;
-                                            montoUltimaPromesa = promesa.getMtopago();
-                                        } else if (fechaUltimaPromesa.before(fechaPago)) {
-                                            fechaUltimaPromesa = fechaPago;
-                                            montoUltimaPromesa = promesa.getMtopago();
-                                        }
-                                    }
-                                }
-*/
                             }
-                        }
-                    }
+                        }//for
+                    }//if
 
                     this.carteraList.get(index).setFechaUltimaGestion(fechaUltimaGestion);
                     this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);                    
