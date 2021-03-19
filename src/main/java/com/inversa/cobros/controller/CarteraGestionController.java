@@ -110,10 +110,10 @@ public class CarteraGestionController implements Serializable {
 
     @Inject
     private ClienteService ejbClienteLocal;
-
+    
     @Inject
     private CarteraController carteraController;
-
+    
     @Inject
     private TipificacionController tipificacionController;
 
@@ -154,9 +154,10 @@ public class CarteraGestionController implements Serializable {
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         this.fechaHoy = Calendar.getInstance();
         this.gestion = new TblGestion();
+        this.tipoDescuentoList = new ArrayList<>();
 
-        this.selectedCartera = this.carteraController.getCartera();
-        this.setCarteraTOGestion(this.selectedCartera);
+        //this.selectedCartera = this.getSelectedCartera();
+        this.setCarteraTOGestion(this.carteraController.getCartera());
 
         this.promesaList = new ArrayList<TblPromesa>();
         this.telefono = new TblTelefono();
@@ -166,44 +167,11 @@ public class CarteraGestionController implements Serializable {
         this.mtoSaldoOperacion = new BigDecimal(BigInteger.ZERO);
         this.mtoDescuentoPromesa = new BigDecimal(BigInteger.ZERO);
         this.mtoSaldoPromesa = new BigDecimal(BigInteger.ZERO);
-
         this.mtoSaldoOperacionUSD = new BigDecimal(BigInteger.ZERO);
         this.mtoDescuentoPromesaUSD = new BigDecimal(BigInteger.ZERO);
         this.mtoSaldoPromesaUSD = new BigDecimal(BigInteger.ZERO);
-
-        TblCliente cliente = this.selectedCartera.getIdCliente();
-        if (cliente != null) {
-            this.prefijoSalidaList = cliente.getTblPrefijoSalidaList();
-            if (this.prefijoSalidaList != null && !this.prefijoSalidaList.isEmpty()) {
-                //prefijoSalidaSelected = this.prefijoSalidaList.get(0);
-            }
-        }
-
         this.mtoSaldoGestionCRC = BigDecimal.ZERO;
-
-        this.tipoDescuentoList = new ArrayList<>();
-        String codigo_cliente = this.gestion.getCodigo_cliente();
-        if (codigo_cliente != null && !codigo_cliente.trim().equals("")) {
-            if (codigo_cliente.trim().equals(ConstanteComun.Credomatic)) {// Credomatic
-                TipoDescuento tdFij = new TipoDescuento("FIJ", "Monto Fijo");
-                TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
-                this.tipoDescuentoList.add(tdFij);
-                this.tipoDescuentoList.add(tdPor);
-                this.isVisibleCancelacionTotalPorCuotas = true;
-
-            } else if (codigo_cliente.trim().equals(ConstanteComun.Davivienda)) {//Davivienda                
-                TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
-                this.tipoDescuentoList.add(tdPor);
-                this.isVisibleCancelacionTotalPorCuotas = false;// desavilita el tab, Cancelación total por cuotas
-
-            } else {
-                this.isVisibleCancelacionTotalPorCuotas = true;
-            }
-
-        } else {
-            this.isVisibleCancelacionTotalPorCuotas = true;
-        }
-
+        
     }
 
     /**
@@ -444,6 +412,7 @@ public class CarteraGestionController implements Serializable {
      */
     public void setCarteraTOGestion(TblCartera objCartera) {
         if (objCartera != null) {
+            this.setSelectedCartera(objCartera);
             String codigoCartera = objCartera.getCodigoCartera();
             String codigoGestor = usuario.getCodigoGestor();
             String identificacion = objCartera.getIdentificacion();
@@ -521,6 +490,37 @@ public class CarteraGestionController implements Serializable {
             obj.setIdentificacion(identificacion);
             this.carteraList = this.ejbCarteraLocal.findByCarteraGestorIdentificacion(obj);
             this.buscarGestion();
+
+            TblCliente cliente = this.selectedCartera.getIdCliente();
+            if (cliente != null) {
+                this.prefijoSalidaList = cliente.getTblPrefijoSalidaList();
+            }
+
+            if(this.tipoDescuentoList == null){
+                this.tipoDescuentoList = new ArrayList<>();
+            }
+            
+            String codigo_cliente = this.gestion.getCodigo_cliente();
+            if (codigo_cliente != null && !codigo_cliente.trim().equals("")) {
+                if (codigo_cliente.trim().equals(ConstanteComun.Credomatic)) {// Credomatic
+                    TipoDescuento tdFij = new TipoDescuento("FIJ", "Monto Fijo");
+                    TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
+                    this.tipoDescuentoList.add(tdFij);
+                    this.tipoDescuentoList.add(tdPor);
+                    this.isVisibleCancelacionTotalPorCuotas = true;
+
+                } else if (codigo_cliente.trim().equals(ConstanteComun.Davivienda)) {//Davivienda                
+                    TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
+                    this.tipoDescuentoList.add(tdPor);
+                    this.isVisibleCancelacionTotalPorCuotas = false;// desavilita el tab, Cancelación total por cuotas
+
+                } else {
+                    this.isVisibleCancelacionTotalPorCuotas = true;
+                }
+
+            } else {
+                this.isVisibleCancelacionTotalPorCuotas = true;
+            }
 
         }
     }
@@ -3066,7 +3066,6 @@ Arreglo de Pago
         }
     }//buscarGestion
 
-    
     /**
      *
      * @param llamada

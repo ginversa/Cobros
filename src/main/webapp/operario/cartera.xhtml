@@ -128,7 +128,7 @@
                                              emptyMessage="No se encontraron registros." >
 
                                     <p:column id="idIdentificacion" headerText="Identificación" filterBy="#{cartera.identificacion}" filterMatchMode="contains" sortBy="#{cartera.identificacion}" >
-                                        <p:commandLink action="carteraGestion" actionListener="#{carteraController.setCartera(cartera)}" >
+                                        <p:commandLink action="carteraGestion" actionListener="#{carteraController.setCartera(cartera)}" process="@this" >
                                             <h:outputText value="#{cartera.identificacion}" />
                                         </p:commandLink>                        
                                     </p:column>                               

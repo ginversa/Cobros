@@ -7,10 +7,8 @@ package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.LlamadaService;
-import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
-import com.inversa.cobros.model.TblPromesa;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

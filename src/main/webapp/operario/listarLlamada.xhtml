@@ -34,7 +34,7 @@
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >
-                            
+
                             <p:column headerText="Nombre" filterBy="#{llamada.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{llamada.idGestion.nombreCliente}" >
                                 <h:outputText value="#{llamada.idGestion.nombreCliente}" />
                             </p:column>
@@ -53,15 +53,15 @@
                             <p:column headerText="Sub-Tipificación" filterBy="#{llamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idSubtipificacion.descripcion}" >
                                 <h:outputText value="#{llamada.idSubtipificacion.descripcion}" />
                             </p:column>
-                            
+
                             <p:column headerText="Resultado Gestión" filterBy="#{llamada.idResultadogestion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadogestion.descripcion}" >
                                 <h:outputText value="#{llamada.idResultadogestion.descripcion}" />
                             </p:column>
-                            
+
                             <p:column headerText="Respuesta" filterBy="#{llamada.idResultadotercero.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadotercero.descripcion}" >
                                 <h:outputText value="#{llamada.idResultadotercero.descripcion}" />
                             </p:column>
-                            
+
                             <p:column headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
                                 <h:outputText value="#{llamada.idrazonmora.descripcion}" />
                             </p:column>
@@ -76,7 +76,7 @@
                             <p:column headerText="Dial_Status" filterBy="#{llamada.dialstatus}" filterMatchMode="contains" sortBy="#{llamada.dialstatus}" >
                                 <h:outputText value="#{llamada.dialstatus}" />
                             </p:column>
-                            <p:column headerText="Call_From_Number" filterBy="#{llamada.callFromNumber}" filterMatchMode="contains" sortBy="#{llamada.callFromNumber}" >
+                            <p:column headerText="Extensión" filterBy="#{llamada.callFromNumber}" filterMatchMode="contains" sortBy="#{llamada.callFromNumber}" >
                                 <h:outputText value="#{llamada.callFromNumber}" />
                             </p:column>                            
                             <p:column headerText="Date_Ini" filterBy="#{llamada.dateIni}" sortBy="#{llamada.dateIni}" >
@@ -89,9 +89,15 @@
                                     <f:convertDateTime dateStyle="full" pattern="yyyy/MM/dd HH:mm:ss" />
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="Call_Log_Id" filterBy="#{llamada.callLogId}" filterMatchMode="contains" sortBy="#{llamada.callLogId}" >
-                                <h:outputText value="#{llamada.callLogId}" />
+                            <p:column headerText="Escuchar">
+                                <p:commandButton actionListener="#{llamarController.escucharLlamada(llamada)}" icon="pi pi-volume-up" styleClass="info-button rounded-button p-mr-2 p-mb-2" />
                             </p:column>                            
+
+                            <p:column headerText="Descargar">
+                                <p:commandButton ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-download" styleClass="info-button rounded-button p-mr-2 p-mb-2">
+                                    <p:fileDownload value="#{llamarController.getFileDownloadView(llamada)}"/>
+                                </p:commandButton>
+                            </p:column>
                         </p:dataTable>
                     </div>
                 </div>
