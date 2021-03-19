@@ -24,7 +24,6 @@ import javax.inject.Named;
  */
 @Named
 @SessionScoped
-
 public class BuscarGestionController implements Serializable {
 
     @Inject

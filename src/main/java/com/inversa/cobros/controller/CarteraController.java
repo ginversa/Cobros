@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +28,7 @@ import javax.inject.Named;
  * @author Z420WK
  */
 @Named
-@RequestScoped
+@SessionScoped
 public class CarteraController implements Serializable {
 
     @Inject
@@ -83,7 +83,7 @@ public class CarteraController implements Serializable {
     }
 
     public List<TblCartera> getCarteraList() {
-        return carteraList;
+        return this.carteraList;
     }
 
     public void setCarteraList(List<TblCartera> carteraList) {

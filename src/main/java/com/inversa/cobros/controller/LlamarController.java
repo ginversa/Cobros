@@ -15,8 +15,6 @@ import com.inversa.cobros.model.TblUrlLlamada;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,8 +32,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
@@ -43,7 +41,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.FileUtils;
-import org.primefaces.model.DefaultScheduleEvent.Builder;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -52,7 +49,7 @@ import org.primefaces.model.StreamedContent;
  * @author Z420WK
  */
 @Named
-@RequestScoped
+@ViewScoped
 public class LlamarController implements Serializable {
 
     @Inject

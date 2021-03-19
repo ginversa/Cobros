@@ -3,6 +3,7 @@
     <persistence-unit name="cobrosPU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/cobrosPool</jta-data-source>
+        <non-jta-data-source>jdbc/cobrosPool</non-jta-data-source>
         <class>com.inversa.cobros.model.TblContacto</class>
         <class>com.inversa.cobros.model.TblDireccion</class>
         <class>com.inversa.cobros.model.TblCorreo</class>
