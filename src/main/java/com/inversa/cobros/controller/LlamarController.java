@@ -148,11 +148,11 @@ public class LlamarController implements Serializable {
 
         TblCentral central = this.prefijoSalidaList.get(0).getTblCentral();
         this.http = central.getProtocolo();
-        this.ip_publica = "192.168.7.201";//central.getIpCentral();
+        this.ip_publica = central.getIpCentral();
         this.directorioCentral = central.getDirectorio();
         //TblUrlLlamada urlLlamar = central.getTblUrlLlamadaList().get(2);// llamar. Buscar servicio para llamar.
         this.servicio = "llamar.php?ext=";//urlLlamar.getServicio();
-        this.ext = "118";//this.usuario.getExtEnsion();
+        this.ext = this.usuario.getExtEnsion();
         this.parametro = "&escuchar=";//urlLlamar.getParametro();        
         String URL_LLAMAR = this.http + this.ip_publica + this.directorioCentral + this.servicio + this.ext + this.parametro + callLogId;
         System.out.println("URL_LLAMAR: " + URL_LLAMAR);
@@ -392,7 +392,7 @@ public class LlamarController implements Serializable {
 
         TblCentral central = this.prefijoSalidaList.get(0).getTblCentral();
         this.http = central.getProtocolo();
-        this.ip_publica = "192.168.7.201";//central.getIpCentral();
+        this.ip_publica = central.getIpCentral();
         this.directorioCentral = central.getDirectorio();
         //TblUrlLlamada urlLlamar = central.getTblUrlLlamadaList().get(2);// llamar. Buscar servicio para llamar.
         this.servicio = "consultar.php?call_log_id=";//urlLlamar.getServicio();
