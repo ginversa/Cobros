@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.validation.ConstraintViolationException;
 
 /**
  *
@@ -40,7 +41,7 @@ public class GestionDaoImpl implements GestionDao {
 
         if (found.isEmpty()) {
             return null; //or throw checked exception data not found
-        } else {            
+        } else {
             return found.get(0);
         }
     }
@@ -127,10 +128,16 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public void insert(TblGestion obj) {
-        em.persist(obj);
-        em.flush();
-        em.refresh(obj);
-        System.out.println("Gestion ID: " + obj.getIdGestion());
+        try {
+            em.persist(obj);
+            em.flush();
+            em.refresh(obj);
+            System.out.println("Gestion ID: " + obj.getIdGestion());
+        } catch (ConstraintViolationException e) {
+            //log.log(Level.SEVERE, "Exception: ");
+            //e.getConstraintViolations().forEach(err -> log.log(Level.SEVERE, err.toString()));
+            System.out.println("insert Gestion : " + e.getMessage());
+        }
 
     }
 

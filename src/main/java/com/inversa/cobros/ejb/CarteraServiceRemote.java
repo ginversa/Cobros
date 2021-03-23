@@ -55,5 +55,7 @@ public interface CarteraServiceRemote {
     public void update(TblCartera obj);
 
     public void delete(TblCartera obj);
+    
+    public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera);
 
 }

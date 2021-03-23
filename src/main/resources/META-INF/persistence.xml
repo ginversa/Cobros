@@ -37,6 +37,7 @@
     <persistence-unit name="findmePU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/findmePool</jta-data-source>
+        <non-jta-data-source>jdbc/findmePool</non-jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.target-database" value="PostgreSQL"/>

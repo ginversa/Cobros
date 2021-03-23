@@ -174,13 +174,14 @@ public class CarteraDaoImpl implements CarteraDao {
         return results;
     }
 
-    /*
-    public List<TblCartera> findByCodigoGestorANDCodigoCartera(TblCartera objCartera) {
-        TypedQuery<TblCartera> query = em.createNamedQuery("TblCartera.findByCodigoGestorANDCodigoCartera", TblCartera.class);
-        query.setParameter("codigoGestor", objCartera.getCodigoGestor());
-        query.setParameter("codigoCartera", objCartera.getCodigoCartera());
+    @Override
+    public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera) {
+        Query query = em.createNativeQuery("select cartera.* from tbl_cartera cartera where cartera.codigo_cartera = ?1 and cartera.codigo_gestor = ?2 and cartera.identificacion = ?3 and not exists (select tg.id_gestion from tbl_gestion tg where tg.operacion = cartera.numero_cuenta)", TblCartera.class);
+        query.setParameter(1, objCartera.getCodigoCartera());
+        query.setParameter(2, objCartera.getCodigoGestor());
+        query.setParameter(3, objCartera.getIdentificacion());
         List<TblCartera> results = query.getResultList();
         return results;
     }
-     */
+    
 }

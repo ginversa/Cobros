@@ -145,4 +145,16 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
         return llamadas;
     }
 
+    @Override
+    public List<TblLlamada> buscarPorTelefono(String telefono, String codigoCartera) {
+        List<TblLlamada> llamadas = dao.buscarPorTelefono(telefono, codigoCartera);
+        
+        for (int i = 0; i < llamadas.size(); i++) {
+            TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
+            llamadas.get(i).setUltimaPromesa(promesaUltimoPago);            
+        }
+
+        return llamadas;
+    }
+
 }

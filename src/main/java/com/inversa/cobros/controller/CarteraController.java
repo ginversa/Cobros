@@ -22,6 +22,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.tabview.TabView;
+import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -36,42 +39,31 @@ public class CarteraController implements Serializable {
 
     @Inject
     private GestionService ejbGestionLocal;
-    
+
     @Inject
     private PromesaService ejbPromesaLocal;
 
+    @Inject
+    private ListarPromesaController listarPromesaController;
+
     private TblCartera cartera;
     private String observaciones;
-    
+
     private List<TblCartera> carteraList;
     private TblUsuario usuario;
     private Calendar fechaHoy;
 
+    private String codigoGestor;
+    private String codigoCartera;
+
     @PostConstruct
     public void init() {
-        
         this.fechaHoy = Calendar.getInstance();
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        String codigoGestor = this.usuario.getCodigoGestor();        
-        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
+        this.codigoGestor = this.usuario.getCodigoGestor();
+        this.codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");        
+        this.cargarCartera();
         
-        if(codigoGestor != null){
-            this.cartera = new TblCartera();
-            this.cartera.setCodigoGestor(codigoGestor);
-            this.fechaHoy.set(Calendar.YEAR, 2020);
-            this.fechaHoy.set(Calendar.MONTH, 11);
-            this.fechaHoy.set(Calendar.DAY_OF_MONTH, 30);
-            this.cartera.setFechaIngreso(this.fechaHoy.getTime());
-            if(codigoCartera != null && !codigoCartera.trim().equals("")){
-                this.cartera.setCodigoCartera(codigoCartera);
-                this.carteraList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(this.cartera);
-            }else{
-                this.carteraList = this.ejbLocal.findByCodigoGestor(this.cartera);
-            }
-            
-            this.buscarGestion();
-        }
-
     }
 
     public TblCartera getCartera() {
@@ -96,7 +88,7 @@ public class CarteraController implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
-    }    
+    }
 
     /**
      *
@@ -112,15 +104,15 @@ public class CarteraController implements Serializable {
                 TblGestion gestion = new TblGestion();
                 gestion.setCodigoCartera(codigoCartera);
                 gestion.setIdentificacion(identificacion);
-                
+
                 gestion = this.ejbGestionLocal.findByCodigoCarteraANDIdentificacion(gestion);
                 if (gestion != null) {
 
                     Date fechaUltimaGestion = gestion.getFechaGestion();
                     String razonMora = "";
-                    
+
                     TblPromesa ultimaPromesa = this.ejbPromesaLocal.findPromesaUltimoPago(gestion.getIdGestion());
-                            
+
                     List<TblLlamada> llamadaList = gestion.getTblLlamadaList();
                     if (llamadaList != null && !llamadaList.isEmpty()) {
                         Date fechaingresoMax = null;
@@ -143,11 +135,76 @@ public class CarteraController implements Serializable {
                     }//if
 
                     this.carteraList.get(index).setFechaUltimaGestion(fechaUltimaGestion);
-                    this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);                    
+                    this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);
                     this.carteraList.get(index).setRazonMora(razonMora);
                 }// if Gestion
             }
         }
     }//buscarGestion
+
+    /*
+    ***************************************************************************
+    ***************************************************************************
+    ***************************************************************************
+    */
+    
+    /**
+     * 
+     */
+    public void cargarCartera() {
+        if (this.codigoGestor != null) {
+            this.cartera = new TblCartera();
+            this.cartera.setCodigoGestor(this.codigoGestor);
+            this.fechaHoy.set(Calendar.YEAR, 2020);
+            this.fechaHoy.set(Calendar.MONTH, 11);
+            this.fechaHoy.set(Calendar.DAY_OF_MONTH, 30);
+            this.cartera.setFechaIngreso(this.fechaHoy.getTime());
+            if (this.codigoCartera != null && !this.codigoCartera.trim().equals("")) {
+                this.cartera.setCodigoCartera(this.codigoCartera);
+                this.carteraList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(this.cartera);
+            } else {
+                this.carteraList = this.ejbLocal.findByCodigoGestor(this.cartera);
+            }
+
+            this.buscarGestion();
+        }
+    }
+
+    private Integer activeTabIndex = 0;
+
+    public Integer getActiveTabIndex() {
+        return activeTabIndex;
+    }
+
+    public void setActiveTabIndex(Integer activeTabIndex) {
+        this.activeTabIndex = activeTabIndex;
+    }
+
+    /**
+     * 
+     * @param event 
+     */
+    public void onTabViewChange(TabChangeEvent event) {
+        TabView tv = (TabView) event.getComponent();
+        this.activeTabIndex = tv.getActiveIndex();
+
+        int index = tv.getChildren().indexOf(event.getTab());
+        switch (index) {
+            case 1:
+                this.listarPromesaController.cargarPromesas();
+                PrimeFaces.current().ajax().update("formCartera:idTabViewCartera:idDTPromesas");
+                break;
+            case 2:
+                this.listarPromesaController.cargarRecordatorio();
+                PrimeFaces.current().ajax().update("formCartera:idTabViewCartera:idDTRecordatorio");
+                break;
+            case 3:
+                this.cargarCartera();
+                PrimeFaces.current().ajax().update("formCartera:idTabViewCartera:idDTCartera");
+                break;
+            default:
+                break;
+        }
+    }
 
 }

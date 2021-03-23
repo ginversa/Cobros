@@ -61,65 +61,86 @@ public class TblLlamada implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_llamada")
     private Long idLlamada;
+    
     @Size(max = 2147483647)
     @Column(name = "call_log_id")
     private String callLogId;
+    
     @Column(name = "date_ini")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateIni;
+    
     @Column(name = "date_end")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateEnd;
+    
     @Size(max = 5)
     @Column(name = "call_from_number")
     private String callFromNumber;
+    
     @Size(max = 50)
     @Column(name = "call_to_number")
     private String callToNumber;
+    
     @Size(max = 50)
     @Column(name = "dialstatus")
     private String dialstatus;
+    
     @Column(name = "call_length")
     @Temporal(TemporalType.TIMESTAMP)
     private Date callLength;
+    
     @Column(name = "conversation_length")
     private Integer conversationLength;
+    
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
+    
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
+    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+    
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
+    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
+    
     @JoinColumn(name = "idrazonmora", referencedColumnName = "idrazonmora")
     @ManyToOne(fetch = FetchType.LAZY)
     private Razonmora idrazonmora;
+    
     @JoinColumn(name = "id_subtipificacion", referencedColumnName = "id_subtipificacion")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Subtipificacion idSubtipificacion;
+    
     @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblGestion idGestion;
+    
     @JoinColumn(name = "id_resultadogestion", referencedColumnName = "id_resultadogestion")
     @ManyToOne(fetch = FetchType.LAZY)
     private TblResultadogestion idResultadogestion;
+    
     @JoinColumn(name = "id_resultadotercero", referencedColumnName = "id_resultadotercero")
     @ManyToOne(fetch = FetchType.LAZY)
     private TblResultadotercero idResultadotercero;
+    
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Tipificacion idTipificacion;
+    
     @JoinColumn(name = "id_tipotelefono", referencedColumnName = "id_tipotelefono")
     @ManyToOne(fetch = FetchType.LAZY)
     private Tipotelefono idTipotelefono;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLlamada", fetch = FetchType.LAZY)
     private List<TblPromesa> tblPromesaList;
     

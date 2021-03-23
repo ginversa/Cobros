@@ -67,10 +67,11 @@ public class TblGestion implements Serializable {
     @Column(name = "id_gestion")
     private Long idGestion;
     
-    @Size(max = 5)
+    @Size(max = 10)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
     
+    @Size(max = 100)
     @Column(name = "nombre_cartera")
     private String nombre_cartera;
     
@@ -78,17 +79,18 @@ public class TblGestion implements Serializable {
     @Column(name = "identificacion")
     private String identificacion;
     
-    @Size(max = 50)
+    @Size(max = 150)
     @Column(name = "nombre_cliente")
     private String nombreCliente;
     
+    @Size(max = 50)
     @Column(name = "operacion")
     private String operacion;
     
     @Column(name = "leyusura")
     private String leyusura;
     
-    @Size(max = 5)
+    @Size(max = 10)
     @Column(name = "codigo_gestor")
     private String codigoGestor;
     

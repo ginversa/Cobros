@@ -22,14 +22,15 @@
     <ui:param name="viewname" value="Deudores" />
 
     <ui:define name="content">
-        <h:form id="form">
+        <h:form id="formCartera">
             <div class="p-grid table-demo">
                 <div class="p-col-12">                    
-                    <p:tabView id="idTabViewDeudor">
+                    <p:tabView id="idTabViewCartera" >
+                        <p:ajax event="tabChange" listener="#{carteraController.onTabViewChange}" />
                         <p:tab title="Promesas">
                             <div class="card">
                                 <h4>Promesas</h4>
-                                <p:dataTable widgetVar="customersDT21" var="promesa" value="#{listarPromesaController.promesasFechaHoyList}"
+                                <p:dataTable id="idDTPromesas" widgetVar="idDTPromesas" var="promesa" value="#{listarPromesaController.promesasFechaHoyList}"
                                              paginator="true" rows="20" paginatorPosition="top"
                                              reflow="true" scrollable="true" scrollHeight="1050"
                                              styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
@@ -75,7 +76,7 @@
                         <p:tab title="Recordatorio">
                             <div class="card">
                                 <h4>Recordatorio</h4>
-                                <p:dataTable widgetVar="customersDT22" var="promesa" value="#{listarPromesaController.promesasFechaAyerList}"
+                                <p:dataTable id="idDTRecordatorio" widgetVar="idDTRecordatorio" var="promesa" value="#{listarPromesaController.promesasFechaAyerList}"
                                              paginator="true" rows="20" paginatorPosition="top"
                                              reflow="true" scrollable="true" scrollHeight="1050"
                                              styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"

@@ -53,5 +53,7 @@ public interface CarteraDao {
     public List<TblCartera> findByCarteraGestorIdentificacion(TblCartera objCartera);
     
     public List<TblCartera> findByCodigoGestorANDCodigoCartera(TblCartera objCartera);
+    
+    public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera);
 
 }

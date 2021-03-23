@@ -51,5 +51,7 @@ public interface LlamadaServiceRemote {
     public void delete(TblLlamada obj);
     
     public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera);
+    
+    public List<TblLlamada> buscarPorTelefono(String telefono, String codigoCartera);
 
 }

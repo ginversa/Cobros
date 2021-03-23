@@ -135,11 +135,9 @@ public class UpdateGestionController implements Serializable {
     @Inject
     private CarteraService ejbCarteraLocal;
 
-    private TblGestion gestion;// Gestion seleccionada.
-    //private List<TblGestionsaldo> saldoList;// Saldos de la gestion.
+    private TblGestion gestion;// Gestion seleccionada.    
     private List<TblLlamada> llamadaOperacionList;// Llamadas da la gestion seleccionada.
-    private List<TblLlamada> llamadaList;
-    //private List<TblPromesa> promesaList;// Promesas y arreglos de pago, Todas.    
+    private List<TblLlamada> llamadaList;    
 
     private TblGestion selectedGestion;
     private TblLlamada selectedLlamada;
@@ -266,15 +264,6 @@ public class UpdateGestionController implements Serializable {
         this.selectedLlamada = selectedLlamada;
     }
 
-    /*
-    public List<TblPromesa> getPromesaList() {
-        return promesaList;
-    }
-
-    public void setPromesaList(List<TblPromesa> promesaList) {
-        this.promesaList = promesaList;
-    }
-     */
     public List<TblTelefono> getTelefonos() {
         return telefonos;
     }
@@ -331,15 +320,6 @@ public class UpdateGestionController implements Serializable {
         this.mtoSaldoGestionCRC = mtoSaldoGestionCRC;
     }
 
-    /*
-    public List<TblGestionsaldo> getSaldoList() {
-        return saldoList;
-    }
-
-    public void setSaldoList(List<TblGestionsaldo> saldoList) {
-        this.saldoList = saldoList;
-    }
-     */
     public List<TblGestion> getGestionList() {
         return gestionList;
     }
@@ -923,7 +903,7 @@ public class UpdateGestionController implements Serializable {
 
         if (oldValue != null) {
             if (newValue != null && !newValue.equals(oldValue)) {
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Celda modificada", "Viejo: " + oldValue + ", Nuevo:" + newValue);
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
         }
@@ -1545,31 +1525,20 @@ Arreglo de Pago
      *
      * @param e
      */
-    public void onTabChanged(TabChangeEvent e) {
-        //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Tab With Index :: " + e.getTab().getTitle() + " Is Changed"));        
+    public void onTabChanged(TabChangeEvent e) {        
         this.cleanFormAP();
-        /*
-        formGestion:idtabViewPromesa:idtabViewPromesaCRC:idCancelacionTotal:txtOperacionPromesa,
-        formGestion:idtabViewPromesa:idtabViewPromesaCRC:idCancelacionTotalCuotas
-        ,formGestion:idtabViewPromesa:idtabViewPromesaCRC:idRefinanciamiento
-        ,formGestion:idtabViewPromesa:idtabViewPromesaCRC:idPagoParcial
-         */
-        //PrimeFaces.current().ajax().update("formGestion:idtabViewPromesa:idtabViewPromesaCRC:idCancelacionTotal:txtOperacionPromesa");
     }
 
     /**
      *
      */
-    public void cleanFormAP() {
-        //this.setClienteOperacion(null); //clienteOperacion;
-        //this.setMtoSaldoOperacion(BigDecimal.ZERO); //mtoSaldoOperacion;
+    public void cleanFormAP() {        
         this.setTipoDescuentoPromesa(null); //tipoDescuentoPromesa;
         this.setMtoDescuentoPromesa(BigDecimal.ZERO); //mtoDescuentoPromesa;
         this.setMtoSaldoPromesa(BigDecimal.ZERO); //mtoSaldoPromesa;
         this.setFechaPagoPromesa(null); //fechaPagoPromesa;
         this.setCuotas(null); //cuotas;
-
-        //this.setMtoSaldoOperacionUSD(BigDecimal.ZERO);
+        
         this.setMtoDescuentoPromesaUSD(BigDecimal.ZERO);
         this.setMtoSaldoPromesaUSD(BigDecimal.ZERO);
     }
@@ -1700,13 +1669,7 @@ Arreglo de Pago
      * @return
      */
     public boolean validPagoParcial(String codigoMoneda) {
-        /*
-        if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return false;
-        }
-         */
+        
         if (codigoMoneda.equals("CRC")) {
             if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");

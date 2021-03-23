@@ -30,34 +30,51 @@
                 <div class="p-col-12">
                     <div class="card">
                         <h4>Buscar Gestión</h4>
-                        <p:fieldset legend="Buscar por Identificación">                            
-                            <h:panelGrid id="idPGGH01" columns="3">
-                                <p:outputLabel for="txtDocumentoGH01" value="Identificación" />
-                                <p:inputText id="txtDocumentoGH01" value="#{buscarGestionController.searchGestion.identificacion}" required="true" requiredMessage="Identificación requerida!" />
-                                <p:message for="txtDocumentoGH01"/>
+                        <p:panelGrid id="idPGBuscar" columns="2" layout="grid">
+                            <p:fieldset legend="Buscar por Identificación">                            
+                                <h:panelGrid id="idPGGH01" columns="3">
+                                    <p:outputLabel for="txtDocumentoGH01" value="Identificación" />
+                                    <p:inputText id="txtDocumentoGH01" value="#{buscarGestionController.identificacion}" />
+                                    <p:message for="txtDocumentoGH01"/>
 
-                                <p:outputLabel for="txtNombreGH01" value="Nombre" />
-                                <h:outputText id="txtNombreGH01" value="#{buscarGestionController.searchGestion.nombreCliente}" />
-                                <p:column/>
+                                    <p:outputLabel for="txtNombreGH01" value="Nombre" />
+                                    <h:outputText id="txtNombreGH01" value="#{buscarGestionController.searchGestion.nombreCliente}" />
+                                    <p:column/>
 
-                                <p:column/>
-                                <p:commandButton id="idBuscarIdentificacion" value="Buscar" icon="pi pi-check" actionListener="#{buscarGestionController.buscarGestion()}" update="formBuscarGestion:idTableGestion,txtDocumentoGH01,txtNombreGH01,messages" />
-                                <p:column/>
-                            </h:panelGrid>
-                        </p:fieldset>                        
+                                    <p:column/>
+                                    <p:commandButton id="idBuscarIdentificacion" value="Buscar" icon="pi pi-check" actionListener="#{buscarGestionController.buscarPorIdentificacion()}" update="formBuscarGestion:idTableGestion,txtDocumentoGH01,txtNombreGH01,messages" />
+                                    <p:column/>
+                                </h:panelGrid>
+                            </p:fieldset>                        
 
-                        <p:dataTable id="idTableGestion" widgetVar="customersDT21" var="llamada" value="#{buscarGestionController.llamadaList}"
+                            <p:fieldset legend="Buscar por Teléfono">                            
+                                <h:panelGrid id="idPGGH02" columns="3">
+                                    <p:outputLabel for="txtTelefonoGH02" value="Teléfono" />
+                                    <p:inputText id="txtTelefonoGH02" value="#{buscarGestionController.telefono}" />
+                                    <p:message for="txtTelefonoGH02"/>
+
+                                    <p:outputLabel for="txtNombreGH02" value="Nombre" />
+                                    <h:outputText id="txtNombreGH02" value="#{buscarGestionController.searchGestion.nombreCliente}" />
+                                    <p:column/>
+
+                                    <p:column/>
+                                    <p:commandButton id="idBuscarTelefono" value="Buscar" icon="pi pi-check" actionListener="#{buscarGestionController.buscarPorTelefono()}" update="formBuscarGestion:idTableGestion,txtTelefonoGH02,txtNombreGH02,messages" />
+                                    <p:column/>
+                                </h:panelGrid>
+                            </p:fieldset> 
+                        </p:panelGrid>
+                        <p:dataTable id="idTableGestion" widgetVar="idTableGestion" var="llamada" value="#{buscarGestionController.llamadaList}"
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >                            
-                            
+
                             <p:column id="idTelefonoBG" headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >                                
                                 <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(llamada.idGestion)}" >
                                     <h:outputText value="#{llamada.callToNumber}" />
                                 </p:commandLink>
                             </p:column>
-                            
+
                             <p:column id="idCuentaBG" headerText="#Cuenta" filterBy="#{llamada.idGestion.operacion}" filterMatchMode="contains" sortBy="#{llamada.idGestion.operacion}" >
                                 <h:outputText value="#{llamada.idGestion.operacion}" />
                             </p:column>                                               

@@ -30,8 +30,9 @@
                                 <p>Sistema de Cobros.</p>
                                 <!-- class="ui-fluid" -->
                                 <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
-                                    <p:panelGrid id="pgDeudor" columns="5" layout="grid">
-                                        <p:panelGrid columns="2" >
+
+                                    <p:panelGrid id="pgDeudor" columns="2" layout="grid">
+                                        <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtCartera" value="Cartera" />
                                             <h:outputText id="txtCartera" value="#{carteraGestionController.gestion.codigoCartera} - #{carteraGestionController.gestion.nombre_cartera}" />
 
@@ -42,66 +43,79 @@
                                             <h:outputText id="txtNombre" value="#{carteraGestionController.gestion.nombreCliente}" />
 
                                             <p:outputLabel for="txtOperacion" value="Operación" />
-                                            <h:outputText id="txtOperacion" value="#{carteraGestionController.gestion.operacion}" />
-                                        </p:panelGrid>
+                                            <h:outputText id="txtOperacion" value="#{carteraGestionController.gestion.operacion}" />                                             
+                                        </p:panelGrid>                                       
 
-                                        <p:panelGrid columns="2">
-                                            <p:outputLabel for="txtSaldoColones" value="Saldo Colones" />
-                                            <h:outputText id="txtSaldoColones" value="#{carteraGestionController.selectedCartera.saldoColones}" >
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                            <p:outputLabel for="txtInteresesColones" value="Intereses Colones" />
-                                            <h:outputText id="txtInteresesColones" value="#{carteraGestionController.selectedCartera.interesesColones}" >
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
+                                        <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
                                             <p:selectOneMenu id="txtLeyUsura" disabled="true" value="#{carteraGestionController.gestion.leyusura}" >
                                                 <f:selectItem itemLabel="--- Si ---" itemValue="1" />
                                                 <f:selectItem itemLabel="--- No ---" itemValue="0" />
-                                            </p:selectOneMenu>                                            
-                                            <p:outputLabel for="txtSaldo" value="Saldo a cobrar" />
-                                            <p:inputNumber id="txtSaldo" value="#{carteraGestionController.mtoSaldoGestionCRC}" symbol="₡" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18" disabled="#{carteraGestionController.leyusuraDisabled}" required="#{carteraGestionController.leyusuraIsRequired}" requiredMessage="Saldo a cobrar, requerido!" />
-                                        </p:panelGrid>
+                                            </p:selectOneMenu>
 
-                                        <p:panelGrid columns="2" >
-                                            <p:outputLabel for="txtSaldoDolares" value="Saldo Dolares" />
-                                            <h:outputText id="txtSaldoDolares" value="#{carteraGestionController.selectedCartera.saldoDolares}" >
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-
-                                            <p:outputLabel for="txtInteresesDolares" value="Intereses Dolares" />
-                                            <h:outputText id="txtInteresesDolares" value="#{carteraGestionController.selectedCartera.interesesDolares}" >
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                            
-                                            <h:outputText id="txtFechaUltimoPago">
+                                            <p:outputLabel for="txtFechaUltimoPromesa" value="Fecha Última Promesa" />
+                                            <h:outputText id="txtFechaUltimoPromesa" value="#{carteraGestionController.gestion.ultimaPromesa.fechaPago}" >
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:outputText>
 
-                                            <p:outputLabel for="txtMontoUltimoPago" value="Monto Último Pago" />
-                                            <h:outputText id="txtMontoUltimoPago" >
+                                            <p:outputLabel for="txtMontoUltimoPromesa" value="Monto Última Promesa" />
+                                            <h:outputText id="txtMontoUltimoPromesa" value="#{carteraGestionController.gestion.ultimaPromesa.mtopago}" >
                                                 <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>
-                                        </p:panelGrid>
 
-                                        <p:panelGrid columns="2" >
-                                            <p:outputLabel for="txtFechaUltimoPromesa" value="Fecha Último Promesa" />
-                                            <h:outputText id="txtFechaUltimoPromesa" value="#{carteraGestionController.selectedCartera.ultimaPromesa.fechaPago}" >
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                                            </h:outputText>
-
-                                            <p:outputLabel for="txtMontoUltimoPromesa" value="Monto Último Promesa" />
-                                            <h:outputText id="txtMontoUltimoPromesa" value="#{carteraGestionController.selectedCartera.ultimaPromesa.mtopago}" >
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
                                             <p:outputLabel for="txtRazonMora" value="Última Razón Mora" />
-                                            <h:outputText id="txtRazonMora" value="#{carteraGestionController.selectedCartera.razonMora}" >
+                                            <h:outputText id="txtRazonMora" value="#{carteraGestionController.gestion.ultimaRazonMora.descripcion}">
                                                 <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                            <p:outputLabel for="txtdescripcion" value="Observación" />
-                                            <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" />                                        
+                                            </h:outputText>                                            
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
+
+                                    <p:panelGrid columns="2" class="p-col">
+                                        <p:outputLabel for="txtdescripcion" value="Observación" />
+                                        <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" />
+                                    </p:panelGrid>
+
+                                    <p:fieldset legend="Saldos" class="ui-fluid" >
+                                        <p:dataTable id="tblSaldoGestion" value="#{carteraGestionController.gestion.tblGestionsaldoList}" var="saldo"
+                                                     editMode="cell" editable="true" widgetVar="tblSaldoGestion"                                                     
+                                                     reflow="true"
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                     style="margin-bottom:20px"
+                                                     emptyMessage="No se encontraron registros." >
+
+                                            <p:column headerText="Saldo Cartera" >
+                                                <h:outputText value="#{saldo.saldoCartera}">
+                                                    <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Intereses" >
+                                                <h:outputText value="#{saldo.intereses}">
+                                                    <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                </h:outputText>
+                                            </p:column>                                                
+                                            <p:column headerText="Saldo Gestión" >
+                                                <p:cellEditor>
+                                                    <f:facet name="output">                                                
+                                                        <h:outputText value="#{saldo.saldoGestion}">
+                                                            <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                        </h:outputText>
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <h:inputText value="#{saldo.saldoGestion}" />
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="Saldo Restante" >
+                                                <h:outputText value="#{saldo.saldoRestante}" >
+                                                    <f:convertNumber type="currency" currencySymbol="#{saldo.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                </h:outputText>
+                                            </p:column>                                                
+                                            <p:column headerText="Moneda" >
+                                                <h:outputText value="#{saldo.idMoneda.codigo}" />
+                                            </p:column>
+                                            <p:ajax event="cellEdit" listener="#{carteraGestionController.onCellEdit}" update="formGestion:messages" />
+                                        </p:dataTable> 
+                                    </p:fieldset>
 
                                     <p:toolbar styleClass="">
                                         <f:facet name="right">
@@ -208,14 +222,14 @@
                                                 </p:cellEditor>
                                             </p:column>
                                             <p:column headerText="Promesa" >
-                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :formGestion:idTabView:pgDeudor" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
+                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" actionListener="#{carteraGestionController.calcArragloPago(llamada)}" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :formGestion:idTabView:pgDeudor" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
                                                     <f:setPropertyActionListener value="#{llamada}" target="#{carteraGestionController.selectedLlamada}"  />
                                                 </p:commandButton>
                                             </p:column>
                                             <p:column headerText="Guardar" >
                                                 <p:commandButton actionListener="#{carteraGestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" />
                                             </p:column>
-                                            
+
                                             <p:ajax event="cellEdit" listener="#{carteraGestionController.onCellEdit}" update="formGestion:messages" />
                                         </p:dataTable> 
                                     </p:fieldset>
@@ -274,18 +288,15 @@
                                         <p:column headerText="Razón Mora" filterBy="#{cartera.razonMora}" sortBy="#{cartera.razonMora}" >
                                             <h:outputText value="#{cartera.razonMora}" />
                                         </p:column>
-                                        
-                                        <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
+
+                                        <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion"/>
                                         <p:ajax event="rowUnselect" listener="#{carteraGestionController.onRowUnselect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
                                     </p:dataTable>
                                 </p:fieldset>
 
                             </div>
                         </p:tab>
-                        <p:tab title="Findme">
-                            <p:commandButton value="Imprimir" type="button" icon="pi pi-print" style="margin-bottom: 2rem" process="@this">
-                                <p:printer target="pgFindme" />
-                            </p:commandButton>
+                        <p:tab title="Findme">                           
                             <div class="card">
                                 <p:panelGrid id="pgFindme" columns="1" layout="grid">
                                     <h2>Datos adicionales para la gestión.</h2>
@@ -749,11 +760,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesa" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesa" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacion, tblPromesaArregloPago" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesa" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacion" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
@@ -797,7 +804,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoCAT" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotal('CRC')}" process="@this" update="tblPromesaArregloPago" />
-                                                                <p:commandButton id="idBorrarArregloPago" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPago,txtOperacionPromesa,txtSaldoOperacion,txtTipoDescuento,txtDescuentoPromesa,txtNewSaldoPromesa,txtFechaPago" />
+                                                                <p:commandButton id="idBorrarArregloPago" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>
@@ -860,7 +867,7 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
+
                                                     <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
                                                     <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
@@ -872,11 +879,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesaCTC" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaCTC" value="#{carteraGestionController.clienteOperacion}" >
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="carteraList" itemLabel="#{carteraList.numeroCuenta}" itemValue="#{carteraList.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionCTC, tblPromesaArregloPagoCTC" process="@this :formGestion:idTabView:pgDeudor" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesaCTC" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionCTC" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -929,7 +932,7 @@
                                                         <div class="col-sm">                                                
                                                             <p:panelGrid id="btpgArregloPagoCTC" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoCTC" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotalPorCuotas('CRC')}" process="@this txtOperacionPromesaCTC txtSaldoOperacionCTC txtTipoDescuentoCTC txtDescuentoPromesaCTC txtNewSaldoPromesaCTC txtFechaPagoCTC txtCuotasCTC" update="tblPromesaArregloPagoCTC" />
-                                                                <p:commandButton id="idBorrarArregloPagoCTC" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoCTC,txtOperacionPromesaCTC,txtSaldoOperacionCTC,txtTipoDescuentoCTC,txtDescuentoPromesaCTC,txtNewSaldoPromesaCTC,txtFechaPagoCTC,txtCuotasCTC" />
+                                                                <p:commandButton id="idBorrarArregloPagoCTC" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1000,7 +1003,7 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
+
                                                     <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
                                                     <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
@@ -1012,11 +1015,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesaREF" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaREF" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionREF, tblPromesaArregloPagoREF" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesaREF" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionREF" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1066,7 +1065,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPago" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoREF" value="Generar" actionListener="#{carteraGestionController.agregarRefinanciamiento('CRC')}" process="@this txtCuotasREF" update="tblPromesaArregloPagoREF" />
-                                                                <p:commandButton id="idBorrarArregloPagoREF" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoREF,txtOperacionPromesaREF,txtSaldoOperacionREF,txtDescuentoPromesaREF,txtNewSaldoPromesaREF,txtFechaPagoREF,txtCuotasREF" />
+                                                                <p:commandButton id="idBorrarArregloPagoREF" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1133,7 +1132,7 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
+
                                                     <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
                                                     <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
@@ -1145,11 +1144,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesaPAP" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaPAP" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChange()}" event="change" update="txtSaldoOperacionPAP, tblPromesaArregloPagoPAP" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesaPAP" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionPAP" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1175,7 +1170,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPagoPAP" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoPAP" value="Generar" actionListener="#{carteraGestionController.agregarPagoParcial('CRC')}" process="@this txtNewSaldoPromesaPAP" update="tblPromesaArregloPagoPAP" />
-                                                                <p:commandButton id="idBorrarArregloPagoPAP" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="tblPromesaArregloPagoPAP,txtOperacionPromesaPAP,txtSaldoOperacionPAP,txtNewSaldoPromesaPAP,txtFechaPagoPAP" />
+                                                                <p:commandButton id="idBorrarArregloPagoPAP" value="Limpiar" process="@this" oncomplete="PF('deletePromesaCRCDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1240,11 +1235,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesaUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaUSD" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionUSD, tblPromesaArregloPagoUSD" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesaUSD" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
@@ -1288,7 +1279,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoCATUSD" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotal('USD')}" process="@this" update="tblPromesaArregloPagoUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoUSD,txtOperacionPromesaUSD,txtSaldoOperacionUSD,txtTipoDescuentoUSD,txtDescuentoPromesaUSD,txtNewSaldoPromesaUSD,txtFechaPagoUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>
@@ -1351,7 +1342,7 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
+
                                                     <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
                                                     <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
@@ -1363,11 +1354,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesaCTCUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaCTCUSD" value="#{carteraGestionController.clienteOperacion}" >
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="carteraList" itemLabel="#{carteraList.numeroCuenta}" itemValue="#{carteraList.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionCTCUSD, tblPromesaArregloPagoCTCUSD" process="@this :formGestion:idTabView:pgDeudor" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesaCTCUSD" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionCTCUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1420,7 +1407,7 @@
                                                         <div class="col-sm">                                                
                                                             <p:panelGrid id="btpgArregloPagoCTCUSD" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoCTCUSD" value="Generar" actionListener="#{carteraGestionController.agregarCancelacionTotalPorCuotas('USD')}" process="@this txtOperacionPromesaCTCUSD txtSaldoOperacionCTCUSD txtTipoDescuentoCTCUSD txtDescuentoPromesaCTCUSD txtNewSaldoPromesaCTCUSD txtFechaPagoCTCUSD txtCuotasCTCUSD" update="tblPromesaArregloPagoCTCUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoCTCUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoCTCUSD,txtOperacionPromesaCTCUSD,txtSaldoOperacionCTCUSD,txtTipoDescuentoCTCUSD,txtDescuentoPromesaCTCUSD,txtNewSaldoPromesaCTCUSD,txtFechaPagoCTCUSD,txtCuotasCTCUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoCTCUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1491,7 +1478,7 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
+
                                                     <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
                                                     <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
@@ -1503,11 +1490,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesaREFUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaREFUSD" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionREFUSD, tblPromesaArregloPagoREFUSD" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesaREFUSD" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionREFUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1557,7 +1540,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPago" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoREFUSD" value="Generar" actionListener="#{carteraGestionController.agregarRefinanciamiento('USD')}" process="@this txtCuotasREFUSD" update="tblPromesaArregloPagoREFUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoREFUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoREFUSD,txtOperacionPromesaREFUSD,txtSaldoOperacionREFUSD,txtDescuentoPromesaREFUSD,txtNewSaldoPromesaREFUSD,txtFechaPagoREFUSD,txtCuotasREFUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoREFUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1624,7 +1607,7 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
+
                                                     <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
                                                     <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
@@ -1636,11 +1619,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtOperacionPromesaPAPUSD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtOperacionPromesaPAPUSD" value="#{carteraGestionController.clienteOperacion}">
-                                                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{carteraGestionController.carteraList}" var="cartera" itemLabel="#{cartera.numeroCuenta}" itemValue="#{cartera.numeroCuenta}" />
-                                                                        <p:ajax listener="#{carteraGestionController.onOperacionPromesaChangeUSD()}" event="change" update="txtSaldoOperacionPAPUSD, tblPromesaArregloPagoPAPUSD" process="@this" />
-                                                                    </p:selectOneMenu>
+                                                                    <h:outputText id="txtOperacionPromesaPAPUSD" value="#{carteraGestionController.gestion.operacion}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionPAPUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1666,7 +1645,7 @@
                                                         <div class="col-sm">
                                                             <p:panelGrid id="btpgArregloPagoPAPUSD" columns="2" layout="grid">
                                                                 <p:commandButton id="idGuardarArreglodepagoPAPUSD" value="Generar" actionListener="#{carteraGestionController.agregarPagoParcial('USD')}" process="@this txtNewSaldoPromesaPAPUSD" update="tblPromesaArregloPagoPAPUSD" />
-                                                                <p:commandButton id="idBorrarArregloPagoPAPUSD" value="Limpiar" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="tblPromesaArregloPagoPAPUSD,txtOperacionPromesaPAPUSD,txtSaldoOperacionPAPUSD,txtNewSaldoPromesaPAPUSD,txtFechaPagoPAPUSD" />
+                                                                <p:commandButton id="idBorrarArregloPagoPAPUSD" value="Limpiar" process="@this" oncomplete="PF('deletePromesaUSDDialog').show()" />
                                                             </p:panelGrid>
                                                         </div>
                                                     </div>                                                
@@ -1722,7 +1701,7 @@
                                                     <p:column headerText="Editar" style="width:32px">
                                                         <p:rowEditor />
                                                     </p:column>
-                                                    
+
                                                     <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
                                                     <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
                                                 </p:dataTable>
@@ -1733,13 +1712,71 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">
-                            <p:commandButton value="Cerrar" icon="pi pi-check" update="manage-llamarPromesaArregloPago-content" process="manage-llamarPromesaArregloPago-content @this" onclick="PF('manageLlamarPromesaArregloPagoDialog').hide()" />                                        
+                            <p:commandButton value="Aceptar" icon="pi pi-check" update="manage-llamarPromesaArregloPago-content" process="manage-llamarPromesaArregloPago-content @this" onclick="PF('manageLlamarPromesaArregloPagoDialog').hide()" />                                        
                         </f:facet>
                     </p:dialog>
 
                     <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
                         <p:commandButton value="Si" icon="pi pi-check" actionListener="#{carteraGestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" process="@this"/>
+                    </p:confirmDialog>
+
+                    <p:confirmDialog widgetVar="deletePromesaCRCDialog" showEffect="fade" width="300" message="Eliminar Arreglo de Pago?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{carteraGestionController.cleanFormArregloPago('CRC')}" process="@this" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacion
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuento
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesa
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesa
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPago                                                                                                                                                                     
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionCTC
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuentoCTC
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaCTC
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaCTC
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoCTC
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasCTC
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionREF
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaREF
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaREF
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoREF
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasREF
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionPAP
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaPAP
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoPAP
+                                         "
+                                         oncomplete="PF('deletePromesaCRCDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaCRCDialog').hide()" process="@this" />
+                    </p:confirmDialog>
+
+                    <p:confirmDialog widgetVar="deletePromesaUSDDialog" showEffect="fade" width="300" message="Eliminar Arreglo de Pago?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{carteraGestionController.cleanFormArregloPago('USD')}" process="@this" update="formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoUSD                                                                                                                                                                     
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionCTCUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoCTCUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaCTCUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaCTCUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoCTCUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasCTCUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionREFUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaREFUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaREFUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoREFUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasREFUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionPAPUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaPAPUSD
+                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoPAPUSD
+                                         "
+                                         oncomplete="PF('deletePromesaUSDDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaUSDDialog').hide()" process="@this" />
                     </p:confirmDialog>
                 </div>
             </div>
