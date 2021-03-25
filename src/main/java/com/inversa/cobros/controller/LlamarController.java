@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -85,22 +86,31 @@ public class LlamarController implements Serializable {
         TblClienteCartera cartera = new TblClienteCartera();
         cartera.setCodigoCartera(codigoCartera);
         List<TblClienteCartera> carteraList = this.ejbClienteCarteraService.findByCodigoCartera(cartera);
-        TblCliente cliente = carteraList.get(0).getIdCliente();
-        this.prefijoSalidaList = cliente.getTblPrefijoSalidaList();
+        TblCliente objCliente = carteraList.get(0).getIdCliente();
+        this.prefijoSalidaList = objCliente.getTblPrefijoSalidaList();
     }
 
     /**
      *
      * @param telefono
      */
-    public void hacerLlamada(String telefono) {
-        String URL_LLAMAR = this.crearUrlHacerLlamada(telefono);
-        cliente = ClientBuilder.newClient();
-        //Leer una llamada (metodo get)
-        webTarget = cliente.target(URL_LLAMAR);
-        // get extracted document as JSON
-        String jsonExtract = webTarget.request(MediaType.APPLICATION_JSON).get(String.class);
-        System.out.println("Generar una llamada: " + jsonExtract);
+    public String hacerLlamada(String telefono) {
+        String jsonExtract = null;
+        if (this.prefijoSalidaSelected == null || this.prefijoSalidaSelected.getPrefijo() == null || this.prefijoSalidaSelected.getPrefijo().trim().equals("")) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Prefijo Salida!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            
+        } else {
+            String URL_LLAMAR = this.crearUrlHacerLlamada(telefono);
+            cliente = ClientBuilder.newClient();
+            //Leer una llamada (metodo get)
+            webTarget = cliente.target(URL_LLAMAR);
+            // get extracted document as JSON
+            jsonExtract = webTarget.request(MediaType.APPLICATION_JSON).get(String.class);
+            //System.out.println("LlamarController.hacerLlamada(): " + jsonExtract);
+        }
+
+        return jsonExtract;
     }
 
     /**
@@ -119,7 +129,7 @@ public class LlamarController implements Serializable {
         this.parametro = urlLlamar.getParametro();
         this.numeroSalida = prefijoSalidaSelected.getPrefijo();
         String URL_LLAMAR = this.http + this.ip_publica + this.directorioCentral + this.servicio + this.ext + this.parametro + this.numeroSalida + telefono;
-        System.out.println("URL_LLAMAR: " + URL_LLAMAR);
+        //System.out.println("LlamarController.crearUrlHacerLlamada(): " + URL_LLAMAR);
         return URL_LLAMAR;
     }
 
@@ -137,7 +147,7 @@ public class LlamarController implements Serializable {
         webTarget = cliente.target(URL_LLAMAR);
         // get extracted document as JSON
         String jsonExtract = webTarget.request(MediaType.APPLICATION_JSON).get(String.class);
-        System.out.println("Generar una llamada: " + jsonExtract);
+        System.out.println("LlamarController.escucharLlamada(): " + jsonExtract);
     }
 
     /**
@@ -155,7 +165,7 @@ public class LlamarController implements Serializable {
         this.ext = this.usuario.getExtEnsion();
         this.parametro = "&escuchar=";//urlLlamar.getParametro();        
         String URL_LLAMAR = this.http + this.ip_publica + this.directorioCentral + this.servicio + this.ext + this.parametro + callLogId;
-        System.out.println("URL_LLAMAR: " + URL_LLAMAR);
+        System.out.println("LlamarController.crearUrlEscucharLlamada(): " + URL_LLAMAR);
         return URL_LLAMAR;
     }
 
@@ -243,7 +253,7 @@ public class LlamarController implements Serializable {
             fileOutputStream.close();
             readableByteChannel.close();
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             Logger.getLogger(LlamarController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -470,6 +480,34 @@ public class LlamarController implements Serializable {
 
         return file;
     }
+
+    public TblPrefijoSalida getPrefijoSalidaSelected() {
+        return prefijoSalidaSelected;
+    }
+
+    public void setPrefijoSalidaSelected(TblPrefijoSalida prefijoSalidaSelected) {
+        this.prefijoSalidaSelected = prefijoSalidaSelected;
+    }
+
+    public List<TblPrefijoSalida> getPrefijoSalidaList() {
+        return prefijoSalidaList;
+    }
+
+    public void setPrefijoSalidaList(List<TblPrefijoSalida> prefijoSalidaList) {
+        this.prefijoSalidaList = prefijoSalidaList;
+    }
+
+    /**
+     *
+     * @param prefijo
+     */
+    public void onPrefijoSalidaChange() {
+
+        if (this.prefijoSalidaSelected != null) {
+            System.out.println("Prefijo: " + this.prefijoSalidaSelected.getId() + " - " + this.prefijoSalidaSelected.getPrefijo() + " - " + this.prefijoSalidaSelected.getNombre() + " - " + this.prefijoSalidaSelected.getDescripcion());
+        }
+    }
+
 }
 
 /*

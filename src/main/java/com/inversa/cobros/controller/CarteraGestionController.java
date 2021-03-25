@@ -147,6 +147,8 @@ public class CarteraGestionController implements Serializable {
 
     private boolean isVisibleCancelacionTotalPorCuotas = false;
 
+    private TabView tabView;
+
     @PostConstruct
     public void init() {
 
@@ -562,7 +564,7 @@ public class CarteraGestionController implements Serializable {
                 this.cargarCarteraList();
                 this.carteraController.cargarCartera();
                 this.promesaList = new ArrayList<>();
-                this.contactoABuscar(this.gestion.getIdentificacion());                
+                this.contactoABuscar(this.gestion.getIdentificacion());
 
                 this.gestion = new TblGestion();
                 this.gestion.setCodigoCartera(codigoCartera);
@@ -573,7 +575,7 @@ public class CarteraGestionController implements Serializable {
 
             } else {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una operación!");
-                FacesContext.getCurrentInstance().addMessage(null, msg);                
+                FacesContext.getCurrentInstance().addMessage(null, msg);
             }
 
         } catch (Exception e) {
@@ -729,7 +731,7 @@ public class CarteraGestionController implements Serializable {
                     this.gestion.setFechaingreso(this.fechaHoy.getTime());
                     this.ejbLocal.insert(this.gestion);
                     this.actualizarTelefonoContacto(llamadaConDatosList);
-                    this.cargarGestionActual(this.gestion);                    
+                    this.cargarGestionActual(this.gestion);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Registrada. Correcto!"));
 
                 } else {// actualizar gestion...
@@ -745,7 +747,7 @@ public class CarteraGestionController implements Serializable {
                     this.gestion.setFechamodifico(this.fechaHoy.getTime());
                     this.ejbLocal.update(this.gestion);
                     this.actualizarTelefonoContacto(llamadaConDatosList);
-                    this.cargarGestionActual(this.gestion);                    
+                    this.cargarGestionActual(this.gestion);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Actulizar. Correcto!"));
                 }
 
@@ -3042,12 +3044,12 @@ Arreglo de Pago
     }
 
     public void onTabViewChange(TabChangeEvent event) {
-        TabView tv = (TabView) event.getComponent();
-        this.activeTabIndex = tv.getActiveIndex();
-        int index = tv.getChildren().indexOf(event.getTab());
+        this.tabView = (TabView) event.getComponent();
+        this.activeTabIndex = this.tabView.getActiveIndex();
+        int index = this.tabView.getChildren().indexOf(event.getTab());
         switch (index) {
             case 1:
-                this.findmeController.cargarFindme();
+                this.findmeController.cargarFindme(this.gestion.getIdentificacion());
                 break;
             case 2:
                 this.pagosHistorialController.cargarPagos(this.gestion.getCodigoCartera(), this.gestion.getOperacion(), this.gestion.getIdentificacion());
@@ -3131,6 +3133,92 @@ Arreglo de Pago
                 }
             }
         }//if
+    }
+
+    /**
+     *
+     */
+    public void callFromFindme() {
+        TblLlamada llamada = this.findmeController.getSelectedLlamada();
+
+        if (llamada != null && llamada.getCallLogId() != null && !llamada.getCallLogId().trim().equals("")) {
+            if (this.existTelefonoContacto(llamada.getCallToNumber())) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Teléfono ya existe!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+
+            } else {
+                this.addCallFromFindme(llamada);
+                this.tabView.setActiveIndex(0);// Tab Gestiones.
+                PrimeFaces.current().ajax().update("formGestion:idTabView");
+            }
+
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe hacer una Llamada!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    /**
+     * verifica si el telefono ya existe.
+     *
+     * @param telefono
+     * @return
+     */
+    private boolean existTelefonoContacto(String telefono) {
+
+        if (this.llamadaList != null) {
+            for (int index = 0; index < this.llamadaList.size(); index++) {
+                if (this.llamadaList.get(index).getCallToNumber().equals(telefono)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param llamada
+     */
+    public void addCallFromFindme(TblLlamada llamada) {
+        try {
+
+            this.contacto = this.ejbContactoLocal.findById(this.contacto);
+
+            TblTelefono objT = new TblTelefono();
+            objT.setTelefono(llamada.getCallToNumber());
+            objT.setIdContacto(this.contacto);
+            objT.setIdTipotelefono(llamada.getIdTipotelefono());
+            objT.setRanking(Integer.valueOf("0"));
+            objT.setUsuarioingreso(this.usuario.getUsuario());
+            objT.setFechaingreso(this.fechaHoy.getTime());
+            objT.setEstado("ACT");
+
+            this.contacto.getTblTelefonoList().add(objT);
+            this.contacto.setFechamodifico(this.fechaHoy.getTime());
+            this.contacto.setUsuariomodifico(this.usuario.getUsuario());
+            this.ejbContactoLocal.update(this.contacto);
+            List<TblTelefono> telefonoList = this.ejbTelefonoLocal.findByContactoEstado(this.contacto.getIdContacto(), "ACT");
+            this.contacto.setTblTelefonoList(telefonoList);
+            this.telefonos = this.contacto.getTblTelefonoList();
+            this.llamadaList.add(llamada);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Teléfono Registrado. Correcto!"));
+            PrimeFaces.current().executeScript("PF('manageLlamarFindmeDialog').hide()");
+            PrimeFaces.current().ajax().update("formGestion:messages", "formGestion:idTabView:tblTelefono");
+
+        } catch (NumberFormatException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "Error registrando Teléfono. Error!"));
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public TabView getTabView() {
+        return tabView;
+    }
+
+    public void setTabView(TabView tabView) {
+        this.tabView = tabView;
     }
 
 }//end

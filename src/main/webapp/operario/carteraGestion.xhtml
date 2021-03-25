@@ -22,15 +22,14 @@
                     <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
                         <p:autoUpdate/>
                     </p:growl>                        
-                    <p:tabView id="idTabView" >
+                    <p:tabView id="idTabView" binding="#{carteraGestionController.tabView}" rendered="true" >
                         <p:ajax event="tabChange" listener="#{carteraGestionController.onTabViewChange}" />
                         <p:tab title="Gestión">                            
                             <div class="card">
-                                <h1>Gestión</h1>
+                                <h4>Gestión</h4>
                                 <p>Sistema de Cobros.</p>
                                 <!-- class="ui-fluid" -->
                                 <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
-
                                     <p:panelGrid id="pgDeudor" columns="2" layout="grid">
                                         <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtCartera" value="Cartera" />
@@ -48,7 +47,7 @@
 
                                         <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
-                                            <p:selectOneMenu id="txtLeyUsura" disabled="true" value="#{carteraGestionController.gestion.leyusura}" >
+                                            <p:selectOneMenu id="txtLeyUsura" value="#{carteraGestionController.gestion.leyusura}" > <!-- disabled="true" -->
                                                 <f:selectItem itemLabel="--- Si ---" itemValue="1" />
                                                 <f:selectItem itemLabel="--- No ---" itemValue="0" />
                                             </p:selectOneMenu>
@@ -117,7 +116,7 @@
                                         </p:dataTable> 
                                     </p:fieldset>
 
-                                    <p:toolbar styleClass="">
+                                    <p:toolbar>
                                         <f:facet name="right">
                                             <h:panelGrid columns="4">
                                                 <p:selectOneMenu id="txtPrefijo" value="#{carteraGestionController.prefijoSalidaSelected}" converter="prefijoSalidaConverter" required="true" requiredMessage="Prefijo Salida requerido!" styleClass="secondary-button p-mr-2 p-mb-2" >
@@ -296,11 +295,20 @@
 
                             </div>
                         </p:tab>
-                        <p:tab title="Findme">                           
+                        <p:tab title="Findme">
                             <div class="card">
-                                <p:panelGrid id="pgFindme" columns="1" layout="grid">
-                                    <h2>Datos adicionales para la gestión.</h2>
-                                    <p>Localización. Según Findme</p>
+                                <h4>#{carteraGestionController.gestion.nombreCliente}</h4>
+                                <p>Localización. Según Findme</p>                                
+                                <p:toolbar>
+                                    <f:facet name="right">
+                                        <p:selectOneMenu id="txtPrefijoFindme" value="#{llamarController.prefijoSalidaSelected}" converter="prefijoSalidaConverter" required="true" requiredMessage="Prefijo Salida requerido!" styleClass="secondary-button p-mr-2 p-mb-2" >
+                                            <f:selectItem itemLabel="--- Prefijo Salida ---" itemValue="" />
+                                            <f:selectItems value="#{llamarController.prefijoSalidaList}" var="prefijoSalida" itemLabel="#{prefijoSalida.prefijo} - #{prefijoSalida.nombre}" itemValue="#{prefijoSalida}" />
+                                            <p:ajax listener="#{llamarController.onPrefijoSalidaChange()}" event="change" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:toolbar>
+                                <p:panelGrid id="pgFindme" columns="1" layout="grid">                                                                     
                                     <p:panelGrid id="pgHistorial" columns="3" layout="grid">
                                         <p:fieldset legend="Teléfonos" >
                                             <p:dataTable id="idHistorialTelefonos" value="#{findmeController.historialTelefonoList}" var="historialTelefono"
@@ -308,13 +316,10 @@
                                                          reflow="true"
                                                          styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
-                                                <p:column headerText="Teléfono" >
-                                                    <h:outputText value="#{historialTelefono.telefono}" />
-                                                    <!-- 
-                                                    <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" process="@this" >
+                                                <p:column headerText="Teléfono" >                                                     
+                                                    <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" oncomplete="PF('manageLlamarFindmeDialog').show()" update="formGestion:manage-llamarFindme-content" process="@this" >
                                                         <f:setPropertyActionListener value="#{historialTelefono}" target="#{findmeController.selectedHistorialTelefono}" />
                                                     </p:commandLink>
-                                                    comment -->
                                                 </p:column>
                                             </p:dataTable>
                                         </p:fieldset>
@@ -663,7 +668,6 @@
                                 </p:dataTable>
                             </div>
                         </p:tab>
-
                     </p:tabView>
 
                     <p:confirmDialog widgetVar="deleteTelefonoDialog" showEffect="fade" width="300" message="Eliminar este Teléfono?" header="Confirmar" severity="warn">
@@ -1778,6 +1782,40 @@
                                          oncomplete="PF('deletePromesaUSDDialog').hide()" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaUSDDialog').hide()" process="@this" />
                     </p:confirmDialog>
+
+                    <p:dialog header="Llamada Findme!" width="600" showEffect="fade" modal="true" widgetVar="manageLlamarFindmeDialog" responsive="true" >
+                        <p:outputPanel id="manage-llamarFindme-content" class="ui-fluid">
+                            <p:outputPanel rendered='true'>
+                                <div class="p-field">                                        
+                                    <p:panelGrid id="idPGTelefonoFindme" columns="3" layout="grid">
+                                        <p:outputLabel for="txtNonbreContactoFindme" value="Nombre: " />
+                                        <h:outputText id="txtNonbreContactoFindme" value="#{carteraGestionController.gestion.nombreCliente}" />
+                                        <p:column />
+                                        <p:outputLabel for="txtIdentificacionContactoFindme" value="Identificación: " />
+                                        <h:outputText id="txtIdentificacionContactoFindme" value="#{carteraGestionController.gestion.identificacion}" />
+                                        <p:column />                                     
+                                        <p:outputLabel for="txtTipotelefonoFindme" value="Tipo Teléfono" />
+                                        <p:selectOneMenu id="txtTipotelefonoFindme" value="#{findmeController.selectedLlamada.idTipotelefono}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
+                                            <f:selectItem itemLabel="--------------------" itemValue="" noSelectionOption="true" />
+                                            <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
+                                        </p:selectOneMenu>
+                                        <p:message for="txtTipotelefonoFindme" />
+                                    </p:panelGrid>
+                                    <p:fieldset legend="Teléfono">
+                                        <div class="card" style="text-align: center;">
+                                            <h1>
+                                                #{findmeController.selectedLlamada.callToNumber}
+                                            </h1>
+                                        </div>
+                                    </p:fieldset>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <f:facet name="footer">    
+                            <p:commandButton value="Agregar Teléfono: Tipificar!" icon="pi pi-check" actionListener="#{carteraGestionController.callFromFindme()}" update="manage-llamarFindme-content, formGestion:idTabView:tblTelefono" process="manage-llamarFindme-content @this" ajax="true" />
+                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageLlamarFindmeDialog').hide()" class="secondary-button" process="@this" />
+                        </f:facet>
+                    </p:dialog>
                 </div>
             </div>
         </h:form>

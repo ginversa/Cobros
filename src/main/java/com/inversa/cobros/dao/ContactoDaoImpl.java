@@ -52,7 +52,6 @@ public class ContactoDaoImpl implements ContactoDao {
         } else {
             return found.get(0);
         }
-        //return results;
     }
 
     @Override

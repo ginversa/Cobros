@@ -120,8 +120,14 @@ public class UsuarioDaoImpl implements UsuarioDao {
         TypedQuery<TblUsuario> query = em.createNamedQuery("TblUsuario.findByUsuarioAndClave", TblUsuario.class);
         query.setParameter("usuario", obj.getUsuario());
         query.setParameter("clave", obj.getClave());
-        TblUsuario results = query.getSingleResult();
-        return results;
+        
+        List<TblUsuario> found = query.getResultList();
+        
+         if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {
+            return found.get(0);
+        }
     }
 
 }
