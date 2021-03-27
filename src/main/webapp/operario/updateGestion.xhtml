@@ -718,27 +718,29 @@
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" process="@this" />
                     </p:confirmDialog>
 
-                    <p:dialog header="Agregar Teléfono" width="900" showEffect="fade" modal="true" widgetVar="manageTelefonoDialog" responsive="true" >
+                    <p:dialog header="Agregar Teléfono" width="450" showEffect="fade" modal="true" widgetVar="manageTelefonoDialog" responsive="true" >
                         <p:outputPanel id="manage-Telefono-content" class="ui-fluid">
                             <p:outputPanel rendered='true'>
-                                <div class="p-field">                                        
-                                    <p:panelGrid id="pgTelefono01" columns="3" layout="grid">
-                                        <p:outputLabel for="txtNonbreContacto" value="Nombre: " />
-                                        <h:outputText id="txtNonbreContacto" value="#{updateGestionController.contacto.nombre}" />
-                                        <p:column />
-                                        <p:outputLabel for="txtCedulaContacto" value="Identificación: " />
-                                        <h:outputText id="txtCedulaContacto" value="#{updateGestionController.contacto.cedula}" />
-                                        <p:column />
-                                        <p:outputLabel for="txtTelefonoContacto" value="Teléfono" />
-                                        <p:inputMask id="txtTelefonoContacto" value="#{updateGestionController.telefono.telefono}" mask="99999999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
-                                        <p:message for="txtTelefonoContacto" />
-                                        <p:outputLabel for="txtTipotelefono" value="Tipo Teléfono" />
-                                        <p:selectOneMenu id="txtTipotelefono" value="#{updateGestionController.tipo}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
-                                            <f:selectItem itemLabel="--------------------" itemValue="" noSelectionOption="true" />
-                                            <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
-                                        </p:selectOneMenu>
-                                        <p:message for="txtTipotelefono" />
-                                    </p:panelGrid>                              
+                                <div class="p-field">
+                                    <p:outputLabel for="txtNonbreContacto" value="Nombre: " />
+                                    <h:outputText id="txtNonbreContacto" value="#{updateGestionController.contacto.nombre}" />
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="txtCedulaContacto" value="Identificación: " />
+                                    <h:outputText id="txtCedulaContacto" value="#{updateGestionController.contacto.cedula}" />
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="txtTelefonoContacto" value="Teléfono" />
+                                    <p:inputMask id="txtTelefonoContacto" value="#{updateGestionController.telefono.telefono}" mask="99999999" maxlength="45" required="true" requiredMessage="Teléfono requerido!" />
+                                    <p:message for="txtTelefonoContacto" />
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="txtTipotelefono" value="Tipo Teléfono" />
+                                    <p:selectOneMenu id="txtTipotelefono" value="#{updateGestionController.tipo}" converter="tipoTelefonoConverter" required="true" requiredMessage="Tipo Teléfono requerido!" >
+                                        <f:selectItem itemLabel="--------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{tipotelefonoController.tipotelefonoList}" var="tipoTelefono" itemLabel="#{tipoTelefono.descripcion}" itemValue="#{tipoTelefono}" />
+                                    </p:selectOneMenu>
+                                    <p:message for="txtTipotelefono" />
                                 </div>
                             </p:outputPanel>
                         </p:outputPanel>
@@ -748,30 +750,51 @@
                         </f:facet>
                     </p:dialog>
 
-                    <p:dialog header="Agregar Correo electrónico" width="900" showEffect="fade" modal="true" widgetVar="manageCorreoDialog" responsive="true" >
+                    <p:dialog header="Agregar Correo electrónico" width="450" showEffect="fade" modal="true" widgetVar="manageCorreoDialog" responsive="true">
                         <p:outputPanel id="manage-Correo-content" class="ui-fluid">
                             <p:outputPanel rendered='true'>
-                                <div class="p-field">                                        
-                                    <p:panelGrid id="pgCorreo01" columns="3" layout="grid">
-                                        <p:outputLabel for="txtNonbreContactoCorreo" value="Nombre: " />
-                                        <h:outputText id="txtNonbreContactoCorreo" value="#{updateGestionController.contacto.nombre}" />
-                                        <p:column />
-                                        <p:outputLabel for="txtCedulaContactoCorreo" value="Identificación: " />
-                                        <h:outputText id="txtCedulaContactoCorreo" value="#{updateGestionController.contacto.cedula}" />
-                                        <p:column />
-                                        <p:outputLabel for="txtCorreoContacto" value="Correo electrónico" />
-                                        <p:inputText id="txtCorreoContacto" value="#{updateGestionController.correoElectronico.correo}" label="email" maxlength="100" required="true" requiredMessage="Por favor, introduzca su dirección de correo electrónico." validatorMessage="Formato de correo inválido" >
-                                            <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-                                        </p:inputText>
-                                        <p:watermark for="txtCorreoContacto" value="Dirección de correo electrónico *" />
-                                        <p:message for="txtCorreoContacto" />
-                                    </p:panelGrid>                              
+                                <div class="p-field">
+                                    <p:outputLabel for="txtNonbreContactoCorreo" value="Nombre : "></p:outputLabel>
+                                    <h:outputText id="txtNonbreContactoCorreo" value="#{updateGestionController.contacto.nombre}" />
                                 </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="txtCedulaContactoCorreo" value="Identificación : "></p:outputLabel>
+                                    <h:outputText id="txtCedulaContactoCorreo" value="#{updateGestionController.contacto.cedula}" />
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="txtCorreoContacto">Correo electrónico:</p:outputLabel>
+                                    <p:inputText id="txtCorreoContacto" value="#{updateGestionController.correoElectronico.correo}" label="email" maxlength="100" required="true" requiredMessage="Por favor, introduzca su dirección de correo electrónico." validatorMessage="Formato de correo inválido" >
+                                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                    </p:inputText>
+                                    <p:watermark for="txtCorreoContacto" value="Dirección de correo electrónico *" />
+                                    <p:message for="txtCorreoContacto" />
+                                </div>
+
+                                <p:dataTable id="idDTCorreoContacto" value="#{updateGestionController.contacto.tblCorreoList}" var="email"
+                                             style="margin-bottom:20px"
+                                             emptyMessage="No se encontraron registros."
+                                             scrollable="true" rows="5"
+                                             widgetVar="idDTCorreoContacto"
+                                             reflow="true"
+                                             paginator="true" paginatorPosition="top">
+
+                                    <p:column exportable="false">                                            
+                                        <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" actionListener="#{updateGestionController.deleteCorreoElectronico(email.correo)}" />
+                                    </p:column>
+                                    <p:column headerText="Correo" >
+                                        <h:outputText value="#{email.correo}" />
+                                    </p:column>
+                                    <p:column headerText="Fecha Ingreso" >
+                                        <h:outputText value="#{email.fechaingreso}">
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">    
-                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{updateGestionController.addCorreoElectronico()}" update="manage-Correo-content" process="manage-Correo-content @this" ajax="true" />
-                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageCorreoDialog').hide()" class="secondary-button" process="@this" />
+                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{updateGestionController.addCorreoElectronico()}" update="manage-Correo-content, idDTCorreoContacto" process="manage-Correo-content @this" ajax="true" />
+                            <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('manageCorreoDialog').hide()" class="secondary-button" process="@this" />
                         </f:facet>
                     </p:dialog>
 
@@ -1816,7 +1839,7 @@
                                          oncomplete="PF('deletePromesaUSDDialog').hide()" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaUSDDialog').hide()" process="@this" />
                     </p:confirmDialog>
-                    
+
                     <p:dialog header="Llamada Findme!" width="600" showEffect="fade" modal="true" widgetVar="manageLlamarFindmeDialog" responsive="true" >
                         <p:outputPanel id="manage-llamarFindme-content" class="ui-fluid">
                             <p:outputPanel rendered='true'>

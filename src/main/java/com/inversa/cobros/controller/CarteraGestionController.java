@@ -9,6 +9,7 @@ import com.inversa.cobros.constante.comun.ConstanteComun;
 import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.ClienteService;
 import com.inversa.cobros.ejb.ContactoService;
+import com.inversa.cobros.ejb.CorreoService;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.MonedaService;
 import com.inversa.cobros.ejb.PromesaService;
@@ -107,6 +108,9 @@ public class CarteraGestionController implements Serializable {
 
     @Inject
     private TelefonoService ejbTelefonoLocal;
+
+    @Inject
+    private CorreoService ejbCorreoLocal;
 
     @Inject
     private ClienteService ejbClienteLocal;
@@ -1205,9 +1209,7 @@ public class CarteraGestionController implements Serializable {
      */
     public void addCorreoElectronico() {
         try {
-
-            System.out.println("addCorreoElectronico ==> " + this.correoElectronico.getCorreo());
-
+            
             TblCorreo objT = new TblCorreo();
             objT.setCorreo(this.correoElectronico.getCorreo());
 
@@ -1225,8 +1227,7 @@ public class CarteraGestionController implements Serializable {
             this.ejbContactoLocal.update(this.contacto);
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Correo electrónico Registrado. Correcto!"));
-            PrimeFaces.current().executeScript("PF('manageCorreoDialog').hide()");
-            PrimeFaces.current().ajax().update("formGestion:messages");
+            PrimeFaces.current().ajax().update("formGestion:messages", "formGestion:idDTCorreoContacto");
 
             this.correoElectronico.setCorreo("");
 
@@ -3219,6 +3220,42 @@ Arreglo de Pago
 
     public void setTabView(TabView tabView) {
         this.tabView = tabView;
+    }
+
+    /*
+    ***************************************************************************    
+    **************************** Eliminar Correo Electronico *******************
+    ***************************************************************************    
+     */
+    
+    /**
+     *
+     * @param email
+     */
+    public void deleteCorreoElectronico(String email) {
+        try {
+            if (email != null && !email.trim().equals("")) {
+                for (int index = 0; index < this.contacto.getTblCorreoList().size(); index++) {
+                    if (this.contacto.getTblCorreoList().get(index).getCorreo().equals(email)) {
+                        this.contacto.getTblCorreoList().get(index).setEstado("INA");
+                        this.contacto.getTblCorreoList().get(index).setUsuariomodifico(this.usuario.getUsuario());
+                        this.contacto.getTblCorreoList().get(index).setFechamodifico(this.fechaHoy.getTime());
+                    }
+                }
+
+                this.ejbContactoLocal.update(this.contacto);
+                List<TblCorreo> correoList = this.ejbCorreoLocal.findByContactoEstado(this.contacto.getIdContacto(), "ACT");
+                this.contacto.setTblCorreoList(correoList);
+
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Correo electrónico Eliminado. Correcto!"));
+                PrimeFaces.current().ajax().update("formGestion:messages", "formGestion:idDTCorreoContacto");
+
+            }
+
+        } catch (NumberFormatException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "Error eliminando correo. Error!"));
+            System.out.println(e.getMessage());
+        }
     }
 
 }//end

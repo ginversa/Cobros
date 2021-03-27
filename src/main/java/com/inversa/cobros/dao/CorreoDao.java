@@ -35,4 +35,6 @@ public interface CorreoDao {
     public void update(TblCorreo obj);
 
     public void delete(TblCorreo obj);
+    
+    public List<TblCorreo> findByContactoEstado(Integer idContacto,String estado);
 }

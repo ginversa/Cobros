@@ -87,4 +87,19 @@ public class CorreoDaoImpl implements CorreoDao{
         em.remove(obj);
     }
     
+    /**
+     * 
+     * @param idContacto
+     * @param estado
+     * @return 
+     */
+    public List<TblCorreo> findByContactoEstado(Integer idContacto,String estado){
+        String sqlString = "select * from tbl_correo tc where id_contacto = ? and estado = ? order by ranking desc";
+        TypedQuery<TblCorreo> query = (TypedQuery<TblCorreo>) em.createNativeQuery(sqlString, TblCorreo.class);
+        query.setParameter(1, idContacto);
+        query.setParameter(2, estado);
+        List<TblCorreo> results = query.getResultList();
+        return results;
+    }
+    
 }

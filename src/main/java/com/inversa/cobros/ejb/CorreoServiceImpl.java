@@ -100,4 +100,9 @@ public class CorreoServiceImpl implements CorreoService, CorreoServiceRemote {
         }        
     }
 
+    @Override
+    public List<TblCorreo> findByContactoEstado(Integer idContacto, String estado) {
+        return dao.findByContactoEstado(idContacto, estado);
+    }
+
 }
