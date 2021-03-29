@@ -14,10 +14,10 @@
     <ui:define name="viewname">
         <li>Reportes</li>
         <li>/</li>
-        <li>Gestiones productividad por hora</li>
+        <li>Gestiones productividad por asesor</li>
     </ui:define>
 
-    <ui:param name="viewname" value="Gestiones productividad por hora" />
+    <ui:param name="viewname" value="Gestiones productividad por asesor" />
 
     <ui:define name="content">
         <h:form id="form">
@@ -27,20 +27,20 @@
                         <p:autoUpdate/>
                     </p:growl> 
                     <div class="card">
-                        <h4>Gestiones productividad por hora</h4>
+                        <h4>Gestiones productividad por asesor</h4>
 
                         <p:fieldset legend="Filtros">                            
                             <h:panelGrid id="idPGGPPH" columns="3">
                                 <p:outputLabel for="txtFecha" value="Fecha" />
-                                <p:calendar id="txtFecha" value="#{gestionesProductividadPorHoraController.fecha}" required="true" requiredMessage="Fecha requerida!" pattern="dd/MM/yyyy"/>                                
+                                <p:calendar id="txtFecha" value="#{gestionProductividadPorAsesorController.fecha}" required="true" requiredMessage="Fecha requerida!" pattern="dd/MM/yyyy"/>                                
                                 <p:message for="txtFecha"/>
                                 <p:column/>
-                                <p:commandButton id="idBuscar" value="Buscar" icon="pi pi-check" actionListener="#{gestionesProductividadPorHoraController.buscar()}" update="form:txtFecha, form:idDTGestionesProductividadPorHora" />
+                                <p:commandButton id="idBuscar" value="Buscar" icon="pi pi-check" actionListener="#{gestionProductividadPorAsesorController.buscar()}" update="form:txtFecha, form:idDTGestionesProductividad" />
                                 <p:column/>
                             </h:panelGrid>
                         </p:fieldset>
 
-                        <p:dataTable id="idDTGestionesProductividadPorHora" widgetVar="idDTGestionesProductividadPorHora" var="gestion" value="#{gestionesProductividadPorHoraController.gestionList}"
+                        <p:dataTable id="idDTGestionesProductividad" widgetVar="idDTGestionesProductividad" var="gestion" value="#{gestionProductividadPorAsesorController.gestionList}"
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
@@ -49,71 +49,56 @@
                             <p:column headerText="Nombre cartera" filterBy="#{gestion.nombrecartera}" filterMatchMode="contains" sortBy="#{gestion.nombrecartera}" >                                
                                 <h:outputText value="#{gestion.nombrecartera}" />
                             </p:column>
-                            <p:column headerText="Indicador" filterBy="#{gestion.indicador}" filterMatchMode="contains" sortBy="#{gestion.indicador}" >
-                                <h:outputText value="#{gestion.indicador}" />
+                            <p:column headerText="Usuario" filterBy="#{gestion.usuario}" filterMatchMode="contains" sortBy="#{gestion.usuario}" >
+                                <h:outputText value="#{gestion.usuario}" />
                             </p:column>
-                            <p:column headerText="hora7am" filterBy="#{gestion.hora7am}" filterMatchMode="contains" sortBy="#{gestion.hora7am}" >
-                                <h:outputText value="#{gestion.hora7am}">
+                            <p:column headerText="Fecha Gestión" filterBy="#{gestion.fechaGestion}" filterMatchMode="contains" sortBy="#{gestion.fechaGestion}" >
+                                <h:outputText value="#{gestion.fechaGestion}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>                            
-                            <p:column headerText="hora8am" filterBy="#{gestion.hora8am}" filterMatchMode="contains" sortBy="#{gestion.hora8am}" >
-                                <h:outputText value="#{gestion.hora8am}">
+                            <p:column headerText="Agestes" filterBy="#{gestion.agentes}" filterMatchMode="contains" sortBy="#{gestion.agentes}" >
+                                <h:outputText value="#{gestion.agentes}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>                            
-                            <p:column headerText="hora9am" filterBy="#{gestion.hora9am}" filterMatchMode="contains" sortBy="#{gestion.hora9am}" >
-                                <h:outputText value="#{gestion.hora9am}">
+                            <p:column headerText="workload" filterBy="#{gestion.workload}" filterMatchMode="contains" sortBy="#{gestion.workload}" >
+                                <h:outputText value="#{gestion.workload}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="hora10am" filterBy="#{gestion.hora10am}" filterMatchMode="contains" sortBy="#{gestion.hora10am}" >
-                                <h:outputText value="#{gestion.hora10am}">
+                            <p:column headerText="rpc" filterBy="#{gestion.rpc}" filterMatchMode="contains" sortBy="#{gestion.rpc}" >
+                                <h:outputText value="#{gestion.rpc}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="hora11am" filterBy="#{gestion.hora11am}" filterMatchMode="contains" sortBy="#{gestion.hora11am}" >
-                                <h:outputText value="#{gestion.hora11am}">
+                            <p:column headerText="por_RPC" filterBy="#{gestion.por_RPC}" filterMatchMode="contains" sortBy="#{gestion.por_RPC}" >
+                                <h:outputText value="#{gestion.por_RPC}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>                            
-                            <p:column headerText="hora12am" filterBy="#{gestion.hora12am}" filterMatchMode="contains" sortBy="#{gestion.hora12am}" >
-                                <h:outputText value="#{gestion.hora12am}">
+                            <p:column headerText="pdp" filterBy="#{gestion.pdp}" filterMatchMode="contains" sortBy="#{gestion.pdp}" >
+                                <h:outputText value="#{gestion.pdp}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="hora1am" filterBy="#{gestion.hora1am}" filterMatchMode="contains" sortBy="#{gestion.hora1am}" >
-                                <h:outputText value="#{gestion.hora1am}">
+                            <p:column headerText="por_PDP" filterBy="#{gestion.por_PDP}" filterMatchMode="contains" sortBy="#{gestion.por_PDP}" >
+                                <h:outputText value="#{gestion.por_PDP}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="hora2am" filterBy="#{gestion.hora2am}" filterMatchMode="contains" sortBy="#{gestion.hora2am}" >
-                                <h:outputText value="#{gestion.hora2am}">
+                            <p:column headerText="valorworkload" filterBy="#{gestion.valorworkload}" filterMatchMode="contains" sortBy="#{gestion.valorworkload}" >
+                                <h:outputText value="#{gestion.valorworkload}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>                            
-                            <p:column headerText="hora3am" filterBy="#{gestion.hora3am}" filterMatchMode="contains" sortBy="#{gestion.hora3am}" >
-                                <h:outputText value="#{gestion.hora3am}">
+                            <p:column headerText="valor_pdp" filterBy="#{gestion.valor_pdp}" filterMatchMode="contains" sortBy="#{gestion.valor_pdp}" >
+                                <h:outputText value="#{gestion.valor_pdp}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>                            
-                            <p:column headerText="hora4am" filterBy="#{gestion.hora4am}" filterMatchMode="contains" sortBy="#{gestion.hora4am}" >
-                                <h:outputText value="#{gestion.hora4am}">
-                                    <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="hora5am" filterBy="#{gestion.hora5am}" filterMatchMode="contains" sortBy="#{gestion.hora5am}" >
-                                <h:outputText value="#{gestion.hora5am}">
-                                    <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="hora6am" filterBy="#{gestion.hora6am}" filterMatchMode="contains" sortBy="#{gestion.hora6am}" >
-                                <h:outputText value="#{gestion.hora6am}">
-                                    <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="Total" filterBy="#{gestion.total}" filterMatchMode="contains" sortBy="#{gestion.total}" >
-                                <h:outputText value="#{gestion.total}">
+                            <p:column headerText="CCP" filterBy="#{gestion.CCP}" filterMatchMode="contains" sortBy="#{gestion.CCP}" >
+                                <h:outputText value="#{gestion.CCP}">
                                     <f:convertNumber type="number" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
                                 </h:outputText>
                             </p:column>

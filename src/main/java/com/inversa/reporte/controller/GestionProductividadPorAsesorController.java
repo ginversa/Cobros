@@ -6,8 +6,6 @@
 package com.inversa.reporte.controller;
 
 import com.inversa.cobros.model.TblUsuario;
-import com.inversa.reporte.ejb.GestionesProductividadPorHoraService;
-import com.inversa.reporte.model.GestionesProductividadPorHora;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +16,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import com.inversa.reporte.ejb.GestionProductividadService;
+import com.inversa.reporte.model.GestionProductividadPorAsesor;
 
 /**
  *
@@ -26,16 +26,16 @@ import javax.inject.Named;
 
 @Named
 @ViewScoped
-public class GestionesProductividadPorHoraController implements Serializable{
+public class GestionProductividadPorAsesorController implements Serializable{
  
     
     @Inject
-    private GestionesProductividadPorHoraService ejbLocal;
+    private GestionProductividadService ejbLocal;
     
     private Date fecha;
     private String codigoCartera;
     
-    private List<GestionesProductividadPorHora> gestionList;
+    private List<GestionProductividadPorAsesor> gestionList;
     
     private Calendar fechaHoy;
     private TblUsuario usuario;
@@ -44,8 +44,8 @@ public class GestionesProductividadPorHoraController implements Serializable{
     public void init(){
         this.fechaHoy = Calendar.getInstance();
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        //this.codigoGestor = this.usuario.getCodigoGestor();
         
+        this.fecha = this.fechaHoy.getTime();
     }
     
     /**
@@ -64,7 +64,7 @@ public class GestionesProductividadPorHoraController implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, msg);
             
         }else{
-            this.gestionList = this.ejbLocal.getProductividadPorHora(fecha, codigoCartera);
+            this.gestionList = this.ejbLocal.getProductividadPorAsesor(this.fecha, this.codigoCartera);
         }        
     }
 
@@ -84,11 +84,11 @@ public class GestionesProductividadPorHoraController implements Serializable{
         this.codigoCartera = codigoCartera;
     }
 
-    public List<GestionesProductividadPorHora> getGestionList() {
+    public List<GestionProductividadPorAsesor> getGestionList() {
         return gestionList;
     }
 
-    public void setGestionList(List<GestionesProductividadPorHora> gestionList) {
+    public void setGestionList(List<GestionProductividadPorAsesor> gestionList) {
         this.gestionList = gestionList;
     }
 

@@ -18,8 +18,8 @@ import javax.persistence.Table;
  * @author Z420WK
  */
 @Entity
-@Table(name="GestionesProductividadPorHora")
-public class GestionesProductividadPorHora implements Serializable{
+@Table(name="GestionProductividadPorHora")
+public class GestionProductividadPorHora implements Serializable{
     
     @Id
     private String indicador;
@@ -218,7 +218,7 @@ public class GestionesProductividadPorHora implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final GestionesProductividadPorHora other = (GestionesProductividadPorHora) obj;
+        final GestionProductividadPorHora other = (GestionProductividadPorHora) obj;
         if (!Objects.equals(this.indicador, other.indicador)) {
             return false;
         }
