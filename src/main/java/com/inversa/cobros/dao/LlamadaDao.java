@@ -52,5 +52,7 @@ public interface LlamadaDao {
     public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera);
     
     public List<TblLlamada> buscarPorTelefono(String telefono, String codigoCartera);
+    
+    public List<TblLlamada> buscarPorGestorCartera(String codigoGestor, String codigoCartera);
 
 }

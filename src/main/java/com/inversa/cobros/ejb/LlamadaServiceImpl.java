@@ -157,4 +157,9 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
         return llamadas;
     }
 
+    @Override
+    public List<TblLlamada> buscarPorGestorCartera(String codigoGestor, String codigoCartera) {
+        return dao.buscarPorGestorCartera(codigoGestor, codigoCartera);
+    }
+
 }

@@ -5,8 +5,7 @@
  */
 package com.inversa.cobros.controller;
 
-import com.inversa.cobros.ejb.GestionService;
-import com.inversa.cobros.model.TblGestion;
+import com.inversa.cobros.ejb.LlamadaService;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
@@ -27,12 +26,17 @@ import javax.inject.Named;
 @SessionScoped
 public class ListarLlamadaController implements Serializable {
 
-    @Inject
+    
+    /*
     private GestionService ejbLocal;
-
     private List<TblGestion> gestionList;
-
+    */
+    
+    @Inject
+    private LlamadaService ejbLocal;
     private List<TblLlamada> llamadaList;
+    
+    private TblUsuario usuario;
 
     @PostConstruct
     public void init() {
@@ -40,21 +44,27 @@ public class ListarLlamadaController implements Serializable {
         this.llamadaList = new ArrayList<TblLlamada>();
 
         // Usuario de session...
-        TblUsuario usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
+        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        
+        String codigoGestor = usuario.getCodigoGestor();
+        String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");        
+        this.llamadaList = this.ejbLocal.buscarPorGestorCartera(codigoGestor, codigoCartera);        
 
+        /*
         TblGestion gestion = new TblGestion();
         gestion.setCodigoGestor(usuario.getCodigoGestor());
         gestion.setCodigoCartera(codigoCartera);
         this.gestionList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(gestion);
-
+        
         for (int index = 0; index < this.gestionList.size(); index++) {
             List<TblLlamada> llamadas = this.gestionList.get(index).getTblLlamadaList();
             if (llamadas != null && !llamadas.isEmpty() && llamadas.size() > 0) {
                 llamadaList.addAll(llamadas);
             }
         }
-    }
+        */
+        
+    }    
 
     public List<TblLlamada> getLlamadaList() {
         return llamadaList;

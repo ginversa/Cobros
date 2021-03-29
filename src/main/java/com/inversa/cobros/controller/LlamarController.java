@@ -99,7 +99,7 @@ public class LlamarController implements Serializable {
         if (this.prefijoSalidaSelected == null || this.prefijoSalidaSelected.getPrefijo() == null || this.prefijoSalidaSelected.getPrefijo().trim().equals("")) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Prefijo Salida!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            
+
         } else {
             String URL_LLAMAR = this.crearUrlHacerLlamada(telefono);
             cliente = ClientBuilder.newClient();
@@ -506,6 +506,27 @@ public class LlamarController implements Serializable {
         if (this.prefijoSalidaSelected != null) {
             System.out.println("Prefijo: " + this.prefijoSalidaSelected.getId() + " - " + this.prefijoSalidaSelected.getPrefijo() + " - " + this.prefijoSalidaSelected.getNombre() + " - " + this.prefijoSalidaSelected.getDescripcion());
         }
+    }
+
+    /**
+     * this.http + this.ip_publica + "/PBXPortal/consultar.php?call_log_id=" +
+     * callLogId;
+     *
+     * @param callLogId
+     * @return
+     */
+    public String crearUrlConsultarLlamada(String callLogId) {
+
+        TblCentral central = this.prefijoSalidaList.get(0).getTblCentral();
+        this.http = central.getProtocolo();
+        this.ip_publica = central.getIpCentral();
+        this.directorioCentral = central.getDirectorio();
+        //TblUrlLlamada urlLlamar = central.getTblUrlLlamadaList().get(2);// llamar. Buscar servicio para llamar.
+        this.servicio = "consultar.php?call_log_id=";//urlLlamar.getServicio();
+
+        String URL_LLAMAR = this.http + this.ip_publica + this.directorioCentral + this.servicio + callLogId;
+        System.out.println("LlamarController.crearUrlConsultarLlamada(): " + URL_LLAMAR);
+        return URL_LLAMAR;
     }
 
 }

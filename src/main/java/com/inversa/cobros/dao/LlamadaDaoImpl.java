@@ -184,15 +184,39 @@ public class LlamadaDaoImpl implements LlamadaDao {
     }
 
     /**
-     * 
+     *
      * @param telefono
      * @param codigoCartera
-     * @return 
+     * @return
      */
     public List<TblLlamada> buscarPorTelefono(String telefono, String codigoCartera) {
         try {
             Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tl.call_to_number = ?1 and tg.codigo_cartera = ?2 order by tl.id_llamada desc", TblLlamada.class);
             query.setParameter(1, telefono);
+            query.setParameter(2, codigoCartera);
+            List<TblLlamada> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found;
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * @param codigoGestor
+     * @param codigoCartera
+     * @return 
+     */
+    @Override
+    public List<TblLlamada> buscarPorGestorCartera(String codigoGestor, String codigoCartera) {
+        try {
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tg.codigo_gestor = ?1 and tg.codigo_cartera = ?2 order by tl.fechaingreso desc", TblLlamada.class);
+            query.setParameter(1, codigoGestor);
             query.setParameter(2, codigoCartera);
             List<TblLlamada> found = query.getResultList();
             if (found.isEmpty()) {

@@ -90,6 +90,9 @@ public class CarteraGestionController implements Serializable {
     private static Client cliente;
     private static WebTarget webTarget;
     private TblLlamada llamada_En_Proceso;
+    
+    @Inject
+    private LlamarController llamarController;
 
     @Inject
     private GestionController gestionController;
@@ -830,7 +833,13 @@ public class CarteraGestionController implements Serializable {
 
                     } else {
 
-                        String URL_CONSULTAR = this.http + this.ip_publica + "/PBXPortal/consultar.php?call_log_id=" + callLogId;
+                        String URL_CONSULTAR = null;
+                        
+                        if(this.http == null || this.ip_publica == null){
+                            URL_CONSULTAR = this.llamarController.crearUrlConsultarLlamada(callLogId);
+                        }else{
+                            URL_CONSULTAR = this.http + this.ip_publica + "/PBXPortal/consultar.php?call_log_id=" + callLogId;
+                        }
 
                         cliente = ClientBuilder.newClient();
                         //Leer una llamada (metodo get)

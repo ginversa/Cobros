@@ -525,13 +525,6 @@ public class UpdateGestionController implements Serializable {
 
                     for (int index = 0; index < llamadaConDatosList.size(); index++) {
                         String telefono = llamadaConDatosList.get(index).getCallToNumber();
-                        /*
-                            if (llamadaConDatosList.get(index).getIdTipotelefono() == null || llamadaConDatosList.get(index).getIdTipotelefono().getIdTipotelefono() == null) {
-                                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Tipo Teléfono requerido!");
-                                FacesContext.getCurrentInstance().addMessage(null, msg);
-                                return false;
-                            }
-                         */
 
                         Tipificacion tipificacion = llamadaConDatosList.get(index).getIdTipificacion();
                         Integer idTipificacion = null;
@@ -553,77 +546,15 @@ public class UpdateGestionController implements Serializable {
                             FacesContext.getCurrentInstance().addMessage(null, msg);
                             return false;
                         }
-
-                        /*
-                            Razon de mora.
-                            No es requerido: si la tipificacion es;
-                            --- Promesa de pago
-                            --- Contacto sin promesa
-                            --- No Contesta
-                            --- Mensaje Familiar
-                         */
- /*
-                        if (!isNullIDTipificacion) {
-                            boolean isPP = idTipificacion.equals(1) ? true : false;
-                            
-                                boolean isCSP = idTipificacion.equals(7) ? true : false;
-                                boolean isNCO = idTipificacion.equals(6) ? true : false;
-                                boolean isMFA = idTipificacion.equals(4) ? true : false;
-                                if (!isPP && !isCSP && !isNCO && !isMFA) {
-                                    if (llamadaConDatosList.get(index).getIdrazonmora() == null || llamadaConDatosList.get(index).getIdrazonmora().getIdrazonmora() == null) {
-                                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Razón Mora requerido!");
-                                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                                        return false;
-                                    }
-                                } 
-                                //Promesas. requerido: si la tipificacion es;
-                                //--- Promesa de pago
-                             
-                            if (isPP) {
-                                if (this.promesaList == null || this.promesaList.isEmpty() || this.promesaList.size() <= 0) {
-                                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Debe registrar una PROMESA. Requerido!");
-                                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                                    return false;
-                                }
-                            }// Promesa de pago                                
-                        }
-                         */
+                        
                     }//for
-
-                    // agregar promesas...
-                    /*
-                    for (int index = 0; index < llamadaConDatosList.size(); index++) {
-                        if (this.promesaList != null && !this.promesaList.isEmpty() && this.promesaList.size() > 0) {
-                            List<TblPromesa> promesas = new ArrayList<TblPromesa>();
-                            for (int i = 0; i < this.promesaList.size(); i++) {
-                                if (llamadaConDatosList.get(index).getCallToNumber().equals(this.promesaList.get(i).getTelefono())) {
-                                    this.promesaList.get(i).setIdLlamada(llamadaConDatosList.get(index));
-                                    this.promesaList.get(i).setIdGestion(this.gestion);
-
-                                    boolean hasOperation = this.promesaList.get(i).getOperacion() != null && !this.promesaList.get(i).getOperacion().trim().equals("") ? true : false;
-                                    boolean hasMtopago = this.promesaList.get(i).getMtopago() != null && !this.promesaList.get(i).getMtopago().equals(0) ? true : false;
-
-                                    if (hasOperation && hasMtopago) {
-                                        promesas.add(this.promesaList.get(i));
-                                    }
-                                }
-                            }
-
-                            // agregar las promesas...
-                            if (promesas != null && !promesas.isEmpty() && promesas.size() > 0) {
-                                llamadaConDatosList.get(index).setTblPromesaList(promesas);
-                            }
-                        }
-                    }// agregar promesas...
-                     */
+                    
                     // agregar llamadas...
-                    /*
                     if (llamadaConDatosList != null && !llamadaConDatosList.isEmpty() && llamadaConDatosList.size() > 0) {
                         for (int index = 0; index < llamadaConDatosList.size(); index++) {
                             this.gestion.getTblLlamadaList().add(llamadaConDatosList.get(index));
                         }
-                    }
-                     */
+                    }                    
                 }
 
                 // actualizar gestion...
