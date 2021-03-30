@@ -695,6 +695,11 @@
                                     <p:column headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
                                         <h:outputText value="#{llamada.idrazonmora.descripcion}" />
                                     </p:column>
+                                    <p:column headerText="Fecha Llamada" filterBy="#{llamada.fechaingreso}" sortBy="#{llamada.fechaingreso}" >
+                                        <h:outputText value="#{llamada.fechaingreso}" >
+                                            <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </p:column>
                                     <p:column headerText="Última Promesa" filterBy="#{llamada.ultimaPromesa.mtopago}" filterMatchMode="contains" sortBy="#{llamada.ultimaPromesa.mtopago}" >
                                         <h:outputText value="#{llamada.ultimaPromesa.mtopago}" >
                                             <f:convertNumber type="currency" currencySymbol="#{llamada.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
@@ -707,7 +712,7 @@
                                         <h:outputText value="#{llamada.ultimaPromesa.fechaPago}" >
                                             <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
                                         </h:outputText>
-                                    </p:column> 
+                                    </p:column>
                                 </p:dataTable>
                             </div>
                         </p:tab>

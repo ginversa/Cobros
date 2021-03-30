@@ -209,16 +209,8 @@ public class FindmeController implements Serializable {
             this.selectedLlamada.setCallToNumber(llamada.getCallToNumber());
 
             String telefono = this.selectedLlamada.getCallToNumber();
-            /*
-            String URL_LLAMAR = "http://192.168.7.201/PBXPortal/llamar.php?ext=118&numero=987356220";
-            cliente = ClientBuilder.newClient();
 
-            //Leer una llamada (metodo get)
-            webTarget = cliente.target(URL_LLAMAR);
-            // get extracted document as JSON
-            String jsonExtract = webTarget.request(MediaType.APPLICATION_JSON).get(String.class);
-             */
-            String jsonExtract = llamarController.hacerLlamada("87356220");
+            String jsonExtract = llamarController.hacerLlamada(telefono);
             if (jsonExtract != null) {
                 System.out.println("Generar una llamada: " + jsonExtract);
 
