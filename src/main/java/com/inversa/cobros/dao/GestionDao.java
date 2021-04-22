@@ -41,7 +41,7 @@ public interface GestionDao {
     
     public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj);//ultima gestion
 
-    public void insert(TblGestion obj);
+    public Long insert(TblGestion obj);
 
     public void update(TblGestion obj);
 

@@ -9,7 +9,7 @@
         <h:outputStylesheet name="css/flags/flags.css" library="demo" />
     </ui:define>
 
-    <ui:define name="title">Mi Gestión</ui:define>
+    <ui:define name="title">Gestión</ui:define>
 
     <ui:define name="viewname">
         <li>Gestiones</li>
@@ -17,6 +17,8 @@
         <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
         <li>/</li>
         <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+         <li>/</li>
+        <li>Buscar Gestión</li>
     </ui:define>
 
     <ui:param name="viewname" value="Mi Gestión" />
@@ -70,13 +72,13 @@
                                      emptyMessage="No se encontraron registros." >                            
 
                             <p:column id="idTelefonoBG" headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >                                
-                                <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(llamada.idGestion)}" >
+                                <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedLlamada(llamada)}" >
                                     <h:outputText value="#{llamada.callToNumber}" />
                                 </p:commandLink>
                             </p:column>
 
-                            <p:column id="idCuentaBG" headerText="#Cuenta" filterBy="#{llamada.idGestion.operacion}" filterMatchMode="contains" sortBy="#{llamada.idGestion.operacion}" >
-                                <h:outputText value="#{llamada.idGestion.operacion}" />
+                            <p:column id="idCuentaBG" headerText="#Cuenta" filterBy="#{llamada.operacion}" filterMatchMode="contains" sortBy="#{llamada.operacion}" >
+                                <h:outputText value="#{llamada.operacion}" />
                             </p:column>                                               
                             <p:column id="idTipificacionBG" headerText="Tipificación" filterBy="#{llamada.idTipificacion.descripcion}" sortBy="#{llamada.idTipificacion.descripcion}" >
                                 <h:outputText value="#{llamada.idTipificacion.descripcion}" />
@@ -106,8 +108,8 @@
                                     <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
                                 </h:outputText>
                             </p:column>
-                            <p:column id="idCarteraBG" headerText="Cartera" filterBy="#{llamada.idGestion.codigoCartera} - #{llamada.idGestion.nombre_cartera}" filterMatchMode="contains" sortBy="#{llamada.idGestion.codigoCartera} - #{llamada.idGestion.nombre_cartera}" >
-                                <h:outputText value="#{llamada.idGestion.codigoCartera} - #{llamada.idGestion.nombre_cartera}" />
+                            <p:column id="idCarteraBG" headerText="Gestor" filterBy="#{llamada.idGestion.codigoGestor}" filterMatchMode="contains" sortBy="#{llamada.idGestion.codigoGestor}" >
+                                <h:outputText value="#{llamada.idGestion.codigoGestor}" />
                             </p:column>
                         </p:dataTable>
                     </div>

@@ -37,13 +37,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TblPromesa.findByIdPromesa", query = "SELECT t FROM TblPromesa t WHERE t.idPromesa = :idPromesa"),
     @NamedQuery(name = "TblPromesa.findByOperacion", query = "SELECT t FROM TblPromesa t WHERE t.operacion = :operacion"),
     @NamedQuery(name = "TblPromesa.findByTelefono", query = "SELECT t FROM TblPromesa t WHERE t.telefono = :telefono"),
-    @NamedQuery(name = "TblPromesa.findByTipodescuento", query = "SELECT t FROM TblPromesa t WHERE t.tipodescuento = :tipodescuento"),
     @NamedQuery(name = "TblPromesa.findByMtoporcentaje", query = "SELECT t FROM TblPromesa t WHERE t.mtoporcentaje = :mtoporcentaje"),
     @NamedQuery(name = "TblPromesa.findByMtopago", query = "SELECT t FROM TblPromesa t WHERE t.mtopago = :mtopago"),
-    @NamedQuery(name = "TblPromesa.findByFechaPago", query = "SELECT t FROM TblPromesa t WHERE t.fechaPago = :fechaPago"),    
+    @NamedQuery(name = "TblPromesa.findByFechaPago", query = "SELECT t FROM TblPromesa t WHERE t.fechaPago = :fechaPago"),
     @NamedQuery(name = "TblPromesa.findByFechaPagoAndUsuarioIngreso", query = "SELECT t FROM TblPromesa t WHERE t.fechaPago = :fechaPago AND t.usuarioingreso = :usuarioingreso"),
-    @NamedQuery(name = "TblPromesa.findByTipoarreglopago", query = "SELECT t FROM TblPromesa t WHERE t.tipoarreglopago = :tipoarreglopago"),
-    @NamedQuery(name = "TblPromesa.findByEstado", query = "SELECT t FROM TblPromesa t WHERE t.estado = :estado"),
     @NamedQuery(name = "TblPromesa.findByUsuarioingreso", query = "SELECT t FROM TblPromesa t WHERE t.usuarioingreso = :usuarioingreso"),
     @NamedQuery(name = "TblPromesa.findByFechaingreso", query = "SELECT t FROM TblPromesa t WHERE t.fechaingreso = :fechaingreso"),
     @NamedQuery(name = "TblPromesa.findByUsuariomodifico", query = "SELECT t FROM TblPromesa t WHERE t.usuariomodifico = :usuariomodifico"),
@@ -65,10 +62,6 @@ public class TblPromesa implements Serializable {
     @Column(name = "telefono")
     private String telefono;
     
-    @Size(max = 3)
-    @Column(name = "tipodescuento")
-    private String tipodescuento;
-    
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "mtoporcentaje")
     private BigDecimal mtoporcentaje;
@@ -79,14 +72,6 @@ public class TblPromesa implements Serializable {
     @Column(name = "fecha_pago")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaPago;
-    
-    @Size(max = 3)
-    @Column(name = "tipoarreglopago")
-    private String tipoarreglopago;
-    
-    @Size(max = 3)
-    @Column(name = "estado")
-    private String estado;
     
     @Size(max = 50)
     @Column(name = "usuarioingreso")
@@ -104,14 +89,26 @@ public class TblPromesa implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     
+    @JoinColumn(name = "idarreglopago", referencedColumnName = "idarreglopago")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Arreglopago idarreglopago;
+    
+    @JoinColumn(name = "idestadopromesa", referencedColumnName = "idestadopromesa")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Estadopromesa idestadopromesa;
+    
     @JoinColumn(name = "id_moneda", referencedColumnName = "id_moneda")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMoneda;
     
+    @JoinColumn(name = "idtipodescuento", referencedColumnName = "idtipodescuento")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Tipodescuento idtipodescuento;
+
     @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblGestion idGestion;
-    
+
     @JoinColumn(name = "id_llamada", referencedColumnName = "id_llamada")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblLlamada idLlamada;
@@ -147,14 +144,6 @@ public class TblPromesa implements Serializable {
         this.telefono = telefono;
     }
 
-    public String getTipodescuento() {
-        return tipodescuento;
-    }
-
-    public void setTipodescuento(String tipodescuento) {
-        this.tipodescuento = tipodescuento;
-    }
-
     public BigDecimal getMtoporcentaje() {
         return mtoporcentaje;
     }
@@ -177,22 +166,6 @@ public class TblPromesa implements Serializable {
 
     public void setFechaPago(Date fechaPago) {
         this.fechaPago = fechaPago;
-    }
-
-    public String getTipoarreglopago() {
-        return tipoarreglopago;
-    }
-
-    public void setTipoarreglopago(String tipoarreglopago) {
-        this.tipoarreglopago = tipoarreglopago;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public String getUsuarioingreso() {
@@ -227,12 +200,36 @@ public class TblPromesa implements Serializable {
         this.fechamodifico = fechamodifico;
     }
 
+    public Arreglopago getIdarreglopago() {
+        return idarreglopago;
+    }
+
+    public void setIdarreglopago(Arreglopago idarreglopago) {
+        this.idarreglopago = idarreglopago;
+    }
+
+    public Estadopromesa getIdestadopromesa() {
+        return idestadopromesa;
+    }
+
+    public void setIdestadopromesa(Estadopromesa idestadopromesa) {
+        this.idestadopromesa = idestadopromesa;
+    }
+
     public Moneda getIdMoneda() {
         return idMoneda;
     }
 
     public void setIdMoneda(Moneda idMoneda) {
         this.idMoneda = idMoneda;
+    }
+
+    public Tipodescuento getIdtipodescuento() {
+        return idtipodescuento;
+    }
+
+    public void setIdtipodescuento(Tipodescuento idtipodescuento) {
+        this.idtipodescuento = idtipodescuento;
     }
 
     public TblGestion getIdGestion() {
@@ -250,6 +247,7 @@ public class TblPromesa implements Serializable {
     public void setIdLlamada(TblLlamada idLlamada) {
         this.idLlamada = idLlamada;
     }
+    
 
     @Override
     public int hashCode() {
@@ -275,5 +273,5 @@ public class TblPromesa implements Serializable {
     public String toString() {
         return "com.inversa.cobros.model.TblPromesa[ idPromesa=" + idPromesa + " ]";
     }
-    
+
 }

@@ -5,6 +5,7 @@
  */
 package com.inversa.reporte.controller;
 
+import com.inversa.cobros.constante.comun.ConstanteComun;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
 import java.util.Calendar;
@@ -43,7 +44,7 @@ public class GestionProductividadPorAsesorController implements Serializable{
     @PostConstruct
     public void init(){
         this.fechaHoy = Calendar.getInstance();
-        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(ConstanteComun.USUARIO);
         
         this.fecha = this.fechaHoy.getTime();
     }
@@ -53,7 +54,7 @@ public class GestionProductividadPorAsesorController implements Serializable{
      */
     public void buscar(){
     
-        this.codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera"); 
+        this.codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(ConstanteComun.COD_CARTERA); 
         
         if (this.fecha == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha requerida!");

@@ -68,11 +68,28 @@ public class CarteraDaoImpl implements CarteraDao {
     }
 
     @Override
-    public List<TblCartera> findByNumeroCuenta(TblCartera obj) {
+    public TblCartera findByNumeroCuenta(TblCartera obj) {
         TypedQuery<TblCartera> query = em.createNamedQuery("TblCartera.findByNumeroCuenta", TblCartera.class);
         query.setParameter("numeroCuenta", obj.getNumeroCuenta());
-        List<TblCartera> results = query.getResultList();
-        return results;
+        List<TblCartera> found = query.getResultList();
+        if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {
+            return found.get(0);
+        }        
+    }
+    
+    @Override
+    public TblCartera findByNumeroCuentaANDIdentificacion(TblCartera obj) {
+        TypedQuery<TblCartera> query = em.createNamedQuery("TblCartera.findByNumeroCuentaANDIdentificacion", TblCartera.class);
+        query.setParameter("numeroCuenta", obj.getNumeroCuenta());
+        query.setParameter("identificacion", obj.getIdentificacion());
+        List<TblCartera> found = query.getResultList();
+        if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {
+            return found.get(0);
+        }        
     }
 
     @Override
@@ -167,7 +184,7 @@ public class CarteraDaoImpl implements CarteraDao {
 
     @Override
     public List<TblCartera> findByCodigoGestorANDCodigoCartera(TblCartera objCartera) {
-        Query query = em.createNativeQuery("select cartera.* from tbl_cartera cartera where cartera.codigo_cartera = ?1 and cartera.codigo_gestor = ?2 and not exists (select tg.id_gestion from tbl_gestion tg where tg.operacion = cartera.numero_cuenta)", TblCartera.class);
+        Query query = em.createNativeQuery("select cartera.* from tbl_cartera cartera where cartera.codigo_cartera = ?1 and cartera.codigo_gestor = ?2 and not exists (select tl.operacion from tbl_llamada tl where tl.operacion = cartera.numero_cuenta limit 1)", TblCartera.class);
         query.setParameter(1, objCartera.getCodigoCartera());
         query.setParameter(2, objCartera.getCodigoGestor());
         List<TblCartera> results = query.getResultList();
@@ -176,7 +193,7 @@ public class CarteraDaoImpl implements CarteraDao {
 
     @Override
     public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera) {
-        Query query = em.createNativeQuery("select cartera.* from tbl_cartera cartera where cartera.codigo_cartera = ?1 and cartera.codigo_gestor = ?2 and cartera.identificacion = ?3 and not exists (select tg.id_gestion from tbl_gestion tg where tg.operacion = cartera.numero_cuenta)", TblCartera.class);
+        Query query = em.createNativeQuery("select cartera.* from tbl_cartera cartera where cartera.codigo_cartera = ?1 and cartera.codigo_gestor = ?2 and cartera.identificacion = ?3 order by cartera.id desc", TblCartera.class);
         query.setParameter(1, objCartera.getCodigoCartera());
         query.setParameter(2, objCartera.getCodigoGestor());
         query.setParameter(3, objCartera.getIdentificacion());

@@ -12,13 +12,11 @@
     <ui:define name="title">Mi Llamada</ui:define>
 
     <ui:define name="viewname">
-        <li>Gestiones</li>
-        <li>/</li>
-        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
+        <li>Supervisor</li>
         <li>/</li>
         <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
         <li>/</li>
-        <li><p:link outcome="listarLlamada">Mi Llamada</p:link></li>
+        <li>Mi Llamada</li>
     </ui:define>
 
     <ui:param name="viewname" value="Mi Llamada" />
@@ -33,14 +31,19 @@
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
-                                     emptyMessage="No se encontraron registros." >
+                                     emptyMessage="No se encontraron registros." >                            
 
-                            <p:column headerText="Nombre" filterBy="#{llamada.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{llamada.idGestion.nombreCliente}" >
-                                <h:outputText value="#{llamada.idGestion.nombreCliente}" />
+                            <p:column headerText="#Cuenta" filterBy="#{llamada.operacion}" filterMatchMode="contains" sortBy="#{llamada.operacion}" >
+                                <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedLlamada(llamada)}" >
+                                    <h:outputText value="#{llamada.operacion}" />
+                                </p:commandLink>
                             </p:column>
                             <p:column headerText="Identificación" filterBy="#{llamada.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{llamada.idGestion.identificacion}" >
                                 <h:outputText value="#{llamada.idGestion.identificacion}" />
                             </p:column>
+                            <p:column headerText="Nombre" filterBy="#{llamada.idGestion.nombreCliente}" filterMatchMode="contains" sortBy="#{llamada.idGestion.nombreCliente}" >
+                                <h:outputText value="#{llamada.idGestion.nombreCliente}" />
+                            </p:column>                            
                             <p:column headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >
                                 <h:outputText value="#{llamada.callToNumber}" />
                             </p:column>

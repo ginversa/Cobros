@@ -5,7 +5,9 @@
  */
 package com.inversa.cobros.controller;
 
+import com.inversa.cobros.constante.comun.ConstanteComun;
 import com.inversa.cobros.ejb.UsuarioService;
+import com.inversa.cobros.model.TblRolusuario;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -27,10 +29,15 @@ public class LoginController implements Serializable {
     private UsuarioService ejbLocal;
 
     private TblUsuario usuario;
+    
+    private TblRolusuario rolUsuario;
+    
+    private boolean esSupervisor;
 
     @PostConstruct
     public void init() {
         this.usuario = new TblUsuario();
+        esSupervisor = false;
     }
 
     public TblUsuario getUsuario() {
@@ -41,6 +48,23 @@ public class LoginController implements Serializable {
         this.usuario = usuario;
     }    
 
+    public TblRolusuario getRolUsuario() {
+        return rolUsuario;
+    }
+
+    public void setRolUsuario(TblRolusuario rolUsuario) {
+        this.rolUsuario = rolUsuario;
+    }
+
+    public boolean isEsSupervisor() {
+        return esSupervisor;
+    }
+
+    public void setEsSupervisor(boolean esSupervisor) {
+        this.esSupervisor = esSupervisor;
+    }
+    
+
     /**
      *
      * @return
@@ -49,13 +73,25 @@ public class LoginController implements Serializable {
         String redireccion = null;
 
         try {
-            TblUsuario obj = this.ejbLocal.findByUsuarioAndClave(usuario);
-            if (obj != null) {
+            this.usuario = this.ejbLocal.findByUsuarioAndClave(usuario);
+            if (this.usuario != null) {
+                
+                this.rolUsuario = this.usuario.getIdRolusuario();
+                
                 FacesContext facesContext = FacesContext.getCurrentInstance();
-                facesContext.getExternalContext().getSessionMap().put("usuario", obj);
+                facesContext.getExternalContext().getSessionMap().put(ConstanteComun.USUARIO, this.usuario);                
                 redireccion = "operario/cartera";
                 
-                System.out.println("====> Usuario             : " + obj.toString());                
+                if(this.rolUsuario != null){
+                    facesContext.getExternalContext().getSessionMap().put(ConstanteComun.ROL_USUARIO, this.rolUsuario);
+                    System.out.println("====> Rol Usuario             : " + this.rolUsuario.toString());
+                    
+                    if(this.rolUsuario.getCodigo().equals(ConstanteComun.COD_SUPERVISOR)){
+                        this.setEsSupervisor(true);
+                    }else{
+                        this.setEsSupervisor(false);
+                    }
+                }                
                 
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Credenciales incorrectas!"));

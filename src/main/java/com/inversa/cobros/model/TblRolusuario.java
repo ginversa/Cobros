@@ -80,8 +80,11 @@ public class TblRolusuario implements Serializable {
     private Date fechamodifico;
     
     @OneToMany(mappedBy = "idRolusuario", fetch = FetchType.LAZY)
-    private List<TblUsuario> tblUsuarioList;    
-    
+    private List<TblUsuario> tblUsuarioList;
+
+    @Size(max = 6)
+    @Column(name = "codigo")
+    private String codigo;
 
     public TblRolusuario() {
     }
@@ -147,7 +150,7 @@ public class TblRolusuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.TblRolusuario[ idRolusuario=" + idRolusuario + " ]";
+        return "TblRolusuario{" + "idRolusuario=" + idRolusuario + ", nombre=" + nombre + ", descripcion=" + descripcion + ", estado=" + estado + ", usuarioingreso=" + usuarioingreso + ", usuariomodifico=" + usuariomodifico + ", fechaingreso=" + fechaingreso + ", fechamodifico=" + fechamodifico + ", tblUsuarioList=" + tblUsuarioList + ", codigo=" + codigo + '}';
     }
 
     public String getNombre() {
@@ -188,6 +191,14 @@ public class TblRolusuario implements Serializable {
 
     public void setUsuariomodifico(String usuariomodifico) {
         this.usuariomodifico = usuariomodifico;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
     
 }

@@ -143,23 +143,6 @@ public class LlamadaDaoImpl implements LlamadaDao {
         em.remove(obj);
     }
 
-    @Override
-    public TblLlamada findUltimaLlamada(Long idGestion) {
-        try {
-            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl where tl.id_gestion = ?1 order by tl.id_llamada desc limit 1", TblLlamada.class);
-            query.setParameter(1, idGestion);
-            List<TblLlamada> found = query.getResultList();
-            if (found.isEmpty()) {
-                return null; //or throw checked exception data not found
-            } else {
-                return found.get(0);
-            }
-
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
     /**
      *
      * @param identificacion
@@ -207,10 +190,10 @@ public class LlamadaDaoImpl implements LlamadaDao {
     }
 
     /**
-     * 
+     *
      * @param codigoGestor
      * @param codigoCartera
-     * @return 
+     * @return
      */
     @Override
     public List<TblLlamada> buscarPorGestorCartera(String codigoGestor, String codigoCartera) {
@@ -223,6 +206,79 @@ public class LlamadaDaoImpl implements LlamadaDao {
                 return null; //or throw checked exception data not found
             } else {
                 return found;
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<TblLlamada> findLlamadasByOperacion(String codigoCartera, String identificacion, String operacion) {
+        try {
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tl.operacion = ?1 and tg.identificacion = ?2 and tg.codigo_cartera = ?3 order by (case when tl.fechamodifico is not null then tl.fechamodifico else tl.fechaingreso end)", TblLlamada.class);
+            query.setParameter(1, operacion);
+            query.setParameter(2, identificacion);
+            query.setParameter(3, codigoCartera);
+            List<TblLlamada> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found;
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public TblLlamada findUltimaLlamada(Long idGestion) {
+        try {
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl where tl.id_gestion = ?1 order by tl.id_llamada desc limit 1", TblLlamada.class);
+            query.setParameter(1, idGestion);
+            List<TblLlamada> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion, String operacion) {
+        try {
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tl.operacion = ?1 and tg.identificacion = ?2 and tg.codigo_cartera = ?3 order by (case when tl.fechamodifico is not null then tl.fechamodifico else tl.fechaingreso end) desc limit 1", TblLlamada.class);
+            query.setParameter(1, operacion);
+            query.setParameter(2, identificacion);
+            query.setParameter(3, codigoCartera);
+            List<TblLlamada> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion) {
+        try {
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tg.identificacion = ?1 and tg.codigo_cartera = ?2 order by tl.id_llamada desc limit 1", TblLlamada.class);            
+            query.setParameter(1, identificacion);
+            query.setParameter(2, codigoCartera);
+            List<TblLlamada> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
             }
 
         } catch (NoResultException e) {

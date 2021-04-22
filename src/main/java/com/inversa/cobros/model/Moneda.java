@@ -44,39 +44,31 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Moneda.findByUsuariomodifico", query = "SELECT m FROM Moneda m WHERE m.usuariomodifico = :usuariomodifico"),
     @NamedQuery(name = "Moneda.findByFechamodifico", query = "SELECT m FROM Moneda m WHERE m.fechamodifico = :fechamodifico")})
 public class Moneda implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_moneda")
     private Integer idMoneda;
-
     @Size(max = 3)
     @Column(name = "codigo")
     private String codigo;
-    
     @Size(max = 1)
     @Column(name = "simbolo")
     private String simbolo;
-    
     @Size(max = 20)
     @Column(name = "descripcion")
     private String descripcion;
-    
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
-    
     @Size(max = 50)
     @Column(name = "usuariomodifico")
-    private String usuariomodifico;   
-
+    private String usuariomodifico;
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
@@ -94,47 +86,6 @@ public class Moneda implements Serializable {
 
     public void setIdMoneda(Integer idMoneda) {
         this.idMoneda = idMoneda;
-    }
-
-    public Date getFechaingreso() {
-        return fechaingreso;
-    }
-
-    public void setFechaingreso(Date fechaingreso) {
-        this.fechaingreso = fechaingreso;
-    }
-
-    public Date getFechamodifico() {
-        return fechamodifico;
-    }
-
-    public void setFechamodifico(Date fechamodifico) {
-        this.fechamodifico = fechamodifico;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idMoneda != null ? idMoneda.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Moneda)) {
-            return false;
-        }
-        Moneda other = (Moneda) object;
-        if ((this.idMoneda == null && other.idMoneda != null) || (this.idMoneda != null && !this.idMoneda.equals(other.idMoneda))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return this.simbolo.toString();
     }
 
     public String getCodigo() {
@@ -169,12 +120,53 @@ public class Moneda implements Serializable {
         this.usuarioingreso = usuarioingreso;
     }
 
+    public Date getFechaingreso() {
+        return fechaingreso;
+    }
+
+    public void setFechaingreso(Date fechaingreso) {
+        this.fechaingreso = fechaingreso;
+    }
+
     public String getUsuariomodifico() {
         return usuariomodifico;
     }
 
     public void setUsuariomodifico(String usuariomodifico) {
         this.usuariomodifico = usuariomodifico;
+    }
+
+    public Date getFechamodifico() {
+        return fechamodifico;
+    }
+
+    public void setFechamodifico(Date fechamodifico) {
+        this.fechamodifico = fechamodifico;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idMoneda != null ? idMoneda.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Moneda)) {
+            return false;
+        }
+        Moneda other = (Moneda) object;
+        if ((this.idMoneda == null && other.idMoneda != null) || (this.idMoneda != null && !this.idMoneda.equals(other.idMoneda))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return this.descripcion;
     }
     
 }

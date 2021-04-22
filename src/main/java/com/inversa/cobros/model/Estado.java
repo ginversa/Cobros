@@ -149,7 +149,7 @@ public class Estado implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.Estado[ idEstado=" + idEstado + " ]";
+        return this.descripcion;
     }
     
 }

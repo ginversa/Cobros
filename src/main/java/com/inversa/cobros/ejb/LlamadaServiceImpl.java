@@ -136,22 +136,23 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
     @Override
     public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera) {
         List<TblLlamada> llamadas = dao.buscarLlamada(identificacion, codigoCartera);
-        
-        for (int i = 0; i < llamadas.size(); i++) {
-            TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
-            llamadas.get(i).setUltimaPromesa(promesaUltimoPago);            
+        if (llamadas != null && !llamadas.isEmpty()) {
+            for (int i = 0; i < llamadas.size(); i++) {
+                TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
+                llamadas.get(i).setUltimaPromesa(promesaUltimoPago);
+            }
         }
-
+        
         return llamadas;
     }
 
     @Override
     public List<TblLlamada> buscarPorTelefono(String telefono, String codigoCartera) {
         List<TblLlamada> llamadas = dao.buscarPorTelefono(telefono, codigoCartera);
-        
+
         for (int i = 0; i < llamadas.size(); i++) {
             TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
-            llamadas.get(i).setUltimaPromesa(promesaUltimoPago);            
+            llamadas.get(i).setUltimaPromesa(promesaUltimoPago);
         }
 
         return llamadas;
@@ -160,6 +161,21 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
     @Override
     public List<TblLlamada> buscarPorGestorCartera(String codigoGestor, String codigoCartera) {
         return dao.buscarPorGestorCartera(codigoGestor, codigoCartera);
+    }
+
+    @Override
+    public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion, String operacion) {
+        return dao.findUltimaLlamada(codigoCartera, identificacion, operacion);
+    }
+
+    @Override
+    public List<TblLlamada> findLlamadasByOperacion(String codigoCartera, String identificacion, String numeroCuenta) {
+        return dao.findLlamadasByOperacion(codigoCartera, identificacion, numeroCuenta);
+    }
+
+    @Override
+    public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion) {
+        return dao.findUltimaLlamada(codigoCartera, identificacion);
     }
 
 }

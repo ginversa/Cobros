@@ -55,5 +55,11 @@ public interface LlamadaServiceRemote {
     public List<TblLlamada> buscarPorTelefono(String telefono, String codigoCartera);
 
     public List<TblLlamada> buscarPorGestorCartera(String codigoGestor, String codigoCartera);
+    
+    public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion, String operacion);
+    
+    public List<TblLlamada> findLlamadasByOperacion(String codigoCartera, String identificacion, String numeroCuenta);
+    
+    public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion);
 
 }

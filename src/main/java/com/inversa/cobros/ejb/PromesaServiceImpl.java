@@ -129,4 +129,19 @@ public class PromesaServiceImpl implements PromesaService, PromesaServiceRemote 
         return dao.updateEstadoPromesa(idGestion, estado);
     }
 
+    @Override
+    public TblPromesa findUltimaPromesa(String codigoCartera, String identificacion, String operacion) {
+        return dao.findUltimaPromesa(codigoCartera,identificacion,operacion);
+    }
+
+    @Override
+    public List<TblPromesa> findPromesaPorOperacion(String codigoCartera, String identificacion, String operacion) {
+        return dao.findPromesaPorOperacion(codigoCartera, identificacion, operacion);
+    }
+
+    @Override
+    public TblPromesa findUltimaPromesa(String codigoCartera, String identificacion) {
+        return dao.findUltimaPromesa(codigoCartera, identificacion);
+    }
+
 }

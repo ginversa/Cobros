@@ -16,7 +16,7 @@
         <li>/</li>
         <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
         <li>/</li>
-        <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+        <li>Mi Gestión</li>
     </ui:define>
 
     <ui:param name="viewname" value="Mi Gestión" />
@@ -32,12 +32,7 @@
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >
-
-                            <p:column headerText="#Cuenta" filterBy="#{gestion.operacion}" filterMatchMode="contains" sortBy="#{gestion.operacion}" >                                
-                                <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(gestion)}" >
-                                    <h:outputText value="#{gestion.operacion}" />
-                                </p:commandLink>
-                            </p:column>
+                            
                             <p:column headerText="Identificación" filterBy="#{gestion.identificacion}" filterMatchMode="contains" sortBy="#{gestion.identificacion}" >                                                                
                                 <h:outputText value="#{gestion.identificacion}" />
                             </p:column>
@@ -49,6 +44,11 @@
                             </p:column>                            
                             <p:column headerText="Fecha Gestión" filterBy="#{gestion.fechaGestion}" sortBy="#{gestion.fechaGestion}" >
                                 <h:outputText value="#{gestion.fechaGestion}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha Última Gestión" filterBy="#{gestion.fechamodifico}" sortBy="#{gestion.fechamodifico}" >
+                                <h:outputText value="#{gestion.fechamodifico}" >
                                     <f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>
                             </p:column>                            

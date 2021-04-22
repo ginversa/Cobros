@@ -43,7 +43,7 @@ public interface GestionServiceRemote {
     
     public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj);
     
-    public void insert(TblGestion obj);
+    public Long insert(TblGestion obj);
 
     public void update(TblGestion obj);
 
@@ -55,6 +55,6 @@ public interface GestionServiceRemote {
     
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj);
     
-    public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj);
+    //public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj);
 
 }

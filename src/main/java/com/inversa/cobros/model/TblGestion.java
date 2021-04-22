@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblGestion.findByIdGestion", query = "SELECT t FROM TblGestion t WHERE t.idGestion = :idGestion order by t.fechaingreso desc"),
     @NamedQuery(name = "TblGestion.findByCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblGestion.findByNombreCliente", query = "SELECT t FROM TblGestion t WHERE t.nombreCliente = :nombreCliente"),
-    @NamedQuery(name = "TblGestion.findByIdentificacion", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion ORDER BY t.idGestion desc"),    
+    @NamedQuery(name = "TblGestion.findByIdentificacion", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion ORDER BY t.idGestion desc"),
     @NamedQuery(name = "TblGestion.findByIdentificacionANDCodigoCartera", query = "SELECT t FROM TblGestion t WHERE t.identificacion = :identificacion AND t.codigoCartera = :codigoCartera ORDER BY t.idGestion desc"),
     @NamedQuery(name = "TblGestion.findByCodigoCarteraANDIdentificacion", query = "SELECT t FROM TblGestion t\n"
             + " WHERE t.codigoCartera = :codigoCartera\n"
@@ -58,90 +58,85 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblGestion.findByUsuariomodifico", query = "SELECT t FROM TblGestion t WHERE t.usuariomodifico = :usuariomodifico"),
     @NamedQuery(name = "TblGestion.findByFechamodifico", query = "SELECT t FROM TblGestion t WHERE t.fechamodifico = :fechamodifico")})
 public class TblGestion implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_gestion")
     private Long idGestion;
-    
+
     @Size(max = 10)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
-    
+
     @Size(max = 100)
     @Column(name = "nombre_cartera")
     private String nombre_cartera;
-    
+
     @Size(max = 50)
     @Column(name = "identificacion")
     private String identificacion;
-    
+
     @Size(max = 150)
     @Column(name = "nombre_cliente")
     private String nombreCliente;
-    
+
     @Size(max = 50)
     @Column(name = "operacion")
     private String operacion;
     
     @Column(name = "leyusura")
     private String leyusura;
-    
+
     @Size(max = 10)
     @Column(name = "codigo_gestor")
     private String codigoGestor;
-    
+
     @Column(name = "fecha_gestion")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaGestion; 
-    
+    private Date fechaGestion;
+
     @Size(max = 2147483647)
     @Column(name = "descripcion")
     private String descripcion;
-    
+
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
-    
+
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    
+
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
-    
+
     @Size(max = 50)
     @Column(name = "usuariomodifico")
-    private String usuariomodifico;    
-    
+    private String usuariomodifico;
+
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.LAZY)
-    private List<TblGestionsaldo> tblGestionsaldoList;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGestion", fetch = FetchType.LAZY)
     private List<TblPromesa> tblPromesaList;
     
-    @Transient
-    private String codigo_cliente;
-    
-    @Transient
-    private TblPromesa ultimaPromesa;
 
     @Transient
-    private Razonmora ultimaRazonMora;
+    private String codigo_cliente;
 
     @Transient
     private TblLlamada ultimaLLamada;
+    
+    @Transient
+    private TblPromesa ultimaPromesa;
     
 
     public TblGestion() {
@@ -190,7 +185,6 @@ public class TblGestion implements Serializable {
     public void setFechaGestion(Date fechaGestion) {
         this.fechaGestion = fechaGestion;
     }
-
 
     public Date getFechaingreso() {
         return fechaingreso;
@@ -257,16 +251,7 @@ public class TblGestion implements Serializable {
 
     public void setUltimaPromesa(TblPromesa ultimaPromesa) {
         this.ultimaPromesa = ultimaPromesa;
-    }    
-
-    public Razonmora getUltimaRazonMora() {
-        return ultimaRazonMora;
     }
-
-    public void setUltimaRazonMora(Razonmora ultimaRazonMora) {
-        this.ultimaRazonMora = ultimaRazonMora;
-    }
-
 
     public TblLlamada getUltimaLLamada() {
         return ultimaLLamada;
@@ -274,7 +259,7 @@ public class TblGestion implements Serializable {
 
     public void setUltimaLLamada(TblLlamada ultimaLLamada) {
         this.ultimaLLamada = ultimaLLamada;
-    }    
+    }
 
     @Override
     public int hashCode() {
@@ -299,9 +284,9 @@ public class TblGestion implements Serializable {
     @Override
     public String toString() {
         return "com.inversa.cobros.model.TblGestion[ idGestion=" + idGestion + " ]";
-    } 
+    }
 
-
+    /*
     @XmlTransient
     public List<TblGestionsaldo> getTblGestionsaldoList() {
         return tblGestionsaldoList;
@@ -310,6 +295,7 @@ public class TblGestion implements Serializable {
     public void setTblGestionsaldoList(List<TblGestionsaldo> tblGestionsaldoList) {
         this.tblGestionsaldoList = tblGestionsaldoList;
     }
+    */
 
     public String getCodigo_cliente() {
         return codigo_cliente;
@@ -317,7 +303,7 @@ public class TblGestion implements Serializable {
 
     public void setCodigo_cliente(String codigo_cliente) {
         this.codigo_cliente = codigo_cliente;
-    }   
+    }
 
     public String getIdentificacion() {
         return identificacion;
@@ -358,5 +344,5 @@ public class TblGestion implements Serializable {
     public void setUsuariomodifico(String usuariomodifico) {
         this.usuariomodifico = usuariomodifico;
     }
-    
+
 }

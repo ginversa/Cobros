@@ -8,9 +8,9 @@
     <ui:define name="title">Gestión</ui:define>
 
     <ui:define name="viewname">
-        <li><p:link outcome="/operario/cartera">Gestión</p:link></li>
+        <li><p:link outcome="/operario/listarGestion">Mi Gestión</p:link></li>
         <li>/</li>
-        <li>Gestión</li>
+        <li>Seguimiento</li>
     </ui:define>
 
     <ui:param name="viewname" value="Gestión" />
@@ -42,12 +42,12 @@
                                             <h:outputText id="txtNombre" value="#{updateGestionController.gestion.nombreCliente}" />
 
                                             <p:outputLabel for="txtOperacion" value="Operación" />
-                                            <h:outputText id="txtOperacion" value="#{updateGestionController.gestion.operacion}" />                                             
+                                            <h:outputText id="txtOperacion" value="#{updateGestionController.operacionSelected.numeroCuenta}" />                                             
                                         </p:panelGrid>                                       
 
                                         <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtLeyUsura" value="Ley Usura" />
-                                            <p:selectOneMenu id="txtLeyUsura" value="#{updateGestionController.gestion.leyusura}" > <!-- disabled="true" -->
+                                            <p:selectOneMenu id="txtLeyUsura" value="#{updateGestionController.operacionSelected.leyusura}" > <!-- disabled="true" -->
                                                 <f:selectItem itemLabel="--- Si ---" itemValue="1" />
                                                 <f:selectItem itemLabel="--- No ---" itemValue="0" />
                                             </p:selectOneMenu>
@@ -63,7 +63,7 @@
                                             </h:outputText>
 
                                             <p:outputLabel for="txtRazonMora" value="Última Razón Mora" />
-                                            <h:outputText id="txtRazonMora" value="#{updateGestionController.gestion.ultimaRazonMora.descripcion}">
+                                            <h:outputText id="txtRazonMora" value="#{updateGestionController.gestion.ultimaLLamada.idrazonmora.descripcion}">
                                                 <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                             </h:outputText>                                            
                                         </p:panelGrid>                                                                       
@@ -75,7 +75,7 @@
                                     </p:panelGrid>
 
                                     <p:fieldset legend="Saldos" class="ui-fluid" >
-                                        <p:dataTable id="tblSaldoGestion" value="#{updateGestionController.gestion.tblGestionsaldoList}" var="saldo"
+                                        <p:dataTable id="tblSaldoGestion" value="#{updateGestionController.operacionSelected.tblSaldoList}" var="saldo"
                                                      editMode="cell" editable="true" widgetVar="tblSaldoGestion"                                                     
                                                      reflow="true"
                                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
@@ -235,8 +235,8 @@
 
                                     <p:panelGrid columns="2" layout="grid">                                        
                                         <p:fieldset legend="Operaciones" class="ui-fluid">
-                                            <p:dataTable id="idTableGestion" value="#{updateGestionController.gestionList}" var="gestion"
-                                                         selectionMode="single" selection="#{updateGestionController.selectedGestion}" rowKey="#{gestion.idGestion}"
+                                            <p:dataTable id="idTableGestion" value="#{updateGestionController.carteraList}" var="operacion"
+                                                         selectionMode="single" selection="#{updateGestionController.operacionSelected}" rowKey="#{operacion.id}"
                                                          widgetVar="idTableGestion"
                                                          rows="20"
                                                          reflow="true"
@@ -244,27 +244,23 @@
                                                          style="margin-bottom:20px"
                                                          emptyMessage="No se encontraron registros." >                                                
 
-                                                <p:column id="idCuentaOP" headerText="#Cuenta" filterBy="#{gestion.operacion}" filterMatchMode="contains" sortBy="#{gestion.operacion}" >
-                                                    <h:outputText value="#{gestion.operacion}" />
+                                                <p:column id="idCuentaOP" headerText="#Cuenta" filterBy="#{operacion.numeroCuenta}" filterMatchMode="contains" sortBy="#{operacion.numeroCuenta}" >
+                                                    <h:outputText value="#{operacion.numeroCuenta}" />
                                                 </p:column>
-                                                <p:column id="idFechaPagoOP" headerText="Fecha" filterBy="#{gestion.fechaGestion}" filterMatchMode="contains" sortBy="#{gestion.fechaGestion}" >
-                                                    <h:outputText value="#{gestion.fechaGestion}">
+                                                <p:column id="idFechaPagoOP" headerText="Fecha" filterBy="#{operacion.ultimaLlamada.fechaingreso}" filterMatchMode="contains" sortBy="#{operacion.ultimaLlamada.fechaingreso}" >
+                                                    <h:outputText value="#{operacion.ultimaLlamada.fechaingreso}">
                                                         <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                                     </h:outputText>
-                                                </p:column>                                                
-                                                <p:column id="idDescripcionOP" headerText="Descripción" filterBy="#{gestion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.descripcion}" >
-                                                    <h:outputText value="#{gestion.descripcion}" />
+                                                </p:column>
+                                                <p:column id="idTipificacionOP" headerText="Tipificación" filterBy="#{operacion.ultimaLlamada.idTipificacion.descripcion}" filterMatchMode="contains" sortBy="#{operacion.ultimaLlamada.idTipificacion.descripcion}" >
+                                                    <h:outputText value="#{operacion.ultimaLlamada.idTipificacion.descripcion}" />
                                                 </p:column>
 
-                                                <p:column id="idTipificacionOP" headerText="Tipificación" filterBy="#{gestion.ultimaLLamada.idTipificacion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idTipificacion.descripcion}" >
-                                                    <h:outputText value="#{gestion.ultimaLLamada.idTipificacion.descripcion}" />
+                                                <p:column id="idSubTipificacionOP" headerText="Sub-Tipificación" filterBy="#{operacion.ultimaLlamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{operacion.ultimaLlamada.idSubtipificacion.descripcion}" >
+                                                    <h:outputText value="#{operacion.ultimaLlamada.idSubtipificacion.descripcion}" />
                                                 </p:column>
 
-                                                <p:column id="idSubTipificacionOP" headerText="Sub-Tipificación" filterBy="#{gestion.ultimaLLamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idSubtipificacion.descripcion}" >
-                                                    <h:outputText value="#{gestion.ultimaLLamada.idSubtipificacion.descripcion}" />
-                                                </p:column>
-
-                                                <p:column id="idRazonMoraBG" headerText="Razón Mora" filterBy="#{gestion.ultimaLLamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idrazonmora.descripcion}" >
+                                                <p:column id="idRazonMoraBG" headerText="Razón Mora" filterBy="#{operacion.ultimaLlamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idrazonmora.descripcion}" >
                                                     <h:outputText value="#{gestion.ultimaLLamada.idrazonmora.descripcion}" />
                                                 </p:column>
 
@@ -282,8 +278,8 @@
                                                          emptyMessage="No se encontraron registros."
                                                          editable="true" >
 
-                                                <p:column id="idTipoDescuentoTPL" headerText="Tipo Descuento" filterBy="#{promesa.tipodescuento}" filterMatchMode="contains" sortBy="#{promesa.tipodescuento}" >
-                                                    <h:outputText value="#{promesa.tipodescuento}" />
+                                                <p:column id="idTipoDescuentoTPL" headerText="Tipo Descuento" filterBy="#{promesa.idtipodescuento.nombre}" filterMatchMode="contains" sortBy="#{promesa.idtipodescuento.nombre}" >
+                                                    <h:outputText value="#{promesa.idtipodescuento.nombre}" />
                                                 </p:column>
 
                                                 <p:column id="idPorcentajeTPL" headerText="Monto o %*" filterBy="#{promesa.mtoporcentaje}" filterMatchMode="contains" sortBy="#{promesa.mtoporcentaje}" >
@@ -309,17 +305,17 @@
                                                         </f:facet>
                                                     </p:cellEditor>
                                                 </p:column>
-                                                <p:column id="idArregloPagoTAP" headerText="Arreglo Pago" filterBy="#{promesa.tipoarreglopago}" filterMatchMode="contains" sortBy="#{promesa.tipoarreglopago}" >
-                                                    <h:outputText value="#{promesa.tipoarreglopago}" />
+                                                <p:column id="idArregloPagoTAP" headerText="Arreglo Pago" filterBy="#{promesa.idarreglopago.nombre}" filterMatchMode="contains" sortBy="#{promesa.idarreglopago.nombre}" >
+                                                    <h:outputText value="#{promesa.idarreglopago.nombre}" />
                                                 </p:column>                                                
-                                                <p:column headerText="Estado" filterBy="#{promesa.estado}" filterMatchMode="contains" sortBy="#{promesa.estado}">
+                                                <p:column headerText="Estado" filterBy="#{promesa.idestadopromesa.nombre}" filterMatchMode="contains" sortBy="#{promesa.idestadopromesa.nombre}">
                                                     <p:cellEditor>
                                                         <f:facet name="output">
-                                                            <h:outputText value="#{promesa.estado}" />
+                                                            <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                         </f:facet>
                                                         <f:facet name="input">
-                                                            <p:selectOneMenu id="idEstadoPromesa" value="#{promesa.estado}" >                                                                        
-                                                                <f:selectItems value="#{estadoPromesaController.estadoPromesaList}" var="estadoPromesa" itemLabel="#{estadoPromesa.nombre}" itemValue="#{estadoPromesa.codigo}"/>                                                                    
+                                                            <p:selectOneMenu id="idEstadoPromesa" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">                                                                        
+                                                                <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadoPromesa" itemLabel="#{estadoPromesa.nombre}" itemValue="#{estadoPromesa}"/>
                                                             </p:selectOneMenu>
                                                         </f:facet>
                                                     </p:cellEditor>
@@ -652,7 +648,7 @@
                                 </p:dataTable>
                             </div>
                         </p:tab>
-                        <p:tab title="Gestiones Histórico">
+                        <p:tab title="Histórico Llamadas">
                             <div class="card">
                                 <h4>Pagos</h4>
                                 <p:panelGrid id="idPGOperacionGH" columns="2" layout="grid">
@@ -835,7 +831,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionCAT" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionCAT" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionCAT" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacion" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
@@ -847,9 +843,9 @@
 
                                                                 <p:outputLabel for="txtTipoDescuento" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuento" value="#{updateGestionController.tipoDescuentoPromesa}">
+                                                                    <p:selectOneMenu id="txtTipoDescuento" value="#{updateGestionController.tipoDescuentoPromesa}" converter="tipodescuentoConverter" required="true" requiredMessage="Tipo descuento requerido!">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />                                                                        
-                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <f:selectItems value="#{tipodescuentoController.tipodescuentoList}" var="tipodescuento" itemLabel="#{tipodescuento.nombre}" itemValue="#{tipodescuento}" />
                                                                         <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesa" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>
@@ -898,7 +894,7 @@
                                                     </p:column>
 
                                                     <p:column headerText="Tipo Descuento" >
-                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                        <h:outputText value="#{promesa.idtipodescuento.nombre}" />
                                                     </p:column>
                                                     <p:column headerText="Fecha Pago" >
                                                         <p:cellEditor>
@@ -927,12 +923,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -954,7 +949,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionCTC" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionCTC" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionCTC" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionCTC" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -966,9 +961,9 @@
 
                                                                 <p:outputLabel for="txtTipoDescuentoCTC" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuentoCTC" value="#{updateGestionController.tipoDescuentoPromesa}" >
+                                                                    <p:selectOneMenu id="txtTipoDescuentoCTC" value="#{updateGestionController.tipoDescuentoPromesa}" converter="tipodescuentoConverter" required="true" requiredMessage="Tipo descuento requerido!">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <f:selectItems value="#{tipodescuentoController.tipodescuentoList}" var="tipodescuento" itemLabel="#{tipodescuento.nombre}" itemValue="#{tipodescuento}" />
                                                                         <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuento()}" event="change" update="txtNewSaldoPromesaCTC" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>                                                            
@@ -1026,7 +1021,7 @@
                                                     </p:column>
 
                                                     <p:column headerText="Tipo Descuento" >
-                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                        <h:outputText value="#{promesa.idtipodescuento.nombre}" />
                                                     </p:column>                                                    
                                                     <p:column headerText="Monto o %" >
                                                         <h:outputText value="#{promesa.mtoporcentaje}" />
@@ -1064,12 +1059,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1090,7 +1084,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionREF" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionREF" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionREF" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionREF" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1193,12 +1187,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1219,7 +1212,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionPAP" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionPAP" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionPAP" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionPAP" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1279,12 +1272,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1310,7 +1302,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionCAT_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionCAT_USD" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionCAT_USD" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
@@ -1322,9 +1314,9 @@
 
                                                                 <p:outputLabel for="txtTipoDescuentoUSD" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0" />
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuentoUSD" value="#{updateGestionController.tipoDescuentoPromesa}">
+                                                                    <p:selectOneMenu id="txtTipoDescuentoUSD" value="#{updateGestionController.tipoDescuentoPromesa}" converter="tipodescuentoConverter" required="true" requiredMessage="Tipo descuento requerido!">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <f:selectItems value="#{tipodescuentoController.tipodescuentoList}" var="tipodescuento" itemLabel="#{tipodescuento.nombre}" itemValue="#{tipodescuento}" />
                                                                         <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaUSD" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>
@@ -1373,7 +1365,7 @@
                                                     </p:column>
 
                                                     <p:column headerText="Tipo Descuento" >
-                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                        <h:outputText value="#{promesa.idtipodescuento.nombre}" />
                                                     </p:column>                                                    
                                                     <p:column headerText="Fecha Pago" >
                                                         <p:cellEditor>
@@ -1402,12 +1394,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1428,7 +1419,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionCTC_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionCTC_USD" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionCTC_USD" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionCTCUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1440,9 +1431,9 @@
 
                                                                 <p:outputLabel for="txtTipoDescuentoCTCUSD" value="Tipo Descuento" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <p:selectOneMenu id="txtTipoDescuentoCTCUSD" value="#{updateGestionController.tipoDescuentoPromesa}" >
+                                                                    <p:selectOneMenu id="txtTipoDescuentoCTCUSD" value="#{updateGestionController.tipoDescuentoPromesa}" converter="tipodescuentoConverter" required="true" requiredMessage="Tipo descuento requerido!">
                                                                         <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
-                                                                        <f:selectItems value="#{updateGestionController.tipoDescuentoList}" var="tipoDescuento" itemLabel="#{tipoDescuento.nombre}" itemValue="#{tipoDescuento.codigo}" />
+                                                                        <f:selectItems value="#{tipodescuentoController.tipodescuentoList}" var="tipodescuento" itemLabel="#{tipodescuento.nombre}" itemValue="#{tipodescuento}" />
                                                                         <p:ajax listener="#{updateGestionController.calcNuevoMontoSegunDescuentoUSD()}" event="change" update="txtNewSaldoPromesaCTCUSD" process="@this" />
                                                                     </p:selectOneMenu>
                                                                 </div>                                                            
@@ -1500,7 +1491,7 @@
                                                     </p:column>
 
                                                     <p:column headerText="Tipo Descuento" >
-                                                        <h:outputText value="#{promesa.tipodescuento}" />
+                                                        <h:outputText value="#{promesa.idtipodescuento.nombre}" />
                                                     </p:column>
                                                     <p:column headerText="Fecha Pago" >
                                                         <p:cellEditor>
@@ -1538,12 +1529,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1564,7 +1554,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionREF_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionREF_USD" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionREF_USD" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionREFUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1667,12 +1657,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">                                                                        
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>
@@ -1693,7 +1682,7 @@
                                                             <div class="p-field p-grid">
                                                                 <p:outputLabel for="txtIdOperacionPAP_USD" value="Operación" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
                                                                 <div class="p-col-6 p-md-10">
-                                                                    <h:outputText id="txtIdOperacionPAP_USD" value="#{updateGestionController.gestion.operacion}" />
+                                                                    <h:outputText id="txtIdOperacionPAP_USD" value="#{updateGestionController.operacionSelected.numeroCuenta}" />
                                                                 </div>
 
                                                                 <p:outputLabel for="txtSaldoOperacionPAPUSD" value="Saldo" styleClass="p-col-12 p-mb-2 p-md-2 p-mb-md-0"/>
@@ -1753,12 +1742,11 @@
                                                     <p:column headerText="Estado" >
                                                         <p:cellEditor>
                                                             <f:facet name="output">
-                                                                <h:outputText value="#{promesa.estado}" />
+                                                                <h:outputText value="#{promesa.idestadopromesa.nombre}" />
                                                             </f:facet>
                                                             <f:facet name="input">
-                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.estado}" >                                                                        
-                                                                    <f:selectItem itemLabel="Seguimiento" itemValue="SEG"/>
-                                                                    <f:selectItem itemLabel="Promesa" itemValue="PRO"/>
+                                                                <p:selectOneMenu id="txtEstadoCAT" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">
+                                                                    <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadopromesa" itemLabel="#{estadopromesa.nombre}" itemValue="#{estadopromesa}" />
                                                                 </p:selectOneMenu>
                                                             </f:facet>
                                                         </p:cellEditor>

@@ -127,18 +127,19 @@ public class GestionDaoImpl implements GestionDao {
     }
 
     @Override
-    public void insert(TblGestion obj) {
+    public Long insert(TblGestion obj) {
+        Long idGestion = null;
         try {
             em.persist(obj);
             em.flush();
             em.refresh(obj);
             System.out.println("Gestion ID: " + obj.getIdGestion());
-        } catch (ConstraintViolationException e) {
-            //log.log(Level.SEVERE, "Exception: ");
-            //e.getConstraintViolations().forEach(err -> log.log(Level.SEVERE, err.toString()));
+            idGestion = obj.getIdGestion();
+        } catch (ConstraintViolationException e) {            
             System.out.println("insert Gestion : " + e.getMessage());
         }
-
+        
+        return idGestion;
     }
 
     @Override

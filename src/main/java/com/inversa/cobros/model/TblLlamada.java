@@ -145,7 +145,11 @@ public class TblLlamada implements Serializable {
     private List<TblPromesa> tblPromesaList;
     
     @Transient    
-    private TblPromesa ultimaPromesa;
+    private TblPromesa ultimaPromesa;    
+    
+    @Size(max = 50)
+    @Column(name = "operacion")
+    private String operacion;
 
     public TblLlamada() {
     }
@@ -321,6 +325,14 @@ public class TblLlamada implements Serializable {
     public void setIdTipotelefono(Tipotelefono idTipotelefono) {
         this.idTipotelefono = idTipotelefono;
     }
+
+    public String getOperacion() {
+        return operacion;
+    }
+
+    public void setOperacion(String operacion) {
+        this.operacion = operacion;
+    }    
 
     public TblPromesa getUltimaPromesa() {
         return ultimaPromesa;

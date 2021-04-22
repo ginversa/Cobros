@@ -28,7 +28,9 @@ public interface CarteraService {
 
     public List<TblCartera> findByIdentificacion(TblCartera obj);
 
-    public List<TblCartera> findByNumeroCuenta(TblCartera obj);
+    public TblCartera findByNumeroCuenta(TblCartera obj);
+    
+    public TblCartera findByNumeroCuentaANDIdentificacion(TblCartera obj);
 
     public List<TblCartera> findByNumeroTarjeta(TblCartera obj);
 

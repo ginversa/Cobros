@@ -5,10 +5,13 @@
  */
 package com.inversa.cobros.controller;
 
+import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.LlamadaService;
+import com.inversa.cobros.model.TblCartera;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
+import com.inversa.cobros.model.TblPromesa;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +38,7 @@ public class BuscarGestionController implements Serializable {
 
     private List<TblGestion> gestionList;
     private TblGestion searchGestion;
-    private TblGestion selectedGestion;
+    private TblLlamada selectedLlamada;
 
     private List<TblLlamada> llamadaList;
 
@@ -44,9 +47,9 @@ public class BuscarGestionController implements Serializable {
 
     @PostConstruct
     public void init() {
-        this.llamadaList = new ArrayList<TblLlamada>();
+        this.llamadaList = new ArrayList<>();
         this.searchGestion = new TblGestion();
-        this.selectedGestion = new TblGestion();
+        this.selectedLlamada = new TblLlamada();
     }
     
 
@@ -119,12 +122,12 @@ public class BuscarGestionController implements Serializable {
         this.searchGestion = searchGestion;
     }
 
-    public TblGestion getSelectedGestion() {
-        return selectedGestion;
+    public TblLlamada getSelectedLlamada() {
+        return selectedLlamada;
     }
 
-    public void setSelectedGestion(TblGestion selectedGestion) {
-        this.selectedGestion = selectedGestion;
+    public void setSelectedLlamada(TblLlamada selectedLlamada) {
+        this.selectedLlamada = selectedLlamada;
     }
 
     public String getIdentificacion() {
@@ -141,6 +144,21 @@ public class BuscarGestionController implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+    
+    /**
+     * 
+     * @param promesa 
+     */
+    public void setPromesaTOGestion(TblPromesa promesa) {
+        if (promesa != null) {
+            TblLlamada llamada = promesa.getIdLlamada();
+            if(llamada.getOperacion() == null || llamada.getOperacion().equals("")){
+                llamada.setOperacion(promesa.getOperacion());
+            }
+            
+            this.setSelectedLlamada(llamada);
+        }
     }
 
 }

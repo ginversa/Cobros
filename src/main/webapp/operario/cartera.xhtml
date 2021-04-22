@@ -14,9 +14,7 @@
     <ui:define name="viewname">
         <li>Gestiones</li>
         <li>/</li>
-        <li>
-            <p:link outcome="/operario/cartera">Mi Cartera</p:link>
-        </li>
+        <li>Mi Cartera</li>
     </ui:define>
 
     <ui:param name="viewname" value="Deudores" />
@@ -37,7 +35,7 @@
                                              emptyMessage="No se encontraron registros." >
 
                                     <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >                                        
-                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(promesa.idGestion)}" >
+                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setPromesaTOGestion(promesa)}" >
                                             <h:outputText value="#{promesa.idGestion.identificacion}" />
                                         </p:commandLink>
                                     </p:column>
@@ -83,7 +81,7 @@
                                              emptyMessage="No se encontraron registros." >
                                     
                                     <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >                                        
-                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedGestion(promesa.idGestion)}" >
+                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setPromesaTOGestion(promesa)}" >
                                             <h:outputText value="#{promesa.idGestion.identificacion}" />
                                         </p:commandLink>
                                     </p:column>
@@ -164,8 +162,8 @@
                                             <f:convertDateTime pattern="dd/MM/yyyy" />
                                         </h:outputText>
                                     </p:column>
-                                    <p:column headerText="Fecha Última Gestión" filterBy="#{cartera.fechaUltimaGestion}" sortBy="#{cartera.fechaUltimaGestion}" >
-                                        <h:outputText value="#{cartera.fechaUltimaGestion}" >
+                                    <p:column headerText="Fecha Última Gestión" filterBy="#{cartera.ultimaLlamada.fechaingreso}" sortBy="#{cartera.ultimaLlamada.fechaingreso}" >
+                                        <h:outputText value="#{cartera.ultimaLlamada.fechaingreso}" >
                                             <f:convertDateTime pattern="dd/MM/yyyy" />
                                         </h:outputText>
                                     </p:column>
@@ -182,8 +180,8 @@
                                             <f:convertDateTime pattern="dd/MM/yyyy" />
                                         </h:outputText>
                                     </p:column>
-                                    <p:column headerText="Razón Mora" filterBy="#{cartera.razonMora}" sortBy="#{cartera.razonMora}" >
-                                        <h:outputText value="#{cartera.razonMora}" />
+                                    <p:column headerText="Razón Mora" filterBy="#{cartera.ultimaLlamada.idrazonmora.descripcion}" sortBy="#{cartera.ultimaLlamada.idrazonmora.descripcion}" >
+                                        <h:outputText value="#{cartera.ultimaLlamada.idrazonmora.descripcion}" />
                                     </p:column>
                                 </p:dataTable>
                             </div>

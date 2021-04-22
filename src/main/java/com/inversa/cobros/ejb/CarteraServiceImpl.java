@@ -57,13 +57,18 @@ public class CarteraServiceImpl implements CarteraService, CarteraServiceRemote 
     }
 
     @Override
-    public List<TblCartera> findByNumeroCuenta(TblCartera obj) {
+    public TblCartera findByNumeroCuenta(TblCartera obj) {
         return dao.findByNumeroCuenta(obj);
     }
 
     @Override
     public List<TblCartera> findByNumeroTarjeta(TblCartera obj) {
         return dao.findByNumeroTarjeta(obj);
+    }
+    
+    @Override
+    public TblCartera findByNumeroCuentaANDIdentificacion(TblCartera obj){
+        return dao.findByNumeroCuentaANDIdentificacion(obj);
     }
 
     @Override
@@ -145,7 +150,7 @@ public class CarteraServiceImpl implements CarteraService, CarteraServiceRemote 
     }
 
     @Override
-    public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera) {
+    public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera) {                
         return dao.findByCarteraGestorIdentificacionNotExistsGestion(objCartera);
     }
 

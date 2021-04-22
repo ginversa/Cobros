@@ -8,7 +8,9 @@ package com.inversa.cobros.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,6 +29,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,12 +43,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TblCartera.findById", query = "SELECT t FROM TblCartera t WHERE t.id = :id"),
     @NamedQuery(name = "TblCartera.findByCodigoCartera", query = "SELECT t FROM TblCartera t WHERE t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblCartera.findByCodigoGestor", query = "SELECT t FROM TblCartera t WHERE t.codigoGestor = :codigoGestor"),
-    @NamedQuery(name = "TblCartera.findByCodigoGestorANDCodigoCartera", query = "SELECT t FROM TblCartera t WHERE t.codigoGestor = :codigoGestor AND t.codigoCartera = :codigoCartera"),
-    @NamedQuery(name = "TblCartera.findByCarteraGestorIdentificacion", query = "SELECT t FROM TblCartera t WHERE t.codigoCartera = :codigoCartera AND t.codigoGestor = :codigoGestor AND t.identificacion = :identificacion"),
     @NamedQuery(name = "TblCartera.findByNumeroClienteCif", query = "SELECT t FROM TblCartera t WHERE t.numeroClienteCif = :numeroClienteCif"),
     @NamedQuery(name = "TblCartera.findByNombreCliente", query = "SELECT t FROM TblCartera t WHERE t.nombreCliente = :nombreCliente"),
     @NamedQuery(name = "TblCartera.findByIdentificacion", query = "SELECT t FROM TblCartera t WHERE t.identificacion = :identificacion"),
     @NamedQuery(name = "TblCartera.findByNumeroCuenta", query = "SELECT t FROM TblCartera t WHERE t.numeroCuenta = :numeroCuenta"),
+    @NamedQuery(name = "TblCartera.findByNumeroCuentaANDIdentificacion", query = "SELECT t FROM TblCartera t WHERE t.numeroCuenta = :numeroCuenta and t.identificacion = :identificacion"),
     @NamedQuery(name = "TblCartera.findByNumeroTarjeta", query = "SELECT t FROM TblCartera t WHERE t.numeroTarjeta = :numeroTarjeta"),
     @NamedQuery(name = "TblCartera.findBySaldoColones", query = "SELECT t FROM TblCartera t WHERE t.saldoColones = :saldoColones"),
     @NamedQuery(name = "TblCartera.findByInteresesColones", query = "SELECT t FROM TblCartera t WHERE t.interesesColones = :interesesColones"),
@@ -56,109 +59,137 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TblCartera.findByPlacement", query = "SELECT t FROM TblCartera t WHERE t.placement = :placement"),
     @NamedQuery(name = "TblCartera.findByFechaAsignacion", query = "SELECT t FROM TblCartera t WHERE t.fechaAsignacion = :fechaAsignacion"),
     @NamedQuery(name = "TblCartera.findByEstado", query = "SELECT t FROM TblCartera t WHERE t.estado = :estado"),
+    @NamedQuery(name = "TblCartera.findByLeyusura", query = "SELECT t FROM TblCartera t WHERE t.leyusura = :leyusura"),
     @NamedQuery(name = "TblCartera.findByUsuarioIngreso", query = "SELECT t FROM TblCartera t WHERE t.usuarioIngreso = :usuarioIngreso"),
     @NamedQuery(name = "TblCartera.findByFechaIngreso", query = "SELECT t FROM TblCartera t WHERE t.fechaIngreso = :fechaIngreso"),
     @NamedQuery(name = "TblCartera.findByUsuarioModifico", query = "SELECT t FROM TblCartera t WHERE t.usuarioModifico = :usuarioModifico"),
-    @NamedQuery(name = "TblCartera.findByFechaModifico", query = "SELECT t FROM TblCartera t WHERE t.fechaModifico = :fechaModifico"),
-    @NamedQuery(name = "TblCartera.findByLeyusura", query = "SELECT t FROM TblCartera t WHERE t.leyusura = :leyusura")})
+    @NamedQuery(name = "TblCartera.findByCodigoGestorANDCodigoCartera", query = "SELECT t FROM TblCartera t WHERE t.codigoGestor = :codigoGestor AND t.codigoCartera = :codigoCartera"),
+    @NamedQuery(name = "TblCartera.findByCarteraGestorIdentificacion", query = "SELECT t FROM TblCartera t WHERE t.codigoCartera = :codigoCartera AND t.codigoGestor = :codigoGestor AND t.identificacion = :identificacion"),
+    @NamedQuery(name = "TblCartera.findByFechaModifico", query = "SELECT t FROM TblCartera t WHERE t.fechaModifico = :fechaModifico")})
 public class TblCartera implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 10)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 10)
     @Column(name = "codigo_gestor")
     private String codigoGestor;
+
     @Size(max = 30)
     @Column(name = "numero_cliente_cif")
     private String numeroClienteCif;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "nombre_cliente")
     private String nombreCliente;
+
     @Size(max = 20)
     @Column(name = "identificacion")
     private String identificacion;
+
     @Size(max = 30)
     @Column(name = "numero_cuenta")
     private String numeroCuenta;
+
     @Size(max = 30)
     @Column(name = "numero_tarjeta")
     private String numeroTarjeta;
+
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "saldo_colones")
     private BigDecimal saldoColones;
+
     @Column(name = "intereses_colones")
     private BigDecimal interesesColones;
+
     @Column(name = "saldo_dolares")
     private BigDecimal saldoDolares;
+
     @Column(name = "intereses_dolares")
     private BigDecimal interesesDolares;
+
     @Size(max = 20)
     @Column(name = "tipo_producto")
     private String tipoProducto;
+
     @Size(max = 15)
     @Column(name = "bucket")
     private String bucket;
+
     @Size(max = 15)
     @Column(name = "dias_mora")
     private String diasMora;
+
     @Size(max = 15)
     @Column(name = "placement")
     private String placement;
+
     @Column(name = "fecha_asignacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaAsignacion;
+
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
+
+    @Size(max = 1)
+    @Column(name = "leyusura")
+    private String leyusura;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
     @Column(name = "usuario_ingreso")
     private String usuarioIngreso;
+
     @Column(name = "fecha_ingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaIngreso;
+
     @Size(max = 30)
     @Column(name = "usuario_modifico")
     private String usuarioModifico;
+
     @Column(name = "fecha_modifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModifico;
-    @Size(max = 1)
-    @Column(name = "leyusura")
-    private String leyusura;
+
     @JoinColumn(name = "id_moneda_colones", referencedColumnName = "id_moneda")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMonedaColones;
+
     @JoinColumn(name = "id_moneda_dolares", referencedColumnName = "id_moneda")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMonedaDolares;
+
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TblCliente idCliente;
 
-    /* datos a buscar */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCartera", fetch = FetchType.LAZY)
+    private List<TblSaldo> tblSaldoList;
+
     @Transient
-    private Date fechaUltimaGestion;
+    private TblLlamada ultimaLlamada;
 
     @Transient
     private TblPromesa ultimaPromesa;
-
-    @Transient
-    private String razonMora;
+    
 
     public TblCartera() {
     }
@@ -319,6 +350,14 @@ public class TblCartera implements Serializable {
         this.estado = estado;
     }
 
+    public String getLeyusura() {
+        return leyusura;
+    }
+
+    public void setLeyusura(String leyusura) {
+        this.leyusura = leyusura;
+    }
+
     public String getUsuarioIngreso() {
         return usuarioIngreso;
     }
@@ -351,14 +390,6 @@ public class TblCartera implements Serializable {
         this.fechaModifico = fechaModifico;
     }
 
-    public String getLeyusura() {
-        return leyusura;
-    }
-
-    public void setLeyusura(String leyusura) {
-        this.leyusura = leyusura;
-    }
-
     public Moneda getIdMonedaColones() {
         return idMonedaColones;
     }
@@ -381,6 +412,31 @@ public class TblCartera implements Serializable {
 
     public void setIdCliente(TblCliente idCliente) {
         this.idCliente = idCliente;
+    }
+
+    @XmlTransient
+    public List<TblSaldo> getTblSaldoList() {
+        return tblSaldoList;
+    }
+
+    public void setTblSaldoList(List<TblSaldo> tblSaldoList) {
+        this.tblSaldoList = tblSaldoList;
+    }
+
+    public TblLlamada getUltimaLlamada() {
+        return ultimaLlamada;
+    }
+
+    public void setUltimaLlamada(TblLlamada ultimaLlamada) {
+        this.ultimaLlamada = ultimaLlamada;
+    }    
+
+    public TblPromesa getUltimaPromesa() {
+        return ultimaPromesa;
+    }
+
+    public void setUltimaPromesa(TblPromesa ultimaPromesa) {
+        this.ultimaPromesa = ultimaPromesa;
     }
 
     @Override
@@ -406,30 +462,6 @@ public class TblCartera implements Serializable {
     @Override
     public String toString() {
         return "com.inversa.cobros.model.TblCartera[ id=" + id + " ]";
-    }
-
-    public Date getFechaUltimaGestion() {
-        return fechaUltimaGestion;
-    }
-
-    public void setFechaUltimaGestion(Date fechaUltimaGestion) {
-        this.fechaUltimaGestion = fechaUltimaGestion;
-    }
-
-    public TblPromesa getUltimaPromesa() {
-        return ultimaPromesa;
-    }
-
-    public void setUltimaPromesa(TblPromesa ultimaPromesa) {
-        this.ultimaPromesa = ultimaPromesa;
-    }
-
-    public String getRazonMora() {
-        return razonMora;
-    }
-
-    public void setRazonMora(String razonMora) {
-        this.razonMora = razonMora;
     }
 
 }

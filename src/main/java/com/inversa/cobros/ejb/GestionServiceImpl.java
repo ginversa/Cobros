@@ -111,14 +111,19 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
     }
 
     @Override
-    public void insert(TblGestion obj) {
+    public Long insert(TblGestion obj) {
+        Long id = null;
+        
         try {
-            dao.insert(obj);
+            
+            id = dao.insert(obj);
 
         } catch (Throwable t) {
             contexto.setRollbackOnly();// hace rollback...
             t.printStackTrace(System.out);// imprime en consola el error
         }
+        
+        return id;
     }
 
     @Override
@@ -163,6 +168,7 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
         return dao.findByCodigoGestorANDCodigoCartera(obj);
     }
 
+    /*
     @Override
     public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj) {
         List<TblGestion> resultList = new ArrayList<>();
@@ -187,5 +193,6 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
         }
         return resultList;
     }
+    */
 
 }

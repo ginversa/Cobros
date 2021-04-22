@@ -5,6 +5,7 @@
  */
 package com.inversa.cobros.controller;
 
+import com.inversa.cobros.constante.comun.ConstanteComun;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.IOException;
 import java.io.Serializable;
@@ -33,7 +34,7 @@ public class SesionController implements Serializable {
      */
     public void buscarUsaurio() {
         FacesContext context = FacesContext.getCurrentInstance();
-        TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get("usuario");
+        TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get(ConstanteComun.USUARIO);
         if (obj != null) {
             usuario = obj;
         }
@@ -46,7 +47,7 @@ public class SesionController implements Serializable {
     public String usuarioSesion() {
         String nombre = "";
         FacesContext context = FacesContext.getCurrentInstance();
-        TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get("usuario");
+        TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get(ConstanteComun.USUARIO);
         if (obj != null) {
             nombre = obj.getTblPersona().getNombre() + " - " + obj.getCodigoGestor();
         }
@@ -63,7 +64,7 @@ public class SesionController implements Serializable {
         
         try {
             
-            context.getExternalContext().redirect("faces/login.xhtml");
+            context.getExternalContext().redirect(ConstanteComun.REDIRECT);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,10 +79,10 @@ public class SesionController implements Serializable {
         try {
 
             FacesContext context = FacesContext.getCurrentInstance();
-            TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get("usuario");
+            TblUsuario obj = (TblUsuario) context.getExternalContext().getSessionMap().get(ConstanteComun.USUARIO);
 
             if (obj == null) {
-                context.getExternalContext().redirect("faces/login.xhtml");
+                context.getExternalContext().redirect(ConstanteComun.REDIRECT);
 
             }
 

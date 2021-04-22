@@ -6,16 +6,19 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.constante.comun.ConstanteComun;
+import com.inversa.cobros.ejb.ArreglopagoService;
 import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.ClienteCarteraService;
-import com.inversa.cobros.ejb.ClienteService;
 import com.inversa.cobros.ejb.ContactoService;
 import com.inversa.cobros.ejb.CorreoService;
+import com.inversa.cobros.ejb.EstadopromesaService;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.LlamadaService;
 import com.inversa.cobros.ejb.MonedaService;
 import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.ejb.TelefonoService;
+import com.inversa.cobros.model.Arreglopago;
+import com.inversa.cobros.model.Estadopromesa;
 import com.inversa.cobros.model.Moneda;
 import com.inversa.cobros.model.Razonmora;
 import com.inversa.cobros.model.Subtipificacion;
@@ -26,7 +29,7 @@ import com.inversa.cobros.model.TblClienteCartera;
 import com.inversa.cobros.model.TblContacto;
 import com.inversa.cobros.model.TblCorreo;
 import com.inversa.cobros.model.TblGestion;
-import com.inversa.cobros.model.TblGestionsaldo;
+import com.inversa.cobros.model.TblSaldo;
 import com.inversa.cobros.model.TblLlamada;
 import com.inversa.cobros.model.TblPrefijoSalida;
 import com.inversa.cobros.model.TblPromesa;
@@ -34,7 +37,7 @@ import com.inversa.cobros.model.TblTelefono;
 import com.inversa.cobros.model.TblUrlLlamada;
 import com.inversa.cobros.model.TblUsuario;
 import com.inversa.cobros.model.Tipificacion;
-import com.inversa.cobros.model.TipoDescuento;
+import com.inversa.cobros.model.Tipodescuento;
 import com.inversa.cobros.model.Tipotelefono;
 import com.inversa.cobros.util.FechaOperacion;
 import com.inversa.findme.controller.FindmeController;
@@ -92,7 +95,6 @@ public class UpdateGestionController implements Serializable {
 
     private static Client cliente;
     private static WebTarget webTarget;
-    private TblLlamada llamada_En_Proceso;
 
     @Inject
     private GestionService ejbLocal;
@@ -104,19 +106,13 @@ public class UpdateGestionController implements Serializable {
     private PromesaService ejbPromesaLocal;
 
     @Inject
-    private GestionController gestionController;
-
-    @Inject
     private ContactoService ejbContactoLocal;
 
     @Inject
     private TelefonoService ejbTelefonoLocal;
-    
-    @Inject
-    private CorreoService ejbCorreoLocal;
 
     @Inject
-    private ClienteService ejbClienteLocal;
+    private CorreoService ejbCorreoLocal;
 
     @Inject
     private FindmeController findmeController;
@@ -131,6 +127,12 @@ public class UpdateGestionController implements Serializable {
     private MonedaService ejbMonedaService;
 
     @Inject
+    private EstadopromesaService ejbEstadopromesaLocal;
+
+    @Inject
+    private ArreglopagoService ejbArreglopagoLocal;
+
+    @Inject
     private ClienteCarteraService clienteCarteraService;
 
     @Inject
@@ -139,17 +141,14 @@ public class UpdateGestionController implements Serializable {
     @Inject
     private CarteraService ejbCarteraLocal;
 
-    private TblGestion gestion;// Gestion seleccionada.    
+    private TblGestion gestion;// Gestion seleccionada.
+
     private List<TblLlamada> llamadaOperacionList;// Llamadas da la gestion seleccionada.
     private List<TblLlamada> llamadaList;
-
-    private TblGestion selectedGestion;
     private TblLlamada selectedLlamada;
 
-    // Lista de gestiones del cliente segun su identificacion.
-    private List<TblGestion> gestionList;
-
     private List<TblCartera> carteraList;
+    private TblCartera operacionSelected;
 
     private List<TblTelefono> telefonos;
 
@@ -160,8 +159,6 @@ public class UpdateGestionController implements Serializable {
     private boolean leyusuraIsRequired;
     private boolean leyusuraDisabled;
     private BigDecimal mtoSaldoGestionCRC;
-
-    private List<TipoDescuento> tipoDescuentoList;
 
     private boolean isVisibleCancelacionTotalPorCuotas = false;
 
@@ -176,8 +173,7 @@ public class UpdateGestionController implements Serializable {
         this.fechaHoy = Calendar.getInstance();
 
         // Buscar la gestion seleccionada...        
-        this.setGestionTOGestion(this.buscarGestionController.getSelectedGestion());
-        this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCarteraOnlyONEOperacion(this.gestion);
+        this.setLlamadaTOGestion(this.buscarGestionController.getSelectedLlamada());
         this.setCarteraTOGestion();
 
         this.telefono = new TblTelefono();
@@ -195,24 +191,17 @@ public class UpdateGestionController implements Serializable {
         TblClienteCartera clienteCartera = new TblClienteCartera();
         clienteCartera.setCodigoCartera(this.gestion.getCodigoCartera());
         List<TblClienteCartera> clienteCarteraList = this.clienteCarteraService.findByCodigoCartera(clienteCartera);
-        TblCliente cliente = clienteCarteraList.get(0).getIdCliente();
-        this.prefijoSalidaList = cliente.getTblPrefijoSalidaList();
+        TblCliente tblcliente = clienteCarteraList.get(0).getIdCliente();
+        this.prefijoSalidaList = tblcliente.getTblPrefijoSalidaList();
 
         this.mtoSaldoGestionCRC = BigDecimal.ZERO;
 
-        this.tipoDescuentoList = new ArrayList<>();
-        String codigo_cliente = cliente.getCodigo();
+        String codigo_cliente = tblcliente.getCodigo();
         if (codigo_cliente != null && !codigo_cliente.trim().equals("")) {
-            if (codigo_cliente.trim().equals(ConstanteComun.Credomatic)) {// Credomatic
-                TipoDescuento tdFij = new TipoDescuento("FIJ", "Monto Fijo");
-                TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
-                this.tipoDescuentoList.add(tdFij);
-                this.tipoDescuentoList.add(tdPor);
+            if (codigo_cliente.trim().equals(ConstanteComun.Credomatic)) {// Credomatic                
                 this.isVisibleCancelacionTotalPorCuotas = true;
 
-            } else if (codigo_cliente.trim().equals(ConstanteComun.Davivienda)) {//Davivienda                
-                TipoDescuento tdPor = new TipoDescuento("POR", "Porcentaje");
-                this.tipoDescuentoList.add(tdPor);
+            } else if (codigo_cliente.trim().equals(ConstanteComun.Davivienda)) {//Davivienda
                 this.isVisibleCancelacionTotalPorCuotas = false;// desavilita el tab, Cancelación total por cuotas
 
             } else {
@@ -302,14 +291,6 @@ public class UpdateGestionController implements Serializable {
         this.leyusuraDisabled = leyusuraDisabled;
     }
 
-    public List<TipoDescuento> getTipoDescuentoList() {
-        return tipoDescuentoList;
-    }
-
-    public void setTipoDescuentoList(List<TipoDescuento> tipoDescuentoList) {
-        this.tipoDescuentoList = tipoDescuentoList;
-    }
-
     public boolean isIsVisibleCancelacionTotalPorCuotas() {
         return isVisibleCancelacionTotalPorCuotas;
     }
@@ -326,14 +307,6 @@ public class UpdateGestionController implements Serializable {
         this.mtoSaldoGestionCRC = mtoSaldoGestionCRC;
     }
 
-    public List<TblGestion> getGestionList() {
-        return gestionList;
-    }
-
-    public void setGestionList(List<TblGestion> gestionList) {
-        this.gestionList = gestionList;
-    }
-
     public List<TblLlamada> getLlamadaOperacionList() {
         return llamadaOperacionList;
     }
@@ -342,12 +315,12 @@ public class UpdateGestionController implements Serializable {
         this.llamadaOperacionList = llamadaOperacionList;
     }
 
-    public TblGestion getSelectedGestion() {
-        return selectedGestion;
+    public TblCartera getOperacionSelected() {
+        return operacionSelected;
     }
 
-    public void setSelectedGestion(TblGestion selectedGestion) {
-        this.selectedGestion = selectedGestion;
+    public void setOperacionSelected(TblCartera operacionSelected) {
+        this.operacionSelected = operacionSelected;
     }
 
     /*
@@ -451,12 +424,11 @@ public class UpdateGestionController implements Serializable {
     Seleccciona un registro de Llamada, Operaciones.
     selecciona una operacion.
      */
-    public void onRowSelect(SelectEvent<TblGestion> event) {
-        TblGestion selectedGestion = event.getObject();
-        selectedGestion = this.ejbLocal.findById(selectedGestion);
-        this.setGestionTOGestion(selectedGestion);
+    public void onRowSelect(SelectEvent<TblCartera> event) {
+        TblCartera cartera = event.getObject();
+        this.setGestionTOGestion(cartera);
 
-        FacesMessage msg = new FacesMessage("Operación seleccionada!", String.valueOf(this.gestion.getOperacion()));
+        FacesMessage msg = new FacesMessage("Operación seleccionada!", String.valueOf(this.operacionSelected.getNumeroCuenta()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
@@ -467,20 +439,30 @@ public class UpdateGestionController implements Serializable {
 
     /**
      *
-     * @param objCartera
      */
     public void setCarteraTOGestion() {
 
-        String identificacion = this.gestion.getIdentificacion();
-        this.contactoABuscar(identificacion);
+        String ident = this.gestion.getIdentificacion();
+        this.contactoABuscar(ident);
 
         //***************************************
         TblCartera obj = new TblCartera();
         obj.setCodigoCartera(this.gestion.getCodigoCartera());
         obj.setCodigoGestor(this.gestion.getCodigoGestor());
-        obj.setIdentificacion(identificacion);
+        obj.setIdentificacion(this.getOperacionSelected().getIdentificacion());
+        this.carteraList = this.ejbCarteraLocal.findByCarteraGestorIdentificacionNotExistsGestion(obj);
+
         this.carteraList = this.ejbCarteraLocal.findByCarteraGestorIdentificacion(obj);
-        this.buscarGestion();
+        for (int index = 0; index < this.carteraList.size(); index++) {
+            String cod_cartera = this.carteraList.get(index).getCodigoCartera();
+            String identificacion = this.carteraList.get(index).getIdentificacion();
+            String operacion = this.carteraList.get(index).getNumeroCuenta();
+            TblLlamada ultimaLlamada = this.ejbLlamadaLocal.findUltimaLlamada(cod_cartera, identificacion, operacion);
+            TblPromesa ultimaPromesa = this.ejbPromesaLocal.findUltimaPromesa(cod_cartera, identificacion, operacion);
+            this.carteraList.get(index).setUltimaLlamada(ultimaLlamada);
+            this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);
+        }
+        //this.buscarGestion();
 
     }
 
@@ -513,7 +495,7 @@ public class UpdateGestionController implements Serializable {
      * @return
      */
     public boolean guardarGestion(boolean isTrue) {
-        List<TblLlamada> llamadaConDatosList = new ArrayList<TblLlamada>();
+        List<TblLlamada> llamadaConDatosList = new ArrayList<>();
 
         try {
 
@@ -532,8 +514,8 @@ public class UpdateGestionController implements Serializable {
                             idTipificacion = tipificacion.getIdTipificacion();
                         }
 
-                        boolean isNullTipificacion = tipificacion == null ? true : false;
-                        boolean isNullIDTipificacion = idTipificacion == null ? true : false;
+                        boolean isNullTipificacion = tipificacion == null;
+                        boolean isNullIDTipificacion = idTipificacion == null;
 
                         if (isNullTipificacion || isNullIDTipificacion) {
                             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Tipificación requerido!");
@@ -546,15 +528,15 @@ public class UpdateGestionController implements Serializable {
                             FacesContext.getCurrentInstance().addMessage(null, msg);
                             return false;
                         }
-                        
+
                     }//for
-                    
+
                     // agregar llamadas...
                     if (llamadaConDatosList != null && !llamadaConDatosList.isEmpty() && llamadaConDatosList.size() > 0) {
                         for (int index = 0; index < llamadaConDatosList.size(); index++) {
                             this.gestion.getTblLlamadaList().add(llamadaConDatosList.get(index));
                         }
-                    }                    
+                    }
                 }
 
                 // actualizar gestion...
@@ -566,7 +548,6 @@ public class UpdateGestionController implements Serializable {
                 this.gestion.setFechamodifico(this.fechaHoy.getTime());
                 this.ejbLocal.update(this.gestion);
                 this.actualizarTelefonoContacto(llamadaConDatosList);
-                //this.cargarGestionActual(this.gestion);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Actulizar. Correcto!"));
 
             }// this.gestion != null
@@ -584,10 +565,12 @@ public class UpdateGestionController implements Serializable {
     /**
      * Consultar datos de llamada: Devuelve... fecha de inicio, fin, dialstatus,
      * ext del usuario, número llamado, duración de la llamada.
+     *
+     * @return
      */
     public List<TblLlamada> consultarDatosLlamada() {
 
-        List<TblLlamada> llamadaConDatosList = new ArrayList<TblLlamada>();
+        List<TblLlamada> llamadaConDatosList = new ArrayList<>();
 
         if (this.llamadaList != null && !this.llamadaList.isEmpty()) {
             for (int index = 0; index < this.llamadaList.size(); index++) {
@@ -772,58 +755,8 @@ public class UpdateGestionController implements Serializable {
         }
     }
 
-    /**
-     *
-     * @param gestion
-     */
+
     /*
-    private void cargarGestionActual(TblGestion gestion) {
-        if (gestion.getIdGestion() != null) {
-            this.gestion = this.ejbLocal.findById(gestion);
-            List<TblLlamada> llamadaConIdList = this.gestion.getTblLlamadaList();
-            for (int index1 = 0; index1 < llamadaConIdList.size(); index1++) {
-                TblLlamada llamadaConId = llamadaConIdList.get(index1);
-                for (int index2 = 0; index2 < this.llamadaList.size(); index2++) {
-                    TblLlamada llamadaSinId = this.llamadaList.get(index2);
-                    if (llamadaConId.getCallToNumber().equals(llamadaSinId.getCallToNumber()) && llamadaConId.getCallLogId().equals(llamadaSinId.getCallLogId())) {
-                        this.llamadaList.get(index2).setIdLlamada(llamadaConId.getIdLlamada());
-                        List<TblPromesa> promesaConIdList = llamadaConId.getTblPromesaList();
-                        if (promesaConIdList != null && !promesaConIdList.isEmpty() && promesaConIdList.size() > 0) {
-                            for (int index3 = 0; index3 < promesaConIdList.size(); index3++) {
-                                TblPromesa promesaConId = promesaConIdList.get(index3);
-                                String operacion = promesaConId.getOperacion();
-                                String telefono = promesaConId.getTelefono();
-                                Date fechaPago = promesaConId.getFechaPago();
-                                BigDecimal mtopago = promesaConId.getMtopago();
-
-                                for (int index4 = 0; index4 < this.promesaList.size(); index4++) {
-                                    TblPromesa promesaSinId = this.promesaList.get(index4);
-                                    String operacionSinId = promesaSinId.getOperacion();
-                                    String telefonoSinId = promesaSinId.getTelefono();
-                                    Date fechaPagoSinId = promesaSinId.getFechaPago();
-                                    BigDecimal mtopagoSinId = promesaSinId.getMtopago();
-
-                                    boolean isTrueOperacion = operacion.equals(operacionSinId);
-                                    boolean isTrueTelefono = telefono.equals(telefonoSinId);
-                                    boolean isTrueFechaPago = fechaPago.equals(fechaPagoSinId);
-                                    boolean isTrueMtopago = mtopago.equals(mtopagoSinId);
-
-                                    if (isTrueOperacion && isTrueTelefono && isTrueFechaPago && isTrueMtopago) {
-                                        this.promesaList.get(index4).setIdPromesa(promesaConId.getIdPromesa());
-                                        this.promesaList.get(index4).setIdLlamada(promesaConId.getIdLlamada());
-                                        this.promesaList.get(index4).setIdGestion(promesaConId.getIdGestion());
-                                    }
-                                }// index4
-                            }//index3
-                        }
-                    }
-                }// index2
-            }// index1
-        }
-    }
-     */
-
- /*
     ***************************************************************************
     ***************************************************************************
     **************************** Llamada **************************************
@@ -861,7 +794,6 @@ public class UpdateGestionController implements Serializable {
             System.out.println("Numero Seleccionado callToNumber: " + callToNumber.getCallToNumber());
 
             if (callToNumber != null && callToNumber.getCallToNumber() != null && !callToNumber.getCallToNumber().trim().equals("")) {
-                //this.selectedLlamada.setIdLlamada(null);
                 this.selectedLlamada = callToNumber;// llamada seleccionada...
                 String telefono = callToNumber.getCallToNumber();
 
@@ -1078,7 +1010,7 @@ public class UpdateGestionController implements Serializable {
     private TblPromesa selectedPromesa;
     private String clienteOperacion;
     private BigDecimal mtoSaldoOperacion;
-    private String tipoDescuentoPromesa;
+    private Tipodescuento tipoDescuentoPromesa;
     private BigDecimal mtoDescuentoPromesa;
     private BigDecimal mtoSaldoPromesa;
     private Date fechaPagoPromesa;
@@ -1108,11 +1040,11 @@ public class UpdateGestionController implements Serializable {
         this.mtoSaldoOperacion = mtoSaldoOperacion;
     }
 
-    public String getTipoDescuentoPromesa() {
+    public Tipodescuento getTipoDescuentoPromesa() {
         return tipoDescuentoPromesa;
     }
 
-    public void setTipoDescuentoPromesa(String tipoDescuentoPromesa) {
+    public void setTipoDescuentoPromesa(Tipodescuento tipoDescuentoPromesa) {
         this.tipoDescuentoPromesa = tipoDescuentoPromesa;
     }
 
@@ -1164,28 +1096,6 @@ public class UpdateGestionController implements Serializable {
         this.prefijoSalidaList = prefijoSalidaList;
     }
 
-    /*
-    public void onOperacionPromesaChange() {
-
-        String operacion = this.gestion.getOperacion();
-        String leyUsuara = this.gestion.getLeyusura();
-        BigDecimal mtosaldocobrar = this.mtoSaldoGestionCRC;// Monto digitado...
-
-        if (this.clienteOperacion != null && !this.clienteOperacion.trim().equals("")) {
-
-            if (operacion != null && !operacion.trim().equals("") && this.clienteOperacion.equals(operacion) && leyUsuara.equals("1")) {
-                this.mtoSaldoOperacion = mtosaldocobrar;
-
-            } else if (this.carteraList != null && !this.carteraList.isEmpty() && this.carteraList.size() > 0) {
-                for (int index = 0; index < this.carteraList.size(); index++) {
-                    if (this.carteraList.get(index).getNumeroCuenta().equals(this.clienteOperacion)) {
-                        this.mtoSaldoOperacion = this.carteraList.get(index).getSaldoColones();
-                    } //if
-                } //for
-            } //if
-        } //if
-    }
-     */
     /**
      *
      */
@@ -1195,11 +1105,11 @@ public class UpdateGestionController implements Serializable {
         BigDecimal mtoSaldo = this.mtoSaldoOperacion;
         BigDecimal mtoPort = this.mtoDescuentoPromesa;
 
-        if (this.tipoDescuentoPromesa != null && !this.tipoDescuentoPromesa.trim().equals("")) {
-            if (this.tipoDescuentoPromesa.equals("FIJ")) {
+        if (this.tipoDescuentoPromesa != null) {
+            if (this.tipoDescuentoPromesa.getCodigo().equals(ConstanteComun.Monto_Fijo)) {
                 newSaldo = mtoSaldo.subtract(mtoPort);
 
-            } else if (this.tipoDescuentoPromesa.equals("POR")) {
+            } else if (this.tipoDescuentoPromesa.getCodigo().equals(ConstanteComun.Porcentaje)) {
                 if (mtoPort != null && mtoPort.compareTo(BigDecimal.ZERO) > 0) {
                     BigDecimal porcentage = mtoSaldo.multiply(mtoPort).divide(cien);
                     newSaldo = mtoSaldo.subtract(porcentage);
@@ -1223,9 +1133,6 @@ Arreglo de Pago
      */
     public void agregarCancelacionTotal(String codigoMoneda) {
         if (this.selectedLlamada != null) {
-            Moneda objMoneda = new Moneda();
-            objMoneda.setCodigo(codigoMoneda);
-            objMoneda = this.ejbMonedaService.findByCodigo(objMoneda);
 
             if (this.validArregloPago(codigoMoneda)) {
                 TblPromesa promesa = new TblPromesa();
@@ -1234,36 +1141,43 @@ Arreglo de Pago
                     promesa.setUsuarioingreso(this.usuario.getUsuario());
                 }
 
+                Moneda monedaPromesa = new Moneda();
+                monedaPromesa.setCodigo(codigoMoneda);
+                monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
+
+                Estadopromesa estadopromesa = new Estadopromesa();
+                estadopromesa.setCodigo(ConstanteComun.Seguimiento);
+                estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
+
+                Arreglopago arreglopagoPromesa = new Arreglopago();
+                arreglopagoPromesa.setCodigo(ConstanteComun.Cancelacion_Total);
+                arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
+
                 promesa.setIdGestion(this.gestion);
                 promesa.setIdLlamada(this.selectedLlamada);
-                promesa.setOperacion(this.gestion.getOperacion());
+                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(this.fechaPagoPromesa);
-                promesa.setEstado("SEG"); // Seguimiento
-                promesa.setTipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
-                promesa.setTipoarreglopago("CAT");//CAT = Cancelacion Total.
+                promesa.setIdestadopromesa(estadopromesa); // Seguimiento
+                promesa.setIdtipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
+                promesa.setIdarreglopago(arreglopagoPromesa);//CAT = Cancelacion Total.
                 promesa.setFechaingreso(this.fechaHoy.getTime());
-                promesa.setIdMoneda(objMoneda);
+                promesa.setIdMoneda(monedaPromesa);
 
-                if (codigoMoneda.equals("CRC")) {
+                if (codigoMoneda.equals(ConstanteComun.colones)) {
                     promesa.setMtopago(this.mtoSaldoPromesa);
                     promesa.setMtoporcentaje(this.mtoDescuentoPromesa); // Monto o %
 
-                } else if (codigoMoneda.equals("USD")) {
+                } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
                     promesa.setMtopago(this.mtoSaldoPromesaUSD);
                     promesa.setMtoporcentaje(this.mtoDescuentoPromesaUSD); // Monto o %
                 }
 
                 // borra las promesas...
-                //this.deleteByOperacionAndArregloPago(this.clienteOperacion, "CAT", codigoMoneda);
-                this.deleteArregloPago(this.gestion.getOperacion(), codigoMoneda);
-
-                //if (this.existOneCTC(promesa) && this.existOneREF(promesa) && this.validOnlyOneCAT(promesa) && this.existOnePAP(promesa)) {
+                this.deleteArregloPago(this.operacionSelected.getNumeroCuenta(), codigoMoneda);
                 this.gestion.getTblPromesaList().add(promesa);
                 FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                 FacesContext.getCurrentInstance().addMessage(null, msg);
-                //}
-
             }
 
         } else {
@@ -1278,9 +1192,17 @@ Arreglo de Pago
      */
     public void agregarCancelacionTotalPorCuotas(String codigoMoneda) {
         if (this.selectedLlamada != null) {
-            Moneda objMoneda = new Moneda();
-            objMoneda.setCodigo(codigoMoneda);
-            objMoneda = this.ejbMonedaService.findByCodigo(objMoneda);
+            Moneda monedaPromesa = new Moneda();
+            monedaPromesa.setCodigo(codigoMoneda);
+            monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
+
+            Estadopromesa estadopromesa = new Estadopromesa();
+            estadopromesa.setCodigo(ConstanteComun.Seguimiento);
+            estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
+
+            Arreglopago arreglopagoPromesa = new Arreglopago();
+            arreglopagoPromesa.setCodigo(ConstanteComun.Cancelacion_total_por_cuotas);
+            arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
 
             if (this.validArregloPago(codigoMoneda) && this.validCancelacionTotalPorCuotas()) {
 
@@ -1290,14 +1212,14 @@ Arreglo de Pago
                 BigDecimal coutasInt = new BigDecimal(this.cuotas);
 
                 BigDecimal saldo = BigDecimal.ZERO;
-                if (codigoMoneda.equals("CRC")) {
+                if (codigoMoneda.equals(ConstanteComun.colones)) {
                     saldo = this.mtoSaldoPromesa.divide(coutasInt, 6, RoundingMode.HALF_UP);
-                } else if (codigoMoneda.equals("USD")) {
+                } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
                     saldo = this.mtoSaldoPromesaUSD.divide(coutasInt, 6, RoundingMode.HALF_UP);
                 }
 
                 // borra las promesas...
-                this.deleteArregloPago(this.gestion.getOperacion(), codigoMoneda);
+                this.deleteArregloPago(this.operacionSelected.getNumeroCuenta(), codigoMoneda);
 
                 for (int count = 0; count < coutasInt.intValue(); count++) {
                     TblPromesa promesa = new TblPromesa();
@@ -1308,29 +1230,28 @@ Arreglo de Pago
 
                     promesa.setIdGestion(this.gestion);
                     promesa.setIdLlamada(this.selectedLlamada);
-                    promesa.setOperacion(this.gestion.getOperacion());
+                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
                     promesa.setMtopago(saldo);
-                    promesa.setIdMoneda(objMoneda);
-                    promesa.setEstado("SEG"); // Seguimiento                    
-                    promesa.setTipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
+                    promesa.setIdMoneda(monedaPromesa);
+                    promesa.setIdestadopromesa(estadopromesa); // Seguimiento                    
+                    promesa.setIdtipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
 
-                    if (codigoMoneda.equals("CRC")) {
+                    if (codigoMoneda.equals(ConstanteComun.colones)) {
                         promesa.setMtoporcentaje(this.mtoDescuentoPromesa); // Monto o %
-                    } else if (codigoMoneda.equals("USD")) {
+                    } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
                         promesa.setMtoporcentaje(this.mtoDescuentoPromesaUSD); // Monto o %
                     }
 
-                    promesa.setTipoarreglopago("CTC");//CTC = Cancelacion Total por Cuotas.
+                    promesa.setIdarreglopago(arreglopagoPromesa);//CTC = Cancelacion Total por Cuotas.
                     promesa.setFechaingreso(this.fechaHoy.getTime());
 
-                    //if (this.existOneCAT(promesa) && this.existOneREF(promesa) && this.validOnlyThreeCTC(promesa) && this.existOnePAP(promesa)) {
                     this.gestion.getTblPromesaList().add(promesa);
                     FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                     FacesContext.getCurrentInstance().addMessage(null, msg);
-                    //}
+
                 }
             }
 
@@ -1349,10 +1270,10 @@ Arreglo de Pago
         BigDecimal mtoSaldo = new BigDecimal(BigInteger.ZERO);
         BigDecimal primerTracto = new BigDecimal(BigInteger.ZERO);
 
-        if (codigoMoneda.equals("CRC")) {
+        if (codigoMoneda.equals(ConstanteComun.colones)) {
             mtoSaldo = this.mtoSaldoOperacion;
             primerTracto = this.mtoDescuentoPromesa;
-        } else if (codigoMoneda.equals("USD")) {
+        } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
             mtoSaldo = this.mtoSaldoOperacionUSD;
             primerTracto = this.mtoDescuentoPromesaUSD;
         }
@@ -1367,9 +1288,9 @@ Arreglo de Pago
             }
         }
 
-        if (codigoMoneda.equals("CRC")) {
+        if (codigoMoneda.equals(ConstanteComun.colones)) {
             this.mtoSaldoPromesa = saldoRestante;
-        } else if (codigoMoneda.equals("USD")) {
+        } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
             this.mtoSaldoPromesaUSD = saldoRestante;
         }
     }
@@ -1380,9 +1301,18 @@ Arreglo de Pago
      */
     public void agregarRefinanciamiento(String codigoMoneda) {
         if (this.selectedLlamada != null) {
-            Moneda objMoneda = new Moneda();
-            objMoneda.setCodigo(codigoMoneda);
-            objMoneda = this.ejbMonedaService.findByCodigo(objMoneda);
+            Moneda monedaPromesa = new Moneda();
+            monedaPromesa.setCodigo(codigoMoneda);
+            monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
+
+            Estadopromesa estadopromesa = new Estadopromesa();
+            estadopromesa.setCodigo(ConstanteComun.Seguimiento);
+            estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
+
+            Arreglopago arreglopagoPromesa = new Arreglopago();
+            arreglopagoPromesa.setCodigo(ConstanteComun.Refinanciamiento);
+            arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
+
             if (this.validRefinanciamiento(codigoMoneda)) {
 
                 Calendar fechaInicial = Calendar.getInstance();
@@ -1393,17 +1323,16 @@ Arreglo de Pago
 
                 BigDecimal primerTracto = BigDecimal.ZERO;// primer tracto
                 BigDecimal saldo = BigDecimal.ZERO;// saldo restante
-                if (codigoMoneda.equals("CRC")) {
+                if (codigoMoneda.equals(ConstanteComun.colones)) {
                     primerTracto = this.mtoDescuentoPromesa;// primer tracto
                     saldo = this.mtoSaldoPromesa.divide(coutasIntLessOne, 6, RoundingMode.HALF_UP);// saldo restante
-                } else if (codigoMoneda.equals("USD")) {
+                } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
                     primerTracto = this.mtoDescuentoPromesaUSD;// primer tracto
                     saldo = this.mtoSaldoPromesaUSD.divide(coutasIntLessOne, 6, RoundingMode.HALF_UP);// saldo restante
                 }
 
-                // borra las promesas...
-                //this.deleteByOperacionAndArregloPago(this.clienteOperacion, "REF", codigoMoneda);
-                this.deleteArregloPago(this.gestion.getOperacion(), codigoMoneda);
+                // borra las promesas...                
+                this.deleteArregloPago(this.operacionSelected.getNumeroCuenta(), codigoMoneda);
 
                 for (int count = 0; count < coutasInt.intValue(); count++) {
                     TblPromesa promesa = new TblPromesa();
@@ -1414,7 +1343,7 @@ Arreglo de Pago
 
                     promesa.setIdGestion(this.gestion);
                     promesa.setIdLlamada(this.selectedLlamada);
-                    promesa.setOperacion(this.gestion.getOperacion());
+                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
@@ -1425,18 +1354,16 @@ Arreglo de Pago
                         promesa.setMtopago(saldo);
                     }
 
-                    promesa.setIdMoneda(objMoneda);
-                    promesa.setEstado("SEG"); // Seguimiento
-                    promesa.setTipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
+                    promesa.setIdMoneda(monedaPromesa);
+                    promesa.setIdestadopromesa(estadopromesa); // Seguimiento
+                    promesa.setIdtipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
                     promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
-                    promesa.setTipoarreglopago("REF");//REF = Refinanciamiento.
+                    promesa.setIdarreglopago(arreglopagoPromesa);//REF = Refinanciamiento.
                     promesa.setFechaingreso(this.fechaHoy.getTime());
 
-                    //if (this.existOneCAT(promesa) && this.validOnlyThreeCTC(promesa) && this.existOneCTC(promesa) && this.existOnePAP(promesa)) {
                     this.gestion.getTblPromesaList().add(promesa);
                     FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                     FacesContext.getCurrentInstance().addMessage(null, msg);
-                    //}
                 }
             }
 
@@ -1448,9 +1375,11 @@ Arreglo de Pago
 
     /**
      * Arreglo de pago. Limpia campos del formulario
+     *
+     * @param codigoMoneda
      */
     public void cleanFormArregloPago(String codigoMoneda) {
-        String operacion = this.gestion.getOperacion();
+        String operacion = this.operacionSelected.getNumeroCuenta();
         this.cleanFormAP();
         this.deleteArregloPago(operacion, codigoMoneda);
     }
@@ -1480,6 +1409,9 @@ Arreglo de Pago
     /**
      * CAT = Cancelacion Total. CTC = Cancelacion Total por Cuotas. REF =
      * Refinanciamiento. PAP = Pago Parcial
+     *
+     * @param operacion
+     * @param codigoMoneda
      */
     public void deleteArregloPago(String operacion, String codigoMoneda) {
         int index = 0;
@@ -1527,7 +1459,7 @@ Arreglo de Pago
         int index = 0;
         while (this.gestion.getTblPromesaList().size() > 0 && this.gestion.getTblPromesaList().size() > index) {
             boolean isOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion);
-            boolean isAP = this.gestion.getTblPromesaList().get(index).getTipoarreglopago().equals(arregloPago);
+            boolean isAP = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo().equals(arregloPago);
             boolean isMoneda = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo().equals(codigoMoneda);
             if (isOperacion && isAP && isMoneda) {
                 this.gestion.getTblPromesaList().remove(index);
@@ -1557,25 +1489,33 @@ Arreglo de Pago
 
                 promesa.setIdGestion(this.gestion);
                 promesa.setIdLlamada(this.selectedLlamada);
-                promesa.setOperacion(this.gestion.getOperacion());
+                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(fechaInicial.getTime());
 
-                if (codigoMoneda.equals("CRC")) {
+                if (codigoMoneda.equals(ConstanteComun.colones)) {
                     promesa.setMtopago(this.mtoSaldoPromesa);
-                } else if (codigoMoneda.equals("USD")) {
+                } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
                     promesa.setMtopago(this.mtoSaldoPromesaUSD);
                 }
 
-                Moneda objMoneda = new Moneda();
-                objMoneda.setCodigo(codigoMoneda);
-                objMoneda = this.ejbMonedaService.findByCodigo(objMoneda);
-                promesa.setIdMoneda(objMoneda);
+                Moneda monedaPromesa = new Moneda();
+                monedaPromesa.setCodigo(codigoMoneda);
+                monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
 
-                promesa.setEstado("SEG"); // Seguimiento
-                promesa.setTipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
+                Estadopromesa estadopromesa = new Estadopromesa();
+                estadopromesa.setCodigo(ConstanteComun.Seguimiento);
+                estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
+
+                Arreglopago arreglopagoPromesa = new Arreglopago();
+                arreglopagoPromesa.setCodigo(ConstanteComun.Pago_Parcial);
+                arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
+
+                promesa.setIdMoneda(monedaPromesa);
+                promesa.setIdestadopromesa(estadopromesa); // Seguimiento
+                promesa.setIdtipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
                 promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
-                promesa.setTipoarreglopago("PAP");//PAP = Pago Parcial
+                promesa.setIdarreglopago(arreglopagoPromesa);//PAP = Pago Parcial
                 promesa.setFechaingreso(this.fechaHoy.getTime());
 
                 if (this.validarSumaPromesaContraSaldo(promesa)) {
@@ -1583,14 +1523,11 @@ Arreglo de Pago
                     FacesContext.getCurrentInstance().addMessage(null, msg);
 
                 } else {
-                    // borra las promesas...                
-                    //this.deleteArregloPago(this.gestion.getOperacion(), codigoMoneda);
+                    // borra las promesas...
                     this.gestion.getTblPromesaList().add(promesa);
                     FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                     FacesContext.getCurrentInstance().addMessage(null, msg);
-                    //}
                 }
-
             }
 
         } else {
@@ -1601,11 +1538,12 @@ Arreglo de Pago
 
     /**
      *
+     * @param codigoMoneda
      * @return
      */
     public boolean validPagoParcial(String codigoMoneda) {
 
-        if (codigoMoneda.equals("CRC")) {
+        if (codigoMoneda.equals(ConstanteComun.colones)) {
             if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -1622,7 +1560,7 @@ Arreglo de Pago
                 return false;
             }
 
-        } else if (codigoMoneda.equals("USD")) {
+        } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
             if (this.mtoSaldoOperacionUSD == null || this.mtoSaldoOperacionUSD.compareTo(BigDecimal.ZERO) <= 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -1656,7 +1594,7 @@ Arreglo de Pago
      */
     private boolean validarSumaPromesaContraSaldo(TblPromesa promesa) {
 
-        BigDecimal suma = this.sumarArrergloPago(promesa.getOperacion(), promesa.getTipoarreglopago(), promesa.getIdMoneda().getCodigo());
+        BigDecimal suma = this.sumarArrergloPago(promesa.getOperacion(), promesa.getIdarreglopago().getCodigo(), promesa.getIdMoneda().getCodigo());
         suma = suma.add(promesa.getMtopago());
 
         if (suma.compareTo(this.mtoSaldoOperacion) > 0) {
@@ -1678,9 +1616,9 @@ Arreglo de Pago
         BigDecimal suma = BigDecimal.ZERO;
         for (int index = 0; index < this.gestion.getTblPromesaList().size(); index++) {
             String ope = this.gestion.getTblPromesaList().get(index).getOperacion();
-            String tipoAP = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+            String tipoAP = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
             String codigoMoneda = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-            String estado = this.gestion.getTblPromesaList().get(index).getEstado();
+            String estado = this.gestion.getTblPromesaList().get(index).getIdestadopromesa().getCodigo();
             BigDecimal mtoPago = this.gestion.getTblPromesaList().get(index).getMtopago();
 
             boolean isOperacion = ope.trim().equals(pOperacion);
@@ -1744,8 +1682,7 @@ Arreglo de Pago
         if (this.gestion.getTblPromesaList() != null && !this.gestion.getTblPromesaList().isEmpty()) {
             for (int index = 0; index < this.gestion.getTblPromesaList().size(); index++) {
                 String operacion = promesa.getOperacion();
-                String tipoarreglopago = "CAT";
-                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo().equals(ConstanteComun.Cancelacion_Total)) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Cancelación Total. Sólo puede haber uno!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
@@ -1757,6 +1694,7 @@ Arreglo de Pago
     }
 
     /**
+     * PAP - Pago Parcial
      *
      * @param promesa
      * @return
@@ -1765,8 +1703,7 @@ Arreglo de Pago
         if (this.gestion.getTblPromesaList() != null && !this.gestion.getTblPromesaList().isEmpty()) {
             for (int index = 0; index < this.gestion.getTblPromesaList().size(); index++) {
                 String operacion = promesa.getOperacion();
-                String tipoarreglopago = "PAP";
-                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo().equals(ConstanteComun.Pago_Parcial)) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Pago Parcial. Sólo puede haber uno!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
@@ -1778,7 +1715,8 @@ Arreglo de Pago
     }
 
     /**
-     * Ya existe una Cancelación Total por Cuotas!
+     * Ya existe una Cancelación Total por Cuotas! CTC - Cancelación total por
+     * cuotas
      *
      * @param promesa
      * @return
@@ -1787,8 +1725,7 @@ Arreglo de Pago
         if (this.gestion.getTblPromesaList() != null && !this.gestion.getTblPromesaList().isEmpty()) {
             for (int index = 0; index < this.gestion.getTblPromesaList().size(); index++) {
                 String operacion = promesa.getOperacion();
-                String tipoarreglopago = "CTC";
-                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo().equals(ConstanteComun.Cancelacion_total_por_cuotas)) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Ya existe una Cancelación Total por Cuotas!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
@@ -1799,7 +1736,7 @@ Arreglo de Pago
     }
 
     /**
-     * Ya existe arreglo de pago, Refinanciamiento!
+     * Ya existe arreglo de pago, Refinanciamiento! REF - Refinanciamiento
      *
      * @param promesa
      * @return
@@ -1808,8 +1745,7 @@ Arreglo de Pago
         if (this.gestion.getTblPromesaList() != null && !this.gestion.getTblPromesaList().isEmpty()) {
             for (int index = 0; index < this.gestion.getTblPromesaList().size(); index++) {
                 String operacion = promesa.getOperacion();
-                String tipoarreglopago = "REF";//REF = Refinanciamiento.
-                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo().equals(ConstanteComun.Refinanciamiento)) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Refinanciamiento. Ya existe arreglo de pago!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
@@ -1825,20 +1761,14 @@ Arreglo de Pago
      * @return
      */
     private boolean validArregloPago(String codigoMoneda) {
-        /*
-        if (this.clienteOperacion == null || this.clienteOperacion.trim().equals("")) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar una Operación!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return false;
-        }
-         */
-        if (codigoMoneda.equals("CRC")) {
+
+        if (codigoMoneda.equals(ConstanteComun.colones)) {
             if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return false;
             }
-        } else if (codigoMoneda.equals("USD")) {
+        } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
             if (this.mtoSaldoOperacionUSD == null || this.mtoSaldoOperacionUSD.compareTo(BigDecimal.ZERO) <= 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -1852,29 +1782,14 @@ Arreglo de Pago
             return false;
         }
 
-        if (codigoMoneda.equals("CRC")) {
-            /*
-            if (this.mtoDescuentoPromesa == null || this.mtoDescuentoPromesa.equals(BigDecimal.ZERO)) {
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe digitar Monto o %!");
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-                return false;
-            } else 
-             */
+        if (codigoMoneda.equals(ConstanteComun.colones)) {
             if (this.mtoSaldoPromesa == null || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesa.compareTo(BigDecimal.ZERO) == -1) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 return false;
             }
 
-        } else if (codigoMoneda.equals("USD")) {
-            /*
-            if (this.mtoDescuentoPromesaUSD == null || this.mtoDescuentoPromesaUSD.equals(BigDecimal.ZERO)) {
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe digitar Monto o %!");
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-                return false;
-
-            } else 
-             */
+        } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
             if (this.mtoSaldoPromesaUSD == null || this.mtoSaldoPromesaUSD.compareTo(BigDecimal.ZERO) == 0 || this.mtoSaldoPromesaUSD.compareTo(BigDecimal.ZERO) == -1) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Monto Promesa debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -1886,18 +1801,7 @@ Arreglo de Pago
         if (!this.validarfechaPagoPromesa()) {
             return false;
         }
-        /*
-        if (this.fechaPagoPromesa == null) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Fecha Pago!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return false;
 
-        } else if (this.fechaPagoPromesa.before(this.fechaHoy.getTime())) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Fecha Pago debe ser mayor a la fecha de hoy!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            return false;
-        }
-         */
         return true;
     }
 
@@ -1917,7 +1821,8 @@ Arreglo de Pago
     }
 
     /**
-     * Sólo puede haber uno. Ya existe una Cancelación Total!
+     * Sólo puede haber uno. Ya existe una Cancelación Total! CAT - Cancelación
+     * Total
      *
      * @param promesa
      * @return
@@ -1926,8 +1831,7 @@ Arreglo de Pago
         if (this.gestion.getTblPromesaList() != null && !this.gestion.getTblPromesaList().isEmpty()) {
             for (int index = 0; index < this.gestion.getTblPromesaList().size(); index++) {
                 String operacion = promesa.getOperacion();
-                String tipoarreglopago = "CAT";
-                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getTipoarreglopago().equals(tipoarreglopago)) {
+                if (this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo().equals(ConstanteComun.Cancelacion_Total)) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Ya existe una Cancelación Total. Sólo puede haber uno!");
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                     return false;
@@ -1938,6 +1842,7 @@ Arreglo de Pago
     }
 
     /**
+     * CTC - Cancelación total por cuotas
      *
      * @param promesa
      * @return
@@ -1946,7 +1851,7 @@ Arreglo de Pago
         int countCTC = 0;
         if (this.gestion.getTblPromesaList() != null && !this.gestion.getTblPromesaList().isEmpty()) {
             for (int i = 0; i < this.gestion.getTblPromesaList().size(); i++) {
-                if (this.gestion.getTblPromesaList().get(i).getTipoarreglopago().equals("CTC")) {
+                if (this.gestion.getTblPromesaList().get(i).getIdarreglopago().getCodigo().equals(ConstanteComun.Cancelacion_total_por_cuotas)) {
                     countCTC++;
                 }
             }
@@ -1967,7 +1872,7 @@ Arreglo de Pago
      */
     private boolean validRefinanciamiento(String codigoMoneda) {
 
-        if (codigoMoneda.equals("CRC")) {
+        if (codigoMoneda.equals(ConstanteComun.colones)) {
             if (this.mtoSaldoOperacion == null || this.mtoSaldoOperacion.compareTo(BigDecimal.ZERO) <= 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -1982,7 +1887,7 @@ Arreglo de Pago
                 return false;
             }
 
-        } else if (codigoMoneda.equals("USD")) {
+        } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
             if (this.mtoSaldoOperacionUSD == null || this.mtoSaldoOperacionUSD.compareTo(BigDecimal.ZERO) <= 0) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Saldo de la operación debe ser mayor a cero!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -2035,27 +1940,30 @@ Arreglo de Pago
         for (int index = 0; index < this.gestion.getTblPromesaList().size(); index++) {
             if (this.selectedPromesa != null && (this.gestion.getTblPromesaList() != null && this.gestion.getTblPromesaList().size() > 0)) {
 
-                boolean isTrueTelefono = this.gestion.getTblPromesaList().get(index).getTelefono().equals(this.selectedPromesa.getTelefono()) ? true : false;
-                boolean isTrueOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
-                boolean isTrueMtopago = this.gestion.getTblPromesaList().get(index).getMtopago().equals(this.selectedPromesa.getMtopago()) ? true : false;
-                boolean isTrueFechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago().equals(this.selectedPromesa.getFechaPago()) ? true : false;
-                boolean isTrueEstado = this.gestion.getTblPromesaList().get(index).getEstado().equals(this.selectedPromesa.getEstado()) ? true : false;
-                boolean isTrueTipoArreglo = this.gestion.getTblPromesaList().get(index).getEstado().equals(this.selectedPromesa.getEstado()) ? true : false;
-                boolean isTrueMoneda = this.gestion.getTblPromesaList().get(index).getIdMoneda().equals(this.selectedPromesa.getIdMoneda()) ? true : false;
+                boolean isTrueTelefono = this.gestion.getTblPromesaList().get(index).getTelefono().equals(this.selectedPromesa.getTelefono());
+                boolean isTrueOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(this.selectedPromesa.getOperacion());
+                boolean isTrueMtopago = this.gestion.getTblPromesaList().get(index).getMtopago().equals(this.selectedPromesa.getMtopago());
+                boolean isTrueFechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago().equals(this.selectedPromesa.getFechaPago());
+                boolean isTrueEstado = this.gestion.getTblPromesaList().get(index).getIdestadopromesa().getCodigo().equals(this.selectedPromesa.getIdestadopromesa().getCodigo());
+                boolean isTrueTipoArreglo = this.gestion.getTblPromesaList().get(index).getIdestadopromesa().getCodigo().equals(this.selectedPromesa.getIdestadopromesa().getCodigo());
+                boolean isTrueMoneda = this.gestion.getTblPromesaList().get(index).getIdMoneda().equals(this.selectedPromesa.getIdMoneda());
 
                 if (this.gestion.getTblPromesaList().get(index).getOperacion() != null) {
-                    isTrueOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(this.selectedPromesa.getOperacion()) ? true : false;
+                    isTrueOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(this.selectedPromesa.getOperacion());
                 }
 
                 if (isTrueTelefono && isTrueOperacion && isTrueMtopago && isTrueFechaPago && isTrueEstado && isTrueTipoArreglo && isTrueMoneda) {
 
                     TblPromesa promesa = this.gestion.getTblPromesaList().get(index);
-                    boolean hasOperation = promesa.getOperacion() != null && !promesa.getOperacion().trim().equals("") ? true : false;
-                    boolean hasMtopago = promesa.getMtopago() != null && !promesa.getMtopago().equals(0) ? true : false;
-                    boolean hasIdGestion = promesa.getIdGestion() != null && promesa.getIdGestion().getIdGestion() != null ? true : false;
+                    boolean hasOperation = promesa.getOperacion() != null && !promesa.getOperacion().trim().equals("");
+                    boolean hasMtopago = promesa.getMtopago() != null && !promesa.getMtopago().equals(0);
+                    boolean hasIdGestion = promesa.getIdGestion() != null && promesa.getIdGestion().getIdGestion() != null;
 
                     if (hasOperation && hasMtopago && hasIdGestion) {
-                        promesa.setEstado("DEL");
+                        Estadopromesa estadopromesa = new Estadopromesa();
+                        estadopromesa.setCodigo(ConstanteComun.Registro_Borrado);
+                        estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
+                        promesa.setIdestadopromesa(estadopromesa);
                         this.ejbPromesaLocal.update(promesa);
                     }
 
@@ -2129,14 +2037,17 @@ Arreglo de Pago
     }
 
     /**
+     * CTC - Cancelación total por cuotas
      *
      * @param pOperacion
      * @param pmtoPago
      * @param pFechaPago
+     * @param tipoarreglopago
+     * @param codigoMoneda
      */
     public void recalcularCuotas(String pOperacion, BigDecimal pmtoPago, Date pFechaPago, String tipoarreglopago, String codigoMoneda) {
 
-        if (tipoarreglopago.equals("CTC") && codigoMoneda.equals("CRC")) {
+        if (tipoarreglopago.equals(ConstanteComun.Cancelacion_total_por_cuotas) && codigoMoneda.equals(ConstanteComun.colones)) {
 
             BigDecimal coutasInt = new BigDecimal(this.cuotas);
             BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
@@ -2154,7 +2065,7 @@ Arreglo de Pago
                     String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                     Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                     String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                    String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                    String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
                     boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
@@ -2195,7 +2106,7 @@ Arreglo de Pago
                     String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                     Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                     String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                    String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                    String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
                     boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
@@ -2218,7 +2129,7 @@ Arreglo de Pago
                             BigDecimal saldoRestante = this.mtoSaldoPromesa.subtract(sumar);
                             BigDecimal contar = BigDecimal.ZERO;
                             for (int i = 0; i < this.gestion.getTblPromesaList().size(); i++) {
-                                String isCTCString = this.gestion.getTblPromesaList().get(i).getTipoarreglopago();
+                                String isCTCString = this.gestion.getTblPromesaList().get(i).getIdarreglopago().getCodigo();
                                 String isUSDString = this.gestion.getTblPromesaList().get(i).getIdMoneda().getCodigo();
                                 String isOperacionString = this.gestion.getTblPromesaList().get(i).getOperacion();
                                 boolean isCTC = tipoarreglopago.equals(isCTCString);
@@ -2236,7 +2147,7 @@ Arreglo de Pago
                             saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
                             index = indexMenosUno.intValue();
                             while (index < this.gestion.getTblPromesaList().size()) {
-                                String isCTCString = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                                String isCTCString = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
                                 String isUSDString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
                                 String isOperacionString = this.gestion.getTblPromesaList().get(index).getOperacion();
                                 boolean isCTC = tipoarreglopago.equals(isCTCString);
@@ -2276,6 +2187,7 @@ Arreglo de Pago
     }
 
     /**
+     * REF - Refinanciamiento
      *
      * @param pOperacion
      * @param pmtoPago
@@ -2285,7 +2197,7 @@ Arreglo de Pago
      */
     public void recalcularCuotasREF(String pOperacion, BigDecimal pmtoPago, Date pFechaPago, String tipoarreglopago, String codigoMoneda) {
 
-        if (tipoarreglopago.equals("REF") && codigoMoneda.equals("CRC")) {
+        if (tipoarreglopago.equals(ConstanteComun.Refinanciamiento) && codigoMoneda.equals(ConstanteComun.colones)) {
 
             BigDecimal coutasInt = new BigDecimal(this.cuotas);
             BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
@@ -2303,7 +2215,7 @@ Arreglo de Pago
                     String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                     Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                     String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                    String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                    String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
                     boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
@@ -2364,7 +2276,7 @@ Arreglo de Pago
                         String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                         Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                         String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                        String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                        String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                         boolean isTrueOperacion = pOperacion.equals(operacion);
                         boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
@@ -2435,20 +2347,6 @@ Arreglo de Pago
         this.mtoSaldoPromesaUSD = mtoSaldoPromesaUSD;
     }
 
-    /*
-    public void onOperacionPromesaChangeUSD() {
-
-        if (this.clienteOperacion != null && !this.clienteOperacion.trim().equals("")) {
-            if (this.carteraList != null && !this.carteraList.isEmpty() && this.carteraList.size() > 0) {
-                for (int index = 0; index < this.carteraList.size(); index++) {
-                    if (this.carteraList.get(index).getNumeroCuenta().equals(this.clienteOperacion)) {
-                        this.mtoSaldoOperacionUSD = this.carteraList.get(index).getSaldoDolares();
-                    } //if
-                } //for
-            } //if
-        } //if
-    }
-     */
     /**
      * USD Cacula nuevo monto degun descuento.
      */
@@ -2459,10 +2357,10 @@ Arreglo de Pago
         BigDecimal mtoPort = this.mtoDescuentoPromesaUSD;
 
         if (this.tipoDescuentoPromesa != null) {
-            if (this.tipoDescuentoPromesa.equals("FIJ")) {
+            if (this.tipoDescuentoPromesa.equals(ConstanteComun.Monto_Fijo)) {
                 newSaldo = mtoSaldo.subtract(mtoPort);
 
-            } else if (this.tipoDescuentoPromesa.equals("POR")) {
+            } else if (this.tipoDescuentoPromesa.equals(ConstanteComun.Porcentaje)) {
                 if (mtoPort != null && mtoPort.compareTo(BigDecimal.ZERO) > 0) {
                     BigDecimal porcentage = mtoSaldo.multiply(mtoPort).divide(cien);
                     newSaldo = mtoSaldo.subtract(porcentage);
@@ -2476,6 +2374,7 @@ Arreglo de Pago
     }
 
     /**
+     * CTC - Cancelación total por cuotas
      *
      * @param pOperacion
      * @param pmtoPago
@@ -2485,7 +2384,7 @@ Arreglo de Pago
      */
     public void recalcularCuotasUSD(String pOperacion, BigDecimal pmtoPago, Date pFechaPago, String tipoarreglopago, String codigoMoneda) {
 
-        if (tipoarreglopago.equals("CTC") && codigoMoneda.equals("USD")) {
+        if (tipoarreglopago.equals(ConstanteComun.Cancelacion_total_por_cuotas) && codigoMoneda.equals(ConstanteComun.dolares)) {
 
             BigDecimal coutasInt = new BigDecimal(this.cuotas);
             BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
@@ -2503,7 +2402,7 @@ Arreglo de Pago
                     String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                     Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                     String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                    String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                    String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
                     boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
@@ -2544,7 +2443,7 @@ Arreglo de Pago
                     String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                     Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                     String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                    String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                    String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
                     boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
@@ -2558,7 +2457,6 @@ Arreglo de Pago
                         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "La suma de las cuotas es mayor al Monto Promesa!");
                         FacesContext.getCurrentInstance().addMessage(null, msg);
 
-                        BigDecimal mtoPagoSiguiente = BigDecimal.ZERO;
                         boolean isTrue = (this.gestion.getTblPromesaList().size() - index) >= 1;
                         if (isTrue) {
                             BigDecimal indexMenosUno = new BigDecimal(index - 1);
@@ -2567,7 +2465,7 @@ Arreglo de Pago
                             BigDecimal saldoRestante = this.mtoSaldoPromesaUSD.subtract(sumar);
                             BigDecimal contar = BigDecimal.ZERO;
                             for (int i = 0; i < this.gestion.getTblPromesaList().size(); i++) {
-                                String isCTCString = this.gestion.getTblPromesaList().get(i).getTipoarreglopago();
+                                String isCTCString = this.gestion.getTblPromesaList().get(i).getIdarreglopago().getCodigo();
                                 String isUSDString = this.gestion.getTblPromesaList().get(i).getIdMoneda().getCodigo();
                                 String isOperacionString = this.gestion.getTblPromesaList().get(i).getOperacion();
                                 boolean isCTC = tipoarreglopago.equals(isCTCString);
@@ -2579,13 +2477,11 @@ Arreglo de Pago
                                 }
                             }
 
-                            BigDecimal promesaSize = new BigDecimal(this.gestion.getTblPromesaList().size());
-
                             BigDecimal cantidaRestante = contar.subtract(BigDecimal.ONE);
                             saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
                             index = indexMenosUno.intValue();
                             while (index < this.gestion.getTblPromesaList().size()) {
-                                String isCTCString = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                                String isCTCString = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
                                 String isUSDString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
                                 String isOperacionString = this.gestion.getTblPromesaList().get(index).getOperacion();
                                 boolean isCTC = tipoarreglopago.equals(isCTCString);
@@ -2625,6 +2521,7 @@ Arreglo de Pago
     }
 
     /**
+     * REF - Refinanciamiento
      *
      * @param pOperacion
      * @param pmtoPago
@@ -2638,7 +2535,7 @@ Arreglo de Pago
         BigDecimal primerTracto = this.mtoDescuentoPromesaUSD; // Primer Tracto
         BigDecimal saldoRestanteUSD = this.mtoSaldoPromesaUSD;    // Saldo restante
 
-        if (tipoarreglopago.equals("REF") && codigoMoneda.equals("USD")) {
+        if (tipoarreglopago.equals(ConstanteComun.Refinanciamiento) && codigoMoneda.equals(ConstanteComun.dolares)) {
 
             BigDecimal coutasInt = new BigDecimal(this.cuotas);
             BigDecimal saldo = new BigDecimal(BigInteger.ZERO);
@@ -2657,7 +2554,7 @@ Arreglo de Pago
                     String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                     Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                     String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                    String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                    String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
                     boolean isFechaPagoEquals = fechaPago.equals(pFechaPago);
@@ -2698,7 +2595,7 @@ Arreglo de Pago
                     String operacion = this.gestion.getTblPromesaList().get(index).getOperacion();
                     Date fechaPago = this.gestion.getTblPromesaList().get(index).getFechaPago();
                     String monedaString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
-                    String arreglopago = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                    String arreglopago = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
 
                     boolean isTrueOperacion = pOperacion.equals(operacion);
                     boolean isFechaPagoAfter = fechaPago.after(pFechaPago);
@@ -2730,7 +2627,7 @@ Arreglo de Pago
                             saldoRestante = saldoRestante.divide(cantidaRestante, 6, RoundingMode.HALF_UP);
                             index = indexMenosUno.intValue();
                             while (index < this.gestion.getTblPromesaList().size()) {
-                                String isCTCString = this.gestion.getTblPromesaList().get(index).getTipoarreglopago();
+                                String isCTCString = this.gestion.getTblPromesaList().get(index).getIdarreglopago().getCodigo();
                                 String isUSDString = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo();
                                 String isOperacionString = this.gestion.getTblPromesaList().get(index).getOperacion();
                                 boolean isCTC = tipoarreglopago.equals(isCTCString);
@@ -2843,6 +2740,10 @@ Arreglo de Pago
         return true;
     }
 
+    /**
+     *
+     * @param event
+     */
     public void onTabViewChange(TabChangeEvent event) {
         TabView tv = (TabView) event.getComponent();
         this.activeTabIndex = tv.getActiveIndex();
@@ -2852,11 +2753,10 @@ Arreglo de Pago
                 this.findmeController.cargarFindme(this.gestion.getIdentificacion());
                 break;
             case 2:
-                this.pagosHistorialController.cargarPagos(this.gestion.getCodigoCartera(), this.gestion.getOperacion(), this.gestion.getIdentificacion());
+                this.pagosHistorialController.cargarPagos(this.operacionSelected.getCodigoCartera(), this.operacionSelected.getNumeroCuenta(), this.operacionSelected.getIdentificacion());
                 PrimeFaces.current().ajax().update("formGestion:idTabView:idTablePagos");
                 break;
             case 3:
-                //this.gestionController.cargarGestiones(this.gestion.getCodigoCartera(), this.gestion.getIdentificacion());
                 PrimeFaces.current().ajax().update("formGestion:idTabView:idTableGH");
                 break;
             default:
@@ -2875,67 +2775,48 @@ Arreglo de Pago
     }
 
     /**
-     * Fecha Ultima Gestion Fecha Ultima Promesa Monto Ultima Promesa
+     *
+     * @param llamada
      */
-    private void buscarGestion() {
-
-        if (this.carteraList != null && !this.carteraList.isEmpty()) {
-            for (int index = 0; index < this.carteraList.size(); index++) {
-                String codigoCartera = this.carteraList.get(index).getCodigoCartera();
-                String identificacion = this.carteraList.get(index).getIdentificacion();
-                String operacion = this.carteraList.get(index).getNumeroCuenta();
-
-                TblGestion gestion = new TblGestion();
-                gestion.setCodigoCartera(codigoCartera);
-                gestion.setIdentificacion(identificacion);
-
-                gestion = this.ejbLocal.findByCodigoCarteraANDIdentificacion(gestion);
-                if (gestion != null) {
-
-                    Date fechaUltimaGestion = gestion.getFechaGestion();
-                    String razonMora = "";
-                    TblPromesa ultimaPromesa = this.ejbPromesaLocal.findPromesaUltimoPago(gestion.getIdGestion());
-
-                    this.carteraList.get(index).setFechaUltimaGestion(fechaUltimaGestion);
-                    this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);
-                    this.carteraList.get(index).setRazonMora(razonMora);
-                }// if Gestion
+    private void setLlamadaTOGestion(TblLlamada llamada) {
+        if (llamada != null) {
+            this.setGestion(llamada.getIdGestion());
+            String identificacion = llamada.getIdGestion().getIdentificacion();
+            String numeroOperacion = llamada.getOperacion();
+            
+            if(numeroOperacion == null){
+                numeroOperacion = this.getGestion().getOperacion();
             }
+            
+            TblCartera operacion = new TblCartera();
+            operacion.setIdentificacion(identificacion);
+            operacion.setNumeroCuenta(numeroOperacion);
+            operacion = this.ejbCarteraLocal.findByNumeroCuentaANDIdentificacion(operacion);
+            
+            if(operacion != null){
+                this.setGestionTOGestion(operacion);
+            }
+            
         }
-    }//buscarGestion
+    }
 
     /**
      *
      * @param pGestion
      */
-    private void setGestionTOGestion(TblGestion pGestion) {
-        this.gestion = pGestion;
+    private void setGestionTOGestion(TblCartera operacion) {
 
-        // Ultima Promesa.
-        TblPromesa ultimaPromesa = this.ejbPromesaLocal.findPromesaUltimoPago(this.gestion.getIdGestion());
-        if (ultimaPromesa != null) {
-            this.gestion.setUltimaPromesa(ultimaPromesa);
-        }
+        this.setOperacionSelected(operacion);
 
-        // Ultima llamada. Ultima Razon de Mora.        
-        TblLlamada ultimaLlamada = this.ejbLlamadaLocal.findUltimaLlamada(this.gestion.getIdGestion());
-        if (ultimaLlamada != null) {
-            Razonmora ultimaRazonMora = ultimaLlamada.getIdrazonmora();
-            if (ultimaRazonMora != null) {
-                this.gestion.setUltimaRazonMora(ultimaRazonMora);
-            }
-        }
-
-        this.llamadaOperacionList = this.gestion.getTblLlamadaList();
+        this.llamadaOperacionList = this.ejbLlamadaLocal.findLlamadasByOperacion(operacion.getCodigoCartera(), operacion.getIdentificacion(), operacion.getNumeroCuenta());
         if (this.llamadaOperacionList != null) {
             for (int index = 0; index < this.llamadaOperacionList.size(); index++) {
-                TblLlamada llamada = this.llamadaOperacionList.get(index);
-                TblPromesa promesa = this.ejbPromesaLocal.findPromesaUltimoPago(this.gestion.getIdGestion(), llamada.getIdLlamada());
-                this.llamadaOperacionList.get(index).setUltimaPromesa(promesa);
+                TblPromesa ultimaPromesa = this.ejbPromesaLocal.findPromesaUltimoPago(this.getGestion().getIdGestion(), this.llamadaOperacionList.get(index).getIdLlamada());
+                this.llamadaOperacionList.get(index).setUltimaPromesa(ultimaPromesa);
             }
         }
 
-        if (this.gestion.getLeyusura() != null && this.gestion.getLeyusura().equals("1")) {
+        if (this.operacionSelected.getLeyusura() != null && this.operacionSelected.getLeyusura().equals("1")) {
             this.setLeyusuraIsRequired(true);
             this.setLeyusuraDisabled(false);
 
@@ -2943,6 +2824,9 @@ Arreglo de Pago
             this.setLeyusuraIsRequired(false);
             this.setLeyusuraDisabled(true);
         }
+
+        List<TblPromesa> promesasPorOperacion = this.ejbPromesaLocal.findPromesaPorOperacion(operacion.getCodigoCartera(), operacion.getIdentificacion(), operacion.getNumeroCuenta());
+        this.getGestion().setTblPromesaList(promesasPorOperacion);
     }
 
     /**
@@ -2951,22 +2835,22 @@ Arreglo de Pago
      */
     public void calcArragloPago(TblLlamada llamada) {
         this.selectedLlamada = llamada;
-        String leyUsura = this.gestion.getLeyusura();
+        String leyUsura = this.operacionSelected.getLeyusura();
 
-        List<TblGestionsaldo> saldoList = this.gestion.getTblGestionsaldoList();
+        List<TblSaldo> saldoList = this.operacionSelected.getTblSaldoList();
 
         if (saldoList != null && !saldoList.isEmpty()) {
             for (int index = 0; index < saldoList.size(); index++) {
-                TblGestionsaldo saldo = saldoList.get(index);
-                if (saldo.getIdMoneda().getCodigo().equals("CRC")) {
-                    if (leyUsura != null && this.gestion.getLeyusura().equals("1")) {
+                TblSaldo saldo = saldoList.get(index);
+                if (saldo.getIdMoneda().getCodigo().equals(ConstanteComun.colones)) {
+                    if (leyUsura != null && leyUsura.equals("1")) {
                         this.mtoSaldoOperacion = saldo.getSaldoGestion();
                     } else {
                         this.mtoSaldoOperacion = saldo.getSaldoCartera();
                     }
 
-                } else if (saldo.getIdMoneda().getCodigo().equals("USD")) {
-                    if (leyUsura != null && this.gestion.getLeyusura().equals("1")) {
+                } else if (saldo.getIdMoneda().getCodigo().equals(ConstanteComun.dolares)) {
+                    if (leyUsura != null && leyUsura.equals("1")) {
                         this.mtoSaldoOperacionUSD = saldo.getSaldoGestion();
                     } else {
                         this.mtoSaldoOperacionUSD = saldo.getSaldoCartera();

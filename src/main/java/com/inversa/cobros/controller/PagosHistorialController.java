@@ -5,11 +5,13 @@
  */
 package com.inversa.cobros.controller;
 
+import com.inversa.cobros.constante.comun.ConstanteComun;
 import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.PagosHistorialService;
 import com.inversa.cobros.model.TblCartera;
 import com.inversa.cobros.model.TblClienteUsuario;
 import com.inversa.cobros.model.TblPagosHistorial;
+import com.inversa.cobros.model.TblSaldo;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -41,7 +43,7 @@ public class PagosHistorialController implements Serializable {
     private BigDecimal interesesCRC;
     private BigDecimal saldoUSD;
     private BigDecimal interesesUSD;
-    
+
     private TblUsuario usuario;
     private String codigoCartera = null;
 
@@ -51,7 +53,7 @@ public class PagosHistorialController implements Serializable {
         this.interesesCRC = BigDecimal.ZERO;
         this.saldoUSD = BigDecimal.ZERO;
         this.interesesUSD = BigDecimal.ZERO;
-        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");        
+        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         this.codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
     }
 
@@ -125,13 +127,21 @@ public class PagosHistorialController implements Serializable {
         if (operacion != null && !operacion.trim().equals("")) {
             TblCartera cartera = new TblCartera();
             cartera.setNumeroCuenta(operacion);
-            List<TblCartera> carteraList = this.ejbCarteraService.findByNumeroCuenta(cartera);
-            if (carteraList != null && !carteraList.isEmpty() && carteraList.size() > 0) {
-                cartera = carteraList.get(0);
-                this.saldoCRC = cartera.getSaldoColones();
-                this.interesesCRC = cartera.getInteresesColones();
-                this.saldoUSD = cartera.getSaldoDolares();
-                this.interesesUSD = cartera.getInteresesDolares();
+            cartera = this.ejbCarteraService.findByNumeroCuenta(cartera);
+            if (cartera != null) {
+                List<TblSaldo> saldos = cartera.getTblSaldoList();
+                if (saldos != null) {
+                    for(int index=0;index<saldos.size();index++){
+                        if(saldos.get(index).getIdMoneda().getCodigo().equals(ConstanteComun.colones)){
+                            this.saldoCRC = saldos.get(index).getSaldoCartera();
+                            this.interesesCRC = saldos.get(index).getIntereses();
+                            
+                        }else if(saldos.get(index).getIdMoneda().getCodigo().equals(ConstanteComun.dolares)){
+                            this.saldoUSD = cartera.getSaldoDolares();
+                            this.interesesUSD = cartera.getInteresesDolares();
+                        }
+                    }
+                }
             }
 
             TblPagosHistorial obj = new TblPagosHistorial();

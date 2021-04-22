@@ -46,13 +46,11 @@ import javax.xml.bind.annotation.XmlTransient;
 public class TblCliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_cliente")
     private Integer idCliente;
-
     @Size(max = 50)
     @Column(name = "nombre")
     private String nombre;
@@ -65,26 +63,24 @@ public class TblCliente implements Serializable {
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
-    @Size(max = 50)
-    @Column(name = "usuariomodifico")
-    private String usuariomodifico;
-    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
-    
+    @Size(max = 50)
+    @Column(name = "usuariomodifico")
+    private String usuariomodifico;
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
     private List<TblClienteCartera> tblClienteCarteraList;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
-    private List<TblCartera> tblCarteraList;    
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
     private List<TblPrefijoSalida> tblPrefijoSalidaList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCliente", fetch = FetchType.LAZY)
+    private List<TblCartera> tblCarteraList;
 
     public TblCliente() {
     }
@@ -99,65 +95,6 @@ public class TblCliente implements Serializable {
 
     public void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
-    }
-
-    public Date getFechaingreso() {
-        return fechaingreso;
-    }
-
-    public void setFechaingreso(Date fechaingreso) {
-        this.fechaingreso = fechaingreso;
-    }
-
-    public Date getFechamodifico() {
-        return fechamodifico;
-    }
-
-    public void setFechamodifico(Date fechamodifico) {
-        this.fechamodifico = fechamodifico;
-    }
-
-    @XmlTransient
-    public List<TblPrefijoSalida> getTblPrefijoSalidaList() {
-        return tblPrefijoSalidaList;
-    }
-
-    public void setTblPrefijoSalidaList(List<TblPrefijoSalida> tblPrefijoSalidaList) {
-        this.tblPrefijoSalidaList = tblPrefijoSalidaList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idCliente != null ? idCliente.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TblCliente)) {
-            return false;
-        }
-        TblCliente other = (TblCliente) object;
-        if ((this.idCliente == null && other.idCliente != null) || (this.idCliente != null && !this.idCliente.equals(other.idCliente))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.inversa.cobros.model.TblCliente[ idCliente=" + idCliente + " ]";
-    }
-
-    @XmlTransient
-    public List<TblCartera> getTblCarteraList() {
-        return tblCarteraList;
-    }
-
-    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
-        this.tblCarteraList = tblCarteraList;
     }
 
     public String getNombre() {
@@ -192,6 +129,14 @@ public class TblCliente implements Serializable {
         this.usuarioingreso = usuarioingreso;
     }
 
+    public Date getFechaingreso() {
+        return fechaingreso;
+    }
+
+    public void setFechaingreso(Date fechaingreso) {
+        this.fechaingreso = fechaingreso;
+    }
+
     public String getUsuariomodifico() {
         return usuariomodifico;
     }
@@ -200,13 +145,62 @@ public class TblCliente implements Serializable {
         this.usuariomodifico = usuariomodifico;
     }
 
+    public Date getFechamodifico() {
+        return fechamodifico;
+    }
+
+    public void setFechamodifico(Date fechamodifico) {
+        this.fechamodifico = fechamodifico;
+    }
+
     @XmlTransient
+    public List<TblCartera> getTblCarteraList() {
+        return tblCarteraList;
+    }
+
+    public void setTblCarteraList(List<TblCartera> tblCarteraList) {
+        this.tblCarteraList = tblCarteraList;
+    }
+
     public List<TblClienteCartera> getTblClienteCarteraList() {
         return tblClienteCarteraList;
     }
 
     public void setTblClienteCarteraList(List<TblClienteCartera> tblClienteCarteraList) {
         this.tblClienteCarteraList = tblClienteCarteraList;
+    }
+
+    public List<TblPrefijoSalida> getTblPrefijoSalidaList() {
+        return tblPrefijoSalidaList;
+    }
+
+    public void setTblPrefijoSalidaList(List<TblPrefijoSalida> tblPrefijoSalidaList) {
+        this.tblPrefijoSalidaList = tblPrefijoSalidaList;
+    }    
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idCliente != null ? idCliente.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof TblCliente)) {
+            return false;
+        }
+        TblCliente other = (TblCliente) object;
+        if ((this.idCliente == null && other.idCliente != null) || (this.idCliente != null && !this.idCliente.equals(other.idCliente))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.inversa.cobros.model.TblCliente[ idCliente=" + idCliente + " ]";
     }
 
 }

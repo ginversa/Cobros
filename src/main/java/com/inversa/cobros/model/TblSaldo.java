@@ -30,27 +30,27 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Z420WK
  */
 @Entity
-@Table(name = "tbl_gestionsaldo")
+@Table(name = "tbl_saldo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TblGestionsaldo.findAll", query = "SELECT t FROM TblGestionsaldo t"),
-    @NamedQuery(name = "TblGestionsaldo.findByIdGestionsaldo", query = "SELECT t FROM TblGestionsaldo t WHERE t.idGestionsaldo = :idGestionsaldo"),
-    @NamedQuery(name = "TblGestionsaldo.findBySaldoCartera", query = "SELECT t FROM TblGestionsaldo t WHERE t.saldoCartera = :saldoCartera"),
-    @NamedQuery(name = "TblGestionsaldo.findByIntereses", query = "SELECT t FROM TblGestionsaldo t WHERE t.intereses = :intereses"),
-    @NamedQuery(name = "TblGestionsaldo.findBySaldoGestion", query = "SELECT t FROM TblGestionsaldo t WHERE t.saldoGestion = :saldoGestion"),
-    @NamedQuery(name = "TblGestionsaldo.findBySaldoRestante", query = "SELECT t FROM TblGestionsaldo t WHERE t.saldoRestante = :saldoRestante"),
-    @NamedQuery(name = "TblGestionsaldo.findByUsuarioingreso", query = "SELECT t FROM TblGestionsaldo t WHERE t.usuarioingreso = :usuarioingreso"),
-    @NamedQuery(name = "TblGestionsaldo.findByFechaingreso", query = "SELECT t FROM TblGestionsaldo t WHERE t.fechaingreso = :fechaingreso"),
-    @NamedQuery(name = "TblGestionsaldo.findByUsuariomodifico", query = "SELECT t FROM TblGestionsaldo t WHERE t.usuariomodifico = :usuariomodifico"),
-    @NamedQuery(name = "TblGestionsaldo.findByFechamodifico", query = "SELECT t FROM TblGestionsaldo t WHERE t.fechamodifico = :fechamodifico")})
-public class TblGestionsaldo implements Serializable {
+    @NamedQuery(name = "TblSaldo.findAll", query = "SELECT t FROM TblSaldo t"),
+    @NamedQuery(name = "TblSaldo.findByIdSaldo", query = "SELECT t FROM TblSaldo t WHERE t.idSaldo = :idSaldo"),
+    @NamedQuery(name = "TblSaldo.findBySaldoCartera", query = "SELECT t FROM TblSaldo t WHERE t.saldoCartera = :saldoCartera"),
+    @NamedQuery(name = "TblSaldo.findByIntereses", query = "SELECT t FROM TblSaldo t WHERE t.intereses = :intereses"),
+    @NamedQuery(name = "TblSaldo.findBySaldoGestion", query = "SELECT t FROM TblSaldo t WHERE t.saldoGestion = :saldoGestion"),
+    @NamedQuery(name = "TblSaldo.findBySaldoRestante", query = "SELECT t FROM TblSaldo t WHERE t.saldoRestante = :saldoRestante"),
+    @NamedQuery(name = "TblSaldo.findByUsuarioingreso", query = "SELECT t FROM TblSaldo t WHERE t.usuarioingreso = :usuarioingreso"),
+    @NamedQuery(name = "TblSaldo.findByFechaingreso", query = "SELECT t FROM TblSaldo t WHERE t.fechaingreso = :fechaingreso"),
+    @NamedQuery(name = "TblSaldo.findByUsuariomodifico", query = "SELECT t FROM TblSaldo t WHERE t.usuariomodifico = :usuariomodifico"),
+    @NamedQuery(name = "TblSaldo.findByFechamodifico", query = "SELECT t FROM TblSaldo t WHERE t.fechamodifico = :fechamodifico")})
+public class TblSaldo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_gestionsaldo")
-    private Integer idGestionsaldo;
+    @Column(name = "id_saldo")
+    private Long idSaldo;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "saldo_cartera")
     private BigDecimal saldoCartera;
@@ -75,23 +75,23 @@ public class TblGestionsaldo implements Serializable {
     @JoinColumn(name = "id_moneda", referencedColumnName = "id_moneda")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Moneda idMoneda;
-    @JoinColumn(name = "id_gestion", referencedColumnName = "id_gestion")
+    @JoinColumn(name = "id_cartera", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private TblGestion idGestion;
+    private TblCartera idCartera;
 
-    public TblGestionsaldo() {
+    public TblSaldo() {
     }
 
-    public TblGestionsaldo(Integer idGestionsaldo) {
-        this.idGestionsaldo = idGestionsaldo;
+    public TblSaldo(Long idSaldo) {
+        this.idSaldo = idSaldo;
     }
 
-    public Integer getIdGestionsaldo() {
-        return idGestionsaldo;
+    public Long getIdSaldo() {
+        return idSaldo;
     }
 
-    public void setIdGestionsaldo(Integer idGestionsaldo) {
-        this.idGestionsaldo = idGestionsaldo;
+    public void setIdSaldo(Long idSaldo) {
+        this.idSaldo = idSaldo;
     }
 
     public BigDecimal getSaldoCartera() {
@@ -166,29 +166,29 @@ public class TblGestionsaldo implements Serializable {
         this.idMoneda = idMoneda;
     }
 
-    public TblGestion getIdGestion() {
-        return idGestion;
+    public TblCartera getIdCartera() {
+        return idCartera;
     }
 
-    public void setIdGestion(TblGestion idGestion) {
-        this.idGestion = idGestion;
+    public void setIdCartera(TblCartera idCartera) {
+        this.idCartera = idCartera;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idGestionsaldo != null ? idGestionsaldo.hashCode() : 0);
+        hash += (idSaldo != null ? idSaldo.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TblGestionsaldo)) {
+        if (!(object instanceof TblSaldo)) {
             return false;
         }
-        TblGestionsaldo other = (TblGestionsaldo) object;
-        if ((this.idGestionsaldo == null && other.idGestionsaldo != null) || (this.idGestionsaldo != null && !this.idGestionsaldo.equals(other.idGestionsaldo))) {
+        TblSaldo other = (TblSaldo) object;
+        if ((this.idSaldo == null && other.idSaldo != null) || (this.idSaldo != null && !this.idSaldo.equals(other.idSaldo))) {
             return false;
         }
         return true;
@@ -196,7 +196,7 @@ public class TblGestionsaldo implements Serializable {
 
     @Override
     public String toString() {
-        return "com.inversa.cobros.model.TblGestionsaldo[ idGestionsaldo=" + idGestionsaldo + " ]";
+        return "com.inversa.cobros.model.TblSaldo[ idSaldo=" + idSaldo + " ]";
     }
     
 }
