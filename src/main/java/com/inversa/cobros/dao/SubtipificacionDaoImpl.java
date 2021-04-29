@@ -9,6 +9,7 @@ import com.inversa.cobros.model.Subtipificacion;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -16,10 +17,9 @@ import javax.persistence.TypedQuery;
  *
  * @author Z420WK
  */
-
 @Stateless
-public class SubtipificacionDaoImpl implements SubtipificacionDao{
-    
+public class SubtipificacionDaoImpl implements SubtipificacionDao {
+
     @PersistenceContext(unitName = "cobrosPU")
     EntityManager em;
 
@@ -34,8 +34,8 @@ public class SubtipificacionDaoImpl implements SubtipificacionDao{
     public Subtipificacion findById(Subtipificacion obj) {
         return em.find(Subtipificacion.class, obj.getIdSubtipificacion());
     }
-    
-    public List<Subtipificacion> findByIdTipificacion(Subtipificacion obj){
+
+    public List<Subtipificacion> findByIdTipificacion(Subtipificacion obj) {
         TypedQuery<Subtipificacion> query = em.createNamedQuery("Subtipificacion.findByIdTipificacion", Subtipificacion.class);
         query.setParameter("idTipificacion", obj.getIdTipificacion().getIdTipificacion());
         List<Subtipificacion> results = query.getResultList();
@@ -101,5 +101,22 @@ public class SubtipificacionDaoImpl implements SubtipificacionDao{
         em.merge(obj);
         em.remove(obj);
     }
-    
+
+    @Override
+    public Subtipificacion findByCodigo(String codigo) {
+        try {
+            TypedQuery<Subtipificacion> query = em.createNamedQuery("Subtipificacion.findByCodigo", Subtipificacion.class);
+            query.setParameter("codigo", codigo);
+            List<Subtipificacion> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

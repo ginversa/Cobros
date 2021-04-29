@@ -9,6 +9,7 @@ import com.inversa.cobros.model.Tipificacion;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -101,6 +102,24 @@ public class TipificacionDaoImpl implements TipificacionDao {
     public void delete(Tipificacion obj) {
         em.merge(obj);
         em.remove(obj);
+    }
+
+    @Override
+    public Tipificacion findByCodigo(String codigo) {
+        try {
+            TypedQuery<Tipificacion> query = em.createNamedQuery("Tipificacion.findByCodigo", Tipificacion.class);
+            query.setParameter("codigo", codigo);
+            List<Tipificacion> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found.get(0);
+            }
+            
+        } catch (NoResultException e) {
+            return null;
+        }
+
     }
 
 }

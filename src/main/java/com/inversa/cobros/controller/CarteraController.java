@@ -171,4 +171,20 @@ public class CarteraController implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param operacion
+     * @return 
+     */
+    public TblCartera searchCarteraByOperacion(String operacion){
+        
+        TblCartera operacion_cartera = new TblCartera();
+        operacion_cartera.setNumeroCuenta(operacion);
+        operacion_cartera = this.ejbLocal.findByNumeroCuenta(operacion_cartera);
+        if(operacion_cartera != null){
+            return operacion_cartera;
+        }else{
+            return null;
+        }        
+    }
 }

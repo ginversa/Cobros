@@ -96,14 +96,18 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
     }
 
     @Override
-    public void insert(TblLlamada obj) {
+    public Long insert(TblLlamada obj) {
+        Long id = null;
         try {
-            dao.insert(obj);
+            
+            id = dao.insert(obj);
 
         } catch (Throwable t) {
             contexto.setRollbackOnly();// hace rollback...
             t.printStackTrace(System.out);// imprime en consola el error
         }
+        
+        return id;
     }
 
     @Override
@@ -134,8 +138,8 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
     }
 
     @Override
-    public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera) {
-        List<TblLlamada> llamadas = dao.buscarLlamada(identificacion, codigoCartera);
+    public List<TblLlamada> findByIdentificacionCartera(String identificacion, String codigoCartera) {
+        List<TblLlamada> llamadas = dao.findByIdentificacionCartera(identificacion, codigoCartera);
         if (llamadas != null && !llamadas.isEmpty()) {
             for (int i = 0; i < llamadas.size(); i++) {
                 TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
@@ -176,6 +180,11 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
     @Override
     public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion) {
         return dao.findUltimaLlamada(codigoCartera, identificacion);
+    }
+
+    @Override
+    public List<TblLlamada> findByGestion(Long idGestion) {
+        return dao.findByGestion(idGestion);
     }
 
 }

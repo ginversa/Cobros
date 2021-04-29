@@ -15,7 +15,10 @@ import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.LlamadaService;
 import com.inversa.cobros.ejb.MonedaService;
 import com.inversa.cobros.ejb.PromesaService;
+import com.inversa.cobros.ejb.SaldoService;
+import com.inversa.cobros.ejb.SubtipificacionService;
 import com.inversa.cobros.ejb.TelefonoService;
+import com.inversa.cobros.ejb.TipificacionService;
 import com.inversa.cobros.model.Arreglopago;
 import com.inversa.cobros.model.Estadopromesa;
 import com.inversa.cobros.model.Moneda;
@@ -103,10 +106,19 @@ public class CarteraGestionController implements Serializable {
     private CarteraService ejbCarteraLocal;
 
     @Inject
+    private SaldoService ejbSaldoLocal;
+
+    @Inject
     private PromesaService ejbPromesaLocal;
 
     @Inject
     private LlamadaService ejbLlamadaLocal;
+
+    @Inject
+    private TipificacionService ejbTipificacionLocal;
+
+    @Inject
+    private SubtipificacionService ejbSubtipificacionLocal;
 
     @Inject
     private EstadopromesaService ejbEstadopromesaLocal;
@@ -168,6 +180,9 @@ public class CarteraGestionController implements Serializable {
     public void init() {
 
         this.llamadaList = new ArrayList<>();
+        this.selectedLlamada = new TblLlamada();
+        this.operacionSelected = new TblCartera();
+
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         this.fechaHoy = Calendar.getInstance();
 
@@ -397,9 +412,13 @@ public class CarteraGestionController implements Serializable {
     selecciona una operacion.
      */
     public void onRowSelect(SelectEvent<TblCartera> event) {
-        TblCartera obj = event.getObject();
-        this.setCarteraTOGestion(obj);
-        FacesMessage msg = new FacesMessage("Operación seleccionada!", String.valueOf(obj.getNumeroCuenta()));
+        TblCartera operacion = event.getObject();
+        this.setCarteraTOGestion(operacion);
+
+        List<TblPromesa> promesasPorOperacion = this.ejbPromesaLocal.findPromesaPorOperacion(operacion.getCodigoCartera(), operacion.getIdentificacion(), operacion.getNumeroCuenta());
+        this.getGestion().setTblPromesaList(promesasPorOperacion);
+
+        FacesMessage msg = new FacesMessage("Operación seleccionada!", String.valueOf(operacion.getNumeroCuenta()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
@@ -414,10 +433,17 @@ public class CarteraGestionController implements Serializable {
      */
     public void setCarteraTOGestion(TblCartera objCartera) {
         if (objCartera != null) {
-            if (this.gestion == null) {
+            if (this.gestion == null || this.gestion.getIdGestion() == null) {
+                this.gestion = new TblGestion();
+                this.gestion.setCodigoCartera(objCartera.getCodigoCartera());
+                this.gestion.setIdentificacion(objCartera.getIdentificacion());
+                this.gestion = this.ejbLocal.findByCodigoCarteraANDIdentificacion(gestion);
+            }
+
+            if (this.gestion == null || this.gestion.getIdGestion() == null) {
+                this.gestion = new TblGestion();
                 List<TblPromesa> promesas = new ArrayList<>();
                 List<TblLlamada> llamadas = new ArrayList<>();
-                this.gestion = new TblGestion();
                 this.gestion.setTblLlamadaList(llamadas);
                 this.gestion.setTblPromesaList(promesas);
 
@@ -435,7 +461,15 @@ public class CarteraGestionController implements Serializable {
             }
 
             this.setOperacionSelected(objCartera);
-            //this.addOperacionToLlamada();
+            if (this.getSelectedLlamada() == null) {
+                TblLlamada newLlamada = new TblLlamada();
+                this.setSelectedLlamada(newLlamada);
+                this.getSelectedLlamada().setOperacion(objCartera.getNumeroCuenta());
+                this.getSelectedLlamada().setTblPromesaList(null);
+            } else {
+                this.getSelectedLlamada().setOperacion(objCartera.getNumeroCuenta());
+                this.getSelectedLlamada().setTblPromesaList(null);
+            }
 
             String codigoCartera = objCartera.getCodigoCartera();
             String codigoGestor = usuario.getCodigoGestor();
@@ -457,7 +491,6 @@ public class CarteraGestionController implements Serializable {
             this.gestion.setFechaGestion(this.fechaHoy.getTime());// fecha Hoy...
             this.gestion.setUsuarioingreso(this.usuario.getUsuario());
             this.gestion.setFechaingreso(this.fechaHoy.getTime());// fecha Hoy...
-            this.gestion.setLeyusura(objCartera.getLeyusura());
 
             if (this.operacionSelected.getLeyusura() != null && this.operacionSelected.getLeyusura().equals("1")) {
                 this.setLeyusuraIsRequired(true);
@@ -559,77 +592,34 @@ public class CarteraGestionController implements Serializable {
                     return false;
 
                 } else {
-
                     this.consultarDatosLlamada();
                     this.agregarLlamadaYTipificacion();// agregar llamadas y tipificaciones.
 
-                    // Validar Tipificaciones...
-                    if (this.gestion.getTblLlamadaList() != null && !this.gestion.getTblLlamadaList().isEmpty() && this.gestion.getTblLlamadaList().size() > 0) {
+                    if (!this.validarTipificacion()) {
+                        return false;
+                    }
 
-                        for (int index = 0; index < this.gestion.getTblLlamadaList().size(); index++) {
-                            String telefono = this.gestion.getTblLlamadaList().get(index).getCallToNumber();
-                            Tipificacion tipificacion = this.gestion.getTblLlamadaList().get(index).getIdTipificacion();
-                            Integer idTipificacion = null;
-                            if (tipificacion != null) {
-                                idTipificacion = tipificacion.getIdTipificacion();
-                            }
-
-                            boolean isNullTipificacion = tipificacion == null;
-                            boolean isNullIDTipificacion = idTipificacion == null;
-
-                            if (isNullTipificacion || isNullIDTipificacion) {
-                                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Tipificación requerido!");
-                                FacesContext.getCurrentInstance().addMessage(null, msg);
-                                return false;
-                            }
-
-                            if (this.gestion.getTblLlamadaList().get(index).getIdSubtipificacion() == null || this.gestion.getTblLlamadaList().get(index).getIdSubtipificacion().getIdSubtipificacion() == null) {
-                                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Sub-Tipificación requerido!");
-                                FacesContext.getCurrentInstance().addMessage(null, msg);
-                                return false;
-                            }
-
-                            /*
-                            Razon de mora.
-                            No es requerido: si la tipificacion es;
-                            --- Promesa de pago 1 - 
-                            --- Contacto sin promesa - 6
-                            --- No Contesta -  4
-                            --- Mensaje Familiar - 3
-                            --- Contacto con tercero - 5
-                             */
-                            if (!isNullIDTipificacion) {
-                                boolean isPP = idTipificacion.equals(1);
-                                /* Promesas. requerido: si la tipificacion es; Promesa de pago */
-                                if (isPP) {
-                                    if (this.gestion.getTblPromesaList() == null || this.gestion.getTblPromesaList().isEmpty() || this.gestion.getTblPromesaList().size() <= 0) {
-                                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Debe registrar una PROMESA. Requerido!");
-                                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                                        return false;
-                                    }
-                                }// Promesa de pago                                
-                            }// isNullIDTipificacion
-
-                        }// for
-                    }// if
                 }//*****************************************************************************************
 
                 // agregar promesas...
                 //*****************************************************************************************
                 //this.agregarPromesas();
                 //*****************************************************************************************
+                /**
+                 * ************************************************************
+                 * Multitipificacion
+                 * *************************************************************
+                 */
+                this.multitipificacion();
+                /*
+                 ***************************************************************
+                 */
 
                 if (this.gestion.getIdGestion() == null) {
 
                     this.gestion.setEstado(ConstanteComun.Ingresar);
                     this.gestion.setFechaingreso(this.fechaHoy.getTime());
                     this.gestion.setUsuarioingreso(this.usuario.getUsuario());// usuario que esta registrando la gestion
-                    /*
-                    for (int index = 0; index < this.gestion.getTblGestionsaldoList().size(); index++) {
-                        this.gestion.getTblGestionsaldoList().get(index).setUsuarioingreso(this.usuario.getUsuario());
-                        this.gestion.getTblGestionsaldoList().get(index).setFechaingreso(this.fechaHoy.getTime());
-                    }
-                     */
 
                     Long idGestion = this.ejbLocal.insert(this.gestion);
                     if (this.gestion.getIdGestion() == null) {
@@ -638,6 +628,7 @@ public class CarteraGestionController implements Serializable {
 
                     this.actualizarTelefonoContacto(this.gestion.getTblLlamadaList());
                     this.cargarGestionActual(this.gestion);
+                    this.actualizarSaldos();
                     PrimeFaces.current().ajax().update("formGestion");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Registrada. Correcto!"));
 
@@ -645,16 +636,30 @@ public class CarteraGestionController implements Serializable {
 
                     this.gestion.setUsuariomodifico(usuario.getUsuario());// usuario que esta registrando la gestion
                     this.gestion.setFechamodifico(this.fechaHoy.getTime());
-                    /*
-                    for (int index = 0; index < this.gestion.getTblGestionsaldoList().size(); index++) {
-                        this.gestion.getTblGestionsaldoList().get(index).setUsuariomodifico(this.usuario.getUsuario());
-                        this.gestion.getTblGestionsaldoList().get(index).setFechamodifico(this.fechaHoy.getTime());
-                    }
-                     */
+
+                    if (this.gestion.getTblLlamadaList() != null && !this.gestion.getTblLlamadaList().isEmpty()) {
+                        for (int index = 0; index < this.gestion.getTblLlamadaList().size(); index++) {
+                            TblLlamada objL = this.gestion.getTblLlamadaList().get(index);
+                            if (objL.getIdLlamada() == null) {
+                                Long idLlamada = this.ejbLlamadaLocal.insert(objL);
+                                this.gestion.getTblLlamadaList().get(index).setIdLlamada(idLlamada);
+                                String operacion = this.gestion.getTblLlamadaList().get(index).getOperacion();
+                                if (this.gestion.getTblPromesaList() != null && !this.gestion.getTblPromesaList().isEmpty()) {
+                                    for (int jdex = 0; jdex < this.gestion.getTblPromesaList().size(); jdex++) {
+                                        if (this.gestion.getTblPromesaList().get(jdex).getOperacion().equals(operacion) && this.gestion.getTblPromesaList().get(jdex).getIdLlamada().getIdLlamada() == null) {
+                                            objL.setIdLlamada(idLlamada);
+                                            this.gestion.getTblPromesaList().get(jdex).setIdLlamada(objL);
+                                        }
+                                    }
+                                }//if
+                            }//if
+                        }//for
+                    }//if
 
                     this.ejbLocal.update(this.gestion);
                     this.actualizarTelefonoContacto(this.gestion.getTblLlamadaList());
                     this.cargarGestionActual(this.gestion);
+                    this.actualizarSaldos();
                     PrimeFaces.current().ajax().update("formGestion");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Actulizar. Correcto!"));
                 }
@@ -676,26 +681,26 @@ public class CarteraGestionController implements Serializable {
      * ext del usuario, número llamado, duración de la llamada.
      */
     public void consultarDatosLlamada() {
-    
+
         String callLogId_selectedLlamada = this.selectedLlamada.getCallLogId();
-        if(callLogId_selectedLlamada == null || callLogId_selectedLlamada.trim().equals("")){
-            for(int i=0;i<this.gestion.getTblLlamadaList().size();i++){
-                if(this.gestion.getTblLlamadaList().get(i).getCallLogId() != null && !this.gestion.getTblLlamadaList().get(i).getCallLogId().trim().equals("")){
+        if (callLogId_selectedLlamada == null || callLogId_selectedLlamada.trim().equals("")) {
+            for (int i = 0; i < this.gestion.getTblLlamadaList().size(); i++) {
+                if (this.gestion.getTblLlamadaList().get(i).getCallLogId() != null && !this.gestion.getTblLlamadaList().get(i).getCallLogId().trim().equals("")) {
                     callLogId_selectedLlamada = this.gestion.getTblLlamadaList().get(i).getCallLogId();
                 }
             }
         }
-        
+
         if (this.gestion.getTblLlamadaList() != null && !this.gestion.getTblLlamadaList().isEmpty()) {
             for (int index = 0; index < this.gestion.getTblLlamadaList().size(); index++) {
 
                 String callLogId = this.gestion.getTblLlamadaList().get(index).getCallLogId();
-                
-                if(callLogId == null || callLogId.trim().equals("")){
+
+                if (callLogId == null || callLogId.trim().equals("")) {
                     callLogId = callLogId_selectedLlamada;
                     this.gestion.getTblLlamadaList().get(index).setCallLogId(callLogId);
                 }
-                
+
                 if (callLogId != null && !callLogId.trim().equals("")) {
                     System.out.println("callLogId: " + callLogId);
                     String errorCentral = null;
@@ -869,6 +874,11 @@ public class CarteraGestionController implements Serializable {
     private void cargarGestionActual(TblGestion gestion) {
         if (gestion.getIdGestion() != null) {
             this.gestion = this.ejbLocal.findById(gestion);
+            List<TblPromesa> promesasByGestion = this.ejbPromesaLocal.findByGestionAndDifferentDEL(this.gestion.getIdGestion());
+            List<TblLlamada> llamadasByGestion = this.ejbLlamadaLocal.findByGestion(this.gestion.getIdGestion());
+
+            this.gestion.setTblLlamadaList(llamadasByGestion);
+            this.gestion.setTblPromesaList(promesasByGestion);
         }
     }
 
@@ -897,21 +907,17 @@ public class CarteraGestionController implements Serializable {
 
     /**
      *
-     * @param callToNumber
+     * @param llamada
      */
     public void generarLlamada(TblLlamada llamada) {
 
         if (prefijoSalidaSelected == null) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Debe seleccionar Prefijo Salida!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+
         } else {
 
-            llamada.setIdLlamada(null);
-            llamada.setOperacion(this.operacionSelected.getNumeroCuenta());
-            System.out.println("Numero Seleccionado callToNumber: " + llamada.getCallToNumber());
-
             if (llamada != null && llamada.getCallToNumber() != null && !llamada.getCallToNumber().trim().equals("")) {
-                this.setSelectedLlamada(llamada);
 
                 if (this.validarURL()) {
 
@@ -983,19 +989,22 @@ public class CarteraGestionController implements Serializable {
                                 if (isCallToNumber && isOperacion) {
                                     this.gestion.getTblLlamadaList().get(index).setCallLogId(jsonExtract);
                                     isTrue = true;
+                                    this.getSelectedLlamada().setCallLogId(jsonExtract);
                                 }
                             }
 
                             if (!isTrue) {
                                 llamada.setCallLogId(jsonExtract);
-                                //this.gestion.getTblLlamadaList().add(llamada);
-                                this.addLlamadaToGestion(llamada);
+                                llamada.setIdLlamada(null);
+                                this.getSelectedLlamada().setCallLogId(jsonExtract);
+                                //this.addLlamadaToGestion(llamada);
                             }
 
                         } else {
                             llamada.setCallLogId(jsonExtract);
-                            //this.gestion.getTblLlamadaList().add(llamada);
-                            this.addLlamadaToGestion(llamada);
+                            llamada.setIdLlamada(null);
+                            this.getSelectedLlamada().setCallLogId(jsonExtract);
+                            //this.addLlamadaToGestion(llamada);
                         }
                     }
 
@@ -1266,7 +1275,7 @@ Arreglo de Pago
      * @param codigoMoneda
      */
     public void agregarCancelacionTotal(String codigoMoneda) {
-        if (this.getSelectedLlamada() != null) {
+        if (this.selectedLlamada != null) {
 
             if (this.validArregloPago(codigoMoneda)) {
                 TblPromesa promesa = new TblPromesa();
@@ -1288,7 +1297,8 @@ Arreglo de Pago
                 arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
 
                 promesa.setIdGestion(this.gestion);
-                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
+                promesa.setIdLlamada(this.selectedLlamada);
+                promesa.setOperacion(this.selectedLlamada.getOperacion());
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(this.fechaPagoPromesa);
                 promesa.setIdestadopromesa(estadopromesa); // Seguimiento
@@ -1309,61 +1319,13 @@ Arreglo de Pago
                 // borra las promesas...                
                 this.deleteArregloPago(this.operacionSelected.getNumeroCuenta(), codigoMoneda);
 
-                if (this.selectedLlamada.getTblPromesaList() == null) {
+                if (this.gestion.getTblPromesaList() == null) {
                     List<TblPromesa> promesas = new ArrayList<>();
-                    this.selectedLlamada.setTblPromesaList(promesas);
+                    this.gestion.setTblPromesaList(promesas);
                 }
 
-                String operacion = this.selectedLlamada.getOperacion();
-                String numeroCuenta = this.operacionSelected.getNumeroCuenta();
-                boolean isOp = operacion != null && !operacion.trim().equals("");
-                boolean isNC = numeroCuenta != null && !numeroCuenta.trim().equals("");
-                boolean isTrue = isOp && isNC;
-
-                if (isTrue && operacion.equals(numeroCuenta)) {
-                    promesa.setIdLlamada(this.selectedLlamada);
-                    this.selectedLlamada.setIdGestion(this.gestion);
-                    this.selectedLlamada.setOperacion(this.getOperacionSelected().getNumeroCuenta());
-                    this.selectedLlamada.getTblPromesaList().add(promesa);
-
-                    if (this.selectedLlamada.getTblPromesaList() == null) {
-                        List<TblPromesa> promesas = new ArrayList<>();
-                        this.selectedLlamada.setTblPromesaList(promesas);
-                    }
-                    this.gestion.getTblPromesaList().add(promesa);
-
-                } else {
-                    String callLogId = this.selectedLlamada.getCallLogId();
-                    String callToNumber = this.selectedLlamada.getCallToNumber();
-                    Tipotelefono tipotelefono = this.selectedLlamada.getIdTipotelefono();
-                    Tipificacion tipificacion = this.selectedLlamada.getIdTipificacion();
-                    Subtipificacion subtipificacion = this.selectedLlamada.getIdSubtipificacion();
-                    TblResultadogestion resultadogestion = this.selectedLlamada.getIdResultadogestion();
-                    TblResultadotercero respuesta = this.selectedLlamada.getIdResultadotercero();
-                    Razonmora razonmora = this.selectedLlamada.getIdrazonmora();
-
-                    this.selectedLlamada = new TblLlamada();
-                    this.selectedLlamada.setCallLogId(callLogId);
-                    this.selectedLlamada.setCallToNumber(callToNumber);
-                    this.selectedLlamada.setIdTipotelefono(tipotelefono);
-                    this.selectedLlamada.setIdTipificacion(tipificacion);
-                    this.selectedLlamada.setIdSubtipificacion(subtipificacion);
-                    this.selectedLlamada.setIdResultadogestion(resultadogestion);
-                    this.selectedLlamada.setIdResultadotercero(respuesta);
-                    this.selectedLlamada.setIdrazonmora(razonmora);
-                    this.selectedLlamada.setIdGestion(this.gestion);
-                    this.selectedLlamada.setOperacion(this.getOperacionSelected().getNumeroCuenta());
-
-                    promesa.setIdLlamada(this.selectedLlamada);
-
-                    if (this.selectedLlamada.getTblPromesaList() == null) {
-                        List<TblPromesa> promesas = new ArrayList<>();
-                        this.selectedLlamada.setTblPromesaList(promesas);
-                    }
-                    this.selectedLlamada.getTblPromesaList().add(promesa);
-                    this.gestion.getTblPromesaList().add(promesa);
-                    this.addLlamadaToGestion(promesa.getIdLlamada());
-                }
+                this.gestion.getTblPromesaList().add(promesa);
+                this.addLlamadaToGestion(this.getSelectedLlamada());
 
                 FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -1381,22 +1343,20 @@ Arreglo de Pago
      */
     public void agregarCancelacionTotalPorCuotas(String codigoMoneda) {
         if (this.selectedLlamada != null) {
-            this.selectedLlamada.setIdGestion(this.gestion);
-            this.selectedLlamada.setOperacion(this.operacionSelected.getNumeroCuenta());
-
-            Moneda monedaPromesa = new Moneda();
-            monedaPromesa.setCodigo(codigoMoneda);
-            monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
-
-            Estadopromesa estadopromesa = new Estadopromesa();
-            estadopromesa.setCodigo(ConstanteComun.Seguimiento);
-            estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
-
-            Arreglopago arreglopagoPromesa = new Arreglopago();
-            arreglopagoPromesa.setCodigo(ConstanteComun.Cancelacion_total_por_cuotas);
-            arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
 
             if (this.validArregloPago(codigoMoneda) && this.validCancelacionTotalPorCuotas()) {
+
+                Moneda monedaPromesa = new Moneda();
+                monedaPromesa.setCodigo(codigoMoneda);
+                monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
+
+                Estadopromesa estadopromesa = new Estadopromesa();
+                estadopromesa.setCodigo(ConstanteComun.Seguimiento);
+                estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
+
+                Arreglopago arreglopagoPromesa = new Arreglopago();
+                arreglopagoPromesa.setCodigo(ConstanteComun.Cancelacion_total_por_cuotas);
+                arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
 
                 Calendar fechaInicial = Calendar.getInstance();
                 fechaInicial.setTime(this.fechaPagoPromesa);
@@ -1421,14 +1381,17 @@ Arreglo de Pago
                     }
 
                     promesa.setIdGestion(this.gestion);
-                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
+                    promesa.setIdLlamada(this.selectedLlamada);
+                    promesa.setOperacion(this.selectedLlamada.getOperacion());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
-                    promesa.setMtopago(saldo);
-                    promesa.setIdMoneda(monedaPromesa);
-                    promesa.setIdestadopromesa(estadopromesa); // Seguimiento                    
+                    promesa.setIdestadopromesa(estadopromesa); // Seguimiento
                     promesa.setIdtipodescuento(this.tipoDescuentoPromesa); // Tipo Descuento: Monto Fijo o Porcentaje.
+                    promesa.setIdarreglopago(arreglopagoPromesa);//CTC = Cancelacion Total por Cuotas.
+                    promesa.setFechaingreso(this.fechaHoy.getTime());
+                    promesa.setIdMoneda(monedaPromesa);
+                    promesa.setMtopago(saldo);
 
                     if (codigoMoneda.equals(ConstanteComun.colones)) {
                         promesa.setMtoporcentaje(this.mtoDescuentoPromesa); // Monto o %
@@ -1436,22 +1399,18 @@ Arreglo de Pago
                         promesa.setMtoporcentaje(this.mtoDescuentoPromesaUSD); // Monto o %
                     }
 
-                    promesa.setIdarreglopago(arreglopagoPromesa);//CTC = Cancelacion Total por Cuotas.
-                    promesa.setFechaingreso(this.fechaHoy.getTime());
-
-                    if (this.selectedLlamada.getTblPromesaList() == null) {
+                    if (this.gestion.getTblPromesaList() == null) {
                         List<TblPromesa> promesas = new ArrayList<>();
-                        this.selectedLlamada.setTblPromesaList(promesas);
+                        this.gestion.setTblPromesaList(promesas);
                     }
-                    promesa.setIdLlamada(this.selectedLlamada);
-                    this.selectedLlamada.getTblPromesaList().add(promesa);
+
                     this.gestion.getTblPromesaList().add(promesa);
 
                     FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                 }
 
-                //this.addLlamadaToGestion(this.selectedLlamada);
+                this.addLlamadaToGestion(this.getSelectedLlamada());
             }
 
         } else {
@@ -1500,22 +1459,20 @@ Arreglo de Pago
      */
     public void agregarRefinanciamiento(String codigoMoneda) {
         if (this.selectedLlamada != null) {
-            this.selectedLlamada.setIdGestion(this.gestion);
-            this.selectedLlamada.setOperacion(this.operacionSelected.getNumeroCuenta());
-
-            Moneda monedaPromesa = new Moneda();
-            monedaPromesa.setCodigo(codigoMoneda);
-            monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
-
-            Estadopromesa estadopromesa = new Estadopromesa();
-            estadopromesa.setCodigo(ConstanteComun.Seguimiento);
-            estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
-
-            Arreglopago arreglopagoPromesa = new Arreglopago();
-            arreglopagoPromesa.setCodigo(ConstanteComun.Refinanciamiento);
-            arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
 
             if (this.validRefinanciamiento(codigoMoneda)) {
+
+                Moneda monedaPromesa = new Moneda();
+                monedaPromesa.setCodigo(codigoMoneda);
+                monedaPromesa = this.ejbMonedaService.findByCodigo(monedaPromesa);
+
+                Estadopromesa estadopromesa = new Estadopromesa();
+                estadopromesa.setCodigo(ConstanteComun.Seguimiento);
+                estadopromesa = this.ejbEstadopromesaLocal.findByCodigo(estadopromesa);
+
+                Arreglopago arreglopagoPromesa = new Arreglopago();
+                arreglopagoPromesa.setCodigo(ConstanteComun.Refinanciamiento);
+                arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
 
                 Calendar fechaInicial = Calendar.getInstance();
                 fechaInicial.setTime(this.fechaPagoPromesa);
@@ -1544,10 +1501,17 @@ Arreglo de Pago
                     }
 
                     promesa.setIdGestion(this.gestion);
-                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
+                    promesa.setIdLlamada(this.selectedLlamada);
+                    promesa.setOperacion(this.selectedLlamada.getOperacion());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
+                    promesa.setIdestadopromesa(estadopromesa); // Seguimiento
+                    promesa.setIdtipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
+                    promesa.setIdarreglopago(arreglopagoPromesa);//REF = Refinanciamiento.
+                    promesa.setFechaingreso(this.fechaHoy.getTime());
+                    promesa.setIdMoneda(monedaPromesa);
+                    promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
 
                     if (count == 0 && primerTracto.compareTo(BigDecimal.ZERO) == 1) {
                         promesa.setMtopago(primerTracto);
@@ -1555,26 +1519,18 @@ Arreglo de Pago
                         promesa.setMtopago(saldo);
                     }
 
-                    promesa.setIdMoneda(monedaPromesa);
-                    promesa.setIdestadopromesa(estadopromesa); // Seguimiento
-                    promesa.setIdtipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
-                    promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
-                    promesa.setIdarreglopago(arreglopagoPromesa);//REF = Refinanciamiento.
-                    promesa.setFechaingreso(this.fechaHoy.getTime());
-
-                    if (this.selectedLlamada.getTblPromesaList() == null) {
+                    if (this.gestion.getTblPromesaList() == null) {
                         List<TblPromesa> promesas = new ArrayList<>();
-                        this.selectedLlamada.setTblPromesaList(promesas);
+                        this.gestion.setTblPromesaList(promesas);
                     }
-                    promesa.setIdLlamada(this.selectedLlamada);
-                    this.selectedLlamada.getTblPromesaList().add(promesa);
+
                     this.gestion.getTblPromesaList().add(promesa);
 
                     FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                 }
 
-                //this.addLlamadaToGestion(this.selectedLlamada);
+                this.addLlamadaToGestion(this.getSelectedLlamada());
             }
 
         } else {
@@ -1628,6 +1584,11 @@ Arreglo de Pago
             boolean searchingMoneda = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo().equals(codigoMoneda);
             boolean searchingOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion);
             if (searchingMoneda && searchingOperacion) {
+                Estadopromesa estado = new Estadopromesa();
+                estado.setCodigo(ConstanteComun.Registro_Borrado);
+                estado = this.ejbEstadopromesaLocal.findByCodigo(estado);
+                this.gestion.getTblPromesaList().get(index).setIdestadopromesa(estado);
+                this.ejbPromesaLocal.update(this.gestion.getTblPromesaList().get(index));
                 this.gestion.getTblPromesaList().remove(index);
                 index = index - 1;
             }
@@ -1651,6 +1612,49 @@ Arreglo de Pago
             }
             index++;
         }
+
+        if (this.gestion != null && this.gestion.getTblLlamadaList() != null) {
+            for (int j = 0; j < this.gestion.getTblLlamadaList().size(); j++) {
+                int index02 = 0;
+                boolean isTrue02 = true;
+
+                if (this.gestion.getTblLlamadaList().get(j).getTblPromesaList() != null) {
+                    while (this.gestion.getTblLlamadaList().get(j).getTblPromesaList().size() > 0 && isTrue02) {
+                        boolean searchingMoneda02 = this.gestion.getTblLlamadaList().get(j).getTblPromesaList().get(index02).getIdMoneda().getCodigo().equals(codigoMoneda);
+                        boolean searchingOperacion02 = this.gestion.getTblLlamadaList().get(j).getTblPromesaList().get(index02).getOperacion().equals(operacion);
+                        if (searchingMoneda02 && searchingOperacion02) {
+                            Estadopromesa estado = new Estadopromesa();
+                            estado.setCodigo(ConstanteComun.Registro_Borrado);
+                            estado = this.ejbEstadopromesaLocal.findByCodigo(estado);
+                            this.gestion.getTblLlamadaList().get(j).getTblPromesaList().get(index02).setIdestadopromesa(estado);
+                            this.ejbPromesaLocal.update(this.gestion.getTblLlamadaList().get(j).getTblPromesaList().get(index02));
+                            this.gestion.getTblLlamadaList().get(j).getTblPromesaList().remove(index02);
+                            index02 = index02 - 1;
+                        }
+
+                        if (this.gestion.getTblLlamadaList().get(j).getTblPromesaList().size() <= 0) {
+                            isTrue02 = false;
+
+                        } else {
+                            int i02 = 0;
+                            while (i02 < this.gestion.getTblLlamadaList().get(j).getTblPromesaList().size()) {
+                                boolean existMoneda02 = this.gestion.getTblLlamadaList().get(j).getTblPromesaList().get(i02).getIdMoneda().getCodigo().equals(codigoMoneda);
+                                boolean existOperacion02 = this.gestion.getTblLlamadaList().get(j).getTblPromesaList().get(i02).getOperacion().equals(operacion);
+                                if (existMoneda02 && existOperacion02) {
+                                    isTrue02 = true;
+                                    i02++;
+                                    break;
+                                }
+                                isTrue02 = false;
+                                i02++;
+                            }
+                        }
+                        index02++;
+                    }// while
+                }// if
+            }// for
+        }
+
     }
 
     /**
@@ -1680,29 +1684,8 @@ Arreglo de Pago
      */
     public void agregarPagoParcial(String codigoMoneda) {
         if (this.selectedLlamada != null) {
-            this.selectedLlamada.setIdGestion(this.gestion);
-            this.selectedLlamada.setOperacion(this.operacionSelected.getNumeroCuenta());
+
             if (this.validPagoParcial(codigoMoneda)) {
-
-                Calendar fechaInicial = Calendar.getInstance();
-                fechaInicial.setTime(this.fechaPagoPromesa);
-
-                TblPromesa promesa = new TblPromesa();
-
-                if (this.usuario != null) {
-                    promesa.setUsuarioingreso(this.usuario.getUsuario());
-                }
-
-                promesa.setIdGestion(this.gestion);
-                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
-                promesa.setTelefono(this.selectedLlamada.getCallToNumber());
-                promesa.setFechaPago(fechaInicial.getTime());
-
-                if (codigoMoneda.equals(ConstanteComun.colones)) {
-                    promesa.setMtopago(this.mtoSaldoPromesa);
-                } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
-                    promesa.setMtopago(this.mtoSaldoPromesaUSD);
-                }
 
                 Moneda monedaPromesa = new Moneda();
                 monedaPromesa.setCodigo(codigoMoneda);
@@ -1716,12 +1699,32 @@ Arreglo de Pago
                 arreglopagoPromesa.setCodigo(ConstanteComun.Pago_Parcial);
                 arreglopagoPromesa = this.ejbArreglopagoLocal.findByCodigo(arreglopagoPromesa);
 
-                promesa.setIdMoneda(monedaPromesa);
+                Calendar fechaInicial = Calendar.getInstance();
+                fechaInicial.setTime(this.fechaPagoPromesa);
+
+                TblPromesa promesa = new TblPromesa();
+
+                if (this.usuario != null) {
+                    promesa.setUsuarioingreso(this.usuario.getUsuario());
+                }
+
+                promesa.setIdGestion(this.gestion);
+                promesa.setIdLlamada(this.selectedLlamada);
+                promesa.setOperacion(this.selectedLlamada.getOperacion());
+                promesa.setTelefono(this.selectedLlamada.getCallToNumber());
+                promesa.setFechaPago(fechaInicial.getTime());
                 promesa.setIdestadopromesa(estadopromesa); // Seguimiento
                 promesa.setIdtipodescuento(null); // Tipo Descuento: Monto Fijo o Porcentaje.
-                promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
                 promesa.setIdarreglopago(arreglopagoPromesa);//PAP = Pago Parcial
                 promesa.setFechaingreso(this.fechaHoy.getTime());
+                promesa.setIdMoneda(monedaPromesa);
+                promesa.setMtoporcentaje(BigDecimal.ZERO); // Monto o %
+
+                if (codigoMoneda.equals(ConstanteComun.colones)) {
+                    promesa.setMtopago(this.mtoSaldoPromesa);
+                } else if (codigoMoneda.equals(ConstanteComun.dolares)) {
+                    promesa.setMtopago(this.mtoSaldoPromesaUSD);
+                }
 
                 if (this.validarSumaPromesaContraSaldo(promesa)) {
                     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Suma Monto Promesa debe ser menor o igual al saldo de la operación!");
@@ -1729,14 +1732,14 @@ Arreglo de Pago
 
                 } else {
 
-                    if (this.selectedLlamada.getTblPromesaList() == null) {
+                    if (this.gestion.getTblPromesaList() == null) {
                         List<TblPromesa> promesas = new ArrayList<>();
-                        this.selectedLlamada.setTblPromesaList(promesas);
+                        this.gestion.setTblPromesaList(promesas);
                     }
-                    promesa.setIdLlamada(this.selectedLlamada);
-                    this.selectedLlamada.getTblPromesaList().add(promesa);
+
                     this.gestion.getTblPromesaList().add(promesa);
-                    //this.addLlamadaToGestion(this.selectedLlamada);
+                    this.addLlamadaToGestion(this.getSelectedLlamada());
+
                     FacesMessage msg = new FacesMessage("Promesa Agregada: ", promesa.getTelefono());
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                 }
@@ -3036,7 +3039,7 @@ Arreglo de Pago
      * @param llamada
      */
     public void calcArregloPago(TblLlamada llamada) {
-        this.setSelectedLlamada(llamada);
+        this.addLlamadaToLlamada(llamada);
         if (this.operacionSelected != null) {
             String leyUsura = this.operacionSelected.getLeyusura();
             List<TblSaldo> saldoList = this.operacionSelected.getTblSaldoList();
@@ -3058,6 +3061,14 @@ Arreglo de Pago
                         }
                     }
                 }
+
+                // actualizar saldos
+                for (int index = 0; index < this.carteraList.size(); index++) {
+                    if (carteraList.get(index).getNumeroCuenta().equals(this.operacionSelected.getNumeroCuenta())) {
+                        carteraList.get(index).setTblSaldoList(saldoList);
+                    }
+                }
+                //**********************
             }//if
         }
     }
@@ -3193,10 +3204,10 @@ Arreglo de Pago
                 if (llamada.getIdTipificacion() != null && llamada.getIdTipificacion().getIdTipificacion() != null) {
                     if (this.gestion.getTblLlamadaList() != null && !this.gestion.getTblLlamadaList().isEmpty()) {
                         for (int i = 0; i < this.gestion.getTblLlamadaList().size(); i++) {
-                            
+
                             boolean true_CallToNumber = this.gestion.getTblLlamadaList().get(i).getCallToNumber().equals(llamada.getCallToNumber());
                             boolean true_Operacion = this.getOperacionSelected().getNumeroCuenta().equals(llamada.getOperacion());
-                            
+
                             if (true_CallToNumber && true_Operacion) {
                                 Tipificacion tipificacion = llamada.getIdTipificacion();
                                 Subtipificacion subtipificacion = llamada.getIdSubtipificacion();
@@ -3241,12 +3252,11 @@ Arreglo de Pago
                                     this.gestion.getTblLlamadaList().get(i).setFechaingreso(this.fechaHoy.getTime());
                                     this.gestion.getTblLlamadaList().get(i).setUsuarioingreso(usuario.getUsuario());
                                 }
-                                
+
                                 /*
                                 this.gestion.getTblLlamadaList().get(i).setIdGestion(this.gestion);
                                 this.gestion.getTblLlamadaList().get(i).setOperacion(this.operacionSelected.getNumeroCuenta());
-                                */
-
+                                 */
                             }
                         }
 
@@ -3292,27 +3302,141 @@ Multitipificacion
      *
      * @param operacion
      */
-    private void addOperacionToLlamada() {
-        boolean laEncontro = false;
-        if (this.gestion.getTblLlamadaList().size() > 0) {
-            for (int index = 0; index < this.gestion.getTblLlamadaList().size(); index++) {
-                if (this.gestion.getTblLlamadaList().get(index).getOperacion().equals(this.operacionSelected.getNumeroCuenta())) {
-                    laEncontro = true;
+    private void addLlamadaToLlamada(TblLlamada pLlamada) {
+        if (pLlamada != null && this.selectedLlamada != null) {
+
+            Long idLlamada = pLlamada.getIdLlamada();
+            String callLogId = pLlamada.getCallLogId();
+            Date dateIni = pLlamada.getDateIni();
+            Date dateEnd = pLlamada.getDateEnd();
+            String callFromNumber = pLlamada.getCallFromNumber();
+            String callToNumber = pLlamada.getCallToNumber();
+            String dialstatus = pLlamada.getDialstatus();
+            Date callLength = pLlamada.getCallLength();
+            Integer conversationLength = pLlamada.getConversationLength();
+            String estado = pLlamada.getEstado();
+            String usuarioingreso = pLlamada.getUsuarioingreso();
+            Date fechaingreso = pLlamada.getFechaingreso();
+            String usuariomodifico = pLlamada.getUsuariomodifico();
+            Date fechamodifico = pLlamada.getFechamodifico();
+            Razonmora idrazonmora = pLlamada.getIdrazonmora();
+            Subtipificacion idSubtipificacion = pLlamada.getIdSubtipificacion();
+            TblResultadogestion idResultadogestion = pLlamada.getIdResultadogestion();
+            TblResultadotercero idResultadotercero = pLlamada.getIdResultadotercero();
+            Tipificacion idTipificacion = pLlamada.getIdTipificacion();
+            Tipotelefono idTipotelefono = pLlamada.getIdTipotelefono();
+            String operacion = pLlamada.getOperacion();
+            List<TblPromesa> tblPromesaList = pLlamada.getTblPromesaList();
+
+            if (this.gestion != null) {
+                this.selectedLlamada.setIdGestion(this.gestion);
+            }
+
+            if (idLlamada != null) {
+                this.selectedLlamada.setIdLlamada(idLlamada);
+            }
+
+            if (callLogId != null && !callLogId.trim().equals("")) {
+                this.selectedLlamada.setCallLogId(callLogId);
+            }
+
+            if (dateIni != null) {
+                this.selectedLlamada.setDateIni(dateIni);
+            }
+
+            if (dateEnd != null) {
+                this.selectedLlamada.setDateEnd(dateEnd);
+            }
+
+            if (callFromNumber != null && !callFromNumber.trim().equals("")) {
+                this.selectedLlamada.setCallFromNumber(callFromNumber);
+            }
+
+            if (callToNumber != null && !callToNumber.trim().equals("")) {
+                this.selectedLlamada.setCallToNumber(callToNumber);
+            }
+
+            if (dialstatus != null && !dialstatus.trim().equals("")) {
+                this.selectedLlamada.setDialstatus(dialstatus);
+            }
+
+            if (callLength != null) {
+                this.selectedLlamada.setCallLength(callLength);
+            }
+
+            if (conversationLength != null) {
+                this.selectedLlamada.setConversationLength(conversationLength);
+            }
+
+            if (estado != null && !estado.trim().equals("")) {
+                this.selectedLlamada.setEstado(estado);
+            }
+
+            if (usuarioingreso != null && usuarioingreso.trim().equals("")) {
+                this.selectedLlamada.setUsuarioingreso(usuarioingreso);
+            }
+
+            if (fechaingreso != null) {
+                this.selectedLlamada.setFechaingreso(fechaingreso);
+            }
+
+            if (usuariomodifico != null && usuariomodifico.trim().equals("")) {
+                this.selectedLlamada.setUsuariomodifico(usuariomodifico);
+            }
+
+            if (fechamodifico != null) {
+                this.selectedLlamada.setFechamodifico(fechamodifico);
+            }
+
+            if (idrazonmora != null && idrazonmora.getIdrazonmora() != null) {
+                this.selectedLlamada.setIdrazonmora(idrazonmora);
+            } else {
+                this.selectedLlamada.setIdrazonmora(null);
+            }
+
+            if (idSubtipificacion != null && idSubtipificacion.getIdSubtipificacion() != null) {
+                this.selectedLlamada.setIdSubtipificacion(idSubtipificacion);
+            } else {
+                this.selectedLlamada.setIdSubtipificacion(null);
+            }
+
+            if (idResultadogestion != null && idResultadogestion.getIdResultadogestion() != null) {
+                this.selectedLlamada.setIdResultadogestion(idResultadogestion);
+            } else {
+                this.selectedLlamada.setIdResultadogestion(null);
+            }
+
+            if (idResultadotercero != null && idResultadotercero.getIdResultadotercero() != null) {
+                this.selectedLlamada.setIdResultadotercero(idResultadotercero);
+            } else {
+                this.selectedLlamada.setIdResultadotercero(null);
+            }
+
+            if (idTipificacion != null && idTipificacion.getIdTipificacion() != null) {
+                this.selectedLlamada.setIdTipificacion(idTipificacion);
+            } else {
+                this.selectedLlamada.setIdTipificacion(null);
+            }
+
+            if (idTipotelefono != null && idTipotelefono.getIdTipotelefono() != null) {
+                this.selectedLlamada.setIdTipotelefono(idTipotelefono);
+            } else {
+                this.selectedLlamada.setIdTipotelefono(null);
+            }
+
+            if (operacion != null && !operacion.trim().equals("")) {
+                this.selectedLlamada.setOperacion(operacion);
+            }
+
+            if (tblPromesaList != null && !tblPromesaList.isEmpty() && tblPromesaList.size() > 0) {
+                if (this.selectedLlamada.getTblPromesaList() == null) {
+                    this.selectedLlamada.setTblPromesaList(tblPromesaList);
+
+                } else if (!this.selectedLlamada.getTblPromesaList().isEmpty() || this.selectedLlamada.getTblPromesaList().size() > 0) {
+                    this.selectedLlamada.getTblPromesaList().addAll(tblPromesaList);
                 }
             }
 
-            if (!laEncontro) {
-                TblLlamada operacionLlamadaSelected = new TblLlamada();
-                operacionLlamadaSelected.setIdGestion(this.getGestion());
-                operacionLlamadaSelected.setOperacion(this.operacionSelected.getNumeroCuenta());
-                this.gestion.getTblLlamadaList().add(operacionLlamadaSelected);
-            }
-
-        } else {
-            TblLlamada operacionLlamadaSelected = new TblLlamada();
-            operacionLlamadaSelected.setIdGestion(this.getGestion());
-            operacionLlamadaSelected.setOperacion(this.operacionSelected.getNumeroCuenta());
-            this.gestion.getTblLlamadaList().add(operacionLlamadaSelected);
         }
     }
 
@@ -3322,8 +3446,8 @@ Multitipificacion
      */
     private void addLlamadaToGestion(TblLlamada pllamada) {
         String callLogId = null;
-        if (this.selectedLlamada != null && this.selectedLlamada.getCallLogId() != null && !this.selectedLlamada.getCallLogId().trim().equals("")) {
-            callLogId = this.selectedLlamada.getCallLogId();
+        if (this.getSelectedLlamada() != null && this.getSelectedLlamada().getCallLogId() != null && !this.getSelectedLlamada().getCallLogId().trim().equals("")) {
+            callLogId = this.getSelectedLlamada().getCallLogId();
         }
 
         boolean laEncontro = false;
@@ -3332,7 +3456,7 @@ Multitipificacion
                 boolean isOperacion = this.gestion.getTblLlamadaList().get(index).getOperacion().equals(pllamada.getOperacion());
                 boolean isTelefono = this.gestion.getTblLlamadaList().get(index).getCallToNumber().equals(pllamada.getCallToNumber());
                 if (isOperacion && isTelefono) {
-                    this.gestion.getTblLlamadaList().get(index).setIdLlamada(pllamada.getIdLlamada());
+                    //this.gestion.getTblLlamadaList().get(index).setIdLlamada(pllamada.getIdLlamada());
                     this.gestion.getTblLlamadaList().get(index).setIdGestion(pllamada.getIdGestion());
 
                     if (pllamada.getCallLogId() != null && !pllamada.getCallLogId().trim().equals("")) {
@@ -3368,16 +3492,291 @@ Multitipificacion
             }
 
             if (!laEncontro) {
+                pllamada.setIdLlamada(null);
+                pllamada.setEstado(ConstanteComun.Ingresar);
                 pllamada.setUsuarioingreso(this.usuario.getUsuario());
                 pllamada.setFechaingreso(this.fechaHoy.getTime());
                 this.gestion.getTblLlamadaList().add(pllamada);
             }
 
         } else {
+            pllamada.setIdLlamada(null);
+            pllamada.setEstado(ConstanteComun.Ingresar);
             pllamada.setUsuarioingreso(this.usuario.getUsuario());
             pllamada.setFechaingreso(this.fechaHoy.getTime());
             this.gestion.getTblLlamadaList().add(pllamada);
         }
+    }
+
+    /**
+     * Actualuzar cartera. Cambiar estado a gestionado. GES. Actualiza el saldo
+     * de la cartera.
+     */
+    private void actualizarSaldos() {
+        if (this.carteraList != null) {
+            for (int indexOP = 0; indexOP < this.carteraList.size(); indexOP++) {
+                List<TblSaldo> saldoList = this.carteraList.get(indexOP).getTblSaldoList();
+                if (saldoList != null) {
+                    for (int index = 0; index < saldoList.size(); index++) {
+                        if (saldoList.get(index).getSaldoGestion() != null && saldoList.get(index).getSaldoGestion().compareTo(BigDecimal.ZERO) > 0) {
+                            saldoList.get(index).setUsuariomodifico(this.usuario.getUsuario());
+                            saldoList.get(index).setFechamodifico(this.fechaHoy.getTime());
+                            this.ejbSaldoLocal.update(saldoList.get(index));
+                        }
+                    }
+                }
+                // actualuzar cartera. Cambiar estado a gestionado. GES
+                this.carteraList.get(indexOP).setUsuarioModifico(this.usuario.getUsuario());
+                this.carteraList.get(indexOP).setFechaModifico(this.fechaHoy.getTime());
+                this.carteraList.get(indexOP).setEstado("GES");
+                this.ejbCarteraLocal.update(this.carteraList.get(indexOP));
+            }
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    private boolean validarTipificacion() {
+        if (this.gestion.getTblLlamadaList() != null && !this.gestion.getTblLlamadaList().isEmpty() && this.gestion.getTblLlamadaList().size() > 0) {
+            for (int index = 0; index < this.gestion.getTblLlamadaList().size(); index++) {
+                String telefono = this.gestion.getTblLlamadaList().get(index).getCallToNumber();
+                Tipificacion tipificacion = this.gestion.getTblLlamadaList().get(index).getIdTipificacion();
+                Integer idTipificacion = null;
+                if (tipificacion != null) {
+                    idTipificacion = tipificacion.getIdTipificacion();
+                }
+
+                boolean isNullTipificacion = tipificacion == null;
+                boolean isNullIDTipificacion = idTipificacion == null;
+
+                if (isNullTipificacion || isNullIDTipificacion) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Tipificación requerido!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return false;
+                }
+
+                if (this.gestion.getTblLlamadaList().get(index).getIdSubtipificacion() == null || this.gestion.getTblLlamadaList().get(index).getIdSubtipificacion().getIdSubtipificacion() == null) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Sub-Tipificación requerido!");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    return false;
+                }
+
+                /*
+                            Razon de mora.
+                            No es requerido: si la tipificacion es;
+                            --- Promesa de pago 1 - 
+                            --- Contacto sin promesa - 6
+                            --- No Contesta -  4
+                            --- Mensaje Familiar - 3
+                            --- Contacto con tercero - 5
+                 */
+                if (!isNullIDTipificacion) {
+                    boolean isPP = idTipificacion.equals(1);
+                    /* Promesas. requerido: si la tipificacion es; Promesa de pago */
+                    if (isPP) {
+                        if (this.gestion.getTblPromesaList() == null || this.gestion.getTblPromesaList().isEmpty() || this.gestion.getTblPromesaList().size() <= 0) {
+                            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "( " + telefono + " ) - " + "Debe registrar una PROMESA. Requerido!");
+                            FacesContext.getCurrentInstance().addMessage(null, msg);
+                            return false;
+                        }
+                    }// Promesa de pago                                
+                }// isNullIDTipificacion
+
+            }// for
+        }// if
+        return true;
+    }
+
+    /**
+     *
+     */
+    private void multitipificacion() {
+
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        c1.setTime(this.fechaHoy.getTime());
+        int DAY_OF_MONTH = c1.get(Calendar.DAY_OF_MONTH);
+        int MONTH = c1.get(Calendar.MONTH);
+        int YEAR = c1.get(Calendar.YEAR);
+
+        boolean PRP = false; // PRP - promesa de pago
+        boolean REP = false; // REP - Recordatorio de pago
+        boolean ESC = false; // ESC - Escalar.
+
+        TblLlamada llamadaPRP = null;
+        TblLlamada llamadaREP = null;
+        TblLlamada llamadaESC = null;
+        TblLlamada llamadaDefault = null;
+
+        for (TblLlamada llamada : this.gestion.getTblLlamadaList()) {
+            Date fechaIngreso = llamada.getFechaingreso();
+            c2.setTime(fechaIngreso);
+            int dia = c2.get(Calendar.DAY_OF_MONTH);
+            int mes = c2.get(Calendar.MONTH);
+            int anno = c2.get(Calendar.YEAR);
+            boolean diaDAY = dia == DAY_OF_MONTH;
+            boolean mesMONTH = mes == MONTH;
+            boolean annoYEAR = anno == YEAR;
+
+            if (llamada.getIdTipificacion().getCodigo().equals("PRP") && diaDAY && mesMONTH && annoYEAR) {
+                PRP = true;
+                llamadaPRP = new TblLlamada();
+                llamadaPRP.setIdLlamada(null);
+                llamadaPRP.setIdGestion(llamada.getIdGestion());
+                llamadaPRP.setCallLogId(llamada.getCallLogId());
+                llamadaPRP.setDateIni(llamada.getDateIni());
+                llamadaPRP.setDateEnd(llamada.getDateEnd());
+                llamadaPRP.setCallFromNumber(llamada.getCallFromNumber());
+                llamadaPRP.setCallToNumber(llamada.getCallToNumber());
+                llamadaPRP.setDialstatus(llamada.getDialstatus());
+                llamadaPRP.setCallLength(llamada.getCallLength());
+                llamadaPRP.setConversationLength(llamada.getConversationLength());
+                llamadaPRP.setEstado(llamada.getEstado());
+                llamadaPRP.setIdTipificacion(llamada.getIdTipificacion());
+                llamadaPRP.setIdSubtipificacion(llamada.getIdSubtipificacion());
+                llamadaPRP.setIdrazonmora(llamada.getIdrazonmora());
+                llamadaPRP.setIdResultadogestion(llamada.getIdResultadogestion());
+                llamadaPRP.setIdResultadotercero(llamada.getIdResultadotercero());
+                llamadaPRP.setIdTipotelefono(llamada.getIdTipotelefono());
+                llamadaPRP.setUsuarioingreso(llamada.getUsuarioingreso());
+                llamadaPRP.setFechaingreso(llamada.getFechaingreso());
+                llamadaPRP.setUsuariomodifico(llamada.getUsuariomodifico());
+                llamadaPRP.setFechamodifico(llamada.getFechamodifico());
+                llamadaPRP.setOperacion(llamada.getOperacion());
+
+            } else if (llamada.getIdTipificacion().getCodigo().equals("REP") && diaDAY && mesMONTH && annoYEAR) {
+                REP = true;
+                llamadaREP = new TblLlamada();
+                llamadaPRP.setIdLlamada(null);
+                llamadaPRP.setIdGestion(llamada.getIdGestion());
+                llamadaPRP.setCallLogId(llamada.getCallLogId());
+                llamadaPRP.setDateIni(llamada.getDateIni());
+                llamadaPRP.setDateEnd(llamada.getDateEnd());
+                llamadaPRP.setCallFromNumber(llamada.getCallFromNumber());
+                llamadaPRP.setCallToNumber(llamada.getCallToNumber());
+                llamadaPRP.setDialstatus(llamada.getDialstatus());
+                llamadaPRP.setCallLength(llamada.getCallLength());
+                llamadaPRP.setConversationLength(llamada.getConversationLength());
+                llamadaPRP.setEstado(llamada.getEstado());
+                llamadaPRP.setIdTipificacion(llamada.getIdTipificacion());
+                llamadaPRP.setIdSubtipificacion(llamada.getIdSubtipificacion());
+                llamadaPRP.setIdrazonmora(llamada.getIdrazonmora());
+                llamadaPRP.setIdResultadogestion(llamada.getIdResultadogestion());
+                llamadaPRP.setIdResultadotercero(llamada.getIdResultadotercero());
+                llamadaPRP.setIdTipotelefono(llamada.getIdTipotelefono());
+                llamadaPRP.setUsuarioingreso(llamada.getUsuarioingreso());
+                llamadaPRP.setFechaingreso(llamada.getFechaingreso());
+                llamadaPRP.setUsuariomodifico(llamada.getUsuariomodifico());
+                llamadaPRP.setFechamodifico(llamada.getFechamodifico());
+                llamadaPRP.setOperacion(llamada.getOperacion());
+
+            } else if (llamada.getIdTipificacion().getCodigo().equals("ESC") && diaDAY && mesMONTH && annoYEAR) {
+                ESC = true;
+                llamadaESC = new TblLlamada();
+                llamadaESC.setIdLlamada(null);
+                llamadaESC.setIdGestion(llamada.getIdGestion());
+                llamadaESC.setCallLogId(llamada.getCallLogId());
+                llamadaESC.setDateIni(llamada.getDateIni());
+                llamadaESC.setDateEnd(llamada.getDateEnd());
+                llamadaESC.setCallFromNumber(llamada.getCallFromNumber());
+                llamadaESC.setCallToNumber(llamada.getCallToNumber());
+                llamadaESC.setDialstatus(llamada.getDialstatus());
+                llamadaESC.setCallLength(llamada.getCallLength());
+                llamadaESC.setConversationLength(llamada.getConversationLength());
+                llamadaESC.setEstado(llamada.getEstado());
+                llamadaESC.setIdTipificacion(llamada.getIdTipificacion());
+                llamadaESC.setIdSubtipificacion(llamada.getIdSubtipificacion());
+                llamadaESC.setIdrazonmora(llamada.getIdrazonmora());
+                llamadaESC.setIdResultadogestion(llamada.getIdResultadogestion());
+                llamadaESC.setIdResultadotercero(llamada.getIdResultadotercero());
+                llamadaESC.setIdTipotelefono(llamada.getIdTipotelefono());
+                llamadaESC.setUsuarioingreso(llamada.getUsuarioingreso());
+                llamadaESC.setFechaingreso(llamada.getFechaingreso());
+                llamadaESC.setUsuariomodifico(llamada.getUsuariomodifico());
+                llamadaESC.setFechamodifico(llamada.getFechamodifico());
+                llamadaESC.setOperacion(llamada.getOperacion());
+
+            } else {
+                llamadaDefault = new TblLlamada();
+                llamadaDefault.setIdLlamada(null);
+                llamadaDefault.setIdGestion(llamada.getIdGestion());
+                llamadaDefault.setCallLogId(llamada.getCallLogId());
+                llamadaDefault.setDateIni(llamada.getDateIni());
+                llamadaDefault.setDateEnd(llamada.getDateEnd());
+                llamadaDefault.setCallFromNumber(llamada.getCallFromNumber());
+                llamadaDefault.setCallToNumber(llamada.getCallToNumber());
+                llamadaDefault.setDialstatus(llamada.getDialstatus());
+                llamadaDefault.setCallLength(llamada.getCallLength());
+                llamadaDefault.setConversationLength(llamada.getConversationLength());
+                llamadaDefault.setEstado(llamada.getEstado());
+                llamadaDefault.setIdTipificacion(llamada.getIdTipificacion());
+                llamadaDefault.setIdSubtipificacion(llamada.getIdSubtipificacion());
+                llamadaDefault.setIdrazonmora(llamada.getIdrazonmora());
+                llamadaDefault.setIdResultadogestion(llamada.getIdResultadogestion());
+                llamadaDefault.setIdResultadotercero(llamada.getIdResultadotercero());
+                llamadaDefault.setIdTipotelefono(llamada.getIdTipotelefono());
+                llamadaDefault.setUsuarioingreso(llamada.getUsuarioingreso());
+                llamadaDefault.setFechaingreso(llamada.getFechaingreso());
+                llamadaDefault.setUsuariomodifico(llamada.getUsuariomodifico());
+                llamadaDefault.setFechamodifico(llamada.getFechamodifico());
+                llamadaDefault.setOperacion(llamada.getOperacion());
+            }
+        }
+
+        if (this.carteraList != null) {
+            boolean operacionExist = false;
+            for (TblCartera cartera : this.carteraList) {
+                String numeroCuenta = cartera.getNumeroCuenta();
+                for (TblLlamada llamada : this.gestion.getTblLlamadaList()) {
+                    Date fechaIngreso = llamada.getFechaingreso();
+                    c2.setTime(fechaIngreso);
+                    int dia = c2.get(Calendar.DAY_OF_MONTH);
+                    int mes = c2.get(Calendar.MONTH);
+                    int anno = c2.get(Calendar.YEAR);
+                    boolean diaDAY = dia == DAY_OF_MONTH;
+                    boolean mesMONTH = mes == MONTH;
+                    boolean annoYEAR = anno == YEAR;
+                    String operacion = llamada.getOperacion();
+                    if (numeroCuenta.equals(operacion) && diaDAY && mesMONTH && annoYEAR) {
+                        operacionExist = true;
+                    }
+                }
+
+                if (!operacionExist) {
+                    if (PRP) {
+                        llamadaPRP.setIdLlamada(null);
+                        llamadaPRP.setOperacion(numeroCuenta);
+                        llamadaPRP.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
+                        llamadaPRP.setIdSubtipificacion(this.ejbSubtipificacionLocal.findByCodigo("ICP"));
+                        this.gestion.getTblLlamadaList().add(llamadaPRP);
+
+                    } else if (REP) {
+                        llamadaREP.setIdLlamada(null);
+                        llamadaREP.setOperacion(numeroCuenta);
+                        llamadaREP.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
+                        llamadaREP.setIdSubtipificacion(this.ejbSubtipificacionLocal.findByCodigo("ICP"));
+                        this.gestion.getTblLlamadaList().add(llamadaREP);
+
+                    } else if (ESC) {
+                        llamadaESC.setIdLlamada(null);
+                        llamadaESC.setOperacion(numeroCuenta);
+                        llamadaESC.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
+                        llamadaESC.setIdSubtipificacion(this.ejbSubtipificacionLocal.findByCodigo("ICP"));
+                        this.gestion.getTblLlamadaList().add(llamadaESC);
+
+                    } else {
+                        llamadaDefault.setIdLlamada(null);
+                        llamadaDefault.setOperacion(numeroCuenta);
+                        //llamadaDefault.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
+                        this.gestion.getTblLlamadaList().add(llamadaESC);
+                    }
+                }
+                operacionExist = false;
+            }
+        }
+
     }
 
 }//end

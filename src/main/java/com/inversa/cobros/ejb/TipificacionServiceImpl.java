@@ -105,4 +105,9 @@ public class TipificacionServiceImpl implements TipificacionService, Tipificacio
         }
     }
 
+    @Override
+    public Tipificacion findByCodigo(String codigo) {
+        return dao.findByCodigo(codigo);
+    }
+
 }

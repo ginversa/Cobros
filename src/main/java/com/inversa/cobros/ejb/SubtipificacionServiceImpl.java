@@ -108,5 +108,10 @@ public class SubtipificacionServiceImpl implements SubtipificacionService, Subti
             t.printStackTrace(System.out);// imprime en consola el error
         }
     }
+
+    @Override
+    public Subtipificacion findByCodigo(String codigo) {
+        return dao.findByCodigo(codigo);
+    }
     
 }

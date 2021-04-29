@@ -220,7 +220,9 @@
                                             </p:column>
                                             <p:column headerText="Promesa" >
                                                 <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" actionListener="#{carteraGestionController.calcArregloPago(llamada)}" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :formGestion:idTabView:pgDeudor" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
+                                                    <!--
                                                     <f:setPropertyActionListener value="#{llamada}" target="#{carteraGestionController.selectedLlamada}"  />
+                                                    -->
                                                 </p:commandButton>
                                             </p:column>
                                             <p:column headerText="Guardar" >
@@ -230,67 +232,106 @@
                                             <p:ajax event="cellEdit" listener="#{carteraGestionController.onCellEdit}" update="formGestion:messages" />
                                         </p:dataTable> 
                                     </p:fieldset>
+                                    
+                                    <p:panelGrid columns="2" layout="grid">                                        
+                                        <p:fieldset legend="Operaciones" class="ui-fluid">
+                                            <p:dataTable id="idTableGestion" value="#{carteraGestionController.carteraList}" var="operacion"
+                                                         selectionMode="single" selection="#{carteraGestionController.operacionSelected}" rowKey="#{operacion.id}"
+                                                         widgetVar="idTableGestion"
+                                                         rows="20"
+                                                         reflow="true"
+                                                         styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                         style="margin-bottom:20px"
+                                                         emptyMessage="No se encontraron registros." >                                                
+
+                                                <p:column id="idCuentaOP" headerText="#Cuenta" filterBy="#{operacion.numeroCuenta}" filterMatchMode="contains" sortBy="#{operacion.numeroCuenta}" >
+                                                    <h:outputText value="#{operacion.numeroCuenta}" />
+                                                </p:column>
+                                                <p:column id="idFechaPagoOP" headerText="Fecha" filterBy="#{operacion.ultimaLlamada.fechaingreso}" filterMatchMode="contains" sortBy="#{operacion.ultimaLlamada.fechaingreso}" >
+                                                    <h:outputText value="#{operacion.ultimaLlamada.fechaingreso}">
+                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column id="idTipificacionOP" headerText="Tipificación" filterBy="#{operacion.ultimaLlamada.idTipificacion.descripcion}" filterMatchMode="contains" sortBy="#{operacion.ultimaLlamada.idTipificacion.descripcion}" >
+                                                    <h:outputText value="#{operacion.ultimaLlamada.idTipificacion.descripcion}" />
+                                                </p:column>
+
+                                                <p:column id="idSubTipificacionOP" headerText="Sub-Tipificación" filterBy="#{operacion.ultimaLlamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{operacion.ultimaLlamada.idSubtipificacion.descripcion}" >
+                                                    <h:outputText value="#{operacion.ultimaLlamada.idSubtipificacion.descripcion}" />
+                                                </p:column>
+
+                                                <p:column id="idRazonMoraBG" headerText="Razón Mora" filterBy="#{operacion.ultimaLlamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{gestion.ultimaLLamada.idrazonmora.descripcion}" >
+                                                    <h:outputText value="#{gestion.ultimaLLamada.idrazonmora.descripcion}" />
+                                                </p:column>
+
+                                                <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion, :formGestion:idTabView:idTablePromesaLlamada"/>
+                                                <p:ajax event="rowUnselect" listener="#{carteraGestionController.onRowUnselect}" update=":formGestion:messages, formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion, :formGestion:idTabView:idTablePromesaLlamada"/>
+                                            </p:dataTable>
+                                        </p:fieldset>
+                                        <p:fieldset legend="Promesas" class="ui-fluid">
+                                            <p:dataTable id="idTablePromesaLlamada" value="#{carteraGestionController.gestion.tblPromesaList}" var="promesa"                                                     
+                                                         widgetVar="idTablePromesaLlamada"
+                                                         rows="20"
+                                                         reflow="true"
+                                                         styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                                         style="margin-bottom:20px"
+                                                         emptyMessage="No se encontraron registros."
+                                                         editable="true" >
+
+                                                <p:column id="idTipoDescuentoTPL" headerText="Tipo Descuento" filterBy="#{promesa.idtipodescuento.nombre}" filterMatchMode="contains" sortBy="#{promesa.idtipodescuento.nombre}" >
+                                                    <h:outputText value="#{promesa.idtipodescuento.nombre}" />
+                                                </p:column>
+
+                                                <p:column id="idPorcentajeTPL" headerText="Monto o %*" filterBy="#{promesa.mtoporcentaje}" filterMatchMode="contains" sortBy="#{promesa.mtoporcentaje}" >
+                                                    <h:outputText value="#{promesa.mtoporcentaje}" />
+                                                </p:column>                                               
+                                                <p:column id="idMontoPgoTMP" headerText="Monto Pago" filterBy="#{promesa.mtopago}" sortBy="#{promesa.mtopago}" >
+                                                    <h:outputText value="#{promesa.mtopago}">
+                                                        <f:convertNumber type="currency" currencySymbol="#{promesa.idMoneda.simbolo}" locale="en-US" maxFractionDigits="2" groupingUsed="true"/>
+                                                    </h:outputText>
+                                                </p:column>                                    
+                                                <p:column id="idMonedaTMP" headerText="Moneda" filterBy="#{promesa.idMoneda.codigo}" filterMatchMode="contains" sortBy="#{promesa.idMoneda.codigo}" >
+                                                    <h:outputText value="#{promesa.idMoneda.codigo}" />
+                                                </p:column>
+                                                <p:column id="idFechaPagoTFP" headerText="Fecha" filterBy="#{promesa.fechaPago}" filterMatchMode="contains" sortBy="#{promesa.fechaPago}" >
+                                                    <p:cellEditor>
+                                                        <f:facet name="output">
+                                                            <h:outputText value="#{promesa.fechaPago}" >
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                            </h:outputText>
+                                                        </f:facet>
+                                                        <f:facet name="input">
+                                                            <p:calendar value="#{promesa.fechaPago}" pattern="dd/MM/yyyy" />
+                                                        </f:facet>
+                                                    </p:cellEditor>
+                                                </p:column>
+                                                <p:column id="idArregloPagoTAP" headerText="Arreglo Pago" filterBy="#{promesa.idarreglopago.nombre}" filterMatchMode="contains" sortBy="#{promesa.idarreglopago.nombre}" >
+                                                    <h:outputText value="#{promesa.idarreglopago.nombre}" />
+                                                </p:column>                                                
+                                                <p:column headerText="Estado" filterBy="#{promesa.idestadopromesa.nombre}" filterMatchMode="contains" sortBy="#{promesa.idestadopromesa.nombre}">
+                                                    <p:cellEditor>
+                                                        <f:facet name="output">
+                                                            <h:outputText value="#{promesa.idestadopromesa.nombre}" />
+                                                        </f:facet>
+                                                        <f:facet name="input">
+                                                            <p:selectOneMenu id="idEstadoPromesa" value="#{promesa.idestadopromesa}" converter="estadopromesaConverter" required="true" requiredMessage="Estado promesa requerido!">                                                                        
+                                                                <f:selectItems value="#{estadopromesaController.estadopromesaList}" var="estadoPromesa" itemLabel="#{estadoPromesa.nombre}" itemValue="#{estadoPromesa}"/>
+                                                            </p:selectOneMenu>
+                                                        </f:facet>
+                                                    </p:cellEditor>
+                                                </p:column>
+
+                                                <p:column headerText="Editar" style="width:32px">
+                                                    <p:rowEditor />
+                                                </p:column>
+
+                                                <p:ajax event="rowEdit" listener="#{carteraGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
+                                                <p:ajax event="rowEditCancel" listener="#{carteraGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                            </p:dataTable>
+                                        </p:fieldset>
+                                    </p:panelGrid>
+                                    
                                 </p:panelGrid>
-
-                                <p:fieldset legend="Operaciones">
-                                    <p:dataTable id="tblOperaciones" value="#{carteraGestionController.carteraList}" var="cartera"
-                                                 selectionMode="single" selection="#{carteraGestionController.operacionSelected}" rowKey="#{cartera.id}"
-                                                 widgetVar="tblOperaciones"
-                                                 reflow="true"
-                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
-                                                 style="margin-bottom:20px"
-                                                 emptyMessage="No se encontraron registros." >
-
-                                        <p:column headerText="#Cuenta" filterBy="#{cartera.numeroCuenta}" filterMatchMode="contains" sortBy="#{cartera.numeroCuenta}" >
-                                            <h:outputText value="#{cartera.numeroCuenta}" />                                
-                                        </p:column>
-                                        <p:column headerText="Saldo Colones" filterBy="#{cartera.saldoColones}" sortBy="#{cartera.saldoColones}" >
-                                            <h:outputText value="#{cartera.saldoColones}">
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Intereses Colones" filterBy="#{cartera.interesesColones}" sortBy="#{cartera.interesesColones}" >
-                                            <h:outputText value="#{cartera.interesesColones}">
-                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Saldo Dolares" filterBy="#{cartera.saldoDolares}" sortBy="#{cartera.saldoDolares}" >
-                                            <h:outputText value="#{cartera.saldoDolares}">
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Intereses Dolares" filterBy="#{cartera.interesesDolares}" sortBy="#{cartera.interesesDolares}" >
-                                            <h:outputText value="#{cartera.interesesDolares}">
-                                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Última Gestión" filterBy="#{cartera.ultimaLlamada.fechaingreso}" sortBy="#{cartera.ultimaLlamada.fechaingreso}" >
-                                            <h:outputText value="#{cartera.ultimaLlamada.fechaingreso}" >
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Última Promesa" filterBy="#{cartera.ultimaPromesa.fechaPago}" sortBy="#{cartera.ultimaPromesa.fechaPago}" >
-                                            <h:outputText value="#{cartera.ultimaPromesa.fechaPago}" >
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Última Promesa" filterBy="#{cartera.ultimaPromesa.mtopago}" sortBy="#{cartera.ultimaPromesa.mtopago}" >
-                                            <h:outputText value="#{cartera.ultimaPromesa.mtopago}" >
-                                                <f:convertNumber type="currency" currencySymbol="#{cartera.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column headerText="Moneda Promesa" filterBy="#{cartera.ultimaPromesa.idMoneda.codigo}" sortBy="#{cartera.ultimaPromesa.idMoneda.codigo}" >
-                                            <h:outputText value="#{cartera.ultimaPromesa.idMoneda.codigo}" />
-                                        </p:column>
-                                        <p:column headerText="Razón Mora" filterBy="#{cartera.ultimaLlamada.idrazonmora.descripcion}" sortBy="#{cartera.ultimaLlamada.idrazonmora.descripcion}" >
-                                            <h:outputText value="#{cartera.ultimaLlamada.idrazonmora.descripcion}" />
-                                        </p:column>
-
-                                        <p:ajax event="rowSelect" listener="#{carteraGestionController.onRowSelect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion"/>
-                                        <p:ajax event="rowUnselect" listener="#{carteraGestionController.onRowUnselect}" update=":formGestion:messages, :formGestion:idTabView:pgDeudor"/>
-                                    </p:dataTable>
-                                </p:fieldset>
-
                             </div>
                         </p:tab>
                         <p:tab title="Findme">
@@ -632,8 +673,8 @@
                                     <p:column headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >
                                         <h:outputText value="#{llamada.callToNumber}" />
                                     </p:column>
-                                    <p:column headerText="#Cuenta" filterBy="#{llamada.idGestion.operacion}" filterMatchMode="contains" sortBy="#{llamada.idGestion.operacion}" >
-                                        <h:outputText value="#{llamada.idGestion.operacion}" />
+                                    <p:column headerText="#Cuenta" filterBy="#{llamada.operacion}" filterMatchMode="contains" sortBy="#{llamada.operacion}" >
+                                        <h:outputText value="#{llamada.operacion}" />
                                     </p:column>                                               
                                     <p:column headerText="Tipificación" filterBy="#{llamada.idTipificacion.descripcion}" sortBy="#{llamada.idTipificacion.descripcion}" >
                                         <h:outputText value="#{llamada.idTipificacion.descripcion}" />
@@ -758,7 +799,7 @@
                         </f:facet>
                     </p:dialog>
 
-                    <p:dialog header="Promesa." width="800" showEffect="fade" modal="true" widgetVar="manageLlamarPromesaArregloPagoDialog" responsive="true">
+                    <p:dialog header="Promesa." width="1000" showEffect="fade" modal="true" widgetVar="manageLlamarPromesaArregloPagoDialog" responsive="true">
                         <p:growl id="msgsArregloPago" showDetail="true"/>
                         <p:outputPanel id="manage-llamarPromesaArregloPago-content" class="ui-fluid">
                             <p:outputPanel rendered='true'>

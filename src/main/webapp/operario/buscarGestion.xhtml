@@ -72,7 +72,7 @@
                                      emptyMessage="No se encontraron registros." >                            
 
                             <p:column id="idTelefonoBG" headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >                                
-                                <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setSelectedLlamada(llamada)}" >
+                                <p:commandLink action="carteraGestion" actionListener="#{buscarGestionController.setLlamadaTOGestion(llamada)}" >
                                     <h:outputText value="#{llamada.callToNumber}" />
                                 </p:commandLink>
                             </p:column>

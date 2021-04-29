@@ -37,5 +37,7 @@ public interface TipificacionDao {
     public void update(Tipificacion obj);
 
     public void delete(Tipificacion obj);
+    
+    public Tipificacion findByCodigo(String codigo);
 
 }

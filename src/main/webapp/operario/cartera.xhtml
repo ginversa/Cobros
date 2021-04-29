@@ -35,7 +35,7 @@
                                              emptyMessage="No se encontraron registros." >
 
                                     <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >                                        
-                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setPromesaTOGestion(promesa)}" >
+                                        <p:commandLink action="carteraGestion" actionListener="#{buscarGestionController.setPromesaTOGestion(promesa)}" >
                                             <h:outputText value="#{promesa.idGestion.identificacion}" />
                                         </p:commandLink>
                                     </p:column>
@@ -81,7 +81,7 @@
                                              emptyMessage="No se encontraron registros." >
                                     
                                     <p:column headerText="Identificación" filterBy="#{promesa.idGestion.identificacion}" filterMatchMode="contains" sortBy="#{promesa.idGestion.identificacion}" >                                        
-                                        <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setPromesaTOGestion(promesa)}" >
+                                        <p:commandLink action="carteraGestion" actionListener="#{buscarGestionController.setPromesaTOGestion(promesa)}" >
                                             <h:outputText value="#{promesa.idGestion.identificacion}" />
                                         </p:commandLink>
                                     </p:column>

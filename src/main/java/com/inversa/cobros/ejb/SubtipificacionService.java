@@ -41,5 +41,7 @@ public interface SubtipificacionService {
     public void update(Subtipificacion obj);
 
     public void delete(Subtipificacion obj);
+    
+    public Subtipificacion findByCodigo(String codigo);
 
 }

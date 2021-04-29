@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Crear Colas</ui:define>
+
+    <ui:define name="viewname">
+        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
+        <li>/</li>
+        <li>Crear Colas</li>
+    </ui:define>
+
+    <ui:param name="viewname" value="Colas" />
+
+    <ui:define name="content">
+        <h:form id="formCola">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-12">
+                    <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
+                        <p:autoUpdate/>
+                    </p:growl>
+                    <div class="card">
+                        <h4>Colas</h4>
+                        <p>Criterios para generar colas de trabajo.</p>
+                        <!-- class="ui-fluid" -->
+                        <p:panelGrid id="pgCola" columns="1" layout="grid">
+
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

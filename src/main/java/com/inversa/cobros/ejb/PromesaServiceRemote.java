@@ -57,5 +57,7 @@ public interface PromesaServiceRemote {
     public List<TblPromesa> findPromesaPorOperacion(String codigoCartera, String identificacion, String operacion);
     
     public TblPromesa findUltimaPromesa(String codigoCartera, String identificacion);
+    
+    public List<TblPromesa> findByGestionAndDifferentDEL(Long idGestion);
 
 }

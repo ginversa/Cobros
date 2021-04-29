@@ -209,7 +209,7 @@ public class PromesaDaoImpl implements PromesaDao {
     @Override
     public List<TblPromesa> findPromesaPorOperacion(String codigoCartera, String identificacion, String operacion) {
         try {
-            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp inner join tbl_gestion tg on tg.id_gestion = tp.id_gestion where tp.operacion = ?1 and tg.identificacion = ?2 and tg.codigo_cartera = ?3 order by (case when tp.fechamodifico is not null then tp.fechamodifico else tp.fechaingreso end) desc", TblPromesa.class);
+            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp inner join tbl_gestion tg on tg.id_gestion = tp.id_gestion where tp.operacion = ?1 and tg.identificacion = ?2 and tg.codigo_cartera = ?3 and tp.idestadopromesa != (select e.idestadopromesa from estadopromesa e where e.codigo = 'DEL') order by (case when tp.fechamodifico is not null then tp.fechamodifico else tp.fechaingreso end) desc", TblPromesa.class);
             query.setParameter(1, operacion);
             query.setParameter(2, identificacion);
             query.setParameter(3, codigoCartera);
@@ -236,6 +236,23 @@ public class PromesaDaoImpl implements PromesaDao {
                 return null; //or throw checked exception data not found
             } else {
                 return found.get(0);
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<TblPromesa> findByGestionAndDifferentDEL(Long idGestion) {
+        try {
+            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.idestadopromesa != (select e.idestadopromesa from estadopromesa e where e.codigo = 'DEL') order by tp.id_promesa desc", TblPromesa.class);
+            query.setParameter(1, idGestion);
+            List<TblPromesa> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found;
             }
 
         } catch (NoResultException e) {

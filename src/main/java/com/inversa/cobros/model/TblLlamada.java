@@ -141,7 +141,7 @@ public class TblLlamada implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Tipotelefono idTipotelefono;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLlamada", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idLlamada", fetch = FetchType.LAZY)
     private List<TblPromesa> tblPromesaList;
     
     @Transient    

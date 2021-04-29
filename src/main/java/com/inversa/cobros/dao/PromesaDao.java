@@ -56,4 +56,6 @@ public interface PromesaDao {
     
     public TblPromesa findUltimaPromesa(String codigoCartera, String identificacion);
     
+    public List<TblPromesa> findByGestionAndDifferentDEL(Long idGestion);
+    
 }

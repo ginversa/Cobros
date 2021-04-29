@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Subtipificacion.findByIdSubtipificacion", query = "SELECT s FROM Subtipificacion s WHERE s.idSubtipificacion = :idSubtipificacion"),
     @NamedQuery(name = "Subtipificacion.findByDescripcion", query = "SELECT s FROM Subtipificacion s WHERE s.descripcion = :descripcion"),
     @NamedQuery(name = "Subtipificacion.findByCodigoCartera", query = "SELECT s FROM Subtipificacion s WHERE s.codigoCartera = :codigoCartera"),
+    @NamedQuery(name = "Subtipificacion.findByCodigo", query = "SELECT s FROM Subtipificacion s WHERE s.codigo = :codigo"),
     @NamedQuery(name = "Subtipificacion.findByEstado", query = "SELECT s FROM Subtipificacion s WHERE s.estado = :estado"),
     @NamedQuery(name = "Subtipificacion.findByUsuarioingreso", query = "SELECT s FROM Subtipificacion s WHERE s.usuarioingreso = :usuarioingreso"),
     @NamedQuery(name = "Subtipificacion.findByFechaingreso", query = "SELECT s FROM Subtipificacion s WHERE s.fechaingreso = :fechaingreso"),
@@ -48,37 +49,52 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Subtipificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_subtipificacion")
     private Integer idSubtipificacion;
+    
     @Size(max = 50)
     @Column(name = "descripcion")
     private String descripcion;
+    
+    @Size(max = 5)
+    @Column(name = "codigo")
+    private String codigo;
+    
     @Size(max = 5)
     @Column(name = "codigo_cartera")
     private String codigoCartera;
+    
     @Size(max = 3)
     @Column(name = "estado")
     private String estado;
+    
     @Size(max = 50)
     @Column(name = "usuarioingreso")
     private String usuarioingreso;
+    
     @Column(name = "fechaingreso")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaingreso;
+    
     @Size(max = 50)
     @Column(name = "usuariomodifico")
     private String usuariomodifico;
+    
     @Column(name = "fechamodifico")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechamodifico;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubtipificacion", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
+    
     @JoinColumn(name = "id_tipificacion", referencedColumnName = "id_tipificacion")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Tipificacion idTipificacion;
+    
     @OneToMany(mappedBy = "idSubtipificacion", fetch = FetchType.LAZY)
     private List<TblResultadogestion> tblResultadogestionList;
 
@@ -178,6 +194,14 @@ public class Subtipificacion implements Serializable {
     public void setTblResultadogestionList(List<TblResultadogestion> tblResultadogestionList) {
         this.tblResultadogestionList = tblResultadogestionList;
     }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }    
 
     @Override
     public int hashCode() {

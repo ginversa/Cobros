@@ -13,6 +13,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.validation.ConstraintViolationException;
 
 /**
  *
@@ -125,11 +126,19 @@ public class LlamadaDaoImpl implements LlamadaDao {
     }
 
     @Override
-    public void insert(TblLlamada obj) {
-        em.persist(obj);
-        em.flush();
-        em.refresh(obj);
-        System.out.println("Llamada ID: " + obj.getIdLlamada());
+    public Long insert(TblLlamada obj) {
+        Long id = null;
+        try {
+            em.persist(obj);
+            em.flush();
+            em.refresh(obj);
+            System.out.println("Llamada ID: " + obj.getIdGestion());
+            id = obj.getIdLlamada();
+        } catch (ConstraintViolationException e) {
+            System.out.println("insert Llamada : " + e.getMessage());
+        }
+
+        return id;
     }
 
     @Override
@@ -149,7 +158,8 @@ public class LlamadaDaoImpl implements LlamadaDao {
      * @param codigoCartera
      * @return
      */
-    public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera) {
+    @Override
+    public List<TblLlamada> findByIdentificacionCartera(String identificacion, String codigoCartera) {
         try {
             Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tg.identificacion = ?1 and tg.codigo_cartera = ?2 order by tl.id_llamada desc", TblLlamada.class);
             query.setParameter(1, identificacion);
@@ -271,7 +281,7 @@ public class LlamadaDaoImpl implements LlamadaDao {
     @Override
     public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion) {
         try {
-            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tg.identificacion = ?1 and tg.codigo_cartera = ?2 order by tl.id_llamada desc limit 1", TblLlamada.class);            
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl inner join tbl_gestion tg on tg.id_gestion = tl.id_gestion where tg.identificacion = ?1 and tg.codigo_cartera = ?2 order by tl.id_llamada desc limit 1", TblLlamada.class);
             query.setParameter(1, identificacion);
             query.setParameter(2, codigoCartera);
             List<TblLlamada> found = query.getResultList();
@@ -279,6 +289,23 @@ public class LlamadaDaoImpl implements LlamadaDao {
                 return null; //or throw checked exception data not found
             } else {
                 return found.get(0);
+            }
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<TblLlamada> findByGestion(Long idGestion) {
+        try {
+            Query query = em.createNativeQuery("select tl.* from tbl_llamada tl where tl.id_gestion = ?1 order by tl.id_llamada desc", TblLlamada.class);
+            query.setParameter(1, idGestion);
+            List<TblLlamada> found = query.getResultList();
+            if (found.isEmpty()) {
+                return null; //or throw checked exception data not found
+            } else {
+                return found;
             }
 
         } catch (NoResultException e) {

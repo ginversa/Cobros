@@ -6,6 +6,7 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.ejb.GestionService;
+import com.inversa.cobros.ejb.LlamadaService;
 import com.inversa.cobros.ejb.PromesaService;
 import com.inversa.cobros.model.TblGestion;
 import com.inversa.cobros.model.TblLlamada;
@@ -28,6 +29,9 @@ public class GestionController implements Serializable {
 
     @Inject
     private GestionService ejbLocal;
+    
+    @Inject
+    private LlamadaService ejbLlamadaLocal;
 
     @Inject
     private PromesaService ejbPromesaServiceLocal;
@@ -72,13 +76,15 @@ public class GestionController implements Serializable {
      * @param identificacion
      */
     public void cargarGestiones(String cartera, String identificacion) {
-        this.llamadaList.clear();
+        this.llamadaList.clear();        
+        
+        this.llamadaList = this.ejbLlamadaLocal.findByIdentificacionCartera(identificacion, cartera);
+        
+        /*
         TblGestion obj = new TblGestion();
         obj.setCodigoCartera(cartera);
-        obj.setIdentificacion(identificacion);
-        
-        this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCartera(obj);
-
+        obj.setIdentificacion(identificacion);        
+        this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCartera(obj);        
         if (this.gestionList != null && !this.gestionList.isEmpty() && this.gestionList.size() > 0) {
             for (int index = 0; index < this.gestionList.size(); index++) {
                 List<TblLlamada> llamadas = this.gestionList.get(index).getTblLlamadaList();
@@ -91,6 +97,7 @@ public class GestionController implements Serializable {
                 }
             }
         }
+        */
     }
 
 }

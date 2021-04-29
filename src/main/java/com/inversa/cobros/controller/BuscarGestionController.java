@@ -5,7 +5,6 @@
  */
 package com.inversa.cobros.controller;
 
-import com.inversa.cobros.ejb.CarteraService;
 import com.inversa.cobros.ejb.GestionService;
 import com.inversa.cobros.ejb.LlamadaService;
 import com.inversa.cobros.model.TblCartera;
@@ -36,6 +35,9 @@ public class BuscarGestionController implements Serializable {
     @Inject
     private LlamadaService ejbLlamadaServiceLocal;
 
+    @Inject
+    private CarteraController carteraController;
+
     private List<TblGestion> gestionList;
     private TblGestion searchGestion;
     private TblLlamada selectedLlamada;
@@ -51,7 +53,6 @@ public class BuscarGestionController implements Serializable {
         this.searchGestion = new TblGestion();
         this.selectedLlamada = new TblLlamada();
     }
-    
 
     /**
      *
@@ -68,7 +69,7 @@ public class BuscarGestionController implements Serializable {
             }
 
             String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("codigo_cartera");
-            this.llamadaList = this.ejbLlamadaServiceLocal.buscarLlamada(this.identificacion, codigoCartera);
+            this.llamadaList = this.ejbLlamadaServiceLocal.findByIdentificacionCartera(this.identificacion, codigoCartera);
             if (this.llamadaList != null && !this.llamadaList.isEmpty() && this.llamadaList.size() > 0) {
                 this.searchGestion = this.llamadaList.get(0).getIdGestion();
             }
@@ -145,20 +146,34 @@ public class BuscarGestionController implements Serializable {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    
+
     /**
-     * 
-     * @param promesa 
+     *
+     * @param promesa
      */
     public void setPromesaTOGestion(TblPromesa promesa) {
         if (promesa != null) {
+            String operacion = promesa.getOperacion();
             TblLlamada llamada = promesa.getIdLlamada();
-            if(llamada.getOperacion() == null || llamada.getOperacion().equals("")){
+            if (llamada.getOperacion() == null || llamada.getOperacion().equals("")) {
                 llamada.setOperacion(promesa.getOperacion());
             }
-            
+
             this.setSelectedLlamada(llamada);
+            TblCartera operacion_cartera = this.carteraController.searchCarteraByOperacion(operacion);
+            this.carteraController.setCartera(operacion_cartera);
         }
+    }
+
+    /**
+     * 
+     * @param llamada 
+     */
+    public void setLlamadaTOGestion(TblLlamada llamada) {
+        String operacion = llamada.getOperacion();
+        this.setSelectedLlamada(llamada);
+        TblCartera operacion_cartera = this.carteraController.searchCarteraByOperacion(operacion);
+        this.carteraController.setCartera(operacion_cartera);
     }
 
 }

@@ -35,7 +35,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public TblGestion findById(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByIdGestion");
+        Query query = em.createNamedQuery("TblGestion.findByIdGestion", TblGestion.class);
         query.setParameter("idGestion", obj.getIdGestion());
         List<TblGestion> found = query.getResultList();
 
@@ -48,7 +48,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByCodigoGestor(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByCodigoGestor");
+        Query query = em.createNamedQuery("TblGestion.findByCodigoGestor", TblGestion.class);
         query.setParameter("codigoGestor", obj.getCodigoGestor());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -56,7 +56,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByCodigoCartera(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByCodigoCartera");
+        Query query = em.createNamedQuery("TblGestion.findByCodigoCartera", TblGestion.class);
         query.setParameter("codigoCartera", obj.getCodigoCartera());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -64,7 +64,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByNombreCliente(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByNombreCliente");
+        Query query = em.createNamedQuery("TblGestion.findByNombreCliente", TblGestion.class);
         query.setParameter("nombreCliente", obj.getNombreCliente());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -72,7 +72,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByIdentificacion(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByIdentificacion");
+        Query query = em.createNamedQuery("TblGestion.findByIdentificacion", TblGestion.class);
         query.setParameter("identificacion", obj.getIdentificacion());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -80,7 +80,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByFechaGestion(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByFechaGestion");
+        Query query = em.createNamedQuery("TblGestion.findByFechaGestion", TblGestion.class);
         query.setParameter("fechaGestion", obj.getFechaGestion());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -88,7 +88,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByEstado(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByEstado");
+        Query query = em.createNamedQuery("TblGestion.findByEstado", TblGestion.class);
         query.setParameter("estado", obj.getEstado());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -96,7 +96,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByUsuarioingreso(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByUsuarioingreso");
+        Query query = em.createNamedQuery("TblGestion.findByUsuarioingreso", TblGestion.class);
         query.setParameter("usuarioingreso", obj.getUsuarioingreso());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -104,7 +104,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByFechaingreso(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByFechaingreso");
+        Query query = em.createNamedQuery("TblGestion.findByFechaingreso", TblGestion.class);
         query.setParameter("fechaingreso", obj.getFechaingreso());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -112,7 +112,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByUsuariomodifico(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByUsuariomodifico");
+        Query query = em.createNamedQuery("TblGestion.findByUsuariomodifico", TblGestion.class);
         query.setParameter("usuariomodifico", obj.getUsuariomodifico());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -120,7 +120,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByFechamodifico(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByFechamodifico");
+        Query query = em.createNamedQuery("TblGestion.findByFechamodifico", TblGestion.class);
         query.setParameter("fechamodifico", obj.getFechamodifico());
         List<TblGestion> results = query.getResultList();
         return results;
@@ -158,9 +158,9 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public TblGestion findByCodigoCarteraANDIdentificacion(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByCodigoCarteraANDIdentificacion");
-        query.setParameter("codigoCartera", obj.getCodigoCartera());
-        query.setParameter("identificacion", obj.getIdentificacion());
+        Query query = em.createNativeQuery("SELECT t.* FROM tbl_gestion t WHERE t.codigo_cartera = ?1 and t.identificacion = ?2 and t.fechaingreso = (select max(gestion.fechaingreso) from tbl_gestion gestion where gestion.codigo_cartera = t.codigo_cartera and gestion.identificacion = t.identificacion)", TblGestion.class);
+        query.setParameter(1, obj.getCodigoCartera());
+        query.setParameter(2, obj.getIdentificacion());
         List<TblGestion> found = query.getResultList();
 
         if (found.isEmpty()) {
@@ -172,7 +172,7 @@ public class GestionDaoImpl implements GestionDao {
 
     @Override
     public List<TblGestion> findByIdentificacionANDCodigoCartera(TblGestion obj) {
-        Query query = em.createNamedQuery("TblGestion.findByIdentificacionANDCodigoCartera");
+        Query query = em.createNamedQuery("TblGestion.findByIdentificacionANDCodigoCartera", TblGestion.class);
         query.setParameter("identificacion", obj.getIdentificacion());
         query.setParameter("codigoCartera", obj.getCodigoCartera());
         List<TblGestion> results = query.getResultList();

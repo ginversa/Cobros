@@ -144,4 +144,9 @@ public class PromesaServiceImpl implements PromesaService, PromesaServiceRemote 
         return dao.findUltimaPromesa(codigoCartera, identificacion);
     }
 
+    @Override
+    public List<TblPromesa> findByGestionAndDifferentDEL(Long idGestion) {
+        return dao.findByGestionAndDifferentDEL(idGestion);
+    }
+
 }

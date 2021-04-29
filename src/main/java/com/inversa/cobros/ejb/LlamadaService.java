@@ -44,13 +44,13 @@ public interface LlamadaService {
 
     public TblLlamada findUltimaLlamada(Long idGestion);
 
-    public void insert(TblLlamada obj);
+    public Long insert(TblLlamada obj);
 
     public void update(TblLlamada obj);
 
     public void delete(TblLlamada obj);
     
-    public List<TblLlamada> buscarLlamada(String identificacion, String codigoCartera);
+    public List<TblLlamada> findByIdentificacionCartera(String identificacion, String codigoCartera);
     
     public List<TblLlamada> buscarPorTelefono(String telefono, String codigoCartera);
     
@@ -61,5 +61,7 @@ public interface LlamadaService {
     public List<TblLlamada> findLlamadasByOperacion(String codigoCartera, String identificacion, String numeroCuenta);
     
     public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion);
+    
+    public List<TblLlamada> findByGestion(Long idGestion);
 
 }
