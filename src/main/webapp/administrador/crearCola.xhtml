@@ -25,8 +25,80 @@
                     <div class="card">
                         <h4>Colas</h4>
                         <p>Criterios para generar colas de trabajo.</p>
-                        <!-- class="ui-fluid" -->
                         <p:panelGrid id="pgCola" columns="1" layout="grid">
+                            <p:outputLabel for="txtNombre" value="Nombre" />
+                            <p:inputText id="txtNombre" />
+                            <p:message for="txtNombre"/>
+
+                            <p:fieldset legend="Filtros por operación" class="ui-fluid">
+                                <p:panelGrid id="idCriterio" columns="2" layout="grid">
+                                    <p:outputLabel for="txtTipificacion" value="Tipificación" />
+                                    <p:selectOneMenu id="txtTipificacion" value="#{filtrocolaController.tipificacion}" converter="tipificacionConverter">
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{filtrocolaController.tipificacionList}" var="tipificacion" itemLabel="#{tipificacion.descripcion}" itemValue="#{tipificacion}" />
+                                        <p:ajax listener="#{filtrocolaController.onTipificacionChange()}" event="change" update="txtSubTipificacion" process="@this" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="txtSubTipificacion" value="Sub-Tipificación" />
+                                    <p:selectOneMenu id="txtSubTipificacion" value="#{filtrocolaController.subTipificacion}" converter="subtipificacionConverter">
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{filtrocolaController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="txtRazonMora" value="Razon Mora" />
+                                    <p:selectOneMenu id="txtRazonMora" value="#{filtrocolaController.razonmora}" converter="razonmoraConverter">
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{razonmoraController.razonmoraList}" var="razonMora" itemLabel="#{razonMora.descripcion}" itemValue="#{razonMora}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Filtros por persona" class="ui-fluid">
+                                <p:panelGrid columns="2" layout="grid">
+                                    <p:outputLabel for="txtPoseeTrabajo" value="Posee Trabajo" />
+                                    <p:selectOneMenu id="txtPoseeTrabajo" value="#{filtrocolaController.poseeTrabajo}">
+                                        <f:selectItem itemLabel="----" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="Si" itemValue="01" />
+                                        <f:selectItem itemLabel="No" itemValue="00" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="idRangoBalance" value="Rango Balance" />
+                                    <p:selectOneMenu id="idRangoBalance" value="#{filtrocolaController.rangobalance}">
+                                        <f:selectItem itemLabel="----" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="menor que" itemValue="menor que" />
+                                        <f:selectItem itemLabel="igual" itemValue="igual" />
+                                        <f:selectItem itemLabel="mayor que" itemValue="mayor que" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="txtCantidad" value="Cantidad" />
+                                    <p:inputText id="txtCantidad" value="#{filtrocolaController.cantidad}" />
+
+                                    <p:outputLabel for="idTipoSalario" value="Tipo de Salario" />
+                                    <p:selectOneMenu id="idTipoSalario" value="#{filtrocolaController.tiposalario}">
+                                        <f:selectItem itemLabel="Tipo Salario" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="Bajo" itemValue="Bajo" />
+                                        <f:selectItem itemLabel="Medio" itemValue="Medio" />
+                                        <f:selectItem itemLabel="Alto" itemValue="Alto" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Días" class="ui-fluid">
+                                <p:selectOneRadio id="iddiasultimopagopromesa" value="#{filtrocolaController.diasultimopagopromesa}" unselectable="true">
+                                    <f:selectItem itemLabel="Días sin gestión" itemValue="01"/>
+                                    <f:selectItem itemLabel="Último pago" itemValue="02"/>
+                                    <f:selectItem itemLabel="Último promesa" itemValue="03"/>
+                                    <f:selectItem itemLabel="Último promesa incumplida" itemValue="04"/>
+                                </p:selectOneRadio>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Fechas para aplicar" class="ui-fluid">
+                                <p:selectOneRadio id="idFechasparaaplicar" value="#{filtrocolaController.fechasparaaplicar}" unselectable="true">
+                                    <f:selectItem itemLabel="Rango de fechas" itemValue="01"/>
+                                    <f:selectItem itemLabel="Mes" itemValue="02"/>
+                                    <f:selectItem itemLabel="Días" itemValue="03"/>
+                                </p:selectOneRadio>
+                            </p:fieldset>
 
                         </p:panelGrid>
                     </div>
