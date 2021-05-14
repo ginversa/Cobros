@@ -76,9 +76,9 @@ public class CarteraDaoImpl implements CarteraDao {
             return null; //or throw checked exception data not found
         } else {
             return found.get(0);
-        }        
+        }
     }
-    
+
     @Override
     public TblCartera findByNumeroCuentaANDIdentificacion(TblCartera obj) {
         TypedQuery<TblCartera> query = em.createNamedQuery("TblCartera.findByNumeroCuentaANDIdentificacion", TblCartera.class);
@@ -89,7 +89,7 @@ public class CarteraDaoImpl implements CarteraDao {
             return null; //or throw checked exception data not found
         } else {
             return found.get(0);
-        }        
+        }
     }
 
     @Override
@@ -200,5 +200,14 @@ public class CarteraDaoImpl implements CarteraDao {
         List<TblCartera> results = query.getResultList();
         return results;
     }
-    
+
+    @Override
+    public List<TblCartera> findByCodigoCarteraAndIdentificacion(TblCartera obj) {
+        TypedQuery<TblCartera> query = em.createNamedQuery("TblCartera.findByCodigoCarteraAndIdentificacion", TblCartera.class);
+        query.setParameter("codigoCartera", obj.getCodigoCartera());
+        query.setParameter("identificacion", obj.getIdentificacion());
+        List<TblCartera> results = query.getResultList();
+        return results;
+    }
+
 }

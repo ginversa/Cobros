@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/flags/flags.css" library="demo" />
+    </ui:define>
+
+    <ui:define name="title">Supervisor</ui:define>
+
+    <ui:define name="viewname">
+        <li>Supervisor</li>
+        <li>/</li>
+        <li>Filtros Colas</li>
+        <li>/</li>        
+    </ui:define>
+
+    <ui:param name="viewname" value="Mi Gestión" />
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="p-grid table-demo">
+                <div class="p-col-12">
+                    <div class="card">
+                        <h4>Colas</h4>
+                        <p>Criterios para generar colas de trabajo.</p>
+                        <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
+                            <p:autoUpdate/>
+                        </p:growl>
+
+                        <p:panelGrid id="idpgFiltroCola" columns="2" layout="grid">
+                            <p:outputLabel for="idSOMFiltro" value="Cola" />
+                            <p:selectOneMenu id="idSOMFiltro" value="#{listarColaGestorController.filtroSelected}" converter="filtrocolaConverter">                            
+                                <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{listarColaGestorController.filtrocolaList}" var="filtro" itemLabel="#{filtro.nombre}" itemValue="#{filtro}" />
+                                <p:ajax listener="#{listarColaGestorController.onFiltroChange()}" event="change" update="dtColaList" process="@this" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+
+                        <p:dataTable id="dtColaList" widgetVar="dtColaList" var="cola" value="#{listarColaGestorController.colaList}"
+                                     paginator="true" rows="20" paginatorPosition="top"
+                                     reflow="true" scrollable="true" scrollHeight="1050"
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                     emptyMessage="No se encontraron registros." >
+
+                            <p:column headerText="Identificación" filterBy="#{cola.identificacion}" filterMatchMode="contains" sortBy="#{cola.identificacion}" >                                
+                                <p:commandLink action="/operario/colaGestion" actionListener="#{listarColaGestorController.setColaTOGestion(cola)}">
+                                    <h:outputText value="#{cola.identificacion}" />
+                                </p:commandLink>
+                            </p:column>                            
+                            <p:column headerText="Saldo Colones" filterBy="#{cola.saldoColones}" filterMatchMode="contains" sortBy="#{cola.saldoColones}" >
+                                <h:outputText value="#{cola.saldoColones}">
+                                    <f:convertNumber type="currency" currencySymbol="#{llamada.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Saldo Dolares" filterBy="#{cola.saldoDolares}" filterMatchMode="contains" sortBy="#{cola.saldoDolares}" >
+                                <h:outputText value="#{cola.saldoDolares}">
+                                    <f:convertNumber type="currency" currencySymbol="#{llamada.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estado" filterBy="#{cola.estado}" filterMatchMode="contains" sortBy="#{cola.estado}" >
+                                <h:outputText value="#{cola.estado}" />
+                            </p:column>                            
+                            <p:column headerText="Gestor" filterBy="#{cola.codigoGestor}" filterMatchMode="contains" sortBy="#{cola.codigoGestor}" >
+                                <h:outputText value="#{cola.codigoGestor}" />
+                            </p:column>
+                            <p:column headerText="Usuario Ingreso" filterBy="#{cola.usuarioingreso}" filterMatchMode="contains" sortBy="#{cola.usuarioingreso}" >
+                                <h:outputText value="#{cola.usuarioingreso}" />
+                            </p:column>                            
+                            <p:column headerText="Usuario Modifico" filterBy="#{cola.usuariomodifico}" filterMatchMode="contains" sortBy="#{cola.usuariomodifico}" >
+                                <h:outputText value="#{cola.usuariomodifico}" />
+                            </p:column>                            
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

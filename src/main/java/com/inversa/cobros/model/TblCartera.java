@@ -65,7 +65,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblCartera.findByUsuarioModifico", query = "SELECT t FROM TblCartera t WHERE t.usuarioModifico = :usuarioModifico"),
     @NamedQuery(name = "TblCartera.findByCodigoGestorANDCodigoCartera", query = "SELECT t FROM TblCartera t WHERE t.codigoGestor = :codigoGestor AND t.codigoCartera = :codigoCartera"),
     @NamedQuery(name = "TblCartera.findByCarteraGestorIdentificacion", query = "SELECT t FROM TblCartera t WHERE t.codigoCartera = :codigoCartera AND t.codigoGestor = :codigoGestor AND t.identificacion = :identificacion"),
-    @NamedQuery(name = "TblCartera.findByFechaModifico", query = "SELECT t FROM TblCartera t WHERE t.fechaModifico = :fechaModifico")})
+    @NamedQuery(name = "TblCartera.findByFechaModifico", query = "SELECT t FROM TblCartera t WHERE t.fechaModifico = :fechaModifico"),
+    @NamedQuery(name = "TblCartera.findByCodigoCarteraAndIdentificacion", query = "SELECT t FROM TblCartera t WHERE t.codigoCartera = :codigoCartera and t.identificacion = :identificacion")})
 public class TblCartera implements Serializable {
 
     private static final long serialVersionUID = 1L;

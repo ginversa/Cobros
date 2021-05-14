@@ -59,5 +59,7 @@ public interface CarteraServiceRemote {
     public void delete(TblCartera obj);
     
     public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera);
+    
+    public List<TblCartera> findByCodigoCarteraAndIdentificacion(TblCartera obj);
 
 }

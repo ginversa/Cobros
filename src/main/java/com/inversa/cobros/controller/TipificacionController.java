@@ -5,6 +5,8 @@
  */
 package com.inversa.cobros.controller;
 
+import com.inversa.cobros.constante.comun.ConstanteComun;
+import com.inversa.cobros.controller.cola.ColaGestionController;
 import com.inversa.cobros.ejb.TipificacionService;
 import com.inversa.cobros.model.Subtipificacion;
 import com.inversa.cobros.model.TblLlamada;
@@ -45,6 +47,9 @@ public class TipificacionController implements Serializable {
 
     @Inject
     private UpdateGestionController updateGestionController;
+
+    @Inject
+    private ColaGestionController colaGestionController;
 
     @PostConstruct
     public void init() {
@@ -106,7 +111,7 @@ public class TipificacionController implements Serializable {
 
     /**
      *
-     * @param selectedTipificacion
+     * @param selectedLlamada
      */
     public void onTipificacionChange(TblLlamada selectedLlamada) {
         if (selectedLlamada != null) {
@@ -116,7 +121,7 @@ public class TipificacionController implements Serializable {
                 this.resultadogestionList = selectedTipificacion.getTblResultadogestionList();
                 this.resultadoterceroList = selectedTipificacion.getTblResultadoterceroList();
 
-                if (selectedTipificacion.getIdTipificacion() == 1) {
+                if (selectedTipificacion.getCodigo().equals("PRP")) {// promesa de pago o Recordatorio de pago
                     this.setIsDisabledPromesa(false);
                 } else {
                     this.setIsDisabledPromesa(true);
@@ -137,6 +142,89 @@ public class TipificacionController implements Serializable {
      *
      * @param selectedLlamada
      */
+    public void onTipificacionChange_cola(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            Tipificacion selectedTipificacion = selectedLlamada.getIdTipificacion();
+            if (selectedTipificacion != null) {
+                this.subtipificacionList = selectedTipificacion.getSubtipificacionList();
+                this.resultadogestionList = selectedTipificacion.getTblResultadogestionList();
+                this.resultadoterceroList = selectedTipificacion.getTblResultadoterceroList();
+
+                if (selectedTipificacion.getCodigo().equals("PRP")) {// promesa de pago o Recordatorio de pago
+                    this.setIsDisabledPromesa(false);
+                } else {
+                    this.setIsDisabledPromesa(true);
+                }
+
+            } else {
+                this.subtipificacionList = new ArrayList<Subtipificacion>();
+                this.setIsDisabledPromesa(true);
+            }
+
+            this.colaGestionController.setSubtipificacionNullonLlamada(selectedLlamada);
+            this.colaGestionController.setResultadoGestionNullonLlamada(selectedLlamada);
+            this.colaGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
+    }
+
+    /**
+     *
+     * @param selectedLlamada
+     */
+    public void onSub_TipificacionChange_cola(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            Tipificacion selectedTipificacion = selectedLlamada.getIdTipificacion();
+            Subtipificacion selectedSubTipificacion = selectedLlamada.getIdSubtipificacion();
+
+            if (selectedTipificacion != null) {
+                if (selectedSubTipificacion != null) {
+                    List<TblResultadogestion> resultadoList = selectedSubTipificacion.getTblResultadogestionList();
+                    if (resultadoList != null && !resultadoList.isEmpty() && resultadoList.size() > 0) {
+                        this.resultadogestionList = resultadoList;
+                    }
+                }
+
+                if (selectedTipificacion.getCodigo().equals("PRP")) {
+                    this.setIsDisabledPromesa(false);
+                } else {
+                    this.setIsDisabledPromesa(true);
+                }
+
+            } else {
+                this.subtipificacionList = new ArrayList<Subtipificacion>();
+                this.setIsDisabledPromesa(true);
+            }
+
+            this.colaGestionController.setResultadoGestionNullonLlamada(selectedLlamada);
+            this.colaGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
+    }
+
+    /**
+     * 
+     * @param selectedLlamada 
+     */
+    public void onResultadogestionChange_cola(TblLlamada selectedLlamada) {
+        if (selectedLlamada != null) {
+            TblResultadogestion selectedResultadogestion = selectedLlamada.getIdResultadogestion();
+            if (selectedResultadogestion != null) {
+                List<TblResultadotercero> respuestaList = selectedResultadogestion.getTblResultadoterceroList();
+                if (respuestaList != null && !respuestaList.isEmpty() && respuestaList.size() > 0) {
+                    this.resultadoterceroList = respuestaList;
+                }
+
+            } else {
+                this.resultadoterceroList = new ArrayList<TblResultadotercero>();
+            }
+
+            this.colaGestionController.setResultadoTerceroNullonLlamada(selectedLlamada);
+        }
+    }
+
+    /**
+     *
+     * @param selectedLlamada
+     */
     public void onTipificacionChange_UG(TblLlamada selectedLlamada) {
         if (selectedLlamada != null) {
             Tipificacion selectedTipificacion = selectedLlamada.getIdTipificacion();
@@ -145,7 +233,7 @@ public class TipificacionController implements Serializable {
                 this.resultadogestionList = selectedTipificacion.getTblResultadogestionList();
                 this.resultadoterceroList = selectedTipificacion.getTblResultadoterceroList();
 
-                if (selectedTipificacion.getIdTipificacion() == 1 || selectedTipificacion.getIdTipificacion() == 2) {
+                if (selectedTipificacion.getCodigo().equals("PRP") || selectedTipificacion.getCodigo().equals("REP")) {
                     this.setIsDisabledPromesa(false);
                 } else {
                     this.setIsDisabledPromesa(true);
@@ -179,7 +267,7 @@ public class TipificacionController implements Serializable {
                     }
                 }
 
-                if (selectedTipificacion.getIdTipificacion() == 1) {
+                if (selectedTipificacion.getCodigo().equals("PRP")) {
                     this.setIsDisabledPromesa(false);
                 } else {
                     this.setIsDisabledPromesa(true);
@@ -212,7 +300,7 @@ public class TipificacionController implements Serializable {
                     }
                 }
 
-                if (selectedTipificacion.getIdTipificacion() == 1 || selectedTipificacion.getIdTipificacion() == 2) {
+                if (selectedTipificacion.getCodigo().equals("PRP") || selectedTipificacion.getCodigo().equals("REP")) {
                     this.setIsDisabledPromesa(false);
                 } else {
                     this.setIsDisabledPromesa(true);

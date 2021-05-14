@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/flags/flags.css" library="demo" />
+    </ui:define>
+
+    <ui:define name="title">Supervisor</ui:define>
+
+    <ui:define name="viewname">
+        <li>Supervisor</li>
+        <li>/</li>
+        <li>Filtros Colas</li>
+        <li>/</li>        
+    </ui:define>
+
+    <ui:param name="viewname" value="Mi Gestión" />
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="p-grid table-demo">
+                <div class="p-col-12">
+                    <div class="card">
+                        <h4>Filtros Colas</h4>
+                        <p>Criterios para generar colas de trabajo.</p>
+                        <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
+                            <p:autoUpdate/>
+                        </p:growl>
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <h:panelGrid columns="4">
+                                    <p:commandButton value="Nuevo" actionListener="#{listarFiltroController.crearCola()}" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                    <p:commandButton value="Buscar" actionListener="#{listarFiltroController.buscar()}" process="@this" update="dtfiltrocolaList form:messages" styleClass="p-mr-2 p-mb-2"/>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:toolbar>
+
+                        <p:dataTable id="dtfiltrocolaList" widgetVar="dtfiltrocolaList" var="filtrocola" value="#{listarFiltroController.filtrocolaList}"
+                                     paginator="true" rows="20" paginatorPosition="top"
+                                     reflow="true" scrollable="true" scrollHeight="1050"
+                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
+                                     emptyMessage="No se encontraron registros." >
+
+                            <p:column headerText="Nombre" filterBy="#{filtrocola.nombre}" filterMatchMode="contains" sortBy="#{filtrocola.nombre}" >
+                                <p:commandLink action="actualizarFiltro" actionListener="#{listarFiltroController.setFiltrocola(filtrocola)}" >
+                                    <h:outputText value="#{filtrocola.nombre}" />
+                                </p:commandLink>
+                            </p:column>
+                            
+                            <p:column headerText="Tipificación" filterBy="#{filtrocola.idTipificacion.descripcion}" filterMatchMode="contains" sortBy="#{filtrocola.idTipificacion.descripcion}" >
+                                <h:outputText value="#{filtrocola.idTipificacion.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Sub-Tipificación" filterBy="#{filtrocola.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{filtrocola.idSubtipificacion.descripcion}" >
+                                <h:outputText value="#{filtrocola.idSubtipificacion.descripcion}" />
+                            </p:column>                            
+                            <p:column headerText="Razon Mora" filterBy="#{filtrocola.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{filtrocola.idrazonmora.descripcion}" >
+                                <h:outputText value="#{filtrocola.idrazonmora.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Posee Trabajo" filterBy="#{filtrocola.poseetrabajo}" filterMatchMode="contains" sortBy="#{filtrocola.poseetrabajo}" >
+                                <h:outputText value="#{filtrocola.poseetrabajo}" />
+                            </p:column>                            
+                            <p:column headerText="Rango Balance" filterBy="#{filtrocola.rangobalance}" filterMatchMode="contains" sortBy="#{filtrocola.rangobalance}" >
+                                <h:outputText value="#{filtrocola.rangobalance}" />
+                            </p:column>
+                            <p:column headerText="Cantidad" filterBy="#{filtrocola.cantidad}" filterMatchMode="contains" sortBy="#{filtrocola.cantidad}" >
+                                <h:outputText value="#{filtrocola.cantidad}" />
+                            </p:column>
+                            <p:column headerText="Tipo Salario" filterBy="#{filtrocola.tiposalario}" filterMatchMode="contains" sortBy="#{filtrocola.tiposalario}" >
+                                <h:outputText value="#{filtrocola.tiposalario}" />
+                            </p:column>
+                            <p:column headerText="Días sin gestión" filterBy="#{filtrocola.diasSingestion}" filterMatchMode="contains" sortBy="#{filtrocola.diasSingestion}" >
+                                <h:outputText value="#{filtrocola.diasSingestion}" />
+                            </p:column>                            
+                            <p:column headerText="Último pago / Mes" filterBy="#{filtrocola.ultimopagoMes}" filterMatchMode="contains" sortBy="#{filtrocola.ultimopagoMes}" >
+                                <h:outputText value="#{filtrocola.ultimopagoMes}" />
+                            </p:column>
+                            <p:column headerText="Último promesa / Mes" filterBy="#{filtrocola.ultimapromesaMes}" filterMatchMode="contains" sortBy="#{filtrocola.ultimapromesaMes}" >
+                                <h:outputText value="#{filtrocola.ultimapromesaMes}" />
+                            </p:column>
+                            <p:column headerText="Acción" exportable="false">
+                                <p:commandButton class="warning-button rounded-button" icon="pi pi-trash" process="@this" oncomplete="PF('deleteCriterioDialog').show()" title="Eliminar Criterio!"  >
+                                    <f:setPropertyActionListener value="#{filtrocola}" target="#{listarFiltroController.selectedFiltrocola}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+
+                    <p:confirmDialog widgetVar="deleteCriterioDialog" showEffect="fade" width="300" message="Eliminar Criterio?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{listarFiltroController.eliminar()}" process="@this" update="dtfiltrocolaList" oncomplete="PF('deleteCriterioDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteCriterioDialog').hide()" process="@this" />
+                    </p:confirmDialog>
+
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

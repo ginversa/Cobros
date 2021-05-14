@@ -100,13 +100,13 @@ public class CarteraController implements Serializable {
                 TblLlamada ultimaLlamada = this.ejbLlamadaLocal.findUltimaLlamada(cod_cartera, identificacion, operacion);
                 TblPromesa ultimaPromesa = this.ejbPromesaLocal.findUltimaPromesa(cod_cartera, identificacion, operacion);
 
-                if(ultimaLlamada != null){
+                if (ultimaLlamada != null) {
                     this.carteraList.get(index).setUltimaLlamada(ultimaLlamada);
                 }
-                
-                if(ultimaPromesa != null){
+
+                if (ultimaPromesa != null) {
                     this.carteraList.get(index).setUltimaPromesa(ultimaPromesa);
-                }                
+                }
             }
         }
     }//buscarGestion
@@ -126,6 +126,7 @@ public class CarteraController implements Serializable {
             if (this.codigoCartera != null && !this.codigoCartera.trim().equals("")) {
                 this.cartera.setCodigoCartera(this.codigoCartera);
                 this.carteraList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(this.cartera);
+                //this.carteraList = this.ejbLocal.findByCodigoGestorANDCodigoCarteraANDFiltro(this.cartera);
             } else {
                 this.carteraList = this.ejbLocal.findByCodigoGestor(this.cartera);
             }
@@ -172,19 +173,36 @@ public class CarteraController implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param operacion
-     * @return 
+     * @return
      */
-    public TblCartera searchCarteraByOperacion(String operacion){
-        
+    public TblCartera searchCarteraByOperacion(String operacion) {
+
         TblCartera operacion_cartera = new TblCartera();
         operacion_cartera.setNumeroCuenta(operacion);
         operacion_cartera = this.ejbLocal.findByNumeroCuenta(operacion_cartera);
-        if(operacion_cartera != null){
+        if (operacion_cartera != null) {
             return operacion_cartera;
-        }else{
+        } else {
             return null;
-        }        
+        }
     }
+
+    /**
+     * 
+     * @param identificacion
+     * @return 
+     */
+    public List<TblCartera> searchCarteraByIdentificacion(String identificacion) {
+        TblCartera tblCartera = new TblCartera();
+        tblCartera.setIdentificacion(identificacion);
+        List<TblCartera> operacionList = this.ejbLocal.findByIdentificacion(tblCartera);
+        if (operacionList != null && !operacionList.isEmpty()) {
+            return operacionList;
+        } else {
+            return null;
+        }
+    }
+
 }

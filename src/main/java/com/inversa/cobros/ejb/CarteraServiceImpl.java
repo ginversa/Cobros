@@ -26,6 +26,9 @@ public class CarteraServiceImpl implements CarteraService, CarteraServiceRemote 
     @Inject
     private CarteraDao dao;
 
+    @Inject
+    private FiltrocolaService ejbFiltrocolaLocal;
+
     @Override
     public List<TblCartera> findAll() {
         return dao.findAll();
@@ -65,9 +68,9 @@ public class CarteraServiceImpl implements CarteraService, CarteraServiceRemote 
     public List<TblCartera> findByNumeroTarjeta(TblCartera obj) {
         return dao.findByNumeroTarjeta(obj);
     }
-    
+
     @Override
-    public TblCartera findByNumeroCuentaANDIdentificacion(TblCartera obj){
+    public TblCartera findByNumeroCuentaANDIdentificacion(TblCartera obj) {
         return dao.findByNumeroCuentaANDIdentificacion(obj);
     }
 
@@ -139,7 +142,7 @@ public class CarteraServiceImpl implements CarteraService, CarteraServiceRemote 
         }
     }
 
-    @Override               
+    @Override
     public List<TblCartera> findByCarteraGestorIdentificacion(TblCartera objCartera) {
         return dao.findByCarteraGestorIdentificacion(objCartera);
     }
@@ -150,8 +153,13 @@ public class CarteraServiceImpl implements CarteraService, CarteraServiceRemote 
     }
 
     @Override
-    public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera) {                
+    public List<TblCartera> findByCarteraGestorIdentificacionNotExistsGestion(TblCartera objCartera) {
         return dao.findByCarteraGestorIdentificacionNotExistsGestion(objCartera);
+    }
+
+    @Override
+    public List<TblCartera> findByCodigoCarteraAndIdentificacion(TblCartera obj) {
+        return dao.findByCodigoCarteraAndIdentificacion(obj);
     }
 
 }

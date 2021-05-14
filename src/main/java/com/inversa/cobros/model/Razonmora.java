@@ -73,6 +73,10 @@ public class Razonmora implements Serializable {
     private Date fechamodifico;
     @OneToMany(mappedBy = "idrazonmora", fetch = FetchType.LAZY)
     private List<TblLlamada> tblLlamadaList;
+    
+    @Size(max = 3)
+    @Column(name = "codigo")
+    private String codigo;
 
     public Razonmora() {
     }
@@ -153,6 +157,14 @@ public class Razonmora implements Serializable {
     public void setTblLlamadaList(List<TblLlamada> tblLlamadaList) {
         this.tblLlamadaList = tblLlamadaList;
     }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }    
 
     @Override
     public int hashCode() {

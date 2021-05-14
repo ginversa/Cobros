@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Supervisor</ui:define>
+
+    <ui:define name="viewname">
+        <li>Supervisor</li>
+        <li>/</li>
+        <li>Filtros Colas</li>
+        <li>/</li>
+    </ui:define>
+
+    <ui:param name="viewname" value="Colas" />
+
+    <ui:define name="content">
+        <h:form id="formCola">
+            <div class="p-grid">
+                <div class="p-col-12 p-md-12">
+                    <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
+                        <p:autoUpdate/>
+                    </p:growl>
+                    <div class="card">
+                        <h4>Filtros Colas</h4>
+                        <p>Criterios para generar colas de trabajo.</p>
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <h:panelGrid columns="4">
+                                    <p:commandButton value="Listar" actionListener="#{filtrocolaController.listarCola()}" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                    <p:commandButton value="Guardar" actionListener="#{filtrocolaController.guardar()}" process="@this formCola" update="formCola:messages" styleClass="p-mr-2 p-mb-2"/>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:toolbar>
+                        <p:panelGrid id="pgNombre" columns="3" layout="grid">
+                            <p:outputLabel for="txtNombre" value="Nombre" />
+                            <p:inputText id="txtNombre" value="#{filtrocolaController.filtrocola.nombre}" required="true" requiredMessage="Nombre requerido!" maxlength="25" size="25" />                            
+                            <p:message for="txtNombre" />
+                        </p:panelGrid>
+                        <p:panelGrid id="pgCola" columns="1" layout="grid">                           
+
+                            <p:fieldset legend="Filtros por operación" class="ui-fluid">
+                                <p:panelGrid id="idCriterio" columns="2" layout="grid">
+                                    <p:outputLabel for="txtTipificacion" value="Tipificación" />
+                                    <p:selectOneMenu id="txtTipificacion" value="#{filtrocolaController.filtrocola.idTipificacion}" converter="tipificacionConverter">
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{filtrocolaController.tipificacionList}" var="tipificacion" itemLabel="#{tipificacion.descripcion}" itemValue="#{tipificacion}" />
+                                        <p:ajax listener="#{filtrocolaController.onTipificacionChange()}" event="change" update="txtSubTipificacion" process="@this" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="txtSubTipificacion" value="Sub-Tipificación" />
+                                    <p:selectOneMenu id="txtSubTipificacion" value="#{filtrocolaController.filtrocola.idSubtipificacion}" converter="subtipificacionConverter">
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{filtrocolaController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="txtRazonMora" value="Razon Mora" />
+                                    <p:selectOneMenu id="txtRazonMora" value="#{filtrocolaController.filtrocola.idrazonmora}" converter="razonmoraConverter">
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{razonmoraController.razonmoraList}" var="razonMora" itemLabel="#{razonMora.descripcion}" itemValue="#{razonMora}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Filtros por persona" class="ui-fluid">
+                                <p:panelGrid columns="2" layout="grid">
+                                    <p:outputLabel for="txtPoseeTrabajo" value="Posee Trabajo" />
+                                    <p:selectOneMenu id="txtPoseeTrabajo" value="#{filtrocolaController.filtrocola.poseetrabajo}">
+                                        <f:selectItem itemLabel="----" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="Si" itemValue="01" />
+                                        <f:selectItem itemLabel="No" itemValue="00" />
+                                    </p:selectOneMenu>
+
+                                    <p:fieldset legend="Rango Balance" class="ui-fluid">
+                                        <p:panelGrid columns="3" layout="grid">
+                                            <p:selectOneMenu id="idRangoBalance" value="#{filtrocolaController.filtrocola.rangobalance}">
+                                                <f:selectItem itemLabel="*** Rango Balance ***" itemValue="" noSelectionOption="true" />
+                                                <f:selectItem itemLabel="menor que" itemValue="-1" />
+                                                <f:selectItem itemLabel="igual" itemValue="0" />
+                                                <f:selectItem itemLabel="mayor que" itemValue="1" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel for="txtCantidad" value="Cantidad" />
+                                            <p:inputNumber id="txtCantidad" value="#{filtrocolaController.filtrocola.cantidad}" symbolPosition="p" decimalSeparator="." thousandSeparator="," decimalPlaces="2" maxlength="18"/>
+                                        </p:panelGrid>
+                                    </p:fieldset>
+                                    <p:column></p:column>
+
+                                    <p:outputLabel for="idTipoSalario" value="Tipo de Salario" />
+                                    <p:selectOneMenu id="idTipoSalario" value="#{filtrocolaController.filtrocola.tiposalario}">
+                                        <f:selectItem itemLabel="Tipo Salario" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="Bajo" itemValue="Bajo" />
+                                        <f:selectItem itemLabel="Medio" itemValue="Medio" />
+                                        <f:selectItem itemLabel="Alto" itemValue="Alto" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Días sin gestión" class="ui-fluid">
+                                <p:selectOneRadio id="iddias_singestion" value="#{filtrocolaController.filtrocola.diasSingestion}" unselectable="true">
+                                    <f:selectItem itemLabel="1 a 5" itemValue="1a5"/>
+                                    <f:selectItem itemLabel="6 a 10" itemValue="6a10"/>
+                                    <f:selectItem itemLabel="11 a 15" itemValue="11a15"/>
+                                    <f:selectItem itemLabel="15+" itemValue="15"/>
+                                </p:selectOneRadio>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Último pago / Mes" class="ui-fluid">
+                                <p:selectOneRadio id="idultimopago_mes" value="#{filtrocolaController.filtrocola.ultimopagoMes}" unselectable="true">
+                                    <f:selectItem itemLabel="1" itemValue="01"/>
+                                    <f:selectItem itemLabel="2" itemValue="02"/>
+                                    <f:selectItem itemLabel="3" itemValue="03"/>
+                                    <f:selectItem itemLabel="4+" itemValue="04"/>
+                                </p:selectOneRadio>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Próxima promesa / Mes" class="ui-fluid">
+                                <p:selectOneRadio id="idultimapromesa_mes" value="#{filtrocolaController.filtrocola.ultimapromesaMes}" unselectable="true">
+                                    <f:selectItem itemLabel="1" itemValue="01"/>
+                                    <f:selectItem itemLabel="2" itemValue="02"/>
+                                    <f:selectItem itemLabel="3" itemValue="03"/>
+                                    <f:selectItem itemLabel="4+" itemValue="04"/>
+                                </p:selectOneRadio>
+                            </p:fieldset>
+
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
