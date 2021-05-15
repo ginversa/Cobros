@@ -58,4 +58,6 @@ public interface PromesaService {
     
     public List<TblPromesa> findByGestionAndDifferentDEL(Long idGestion);
 
+    public List<TblPromesa> findByCarteraANDSupervisor(String codigoCartera, String codigoGestor);
+
 }

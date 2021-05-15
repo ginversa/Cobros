@@ -9,16 +9,13 @@
         <h:outputStylesheet name="css/flags/flags.css" library="demo" />
     </ui:define>
 
-    <ui:define name="title">Mi Promesa</ui:define>
+    <ui:define name="title">Supervisor</ui:define>
 
     <ui:define name="viewname">
         <li>Supervisor</li>
         <li>/</li>
-        <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+        <li>Promesas</li>
         <li>/</li>
-        <li><p:link outcome="listarLlamada">Mi Llamada</p:link></li>
-        <li>/</li>
-        <li>Mi Promesa</li>
     </ui:define>
 
     <ui:param name="viewname" value="Mi Promesa" />
@@ -28,8 +25,8 @@
             <div class="p-grid table-demo">
                 <div class="p-col-12">
                     <div class="card">
-                        <h4>Mi Promesa</h4>
-                        <p:dataTable widgetVar="customersDT2" var="promesa" value="#{listarPromesaController.promesasFechaHoyList}"
+                        <h4>Promesas</h4>
+                        <p:dataTable widgetVar="customersDT2" var="promesa" value="#{listarPromesaSupervisorController.promesaList}"
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"

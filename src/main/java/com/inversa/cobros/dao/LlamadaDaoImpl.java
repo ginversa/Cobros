@@ -313,4 +313,22 @@ public class LlamadaDaoImpl implements LlamadaDao {
         }
     }
 
+    @Override
+    public List<TblLlamada> findByCarteraANDSupervisor(String codigoCartera, String codigoGestor) {
+        Query query = em.createNativeQuery("select tl.*\n"
+                + "  from tbl_gestion tg inner join tbl_llamada tl on tl.id_gestion = tg.id_gestion\n"
+                + " where tg.codigo_cartera = ?1\n"
+                + "   and tg.codigo_gestor in(select usuario.codigo_gestor from tbl_usuario usuario where usuario.id_usuariosupervisor = (select supervisor.id_persona from tbl_usuario supervisor where supervisor.codigo_gestor = ?2 and supervisor.id_rolusuario = 2))\n"
+                + "order by tg.id_gestion, tl.id_llamada desc", TblLlamada.class);
+        query.setParameter(1, codigoCartera);
+        query.setParameter(2, codigoGestor);
+        List<TblLlamada> found = query.getResultList();
+
+        if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {
+            return found;
+        }
+    }
+
 }

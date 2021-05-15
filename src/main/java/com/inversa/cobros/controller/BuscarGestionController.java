@@ -166,14 +166,28 @@ public class BuscarGestionController implements Serializable {
     }
 
     /**
-     * 
-     * @param llamada 
+     *
+     * @param llamada
      */
     public void setLlamadaTOGestion(TblLlamada llamada) {
         String operacion = llamada.getOperacion();
         this.setSelectedLlamada(llamada);
         TblCartera operacion_cartera = this.carteraController.searchCarteraByOperacion(operacion);
         this.carteraController.setCartera(operacion_cartera);
+    }
+
+    /**
+     * 
+     * @param tblGestion 
+     */
+    public void setGestionTOGestion(TblGestion tblGestion) {
+        if (tblGestion != null) {            
+            List<TblCartera> operacionList = this.carteraController.searchCarteraByIdentificacion(tblGestion.getIdentificacion());
+            if (operacionList != null && !operacionList.isEmpty() && operacionList.size() > 0) {
+                TblCartera operacion_cartera = operacionList.get(0);
+                this.carteraController.setCartera(operacion_cartera);
+            }
+        }
     }
 
 }

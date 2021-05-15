@@ -7,11 +7,7 @@ package com.inversa.cobros.ejb;
 
 import com.inversa.cobros.dao.GestionDao;
 import com.inversa.cobros.model.Cartera;
-import com.inversa.cobros.model.Razonmora;
 import com.inversa.cobros.model.TblGestion;
-import com.inversa.cobros.model.TblLlamada;
-import com.inversa.cobros.model.TblPromesa;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -194,5 +190,10 @@ public class GestionServiceImpl implements GestionService, GestionServiceRemote 
         return resultList;
     }
     */
+
+    @Override
+    public List<TblGestion> findByCarteraANDSupervisor(TblGestion gestion) {
+        return dao.findByCarteraANDSupervisor(gestion);
+    }
 
 }

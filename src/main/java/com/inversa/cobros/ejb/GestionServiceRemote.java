@@ -56,5 +56,7 @@ public interface GestionServiceRemote {
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj);
     
     //public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj);
+    
+    public List<TblGestion> findByCarteraANDSupervisor(TblGestion gestion);
 
 }

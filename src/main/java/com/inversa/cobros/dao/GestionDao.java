@@ -53,4 +53,6 @@ public interface GestionDao {
     
     public List<TblGestion> findByCodigoGestorANDCodigoCartera(TblGestion obj);
 
+    public List<TblGestion> findByCarteraANDSupervisor(TblGestion gestion);
+
 }

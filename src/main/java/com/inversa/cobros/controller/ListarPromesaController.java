@@ -50,8 +50,8 @@ public class ListarPromesaController implements Serializable {
     @PostConstruct
     public void init() {
 
-        this.promesasFechaHoyList = new ArrayList<TblPromesa>();
-        this.promesasFechaAyerList = new ArrayList<TblPromesa>();
+        this.promesasFechaHoyList = new ArrayList<>();
+        this.promesasFechaAyerList = new ArrayList<>();
 
         // Usuario de session...
         FacesContext contexto = FacesContext.getCurrentInstance();

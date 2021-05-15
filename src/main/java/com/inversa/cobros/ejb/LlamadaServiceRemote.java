@@ -63,5 +63,7 @@ public interface LlamadaServiceRemote {
     public TblLlamada findUltimaLlamada(String codigoCartera, String identificacion);
     
     public List<TblLlamada> findByGestion(Long idGestion);
+    
+    public List<TblLlamada> findByCarteraANDSupervisor(String codigoCartera, String codigoGestor);
 
 }

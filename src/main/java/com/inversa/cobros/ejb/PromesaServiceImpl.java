@@ -149,4 +149,9 @@ public class PromesaServiceImpl implements PromesaService, PromesaServiceRemote 
         return dao.findByGestionAndDifferentDEL(idGestion);
     }
 
+    @Override
+    public List<TblPromesa> findByCarteraANDSupervisor(String codigoCartera, String codigoGestor) {
+        return dao.findByCarteraANDSupervisor(codigoCartera, codigoGestor);
+    }
+
 }

@@ -85,9 +85,9 @@
                             <p:menuitem id="idlistarColaGestor" value="Listar Cola" icon="pi pi-id-card" outcome="/operario/listarCola" />
                         </p:submenu>                        
                         <p:submenu id="idGestionesSup" label="Supervisor" icon="pi pi-briefcase" rendered="#{loginController.esSupervisor}">
-                            <p:menuitem id="idGestionSup" value="Gestiones" icon="pi pi-id-card" outcome="/operario/listarGestion" />
-                            <p:menuitem id="idLlamadaSup" value="Llamadas" icon="pi pi-id-card" outcome="/operario/listarLlamada" />
-                            <p:menuitem id="idPromesaSup" value="Promesas" icon="pi pi-id-card" outcome="/operario/listarPromesa" />
+                            <p:menuitem id="idGestionSup" value="Gestiones" icon="pi pi-id-card" outcome="/administrador/listarGestion" />
+                            <p:menuitem id="idLlamadaSup" value="Llamadas" icon="pi pi-id-card" outcome="/administrador/listarLlamada" />
+                            <p:menuitem id="idPromesaSup" value="Promesas" icon="pi pi-id-card" outcome="/administrador/listarPromesa" />
                             <p:menuitem id="idFiltroSup" value="Filtros Colas" icon="pi pi-id-card" outcome="/administrador/filtro_cola/crearFiltro" />
                             <p:menuitem id="idColaSup" value="Listar Cola" icon="pi pi-id-card" outcome="/administrador/filtro_cola/listarCola" />
                         </p:submenu>                        

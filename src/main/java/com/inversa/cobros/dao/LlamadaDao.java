@@ -62,4 +62,6 @@ public interface LlamadaDao {
     
     public List<TblLlamada> findByGestion(Long idGestion);
 
+    public List<TblLlamada> findByCarteraANDSupervisor(String codigoCartera, String codigoGestor);
+
 }

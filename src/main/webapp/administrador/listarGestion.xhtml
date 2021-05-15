@@ -9,14 +9,13 @@
         <h:outputStylesheet name="css/flags/flags.css" library="demo" />
     </ui:define>
 
-    <ui:define name="title">Mi Gestión</ui:define>
+    <ui:define name="title">Supervisor</ui:define>
 
     <ui:define name="viewname">
+       <li>Supervisor</li>
+        <li>/</li>
         <li>Gestiones</li>
         <li>/</li>
-        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
-        <li>/</li>
-        <li>Mi Gestión</li>
     </ui:define>
 
     <ui:param name="viewname" value="Mi Gestión" />
@@ -26,17 +25,15 @@
             <div class="p-grid table-demo">
                 <div class="p-col-12">
                     <div class="card">
-                        <h4>Mi Gestión</h4>                        
-                        <p:dataTable widgetVar="customersDT2" var="gestion" value="#{listarGestionController.gestionList}"
+                        <h4>Gestiones</h4>                        
+                        <p:dataTable widgetVar="customersDT2" var="gestion" value="#{listarGestionSupervisorController.gestionList}"
                                      paginator="true" rows="20" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >
 
-                            <p:column headerText="Identificación" filterBy="#{gestion.identificacion}" filterMatchMode="contains" sortBy="#{gestion.identificacion}" >
-                                <p:commandLink action="carteraGestion" actionListener="#{buscarGestionController.setGestionTOGestion(gestion)}" >
-                                    <h:outputText value="#{gestion.identificacion}" />
-                                </p:commandLink>
+                            <p:column headerText="Identificación" filterBy="#{gestion.identificacion}" filterMatchMode="contains" sortBy="#{gestion.identificacion}" >                                
+                                <h:outputText value="#{gestion.identificacion}" />
                             </p:column>
                             <p:column headerText="Nombre" filterBy="#{gestion.nombreCliente}" filterMatchMode="contains" sortBy="#{gestion.nombreCliente}" >
                                 <h:outputText value="#{gestion.nombreCliente}" />

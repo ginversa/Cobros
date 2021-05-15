@@ -135,10 +135,10 @@ public class GestionDaoImpl implements GestionDao {
             em.refresh(obj);
             System.out.println("Gestion ID: " + obj.getIdGestion());
             idGestion = obj.getIdGestion();
-        } catch (ConstraintViolationException e) {            
+        } catch (ConstraintViolationException e) {
             System.out.println("insert Gestion : " + e.getMessage());
         }
-        
+
         return idGestion;
     }
 
@@ -197,6 +197,24 @@ public class GestionDaoImpl implements GestionDao {
         query.setParameter("codigoCartera", obj.getCodigoCartera());
         List<TblGestion> results = query.getResultList();
         return results;
+    }
+
+    @Override
+    public List<TblGestion> findByCarteraANDSupervisor(TblGestion gestion) {
+        Query query = em.createNativeQuery("select tg.*\n"
+                + "  from tbl_gestion tg\n"
+                + " where tg.codigo_cartera = ?1\n"
+                + "   and tg.codigo_gestor in(select usuario.codigo_gestor from tbl_usuario usuario where usuario.id_usuariosupervisor = (select supervisor.id_persona from tbl_usuario supervisor where supervisor.codigo_gestor = ?2 and supervisor.id_rolusuario = 2))\n"
+                + "order by tg.id_gestion desc", TblGestion.class);
+        query.setParameter(1, gestion.getCodigoCartera());
+        query.setParameter(2, gestion.getCodigoGestor());
+        List<TblGestion> found = query.getResultList();
+
+        if (found.isEmpty()) {
+            return null; //or throw checked exception data not found
+        } else {
+            return found;
+        }
     }
 
 }

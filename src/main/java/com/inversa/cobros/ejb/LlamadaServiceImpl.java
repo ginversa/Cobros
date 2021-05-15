@@ -187,4 +187,9 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
         return dao.findByGestion(idGestion);
     }
 
+    @Override
+    public List<TblLlamada> findByCarteraANDSupervisor(String codigoCartera, String codigoGestor) {
+        return dao.findByCarteraANDSupervisor(codigoCartera, codigoGestor);
+    }
+
 }

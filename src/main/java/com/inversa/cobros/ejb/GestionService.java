@@ -57,4 +57,6 @@ public interface GestionService {
     
     //public List<TblGestion> findByIdentificacionANDCodigoCarteraOnlyONEOperacion(TblGestion obj);
 
+    public List<TblGestion> findByCarteraANDSupervisor(TblGestion gestion);
+
 }

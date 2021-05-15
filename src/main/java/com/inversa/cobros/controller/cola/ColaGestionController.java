@@ -51,6 +51,7 @@ import com.inversa.cobros.model.Tipodescuento;
 import com.inversa.cobros.model.Tipotelefono;
 import com.inversa.cobros.util.FechaOperacion;
 import com.inversa.findme.controller.FindmeController;
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -701,7 +702,7 @@ public class ColaGestionController implements Serializable {
 
             }// this.gestion != null
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "Error registrando gestión. Error!"));
             System.out.println(e.getMessage());
             return false;
