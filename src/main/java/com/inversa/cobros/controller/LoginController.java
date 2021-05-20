@@ -29,10 +29,12 @@ public class LoginController implements Serializable {
     private UsuarioService ejbLocal;
 
     private TblUsuario usuario;
-    
+
     private TblRolusuario rolUsuario;
-    
+
     private boolean esSupervisor;
+
+    private boolean esValidador;
 
     @PostConstruct
     public void init() {
@@ -46,7 +48,7 @@ public class LoginController implements Serializable {
 
     public void setUsuario(TblUsuario usuario) {
         this.usuario = usuario;
-    }    
+    }
 
     public TblRolusuario getRolUsuario() {
         return rolUsuario;
@@ -63,7 +65,14 @@ public class LoginController implements Serializable {
     public void setEsSupervisor(boolean esSupervisor) {
         this.esSupervisor = esSupervisor;
     }
-    
+
+    public boolean isEsValidador() {
+        return esValidador;
+    }
+
+    public void setEsValidador(boolean esValidador) {
+        this.esValidador = esValidador;
+    }
 
     /**
      *
@@ -75,24 +84,31 @@ public class LoginController implements Serializable {
         try {
             this.usuario = this.ejbLocal.findByUsuarioAndClave(usuario);
             if (this.usuario != null) {
-                
+
                 this.rolUsuario = this.usuario.getIdRolusuario();
-                
+
                 FacesContext facesContext = FacesContext.getCurrentInstance();
-                facesContext.getExternalContext().getSessionMap().put(ConstanteComun.USUARIO, this.usuario);                
+                facesContext.getExternalContext().getSessionMap().put(ConstanteComun.USUARIO, this.usuario);
                 redireccion = "operario/cartera";
-                
-                if(this.rolUsuario != null){
+
+                if (this.rolUsuario != null) {
                     facesContext.getExternalContext().getSessionMap().put(ConstanteComun.ROL_USUARIO, this.rolUsuario);
                     System.out.println("====> Rol Usuario             : " + this.rolUsuario.toString());
-                    
-                    if(this.rolUsuario.getCodigo().equals(ConstanteComun.COD_SUPERVISOR)){
+
+                    if (this.rolUsuario.getCodigo().equals(ConstanteComun.COD_SUPERVISOR)) {
                         this.setEsSupervisor(true);
-                    }else{
+                    } else {
                         this.setEsSupervisor(false);
                     }
-                }                
-                
+
+                    if (this.rolUsuario.getCodigo().equals(ConstanteComun.COD_VALIDADOR) || this.rolUsuario.getCodigo().equals(ConstanteComun.COD_SUPERVISOR)) {
+                        this.setEsValidador(true);
+                    } else {
+                        this.setEsValidador(false);
+                    }
+
+                }
+
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Credenciales incorrectas!"));
             }

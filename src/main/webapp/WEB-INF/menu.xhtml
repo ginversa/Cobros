@@ -95,6 +95,9 @@
                             <p:menuitem id="idGestionproductividadporhora" value="Gestiones productividad por hora" icon="pi pi-id-card" outcome="/reporte/GestionProductividadPorHora" />
                             <p:menuitem id="idGestionproductividadporasesor" value="Gestiones productividad por asesor" icon="pi pi-id-card" outcome="/reporte/GestionProductividadPorAsesor" />
                         </p:submenu>
+                        <p:submenu id="idValidador" label="Validador" icon="pi pi-briefcase" rendered="#{loginController.esValidador}">
+                            <p:menuitem id="idBuscarFindme" value="Buscar en Findme" icon="pi pi-id-card" outcome="/validador/buscarFindme" />
+                        </p:submenu>
                         <!-- 
                         <p:submenu id="idMantenimiento" label="Mantenimiento" icon="pi pi-briefcase">
                             <p:menuitem id="idCliente" value="Cliente" icon="pi pi-id-card" outcome="/crud" />

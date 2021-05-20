@@ -65,7 +65,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
@@ -192,7 +191,6 @@ public class ColaGestionController implements Serializable {
     private TabView tabView;
 
     private TblCola colaSelected;
-    
 
     @PostConstruct
     public void init() {
@@ -205,8 +203,8 @@ public class ColaGestionController implements Serializable {
         this.fechaHoy = Calendar.getInstance();
 
         this.setCarteraTOGestion(this.carteraController.getCartera());
-        
-        if(this.colaSelected == null){
+
+        if (this.colaSelected == null) {
             this.colaSelected = this.listarColaController.getColaSelected();
         }
 
@@ -459,7 +457,7 @@ public class ColaGestionController implements Serializable {
                 this.gestion = new TblGestion();
                 this.gestion.setCodigoCartera(objCartera.getCodigoCartera());
                 this.gestion.setIdentificacion(objCartera.getIdentificacion());
-                this.gestion = this.ejbLocal.findByCodigoCarteraANDIdentificacion(gestion);
+                this.gestion = this.ejbLocal.findByCodigoCarteraANDIdentificacion(this.gestion);
             }
 
             if (this.gestion == null || this.gestion.getIdGestion() == null) {
@@ -471,10 +469,10 @@ public class ColaGestionController implements Serializable {
 
             } else {
 
-                if (this.gestion.getTblLlamadaList() == null) {
-                    List<TblLlamada> llamadas = new ArrayList<>();
-                    this.gestion.setTblLlamadaList(llamadas);
-                }
+                //if (this.gestion.getTblLlamadaList() == null) {
+                List<TblLlamada> llamadas = new ArrayList<>();
+                this.gestion.setTblLlamadaList(llamadas);
+                //}
 
                 if (this.gestion.getTblPromesaList() == null) {
                     List<TblPromesa> promesas = new ArrayList<>();
@@ -651,14 +649,15 @@ public class ColaGestionController implements Serializable {
                     this.cargarGestionActual(this.gestion);
                     this.actualizarSaldos();
                     this.actualizarEstadoCola();
-                    PrimeFaces.current().ajax().update("formGestion","formGestion:idTabView:tblTelefono");
+                    PrimeFaces.current().ajax().update("formGestion", "formGestion:idTabView:tblTelefono");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Registrada. Correcto!"));
-                    if(this.gestionarSiguienteClienteEnCola()){
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestionar nuevo cliente!"));                        
-                    }else{
+                    if (this.gestionarSiguienteClienteEnCola()) {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestionar nuevo cliente!"));
+                    } else {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "No mas Clientes. Cola Finalizada!"));
+                        PrimeFaces.current().ajax().update("form", "messages", "form:dtColaList");
                         FacesContext.getCurrentInstance().getExternalContext().redirect("listarCola.xhtml");
-                    }                    
+                    }
 
                 } else {// actualizar gestion...
 
@@ -689,15 +688,17 @@ public class ColaGestionController implements Serializable {
                     this.cargarGestionActual(this.gestion);
                     this.actualizarSaldos();
                     this.actualizarEstadoCola();
-                    PrimeFaces.current().ajax().update("formGestion","formGestion:idTabView:tblTelefono");
+                    PrimeFaces.current().ajax().update("formGestion", "formGestion:idTabView:tblTelefono");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestión Actulizar. Correcto!"));
-                    if(this.gestionarSiguienteClienteEnCola()){
+                    if (this.gestionarSiguienteClienteEnCola()) {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Gestionar nuevo cliente!"));
-                    }else{
+                        PrimeFaces.current().ajax().update("formGestion", "formGestion:idTabView:tblTelefono");
+                    } else {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "No mas Clientes. Cola Finalizada!"));
+                        PrimeFaces.current().ajax().update("form", "messages", "form:dtColaList");
                         FacesContext.getCurrentInstance().getExternalContext().redirect("listarCola.xhtml");
                     }
-                    
+
                 }
 
             }// this.gestion != null
@@ -980,33 +981,43 @@ public class ColaGestionController implements Serializable {
 
                         switch (errorCentral.trim()) {
                             case "0":
+                                System.out.println("0 - No está configurado el servicio!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "0 - No está configurado el servicio!"));
                                 break;
                             case "1":
+                                System.out.println("1 - El IP no está autorizado!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "1 - El IP no está autorizado!"));
                                 break;
                             case "001":
+                                System.out.println("001 - No indica la extensión!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "001 - No indica la extensión!"));
                                 break;
                             case "002":
+                                System.out.println("002 - El número a marcar no es correcto!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "002 - El número a marcar no es correcto!"));
                                 break;
                             case "004":
+                                System.out.println("004 - La extensión no es numérica!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "004 - La extensión no es numérica!"));
                                 break;
                             case "008":
+                                System.out.println("008 - La extensión no existe ni está como activa!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "008 - La extensión no existe ni está como activa!"));
                                 break;
                             case "016":
+                                System.out.println("016 - Falla en generar la llamada local inicial!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "016 - Falla en generar la llamada local inicial!"));
                                 break;
                             case "032":
+                                System.out.println("032 - No logra recuperar el ID de la llamada!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "032 - No logra recuperar el ID de la llamada!"));
                                 break;
                             case "064":
+                                System.out.println("064 - si se envía un ID de llamada que no sea numérico para el caso de escucharla!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "064 - si se envía un ID de llamada que no sea numérico para el caso de escucharla!"));
                                 break;
                             case "128":
+                                System.out.println("128 - si no se especifica una extensión activa ni existe el contexto: context_qrm!");
                                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error!", "128 - si no se especifica una extensión activa ni existe el contexto: context_qrm!"));
                                 break;
                             default:
@@ -1040,7 +1051,7 @@ public class ColaGestionController implements Serializable {
                             llamada.setCallLogId(jsonExtract);
                             llamada.setIdLlamada(null);
                             this.getSelectedLlamada().setCallLogId(jsonExtract);
-                            //this.addLlamadaToGestion(llamada);
+                            this.addLlamadaToGestion(llamada);
                         }
                     }
 
@@ -1334,7 +1345,7 @@ Arreglo de Pago
 
                 promesa.setIdGestion(this.gestion);
                 promesa.setIdLlamada(this.selectedLlamada);
-                promesa.setOperacion(this.selectedLlamada.getOperacion());
+                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(this.fechaPagoPromesa);
                 promesa.setIdestadopromesa(estadopromesa); // Seguimiento
@@ -1418,7 +1429,7 @@ Arreglo de Pago
 
                     promesa.setIdGestion(this.gestion);
                     promesa.setIdLlamada(this.selectedLlamada);
-                    promesa.setOperacion(this.selectedLlamada.getOperacion());
+                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
@@ -1538,7 +1549,7 @@ Arreglo de Pago
 
                     promesa.setIdGestion(this.gestion);
                     promesa.setIdLlamada(this.selectedLlamada);
-                    promesa.setOperacion(this.selectedLlamada.getOperacion());
+                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
@@ -1749,7 +1760,7 @@ Arreglo de Pago
 
                 promesa.setIdGestion(this.gestion);
                 promesa.setIdLlamada(this.selectedLlamada);
-                promesa.setOperacion(this.selectedLlamada.getOperacion());
+                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(fechaInicial.getTime());
                 promesa.setIdestadopromesa(estadopromesa); // Seguimiento
@@ -3688,28 +3699,28 @@ Multitipificacion
             } else if (llamada.getIdTipificacion().getCodigo().equals("REP") && diaDAY && mesMONTH && annoYEAR) {
                 REP = true;
                 llamadaREP = new TblLlamada();
-                llamadaPRP.setIdLlamada(null);
-                llamadaPRP.setIdGestion(llamada.getIdGestion());
-                llamadaPRP.setCallLogId(llamada.getCallLogId());
-                llamadaPRP.setDateIni(llamada.getDateIni());
-                llamadaPRP.setDateEnd(llamada.getDateEnd());
-                llamadaPRP.setCallFromNumber(llamada.getCallFromNumber());
-                llamadaPRP.setCallToNumber(llamada.getCallToNumber());
-                llamadaPRP.setDialstatus(llamada.getDialstatus());
-                llamadaPRP.setCallLength(llamada.getCallLength());
-                llamadaPRP.setConversationLength(llamada.getConversationLength());
-                llamadaPRP.setEstado(llamada.getEstado());
-                llamadaPRP.setIdTipificacion(llamada.getIdTipificacion());
-                llamadaPRP.setIdSubtipificacion(llamada.getIdSubtipificacion());
-                llamadaPRP.setIdrazonmora(llamada.getIdrazonmora());
-                llamadaPRP.setIdResultadogestion(llamada.getIdResultadogestion());
-                llamadaPRP.setIdResultadotercero(llamada.getIdResultadotercero());
-                llamadaPRP.setIdTipotelefono(llamada.getIdTipotelefono());
-                llamadaPRP.setUsuarioingreso(llamada.getUsuarioingreso());
-                llamadaPRP.setFechaingreso(llamada.getFechaingreso());
-                llamadaPRP.setUsuariomodifico(llamada.getUsuariomodifico());
-                llamadaPRP.setFechamodifico(llamada.getFechamodifico());
-                llamadaPRP.setOperacion(llamada.getOperacion());
+                llamadaREP.setIdLlamada(null);
+                llamadaREP.setIdGestion(llamada.getIdGestion());
+                llamadaREP.setCallLogId(llamada.getCallLogId());
+                llamadaREP.setDateIni(llamada.getDateIni());
+                llamadaREP.setDateEnd(llamada.getDateEnd());
+                llamadaREP.setCallFromNumber(llamada.getCallFromNumber());
+                llamadaREP.setCallToNumber(llamada.getCallToNumber());
+                llamadaREP.setDialstatus(llamada.getDialstatus());
+                llamadaREP.setCallLength(llamada.getCallLength());
+                llamadaREP.setConversationLength(llamada.getConversationLength());
+                llamadaREP.setEstado(llamada.getEstado());
+                llamadaREP.setIdTipificacion(llamada.getIdTipificacion());
+                llamadaREP.setIdSubtipificacion(llamada.getIdSubtipificacion());
+                llamadaREP.setIdrazonmora(llamada.getIdrazonmora());
+                llamadaREP.setIdResultadogestion(llamada.getIdResultadogestion());
+                llamadaREP.setIdResultadotercero(llamada.getIdResultadotercero());
+                llamadaREP.setIdTipotelefono(llamada.getIdTipotelefono());
+                llamadaREP.setUsuarioingreso(llamada.getUsuarioingreso());
+                llamadaREP.setFechaingreso(llamada.getFechaingreso());
+                llamadaREP.setUsuariomodifico(llamada.getUsuariomodifico());
+                llamadaREP.setFechamodifico(llamada.getFechamodifico());
+                llamadaREP.setOperacion(llamada.getOperacion());
 
             } else if (llamada.getIdTipificacion().getCodigo().equals("ESC") && diaDAY && mesMONTH && annoYEAR) {
                 ESC = true;
@@ -3809,7 +3820,7 @@ Multitipificacion
                         llamadaDefault.setIdLlamada(null);
                         llamadaDefault.setOperacion(numeroCuenta);
                         //llamadaDefault.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
-                        this.gestion.getTblLlamadaList().add(llamadaESC);
+                        this.gestion.getTblLlamadaList().add(llamadaDefault);
                     }
                 }
                 operacionExist = false;
@@ -3821,7 +3832,7 @@ Multitipificacion
     /**
      *
      */
-    private void actualizarEstadoCola() {        
+    private void actualizarEstadoCola() {
         if (this.colaSelected != null && this.colaSelected.getIdCola() != null) {
             this.colaSelected.setEstado(ConstanteComun.GESTIONADO);// GES - Gestionado
             this.colaSelected.setUsuariomodifico(this.usuario.getUsuario());
@@ -3837,6 +3848,7 @@ Multitipificacion
      * Busca el siguiente cliente sin gestionar en la cola.
      */
     private boolean gestionarSiguienteClienteEnCola() {
+        this.gestion = new TblGestion();
         if (this.colaSelected != null) {
             TblCola siguienteEnCola = new TblCola();
             siguienteEnCola.setCodigoCartera(this.colaSelected.getCodigoCartera());
@@ -3849,12 +3861,13 @@ Multitipificacion
                 if (operacionList != null && !operacionList.isEmpty() && operacionList.size() > 0) {
                     TblCartera operacion_cartera = operacionList.get(0);
                     this.setCarteraTOGestion(operacion_cartera);
+                    this.setColaSelected(siguienteEnCola);
                     return true;
                 }
             }
         }
-        
-        return false;        
+
+        return false;
     }
 
     public TblCola getColaSelected() {
@@ -3863,6 +3876,6 @@ Multitipificacion
 
     public void setColaSelected(TblCola colaSelected) {
         this.colaSelected = colaSelected;
-    }    
+    }
 
 }//end

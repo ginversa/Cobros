@@ -76,28 +76,11 @@ public class GestionController implements Serializable {
      * @param identificacion
      */
     public void cargarGestiones(String cartera, String identificacion) {
-        this.llamadaList.clear();        
+        if(this.llamadaList != null && !this.llamadaList.isEmpty() && this.llamadaList.size()>0){
+            this.llamadaList.clear();
+        }
         
         this.llamadaList = this.ejbLlamadaLocal.findByIdentificacionCartera(identificacion, cartera);
-        
-        /*
-        TblGestion obj = new TblGestion();
-        obj.setCodigoCartera(cartera);
-        obj.setIdentificacion(identificacion);        
-        this.gestionList = this.ejbLocal.findByIdentificacionANDCodigoCartera(obj);        
-        if (this.gestionList != null && !this.gestionList.isEmpty() && this.gestionList.size() > 0) {
-            for (int index = 0; index < this.gestionList.size(); index++) {
-                List<TblLlamada> llamadas = this.gestionList.get(index).getTblLlamadaList();
-                if (llamadas != null && !llamadas.isEmpty() && llamadas.size() > 0) {
-                    for (int i = 0; i < llamadas.size(); i++) {                        
-                        TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(this.gestionList.get(index).getIdGestion(), llamadas.get(i).getIdLlamada());
-                        llamadas.get(i).setUltimaPromesa(promesaUltimoPago);                        
-                        this.llamadaList.add(llamadas.get(i));
-                    }
-                }
-            }
-        }
-        */
     }
 
 }

@@ -34,7 +34,7 @@
                                      emptyMessage="No se encontraron registros." >
 
                             <p:column headerText="Identificación" filterBy="#{gestion.identificacion}" filterMatchMode="contains" sortBy="#{gestion.identificacion}" >
-                                <p:commandLink action="carteraGestion" actionListener="#{buscarGestionController.setGestionTOGestion(gestion)}" >
+                                <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setGestionTOGestion(gestion)}" >
                                     <h:outputText value="#{gestion.identificacion}" />
                                 </p:commandLink>
                             </p:column>

@@ -1,0 +1,262 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Validador</ui:define>
+
+    <ui:define name="viewname">
+        <li>Validador</li>
+        <li>/</li>
+        <li>Buscar</li>
+    </ui:define>
+
+    <ui:param name="viewname" value="Validador" />
+
+    <ui:define name="content">         
+        <h:form id="formFindme">
+            <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
+                <p:autoUpdate/>
+            </p:growl>
+            <div class="p-grid">                
+                <div class="p-col-12 p-md-12">                    
+                    <div class="card">
+                        <p:commandButton value="Print" type="button" icon="pi pi-print" style="margin-bottom: 2rem">
+                            <p:printer target="invoice-content" />
+                        </p:commandButton>
+
+                        <p:outputPanel id="invoice-content">
+                            <h4><h:outputText id="txtNombre" value="#{buscarFindmeController.nombre}" /></h4>
+                            <p:fieldset legend="Identificación">
+                                <p:panelGrid id="idPG_BuscarIdentificacion" columns="2">                                    
+                                    <p:inputText id="txtIdentificacion" value="#{buscarFindmeController.identificacion}" size="25" maxlength="25" required="true" requiredMessage="Identificación requerida!" />
+                                    <p:commandButton id="idBuscarIdentificacion" value="Buscar" icon="pi pi-check" actionListener="#{buscarFindmeController.buscar()}" update="txtIdentificacion,txtNombre,messages" />                                    
+                                </p:panelGrid>
+                            </p:fieldset> 
+
+                            <p:panelGrid id="pgFindme" columns="1" layout="grid">                                                                     
+                                <p:panelGrid id="pgHistorial" columns="3" layout="grid">
+                                    <p:fieldset legend="Teléfonos" >
+                                        <p:dataTable id="idHistorialTelefonos" value="#{buscarFindmeController.historialTelefonoList}" var="historialTelefono"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Teléfono" >
+                                                <h:outputText value="#{historialTelefono.telefono}" />                                            
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                    <p:fieldset legend="Correos" >
+                                        <p:dataTable id="idHistorialCorreo" value="#{buscarFindmeController.historialCorreoList}" var="historialCorreo"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Correo">
+                                                <h:outputText value="#{historialCorreo.correo}" />
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                    <p:fieldset legend="Direcciones" >
+                                        <p:dataTable id="idHistorialDireccion" value="#{buscarFindmeController.historialDireccionList}" var="historialDireccion"
+                                                     style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                     reflow="true"
+                                                     styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                            <p:column headerText="Tipo">
+                                                <h:outputText value="#{historialDireccion.tipo}" />
+                                            </p:column>                                        
+                                            <p:column headerText="Dirección">
+                                                <h:outputText value="#{historialDireccion.direccion}" />
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                </p:panelGrid>
+
+                                <p:fieldset legend="Árbol Familiar" >
+                                    <p:dataTable id="idArbolFamiliar" value="#{buscarFindmeController.arbolFamiliarList}" var="arbolFamiliar"
+                                                 style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                 reflow="true"
+                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                        <p:column headerText="Nombre">
+                                            <h:outputText value="#{arbolFamiliar.nombre}" />
+                                        </p:column>                                        
+                                        <p:column headerText="Parentesco">
+                                            <h:outputText value="#{arbolFamiliar.parentesco}" />
+                                        </p:column>
+                                        <p:column headerText="Teléfono">
+                                            <h:outputText value="#{arbolFamiliar.telefonos}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:fieldset>
+
+                                <p:fieldset legend="Análisis Laboral" >
+                                    <p:dataTable id="idAnalisisLaboral" value="#{buscarFindmeController.historialLaboralList}" var="historialLaboral"                                                 
+                                                 style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                 reflow="true"
+                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                        <p:column headerText="Estatus">
+                                            <h:outputText value="#{historialLaboral.estatus}" />
+                                        </p:column>
+                                        <p:column headerText="Cédula Patrono">
+                                            <h:outputText value="#{historialLaboral.cedula_patrono}" />
+                                        </p:column>
+                                        <p:column headerText="Nombre">
+                                            <h:outputText value="#{historialLaboral.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="Último Salario">
+                                            <h:outputText value="#{historialLaboral.ultimo_salario}" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Último Periodo">
+                                            <h:outputText value="#{historialLaboral.ultimo_periodo}" />
+                                        </p:column>
+                                        <p:column headerText="Meses">
+                                            <h:outputText value="#{historialLaboral.meses}" />
+                                        </p:column>
+                                        <p:column headerText="Promedio">
+                                            <h:outputText value="#{historialLaboral.promedio}" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Tipo Salario">
+                                            <h:outputText value="#{historialLaboral.tipo_salario}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:fieldset>
+
+                                <p:fieldset legend="Sociedades Anónimas" >
+                                    <p:dataTable id="idSociedadAnonima" value="#{buscarFindmeController.sociedadAnonimaList}" var="sociedadAnonima"
+                                                 style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                 reflow="true"
+                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                        <p:column headerText="Posición">
+                                            <h:outputText value="#{sociedadAnonima.posicion}" />
+                                        </p:column>                                        
+                                        <p:column headerText="Nombre Sociedad">
+                                            <h:outputText value="#{sociedadAnonima.nombre_sociedad}" />
+                                        </p:column>
+                                        <p:column headerText="Cédula Jurídica">
+                                            <h:outputText value="#{sociedadAnonima.cedula_juridica}" />
+                                        </p:column>
+                                        <p:column headerText="Dirección">
+                                            <h:outputText value="#{sociedadAnonima.direccion}" />
+                                        </p:column>
+                                        <p:column headerText="Teléfono">
+                                            <h:outputText value="#{sociedadAnonima.telefono}" />
+                                        </p:column>
+                                        <p:column headerText="Fax">
+                                            <h:outputText value="#{sociedadAnonima.fax}" />
+                                        </p:column>
+                                        <p:column headerText="Verificado">
+                                            <h:outputText value="#{sociedadAnonima.verificado}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:fieldset>
+
+                                <p:fieldset legend="Bienes Inmuebles" >
+                                    <p:dataTable id="idPropiedadRegistrada" value="#{buscarFindmeController.propiedadRegistradaList}" var="propiedadRegistrada"
+                                                 style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                 reflow="true"
+                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                        <p:column headerText="Provincia">
+                                            <h:outputText value="#{propiedadRegistrada.provincia}" />
+                                        </p:column>                                        
+                                        <p:column headerText="Cantón">
+                                            <h:outputText value="#{propiedadRegistrada.canton}" />
+                                        </p:column>
+                                        <p:column headerText="Distrito">
+                                            <h:outputText value="#{propiedadRegistrada.distrito}" />
+                                        </p:column>
+                                        <p:column headerText="Valor">
+                                            <h:outputText value="#{propiedadRegistrada.valor}" >
+                                                <f:convertNumber type="currency" currencySymbol="₡" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="País">
+                                            <h:outputText value="#{propiedadRegistrada.pais}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:fieldset>
+
+                                <p:fieldset legend="Vehículos" >
+                                    <p:dataTable id="idVehiculo" value="#{buscarFindmeController.vehiculoList}" var="vehiculo"
+                                                 style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                 reflow="true"
+                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                        <p:column headerText="Placa">
+                                            <h:outputText value="#{vehiculo.placa}" />
+                                        </p:column>                                        
+                                        <p:column headerText="Año de Fabricación">
+                                            <h:outputText value="#{vehiculo.ano_fabricacion}" />
+                                        </p:column>
+                                        <p:column headerText="Fabricante">
+                                            <h:outputText value="#{vehiculo.marca}" />
+                                        </p:column>
+                                        <p:column headerText="Modelo">
+                                            <h:outputText value="#{vehiculo.estilo}" />
+                                        </p:column>
+                                        <p:column headerText="Tipo">
+                                            <h:outputText value="#{vehiculo.tipo}" />
+                                        </p:column>                                            
+                                        <p:column headerText="País">
+                                            <h:outputText value="#{vehiculo.pais}" />
+                                        </p:column>
+                                        <p:column headerText="Antigüedad">
+                                            <h:outputText value="#{vehiculo.antiguedad}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:fieldset>
+
+                                <p:fieldset legend="Historial Judicial" >
+                                    <p:dataTable id="idHistorialJudicial" value="#{buscarFindmeController.historialJudicialList}" var="historialJudicial"
+                                                 style="margin-bottom:20px" emptyMessage="No se encontraron registros."
+                                                 reflow="true"
+                                                 styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
+
+                                        <p:column headerText="Expediente">
+                                            <h:outputText value="#{historialJudicial.expediente}" />
+                                        </p:column>                                        
+                                        <p:column headerText="Asunto">
+                                            <h:outputText value="#{historialJudicial.asunto}" />
+                                        </p:column>
+                                        <p:column headerText="Oficina">
+                                            <h:outputText value="#{historialJudicial.oficina}" />
+                                        </p:column>
+                                        <p:column headerText="Caso">
+                                            <h:outputText value="#{historialJudicial.caso}" />
+                                        </p:column>
+                                        <p:column headerText="Tipo Parte">
+                                            <h:outputText value="#{historialJudicial.tipo_parte}" />
+                                        </p:column>
+                                        <p:column headerText="Fecha Caso">
+                                            <h:outputText value="#{historialJudicial.fecha_caso}" >
+                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                            </h:outputText>                                                
+                                        </p:column>
+                                        <p:column headerText="Estado">
+                                            <h:outputText value="#{historialJudicial.estado}" />
+                                        </p:column>
+                                        <p:column headerText="País">
+                                            <h:outputText value="#{historialJudicial.pais}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:fieldset>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

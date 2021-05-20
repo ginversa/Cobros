@@ -9,13 +9,18 @@
         <h:outputStylesheet name="css/flags/flags.css" library="demo" />
     </ui:define>
 
-    <ui:define name="title">Supervisor</ui:define>
+    <ui:define name="title">Gestiones</ui:define>
 
     <ui:define name="viewname">
-        <li>Supervisor</li>
+        <li>Gestiones</li>
         <li>/</li>
-        <li>Filtros Colas</li>
-        <li>/</li>        
+        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
+        <li>/</li>
+        <li><p:link outcome="listarGestion">Mi Gestión</p:link></li>
+         <li>/</li>
+         <li><p:link outcome="buscarGestion">Buscar Gestión</p:link></li>
+        <li>/</li>
+        <li>Listar Colas</li>
     </ui:define>
 
     <ui:param name="viewname" value="Mi Gestión" />
@@ -33,10 +38,10 @@
 
                         <p:panelGrid id="idpgFiltroCola" columns="2" layout="grid">
                             <p:outputLabel for="idSOMFiltro" value="Cola" />
-                            <p:selectOneMenu id="idSOMFiltro" value="#{listarColaGestorController.filtroSelected}" converter="filtrocolaConverter">                            
+                            <p:selectOneMenu id="idSOMFiltro" value="#{listarColaGestorController.filtroSelected}" converter="filtrocolaConverter" >                            
                                 <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{listarColaGestorController.filtrocolaList}" var="filtro" itemLabel="#{filtro.nombre}" itemValue="#{filtro}" />
-                                <p:ajax listener="#{listarColaGestorController.onFiltroChange()}" event="change" update="dtColaList" process="@this" />
+                                <p:ajax listener="#{listarColaGestorController.onFiltroChange()}" event="change" update="dtColaList" process="@this idSOMFiltro" />
                             </p:selectOneMenu>
                         </p:panelGrid>
 
@@ -47,7 +52,7 @@
                                      emptyMessage="No se encontraron registros." >
 
                             <p:column headerText="Identificación" filterBy="#{cola.identificacion}" filterMatchMode="contains" sortBy="#{cola.identificacion}" >                                
-                                <p:commandLink action="/operario/colaGestion" actionListener="#{listarColaGestorController.setColaTOGestion(cola)}">
+                                <p:commandLink action="colaGestion" actionListener="#{listarColaGestorController.setColaTOGestion(cola)}">
                                     <h:outputText value="#{cola.identificacion}" />
                                 </p:commandLink>
                             </p:column>                            

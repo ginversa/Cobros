@@ -8,9 +8,9 @@
     <ui:define name="title">Cola</ui:define>
 
     <ui:define name="viewname">
-        <li><p:link outcome="/operario/cartera">Mi Cola</p:link></li>
+        <li><p:link outcome="/operario/cartera">Gestiones</p:link></li>
         <li>/</li>
-        <li>Cola</li>
+        <li>Listar Cola</li>
     </ui:define>
 
     <ui:param name="viewname" value="Gestión" />
@@ -179,7 +179,7 @@
                                                         <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
                                                             <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                             <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
-                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange_cola(llamada)}" event="change" update="idOutputTextSubtipificacion,idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa" />
+                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange_cola(llamada)}" event="change" update="idOutputTextSubtipificacion,idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa idOutputTextSubtipificacion" />
                                                         </h:selectOneMenu>
                                                     </f:facet>
                                                 </p:cellEditor>

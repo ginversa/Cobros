@@ -125,7 +125,7 @@ public class ListarFiltroController implements Serializable {
      * @param id
      * @return 
      */
-    public TblFiltrocola getFiltrocola(Integer id) {
+    public TblFiltrocola getFiltrocola(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("no id provided");
         }

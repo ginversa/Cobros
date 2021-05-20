@@ -14,6 +14,7 @@ import com.inversa.cobros.model.TblCola;
 import com.inversa.cobros.model.TblFiltrocola;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -76,8 +78,11 @@ public class ListarColaGestorController implements Serializable {
             TblCola obj = new TblCola();
             obj.setIdFiltrocola(this.filtroSelected);
             obj.setCodigoCartera(this.filtroSelected.getCodigoCartera());
-            this.colaList = this.ejbColaLocal.findByCodigoGestorAndIdFiltroLimit_ONE(obj);
+            this.colaList = this.ejbColaLocal.findByCodigoGestorAndIdFiltroLimit_ONE(obj);            
+        }else{
+            this.colaList = new ArrayList<>();
         }
+        PrimeFaces.current().ajax().update("form","dtColaList","messages");
     }
 
     public List<TblCola> getColaList() {
@@ -93,7 +98,7 @@ public class ListarColaGestorController implements Serializable {
     }
 
     public void setFiltroSelected(TblFiltrocola filtroSelected) {
-        this.filtroSelected = filtroSelected;
+            this.filtroSelected = filtroSelected;
     }
 
     public List<TblFiltrocola> getFiltrocolaList() {

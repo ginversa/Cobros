@@ -1298,7 +1298,7 @@ Arreglo de Pago
 
                 promesa.setIdGestion(this.gestion);
                 promesa.setIdLlamada(this.selectedLlamada);
-                promesa.setOperacion(this.selectedLlamada.getOperacion());
+                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(this.fechaPagoPromesa);
                 promesa.setIdestadopromesa(estadopromesa); // Seguimiento
@@ -1382,7 +1382,7 @@ Arreglo de Pago
 
                     promesa.setIdGestion(this.gestion);
                     promesa.setIdLlamada(this.selectedLlamada);
-                    promesa.setOperacion(this.selectedLlamada.getOperacion());
+                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
@@ -1502,7 +1502,7 @@ Arreglo de Pago
 
                     promesa.setIdGestion(this.gestion);
                     promesa.setIdLlamada(this.selectedLlamada);
-                    promesa.setOperacion(this.selectedLlamada.getOperacion());
+                    promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                     promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                     promesa.setFechaPago(fechaInicial.getTime());
                     fechaInicial.set(Calendar.MONTH, fechaInicial.get(Calendar.MONTH) + 1);
@@ -1578,39 +1578,42 @@ Arreglo de Pago
      * @param codigoMoneda
      */
     public void deleteArregloPago(String operacion, String codigoMoneda) {
-        int index = 0;
-        boolean isTrue = true;
-        while (this.gestion.getTblPromesaList().size() > 0 && isTrue) {//&& this.promesaList.size() > index
-            boolean searchingMoneda = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo().equals(codigoMoneda);
-            boolean searchingOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion);
-            if (searchingMoneda && searchingOperacion) {
-                Estadopromesa estado = new Estadopromesa();
-                estado.setCodigo(ConstanteComun.Registro_Borrado);
-                estado = this.ejbEstadopromesaLocal.findByCodigo(estado);
-                this.gestion.getTblPromesaList().get(index).setIdestadopromesa(estado);
-                this.ejbPromesaLocal.update(this.gestion.getTblPromesaList().get(index));
-                this.gestion.getTblPromesaList().remove(index);
-                index = index - 1;
-            }
 
-            if (this.gestion.getTblPromesaList().size() <= 0) {
-                isTrue = false;
-
-            } else {
-                int i = 0;
-                while (i < this.gestion.getTblPromesaList().size()) {
-                    boolean existMoneda = this.gestion.getTblPromesaList().get(i).getIdMoneda().getCodigo().equals(codigoMoneda);
-                    boolean existOperacion = this.gestion.getTblPromesaList().get(i).getOperacion().equals(operacion);
-                    if (existMoneda && existOperacion) {
-                        isTrue = true;
-                        i++;
-                        break;
-                    }
-                    isTrue = false;
-                    i++;
+        if (this.gestion.getTblPromesaList() != null) {
+            int index = 0;
+            boolean isTrue = true;
+            while (this.gestion.getTblPromesaList().size() > 0 && isTrue) {//&& this.promesaList.size() > index
+                boolean searchingMoneda = this.gestion.getTblPromesaList().get(index).getIdMoneda().getCodigo().equals(codigoMoneda);
+                boolean searchingOperacion = this.gestion.getTblPromesaList().get(index).getOperacion().equals(operacion);
+                if (searchingMoneda && searchingOperacion) {
+                    Estadopromesa estado = new Estadopromesa();
+                    estado.setCodigo(ConstanteComun.Registro_Borrado);
+                    estado = this.ejbEstadopromesaLocal.findByCodigo(estado);
+                    this.gestion.getTblPromesaList().get(index).setIdestadopromesa(estado);
+                    this.ejbPromesaLocal.update(this.gestion.getTblPromesaList().get(index));
+                    this.gestion.getTblPromesaList().remove(index);
+                    index = index - 1;
                 }
+
+                if (this.gestion.getTblPromesaList().size() <= 0) {
+                    isTrue = false;
+
+                } else {
+                    int i = 0;
+                    while (i < this.gestion.getTblPromesaList().size()) {
+                        boolean existMoneda = this.gestion.getTblPromesaList().get(i).getIdMoneda().getCodigo().equals(codigoMoneda);
+                        boolean existOperacion = this.gestion.getTblPromesaList().get(i).getOperacion().equals(operacion);
+                        if (existMoneda && existOperacion) {
+                            isTrue = true;
+                            i++;
+                            break;
+                        }
+                        isTrue = false;
+                        i++;
+                    }
+                }
+                index++;
             }
-            index++;
         }
 
         if (this.gestion != null && this.gestion.getTblLlamadaList() != null) {
@@ -1710,7 +1713,7 @@ Arreglo de Pago
 
                 promesa.setIdGestion(this.gestion);
                 promesa.setIdLlamada(this.selectedLlamada);
-                promesa.setOperacion(this.selectedLlamada.getOperacion());
+                promesa.setOperacion(this.operacionSelected.getNumeroCuenta());
                 promesa.setTelefono(this.selectedLlamada.getCallToNumber());
                 promesa.setFechaPago(fechaInicial.getTime());
                 promesa.setIdestadopromesa(estadopromesa); // Seguimiento
@@ -3649,28 +3652,28 @@ Multitipificacion
             } else if (llamada.getIdTipificacion().getCodigo().equals("REP") && diaDAY && mesMONTH && annoYEAR) {
                 REP = true;
                 llamadaREP = new TblLlamada();
-                llamadaPRP.setIdLlamada(null);
-                llamadaPRP.setIdGestion(llamada.getIdGestion());
-                llamadaPRP.setCallLogId(llamada.getCallLogId());
-                llamadaPRP.setDateIni(llamada.getDateIni());
-                llamadaPRP.setDateEnd(llamada.getDateEnd());
-                llamadaPRP.setCallFromNumber(llamada.getCallFromNumber());
-                llamadaPRP.setCallToNumber(llamada.getCallToNumber());
-                llamadaPRP.setDialstatus(llamada.getDialstatus());
-                llamadaPRP.setCallLength(llamada.getCallLength());
-                llamadaPRP.setConversationLength(llamada.getConversationLength());
-                llamadaPRP.setEstado(llamada.getEstado());
-                llamadaPRP.setIdTipificacion(llamada.getIdTipificacion());
-                llamadaPRP.setIdSubtipificacion(llamada.getIdSubtipificacion());
-                llamadaPRP.setIdrazonmora(llamada.getIdrazonmora());
-                llamadaPRP.setIdResultadogestion(llamada.getIdResultadogestion());
-                llamadaPRP.setIdResultadotercero(llamada.getIdResultadotercero());
-                llamadaPRP.setIdTipotelefono(llamada.getIdTipotelefono());
-                llamadaPRP.setUsuarioingreso(llamada.getUsuarioingreso());
-                llamadaPRP.setFechaingreso(llamada.getFechaingreso());
-                llamadaPRP.setUsuariomodifico(llamada.getUsuariomodifico());
-                llamadaPRP.setFechamodifico(llamada.getFechamodifico());
-                llamadaPRP.setOperacion(llamada.getOperacion());
+                llamadaREP.setIdLlamada(null);
+                llamadaREP.setIdGestion(llamada.getIdGestion());
+                llamadaREP.setCallLogId(llamada.getCallLogId());
+                llamadaREP.setDateIni(llamada.getDateIni());
+                llamadaREP.setDateEnd(llamada.getDateEnd());
+                llamadaREP.setCallFromNumber(llamada.getCallFromNumber());
+                llamadaREP.setCallToNumber(llamada.getCallToNumber());
+                llamadaREP.setDialstatus(llamada.getDialstatus());
+                llamadaREP.setCallLength(llamada.getCallLength());
+                llamadaREP.setConversationLength(llamada.getConversationLength());
+                llamadaREP.setEstado(llamada.getEstado());
+                llamadaREP.setIdTipificacion(llamada.getIdTipificacion());
+                llamadaREP.setIdSubtipificacion(llamada.getIdSubtipificacion());
+                llamadaREP.setIdrazonmora(llamada.getIdrazonmora());
+                llamadaREP.setIdResultadogestion(llamada.getIdResultadogestion());
+                llamadaREP.setIdResultadotercero(llamada.getIdResultadotercero());
+                llamadaREP.setIdTipotelefono(llamada.getIdTipotelefono());
+                llamadaREP.setUsuarioingreso(llamada.getUsuarioingreso());
+                llamadaREP.setFechaingreso(llamada.getFechaingreso());
+                llamadaREP.setUsuariomodifico(llamada.getUsuariomodifico());
+                llamadaREP.setFechamodifico(llamada.getFechamodifico());
+                llamadaREP.setOperacion(llamada.getOperacion());
 
             } else if (llamada.getIdTipificacion().getCodigo().equals("ESC") && diaDAY && mesMONTH && annoYEAR) {
                 ESC = true;
@@ -3770,7 +3773,7 @@ Multitipificacion
                         llamadaDefault.setIdLlamada(null);
                         llamadaDefault.setOperacion(numeroCuenta);
                         //llamadaDefault.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
-                        this.gestion.getTblLlamadaList().add(llamadaESC);
+                        this.gestion.getTblLlamadaList().add(llamadaDefault);
                     }
                 }
                 operacionExist = false;

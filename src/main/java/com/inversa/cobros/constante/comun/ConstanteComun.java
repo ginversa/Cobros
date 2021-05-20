@@ -50,6 +50,7 @@ public class ConstanteComun {
     // Rol Usuario, codigo.    
     public static final String COD_GESTOR = "gescar";
     public static final String COD_SUPERVISOR = "supcar";
+    public static final String COD_VALIDADOR = "valida";
 
     public static final String REDIRECT = "../../faces/login.xhtml";
 

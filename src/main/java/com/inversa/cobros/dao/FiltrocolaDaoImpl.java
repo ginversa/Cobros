@@ -75,9 +75,9 @@ public class FiltrocolaDaoImpl implements FiltrocolaDao {
                 + "     , externo.usuarioIngreso\n"
                 + "     , externo.fechaIngreso\n"
                 + "     , externo.usuarioModifico\n"
-                + "     , externo.fechaModifico from (select null id_filtrocola, row_number() over() as id_Cola, cartera.codigo_cartera, null codigo_gestor, cartera.identificacion, sum(cartera.saldo_colones) saldo_colones, sum(cartera.saldo_dolares) saldo_dolares, 'SIN' estado, null id_gestion, null usuarioIngreso, null fechaIngreso, null usuarioModifico, null fechaModifico from tbl_cartera cartera where cartera.codigo_cartera = ?1 and cartera.estado != 'GES'";// and cartera.codigo_gestor = ?2
+                + "     , externo.fechaModifico from (select null id_filtrocola, row_number() over() as id_Cola, cartera.codigo_cartera, null codigo_gestor, cartera.identificacion, sum(cartera.saldo_colones) saldo_colones, sum(cartera.saldo_dolares) saldo_dolares, 'SIN' estado, null id_gestion, null usuarioIngreso, null fechaIngreso, null usuarioModifico, null fechaModifico from tbl_cartera cartera where cartera.codigo_cartera = ?1";// and cartera.codigo_gestor = ?2
 
-        /*
+        
         if (codigoTipificacion != null) {
             sql = sql + " and exists (select tl.id_llamada from tbl_llamada tl where tl.operacion = cartera.numero_cuenta and tl.id_tipificacion = (select t.id_tipificacion from tipificacion t where t.codigo = '"+codigoTipificacion+"'))";
         }
@@ -114,7 +114,7 @@ public class FiltrocolaDaoImpl implements FiltrocolaDao {
                 sql = sql + " and exists (select tp.id_promesa from tbl_promesa tp where tp.operacion = cartera.numero_cuenta and tp.idestadopromesa = (select e.idestadopromesa from estadopromesa e where e.codigo = 'SEG') and tp.fecha_pago between CURRENT_DATE and CURRENT_DATE + INTERVAL '"+mesPP+" months' order by tp.id_promesa desc)";
             }            
         }
-         */
+         
  /*
         Agrupacion por identificacion.
         sumar saldos.

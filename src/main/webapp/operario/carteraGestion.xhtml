@@ -179,7 +179,7 @@
                                                         <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
                                                             <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                             <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
-                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange(llamada)}" event="change" update="idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa" />
+                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange(llamada)}" event="change" update="idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa idOutputTextSubtipificacion" />
                                                         </h:selectOneMenu>
                                                     </f:facet>
                                                 </p:cellEditor>

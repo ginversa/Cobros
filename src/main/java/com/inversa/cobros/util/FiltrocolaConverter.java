@@ -25,12 +25,12 @@ public class FiltrocolaConverter implements Converter {
         ValueExpression vex = context.getApplication().getExpressionFactory().createValueExpression(context.getELContext(), "#{listarFiltroController}", ListarFiltroController.class);
         ListarFiltroController controller = (ListarFiltroController) vex.getValue(context.getELContext());
 
-        Integer idInteger = Integer.valueOf("0");
+        Long idLong = Long.valueOf("0");
         if (valorId != null && !valorId.trim().equals("")) {
-            idInteger = Integer.valueOf(valorId);
+            idLong = Long.valueOf(valorId);
         }
 
-        return controller.getFiltrocola(idInteger);
+        return controller.getFiltrocola(idLong);
     }
 
     @Override
