@@ -3625,106 +3625,12 @@ Multitipificacion
 
             if (llamada.getIdTipificacion().getCodigo().equals("PRP") && diaDAY && mesMONTH && annoYEAR) {
                 PRP = true;
-                llamadaPRP = new TblLlamada();
-                llamadaPRP.setIdLlamada(null);
-                llamadaPRP.setIdGestion(llamada.getIdGestion());
-                llamadaPRP.setCallLogId(llamada.getCallLogId());
-                llamadaPRP.setDateIni(llamada.getDateIni());
-                llamadaPRP.setDateEnd(llamada.getDateEnd());
-                llamadaPRP.setCallFromNumber(llamada.getCallFromNumber());
-                llamadaPRP.setCallToNumber(llamada.getCallToNumber());
-                llamadaPRP.setDialstatus(llamada.getDialstatus());
-                llamadaPRP.setCallLength(llamada.getCallLength());
-                llamadaPRP.setConversationLength(llamada.getConversationLength());
-                llamadaPRP.setEstado(llamada.getEstado());
-                llamadaPRP.setIdTipificacion(llamada.getIdTipificacion());
-                llamadaPRP.setIdSubtipificacion(llamada.getIdSubtipificacion());
-                llamadaPRP.setIdrazonmora(llamada.getIdrazonmora());
-                llamadaPRP.setIdResultadogestion(llamada.getIdResultadogestion());
-                llamadaPRP.setIdResultadotercero(llamada.getIdResultadotercero());
-                llamadaPRP.setIdTipotelefono(llamada.getIdTipotelefono());
-                llamadaPRP.setUsuarioingreso(llamada.getUsuarioingreso());
-                llamadaPRP.setFechaingreso(llamada.getFechaingreso());
-                llamadaPRP.setUsuariomodifico(llamada.getUsuariomodifico());
-                llamadaPRP.setFechamodifico(llamada.getFechamodifico());
-                llamadaPRP.setOperacion(llamada.getOperacion());
 
             } else if (llamada.getIdTipificacion().getCodigo().equals("REP") && diaDAY && mesMONTH && annoYEAR) {
                 REP = true;
-                llamadaREP = new TblLlamada();
-                llamadaREP.setIdLlamada(null);
-                llamadaREP.setIdGestion(llamada.getIdGestion());
-                llamadaREP.setCallLogId(llamada.getCallLogId());
-                llamadaREP.setDateIni(llamada.getDateIni());
-                llamadaREP.setDateEnd(llamada.getDateEnd());
-                llamadaREP.setCallFromNumber(llamada.getCallFromNumber());
-                llamadaREP.setCallToNumber(llamada.getCallToNumber());
-                llamadaREP.setDialstatus(llamada.getDialstatus());
-                llamadaREP.setCallLength(llamada.getCallLength());
-                llamadaREP.setConversationLength(llamada.getConversationLength());
-                llamadaREP.setEstado(llamada.getEstado());
-                llamadaREP.setIdTipificacion(llamada.getIdTipificacion());
-                llamadaREP.setIdSubtipificacion(llamada.getIdSubtipificacion());
-                llamadaREP.setIdrazonmora(llamada.getIdrazonmora());
-                llamadaREP.setIdResultadogestion(llamada.getIdResultadogestion());
-                llamadaREP.setIdResultadotercero(llamada.getIdResultadotercero());
-                llamadaREP.setIdTipotelefono(llamada.getIdTipotelefono());
-                llamadaREP.setUsuarioingreso(llamada.getUsuarioingreso());
-                llamadaREP.setFechaingreso(llamada.getFechaingreso());
-                llamadaREP.setUsuariomodifico(llamada.getUsuariomodifico());
-                llamadaREP.setFechamodifico(llamada.getFechamodifico());
-                llamadaREP.setOperacion(llamada.getOperacion());
 
             } else if (llamada.getIdTipificacion().getCodigo().equals("ESC") && diaDAY && mesMONTH && annoYEAR) {
                 ESC = true;
-                llamadaESC = new TblLlamada();
-                llamadaESC.setIdLlamada(null);
-                llamadaESC.setIdGestion(llamada.getIdGestion());
-                llamadaESC.setCallLogId(llamada.getCallLogId());
-                llamadaESC.setDateIni(llamada.getDateIni());
-                llamadaESC.setDateEnd(llamada.getDateEnd());
-                llamadaESC.setCallFromNumber(llamada.getCallFromNumber());
-                llamadaESC.setCallToNumber(llamada.getCallToNumber());
-                llamadaESC.setDialstatus(llamada.getDialstatus());
-                llamadaESC.setCallLength(llamada.getCallLength());
-                llamadaESC.setConversationLength(llamada.getConversationLength());
-                llamadaESC.setEstado(llamada.getEstado());
-                llamadaESC.setIdTipificacion(llamada.getIdTipificacion());
-                llamadaESC.setIdSubtipificacion(llamada.getIdSubtipificacion());
-                llamadaESC.setIdrazonmora(llamada.getIdrazonmora());
-                llamadaESC.setIdResultadogestion(llamada.getIdResultadogestion());
-                llamadaESC.setIdResultadotercero(llamada.getIdResultadotercero());
-                llamadaESC.setIdTipotelefono(llamada.getIdTipotelefono());
-                llamadaESC.setUsuarioingreso(llamada.getUsuarioingreso());
-                llamadaESC.setFechaingreso(llamada.getFechaingreso());
-                llamadaESC.setUsuariomodifico(llamada.getUsuariomodifico());
-                llamadaESC.setFechamodifico(llamada.getFechamodifico());
-                llamadaESC.setOperacion(llamada.getOperacion());
-
-            } else {
-                llamadaDefault = new TblLlamada();
-                llamadaDefault.setIdLlamada(null);
-                llamadaDefault.setIdGestion(llamada.getIdGestion());
-                llamadaDefault.setCallLogId(llamada.getCallLogId());
-                llamadaDefault.setDateIni(llamada.getDateIni());
-                llamadaDefault.setDateEnd(llamada.getDateEnd());
-                llamadaDefault.setCallFromNumber(llamada.getCallFromNumber());
-                llamadaDefault.setCallToNumber(llamada.getCallToNumber());
-                llamadaDefault.setDialstatus(llamada.getDialstatus());
-                llamadaDefault.setCallLength(llamada.getCallLength());
-                llamadaDefault.setConversationLength(llamada.getConversationLength());
-                llamadaDefault.setEstado(llamada.getEstado());
-                llamadaDefault.setIdTipificacion(llamada.getIdTipificacion());
-                llamadaDefault.setIdSubtipificacion(llamada.getIdSubtipificacion());
-                llamadaDefault.setIdrazonmora(llamada.getIdrazonmora());
-                llamadaDefault.setIdResultadogestion(llamada.getIdResultadogestion());
-                llamadaDefault.setIdResultadotercero(llamada.getIdResultadotercero());
-                llamadaDefault.setIdTipotelefono(llamada.getIdTipotelefono());
-                llamadaDefault.setUsuarioingreso(llamada.getUsuarioingreso());
-                llamadaDefault.setFechaingreso(llamada.getFechaingreso());
-                llamadaDefault.setUsuariomodifico(llamada.getUsuariomodifico());
-                llamadaDefault.setFechamodifico(llamada.getFechamodifico());
-                llamadaDefault.setOperacion(llamada.getOperacion());
             }
         }
 
@@ -3732,7 +3638,46 @@ Multitipificacion
             boolean operacionExist = false;
             for (TblCartera cartera : this.carteraList) {
                 String numeroCuenta = cartera.getNumeroCuenta();
+                operacionExist = false;
+                
+                String callLogId = null;
+                Date dateIni = null;
+                Date dateEnd = null;
+                String callFromNumber = null;
+                String callToNumber = null;
+                String dialstatus = null;
+                Date callLength = null;
+                Integer conversationLength = null;
+                String estado = null;
+                Razonmora razonmora = null;
+                TblResultadogestion resultadogestion = null;
+                TblResultadotercero respuesta = null;
+                Tipotelefono tipotelefono = null;
+                String usuarioingreso = null;
+                Date fechaingreso = null;
+                String usuariomodifico = null;
+                Date fechamodifico = null;
+                
                 for (TblLlamada llamada : this.gestion.getTblLlamadaList()) {
+                    
+                    callLogId = llamada.getCallLogId();
+                    dateIni = llamada.getDateIni();
+                    dateEnd = llamada.getDateEnd();
+                    callFromNumber = llamada.getCallFromNumber();
+                    callToNumber = llamada.getCallToNumber();
+                    dialstatus = llamada.getDialstatus();
+                    callLength = llamada.getCallLength();
+                    conversationLength = llamada.getConversationLength();
+                    estado = llamada.getEstado();
+                    razonmora = llamada.getIdrazonmora();
+                    resultadogestion = llamada.getIdResultadogestion();
+                    respuesta = llamada.getIdResultadotercero();
+                    tipotelefono = llamada.getIdTipotelefono();
+                    usuarioingreso = llamada.getUsuarioingreso();
+                    fechaingreso = llamada.getFechaingreso();
+                    usuariomodifico = llamada.getUsuariomodifico();
+                    fechamodifico = llamada.getFechamodifico();
+                    
                     Date fechaIngreso = llamada.getFechaingreso();
                     c2.setTime(fechaIngreso);
                     int dia = c2.get(Calendar.DAY_OF_MONTH);
@@ -3745,41 +3690,114 @@ Multitipificacion
                     if (numeroCuenta.equals(operacion) && diaDAY && mesMONTH && annoYEAR) {
                         operacionExist = true;
                     }
-                }
+                }// for
 
                 if (!operacionExist) {
                     if (PRP) {
+                        llamadaPRP = new TblLlamada();
                         llamadaPRP.setIdLlamada(null);
+                        llamadaPRP.setIdGestion(this.gestion);
+                        llamadaPRP.setCallLogId(callLogId);
+                        llamadaPRP.setDateIni(dateIni);
+                        llamadaPRP.setDateEnd(dateEnd);
+                        llamadaPRP.setCallFromNumber(callFromNumber);
+                        llamadaPRP.setCallToNumber(callToNumber);
+                        llamadaPRP.setDialstatus(dialstatus);
+                        llamadaPRP.setCallLength(callLength);
+                        llamadaPRP.setConversationLength(conversationLength);
+                        llamadaPRP.setEstado(estado);                        
+                        llamadaPRP.setIdrazonmora(razonmora);
+                        llamadaPRP.setIdResultadogestion(resultadogestion);
+                        llamadaPRP.setIdResultadotercero(respuesta);
+                        llamadaPRP.setIdTipotelefono(tipotelefono);
+                        llamadaPRP.setUsuarioingreso(usuarioingreso);
+                        llamadaPRP.setFechaingreso(fechaingreso);
+                        llamadaPRP.setUsuariomodifico(usuariomodifico);
+                        llamadaPRP.setFechamodifico(fechamodifico);
                         llamadaPRP.setOperacion(numeroCuenta);
                         llamadaPRP.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
                         llamadaPRP.setIdSubtipificacion(this.ejbSubtipificacionLocal.findByCodigo("ICP"));
                         this.gestion.getTblLlamadaList().add(llamadaPRP);
 
                     } else if (REP) {
+                        llamadaREP = new TblLlamada();
                         llamadaREP.setIdLlamada(null);
+                        llamadaREP.setIdGestion(this.gestion);
+                        llamadaREP.setCallLogId(callLogId);
+                        llamadaREP.setDateIni(dateIni);
+                        llamadaREP.setDateEnd(dateEnd);
+                        llamadaREP.setCallFromNumber(callFromNumber);
+                        llamadaREP.setCallToNumber(callToNumber);
+                        llamadaREP.setDialstatus(dialstatus);
+                        llamadaREP.setCallLength(callLength);
+                        llamadaREP.setConversationLength(conversationLength);
+                        llamadaREP.setEstado(estado);                        
+                        llamadaREP.setIdrazonmora(razonmora);
+                        llamadaREP.setIdResultadogestion(resultadogestion);
+                        llamadaREP.setIdResultadotercero(respuesta);
+                        llamadaREP.setIdTipotelefono(tipotelefono);
+                        llamadaREP.setUsuarioingreso(usuarioingreso);
+                        llamadaREP.setFechaingreso(fechaingreso);
+                        llamadaREP.setUsuariomodifico(usuariomodifico);
+                        llamadaREP.setFechamodifico(fechamodifico);
                         llamadaREP.setOperacion(numeroCuenta);
                         llamadaREP.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
                         llamadaREP.setIdSubtipificacion(this.ejbSubtipificacionLocal.findByCodigo("ICP"));
                         this.gestion.getTblLlamadaList().add(llamadaREP);
 
                     } else if (ESC) {
+                        llamadaESC = new TblLlamada();
                         llamadaESC.setIdLlamada(null);
+                        llamadaESC.setIdGestion(this.gestion);
+                        llamadaESC.setCallLogId(callLogId);
+                        llamadaESC.setDateIni(dateIni);
+                        llamadaESC.setDateEnd(dateEnd);
+                        llamadaESC.setCallFromNumber(callFromNumber);
+                        llamadaESC.setCallToNumber(callToNumber);
+                        llamadaESC.setDialstatus(dialstatus);
+                        llamadaESC.setCallLength(callLength);
+                        llamadaESC.setConversationLength(conversationLength);
+                        llamadaESC.setEstado(estado);                        
+                        llamadaESC.setIdrazonmora(razonmora);
+                        llamadaESC.setIdResultadogestion(resultadogestion);
+                        llamadaESC.setIdResultadotercero(respuesta);
+                        llamadaESC.setIdTipotelefono(tipotelefono);
+                        llamadaESC.setUsuarioingreso(usuarioingreso);
+                        llamadaESC.setFechaingreso(fechaingreso);
+                        llamadaESC.setUsuariomodifico(usuariomodifico);
+                        llamadaESC.setFechamodifico(fechamodifico);
                         llamadaESC.setOperacion(numeroCuenta);
                         llamadaESC.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
                         llamadaESC.setIdSubtipificacion(this.ejbSubtipificacionLocal.findByCodigo("ICP"));
                         this.gestion.getTblLlamadaList().add(llamadaESC);
 
                     } else {
+                        llamadaDefault = new TblLlamada();
                         llamadaDefault.setIdLlamada(null);
+                        llamadaDefault.setIdGestion(this.gestion);
+                        llamadaDefault.setCallLogId(callLogId);
+                        llamadaDefault.setDateIni(dateIni);
+                        llamadaDefault.setDateEnd(dateEnd);
+                        llamadaDefault.setCallFromNumber(callFromNumber);
+                        llamadaDefault.setCallToNumber(callToNumber);
+                        llamadaDefault.setDialstatus(dialstatus);
+                        llamadaDefault.setCallLength(callLength);
+                        llamadaDefault.setConversationLength(conversationLength);
+                        llamadaDefault.setEstado(estado);                        
+                        llamadaDefault.setIdrazonmora(razonmora);
+                        llamadaDefault.setIdResultadogestion(resultadogestion);
+                        llamadaDefault.setIdResultadotercero(respuesta);
+                        llamadaDefault.setIdTipotelefono(tipotelefono);
+                        llamadaDefault.setUsuarioingreso(usuarioingreso);
+                        llamadaDefault.setFechaingreso(fechaingreso);
+                        llamadaDefault.setUsuariomodifico(usuariomodifico);
+                        llamadaDefault.setFechamodifico(fechamodifico);
                         llamadaDefault.setOperacion(numeroCuenta);
-                        //llamadaDefault.setIdTipificacion(this.ejbTipificacionLocal.findByCodigo("CSP"));
                         this.gestion.getTblLlamadaList().add(llamadaDefault);
                     }
-                }
-                operacionExist = false;
-            }
-        }
-
-    }
+                }// operacionExist
+            }//for operaciones
+        }// if
+    }//multitipificacion
 
 }//end

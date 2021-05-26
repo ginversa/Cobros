@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">Cola</ui:define>
+    <ui:define name="title">Gestiones</ui:define>
 
     <ui:define name="viewname">
         <li><p:link outcome="/operario/cartera">Gestiones</p:link></li>
@@ -13,7 +13,7 @@
         <li>Listar Cola</li>
     </ui:define>
 
-    <ui:param name="viewname" value="Gestión" />
+    <ui:param name="viewname" value="Listar Cola" />
 
     <ui:define name="content">
         <h:form id="formGestion">
@@ -67,7 +67,7 @@
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
 
-                                    <p:panelGrid columns="2" class="p-col">
+                                    <p:panelGrid id="idPGDescripcion" columns="2" class="p-col">
                                         <p:outputLabel for="txtdescripcion" value="Observación" />
                                         <p:inputTextarea id="txtdescripcion" value="#{colaGestionController.gestion.descripcion}" />
                                     </p:panelGrid>
@@ -124,7 +124,7 @@
                                                 </p:selectOneMenu>
                                                 <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
                                                 <p:commandButton value="Agregar Correo" update="formGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Finalizar" actionListener="#{colaGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                                <p:commandButton value="Finalizar" actionListener="#{colaGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor formGestion:idTabView:idPGDescripcion" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
                                             </h:panelGrid>
                                         </f:facet>
                                     </p:toolbar>

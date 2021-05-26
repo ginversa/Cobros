@@ -5,18 +5,20 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">Cola</ui:define>
+    <ui:define name="title">Seguimiento</ui:define>
 
     <ui:define name="viewname">
-        <li><p:link outcome="/operario/cartera">Mi Cola</p:link></li>
+         <li>Gestiones</li>
         <li>/</li>
-        <li>Cola</li>
+        <li><p:link outcome="/operario/listarGestion">Mi Gestión</p:link></li>
+        <li>/</li>
+        <li>Seguimiento</li>
     </ui:define>
 
-    <ui:param name="viewname" value="Gestión" />
+    <ui:param name="viewname" value="Seguimiento" />
 
     <ui:define name="content">
-        <h:form id="formGestion">
+        <h:form id="idFormGestion">
             <div class="p-grid">
                 <div class="p-col-12 p-md-12">
                     <p:growl id="messages" showDetail="true" showSummary="true" severity="info,fatal" >
@@ -29,8 +31,8 @@
                                 <h4>Gestión</h4>
                                 <p>Sistema de Cobros.</p>
                                 <!-- class="ui-fluid" -->
-                                <p:panelGrid id="pgInfoGestion" columns="1" layout="grid">
-                                    <p:panelGrid id="pgDeudor" columns="2" layout="grid">
+                                <p:panelGrid id="idPGActualizarGestion" columns="1" layout="grid">
+                                    <p:panelGrid id="idPGDeudor" columns="2" layout="grid">
                                         <p:panelGrid columns="2" layout="grid">
                                             <p:outputLabel for="txtCartera" value="Cartera" />
                                             <h:outputText id="txtCartera" value="#{updateGestionController.gestion.codigoCartera} - #{updateGestionController.gestion.nombre_cartera}" />
@@ -67,7 +69,7 @@
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
 
-                                    <p:panelGrid columns="2" class="p-col">
+                                    <p:panelGrid id="idPGDescripcion" columns="2" class="p-col">
                                         <p:outputLabel for="txtdescripcion" value="Observación" />
                                         <p:inputTextarea id="txtdescripcion" value="#{updateGestionController.gestion.descripcion}" />
                                     </p:panelGrid>
@@ -110,7 +112,7 @@
                                             <p:column headerText="Moneda" >
                                                 <h:outputText value="#{saldo.idMoneda.codigo}" />
                                             </p:column>
-                                            <p:ajax event="cellEdit" listener="#{updateGestionController.onCellEdit}" update="formGestion:messages" />
+                                            <p:ajax event="cellEdit" listener="#{updateGestionController.onCellEdit}" update="idFormGestion:messages" />
                                         </p:dataTable> 
                                     </p:fieldset>
 
@@ -122,9 +124,9 @@
                                                     <f:selectItems value="#{updateGestionController.prefijoSalidaList}" var="prefijoSalida" itemLabel="#{prefijoSalida.prefijo} - #{prefijoSalida.nombre}" itemValue="#{prefijoSalida}" />
                                                     <p:ajax listener="#{updateGestionController.onPrefijoSalidaChange()}" event="change" />
                                                 </p:selectOneMenu>
-                                                <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Agregar Correo" update="formGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Finalizar" actionListener="#{updateGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                                <p:commandButton value="Agregar Teléfono" update="idFormGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                                <p:commandButton value="Agregar Correo" update="idFormGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
+                                                <p:commandButton value="Finalizar" actionListener="#{updateGestionController.finalizarGestion()}" process="@this idFormGestion:idTabView:idPGDeudor formGestion:idTabView:idPGDescripcion" update="idFormGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
                                             </h:panelGrid>
                                         </f:facet>
                                     </p:toolbar>
@@ -219,17 +221,17 @@
                                                 </p:cellEditor>
                                             </p:column>
                                             <p:column headerText="Promesa" >
-                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" actionListener="#{updateGestionController.calcArregloPago(llamada)}" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :formGestion:idTabView:pgDeudor" update="formGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
+                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" actionListener="#{updateGestionController.calcArregloPago(llamada)}" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :idFormGestion:idTabView:idPGDeudor" update="idFormGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
                                                     <!--
                                                     <f:setPropertyActionListener value="#{llamada}" target="#{updateGestionController.selectedLlamada}"  />
                                                     -->
                                                 </p:commandButton>
                                             </p:column>
                                             <p:column headerText="Guardar" >
-                                                <p:commandButton actionListener="#{updateGestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" />
+                                                <p:commandButton actionListener="#{updateGestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this idFormGestion:idTabView:idPGDeudor" update="idFormGestion:messages" />
                                             </p:column>
 
-                                            <p:ajax event="cellEdit" listener="#{updateGestionController.onCellEdit}" update="formGestion:messages" />
+                                            <p:ajax event="cellEdit" listener="#{updateGestionController.onCellEdit}" update="idFormGestion:messages" />
                                         </p:dataTable> 
                                     </p:fieldset>
                                     
@@ -264,8 +266,8 @@
                                                     <h:outputText value="#{gestion.ultimaLLamada.idrazonmora.descripcion}" />
                                                 </p:column>
 
-                                                <p:ajax event="rowSelect" listener="#{updateGestionController.onRowSelect}" update=":formGestion:messages, formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion, :formGestion:idTabView:idTablePromesaLlamada"/>
-                                                <p:ajax event="rowUnselect" listener="#{updateGestionController.onRowUnselect}" update=":formGestion:messages, formGestion:idTabView:pgDeudor, :formGestion:idTabView:tblSaldoGestion, :formGestion:idTabView:idTablePromesaLlamada"/>
+                                                <p:ajax event="rowSelect" listener="#{updateGestionController.onRowSelect}" update=":idFormGestion:messages, idFormGestion:idTabView:idPGDeudor, :idFormGestion:idTabView:tblSaldoGestion, :idFormGestion:idTabView:idTablePromesaLlamada"/>
+                                                <p:ajax event="rowUnselect" listener="#{updateGestionController.onRowUnselect}" update=":idFormGestion:messages, idFormGestion:idTabView:idPGDeudor, :idFormGestion:idTabView:tblSaldoGestion, :idFormGestion:idTabView:idTablePromesaLlamada"/>
                                             </p:dataTable>
                                         </p:fieldset>
                                         <p:fieldset legend="Promesas" class="ui-fluid">
@@ -325,8 +327,8 @@
                                                     <p:rowEditor />
                                                 </p:column>
 
-                                                <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                             </p:dataTable>
                                         </p:fieldset>
                                     </p:panelGrid>
@@ -356,7 +358,7 @@
                                                          styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines" >
 
                                                 <p:column headerText="Teléfono" >                                                     
-                                                    <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" oncomplete="PF('manageLlamarFindmeDialog').show()" update="formGestion:manage-llamarFindme-content" process="@this" >
+                                                    <p:commandLink value="#{historialTelefono.telefono}" actionListener="#{findmeController.generarLlamada(historialTelefono)}" oncomplete="PF('manageLlamarFindmeDialog').show()" update="idFormGestion:manage-llamarFindme-content" process="@this" >
                                                         <f:setPropertyActionListener value="#{historialTelefono}" target="#{findmeController.selectedHistorialTelefono}" />
                                                     </p:commandLink>
                                                 </p:column>
@@ -715,7 +717,7 @@
                     </p:tabView>
 
                     <p:confirmDialog widgetVar="deleteTelefonoDialog" showEffect="fade" width="300" message="Eliminar este Teléfono?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deleteTelefono()}" process="@this" update="formGestion:idTabView:tblTelefono" oncomplete="PF('deleteTelefonoDialog').hide()" />
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deleteTelefono()}" process="@this" update="idFormGestion:idTabView:tblTelefono" oncomplete="PF('deleteTelefonoDialog').hide()" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteTelefonoDialog').hide()" process="@this" />
                     </p:confirmDialog>
 
@@ -746,7 +748,7 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">    
-                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{updateGestionController.addTelefono()}" update="manage-Telefono-content, formGestion:idTabView:tblTelefono" process="manage-Telefono-content @this" ajax="true" />
+                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{updateGestionController.addTelefono()}" update="manage-Telefono-content, idFormGestion:idTabView:tblTelefono" process="manage-Telefono-content @this" ajax="true" />
                             <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageTelefonoDialog').hide()" class="secondary-button" process="@this" />
                         </f:facet>
                     </p:dialog>
@@ -930,8 +932,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idCancelacionTotalCuotas" title="Cancelación total por cuotas CRC" rendered="#{updateGestionController.isVisibleCancelacionTotalPorCuotas}" >
@@ -1065,8 +1067,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idRefinanciamiento" title="Refinanciamiento CRC" >
@@ -1193,8 +1195,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idPagoParcial" title="Pago Parcial CRC">
@@ -1278,8 +1280,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
@@ -1393,8 +1395,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idCancelacionTotalCuotasUSD" title="Cancelación total por cuotas USD" rendered="#{updateGestionController.isVisibleCancelacionTotalPorCuotas}" >
@@ -1528,8 +1530,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idRefinanciamientoUSD" title="Refinanciamiento USD" >
@@ -1656,8 +1658,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab id="idPagoParcial" title="Pago Parcial USD">
@@ -1741,8 +1743,8 @@
                                                         <p:rowEditor />
                                                     </p:column>
 
-                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="formGestion:msgsArregloPago" />
-                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="formGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEdit" listener="#{updateGestionController.onRowEdit}" update="idFormGestion:msgsArregloPago" />
+                                                    <p:ajax event="rowEditCancel" listener="#{updateGestionController.onRowCancel}" update="idFormGestion:msgsArregloPago" />
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
@@ -1756,70 +1758,70 @@
                     </p:dialog>
 
                     <p:confirmDialog widgetVar="deletePromesaDialog" showEffect="fade" width="300" message="Eliminar esta promesa?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deletePromesa}" process="@this" oncomplete="PF('deletePromesaDialog').hide()" update="idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaDialog').hide()" process="@this"/>
                     </p:confirmDialog>
 
                     <!--
                     <p:confirmDialog widgetVar="deleteCorreoElectronicoDialog" showEffect="fade" width="300" message="Eliminar este Correo?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deleteCorreoElectronico}" process="@this" oncomplete="PF('deleteCorreoElectronicoDialog').hide()" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.deleteCorreoElectronico}" process="@this" oncomplete="PF('deleteCorreoElectronicoDialog').hide()" update="idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago,idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC,idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF,idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD,idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteCorreoElectronicoDialog').hide()" process="@this"/>
                     </p:confirmDialog>
                     -->
 
                     <p:confirmDialog widgetVar="deletePromesaCRCDialog" showEffect="fade" width="300" message="Eliminar Arreglo de Pago?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacion
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuento
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesa
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesa
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPago                                                                                                                                                                     
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionCTC
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuentoCTC
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaCTC
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaCTC
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoCTC
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasCTC
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionREF
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaREF
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaREF
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoREF
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasREF
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionPAP
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaPAP
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoPAP
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.cleanFormArregloPago('CRC')}" process="@this" update="idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPago
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacion
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuento
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesa
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesa
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPago                                                                                                                                                                     
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoCTC
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionCTC
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtTipoDescuentoCTC
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaCTC
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaCTC
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoCTC
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasCTC
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoREF
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionREF
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtDescuentoPromesaREF
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaREF
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoREF
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtCuotasREF
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:tblPromesaArregloPagoPAP
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtSaldoOperacionPAP
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtNewSaldoPromesaPAP
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaCRC:txtFechaPagoPAP
                                          "
                                          oncomplete="PF('deletePromesaCRCDialog').hide()" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaCRCDialog').hide()" process="@this" />
                     </p:confirmDialog>
 
                     <p:confirmDialog widgetVar="deletePromesaUSDDialog" showEffect="fade" width="300" message="Eliminar Arreglo de Pago?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoUSD                                                                                                                                                                     
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionCTCUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoCTCUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaCTCUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaCTCUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoCTCUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasCTCUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionREFUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaREFUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaREFUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoREFUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasREFUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionPAPUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaPAPUSD
-                                         , formGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoPAPUSD
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{updateGestionController.cleanFormArregloPago('USD')}" process="@this" update="idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoUSD                                                                                                                                                                     
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoCTCUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionCTCUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtTipoDescuentoCTCUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaCTCUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaCTCUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoCTCUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasCTCUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoREFUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionREFUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtDescuentoPromesaREFUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaREFUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoREFUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtCuotasREFUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:tblPromesaArregloPagoPAPUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtSaldoOperacionPAPUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtNewSaldoPromesaPAPUSD
+                                         , idFormGestion:idtabViewPromesa:idtabViewPromesaUSD:txtFechaPagoPAPUSD
                                          "
                                          oncomplete="PF('deletePromesaUSDDialog').hide()" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deletePromesaUSDDialog').hide()" process="@this" />
@@ -1854,7 +1856,7 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">    
-                            <p:commandButton value="Agregar Teléfono: Tipificar!" icon="pi pi-check" actionListener="#{updateGestionController.callFromFindme()}" update="manage-llamarFindme-content, formGestion:idTabView:tblTelefono" process="manage-llamarFindme-content @this" ajax="true" />
+                            <p:commandButton value="Agregar Teléfono: Tipificar!" icon="pi pi-check" actionListener="#{updateGestionController.callFromFindme()}" update="manage-llamarFindme-content, idFormGestion:idTabView:tblTelefono" process="manage-llamarFindme-content @this" ajax="true" />
                             <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageLlamarFindmeDialog').hide()" class="secondary-button" process="@this" />
                         </f:facet>
                     </p:dialog>

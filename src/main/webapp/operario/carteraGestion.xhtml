@@ -5,12 +5,12 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">Gestión</ui:define>
+    <ui:define name="title">Gestiones</ui:define>
 
     <ui:define name="viewname">
-        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>
+        <li>Gestiones</li>
         <li>/</li>
-        <li>Gestión</li>
+        <li><p:link outcome="/operario/cartera">Mi Cartera</p:link></li>        
     </ui:define>
 
     <ui:param name="viewname" value="Gestión" />
@@ -67,9 +67,9 @@
                                         </p:panelGrid>                                                                       
                                     </p:panelGrid>
 
-                                    <p:panelGrid columns="2" class="p-col">
+                                    <p:panelGrid id="idPGDescripcion" columns="2" class="p-col" layout="grid">
                                         <p:outputLabel for="txtdescripcion" value="Observación" />
-                                        <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" />
+                                        <p:inputTextarea id="txtdescripcion" value="#{carteraGestionController.gestion.descripcion}" maxlength="200" />
                                     </p:panelGrid>
 
                                     <p:fieldset legend="Saldos" class="ui-fluid" >
@@ -124,7 +124,7 @@
                                                 </p:selectOneMenu>
                                                 <p:commandButton value="Agregar Teléfono" update="formGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
                                                 <p:commandButton value="Agregar Correo" update="formGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                                <p:commandButton value="Finalizar" actionListener="#{carteraGestionController.finalizarGestion()}" process="@this formGestion:idTabView:pgDeudor formGestion:idTabView:idPGDescripcion" update="formGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
                                             </h:panelGrid>
                                         </f:facet>
                                     </p:toolbar>

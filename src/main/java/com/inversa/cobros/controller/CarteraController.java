@@ -126,7 +126,7 @@ public class CarteraController implements Serializable {
             if (this.codigoCartera != null && !this.codigoCartera.trim().equals("")) {
                 this.cartera.setCodigoCartera(this.codigoCartera);
                 this.carteraList = this.ejbLocal.findByCodigoGestorANDCodigoCartera(this.cartera);
-                //this.carteraList = this.ejbLocal.findByCodigoGestorANDCodigoCarteraANDFiltro(this.cartera);
+                
             } else {
                 this.carteraList = this.ejbLocal.findByCodigoGestor(this.cartera);
             }
