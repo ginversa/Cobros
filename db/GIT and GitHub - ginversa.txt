@@ -1,0 +1,10 @@
+
+harold.bonilla@ginversa.com
+usuario:    ginversa
+contraseña: haroldginversa123
+
+/*
+Git Bash
+*/
+git config --global user.email "harold.bonilla@ginversa.com"
+git config --global user.name "harold.bonilla"
