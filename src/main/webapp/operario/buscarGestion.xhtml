@@ -71,44 +71,44 @@
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >                            
 
-                            <p:column id="idTelefonoBG" headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >                                
+                            <p:column headerText="Teléfono" filterBy="#{llamada.callToNumber}" filterMatchMode="contains" sortBy="#{llamada.callToNumber}" >                                
                                 <p:commandLink action="updateGestion" actionListener="#{buscarGestionController.setLlamadaTOGestion(llamada)}" >
                                     <h:outputText value="#{llamada.callToNumber}" />
                                 </p:commandLink>
-                            </p:column>
+                            </p:column>                           
 
-                            <p:column id="idCuentaBG" headerText="#Cuenta" filterBy="#{llamada.operacion}" filterMatchMode="contains" sortBy="#{llamada.operacion}" >
+                            <p:column headerText="#Cuenta" filterBy="#{llamada.operacion}" filterMatchMode="contains" sortBy="#{llamada.operacion}" >
                                 <h:outputText value="#{llamada.operacion}" />
                             </p:column>                                               
-                            <p:column id="idTipificacionBG" headerText="Tipificación" filterBy="#{llamada.idTipificacion.descripcion}" sortBy="#{llamada.idTipificacion.descripcion}" >
+                            <p:column headerText="Tipificación" filterBy="#{llamada.idTipificacion.descripcion}" sortBy="#{llamada.idTipificacion.descripcion}" >
                                 <h:outputText value="#{llamada.idTipificacion.descripcion}" />
                             </p:column>                                    
-                            <p:column id="idSubTipificacionBG" headerText="Sub-Tipificación" filterBy="#{llamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idSubtipificacion.descripcion}" >
+                            <p:column headerText="Sub-Tipificación" filterBy="#{llamada.idSubtipificacion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idSubtipificacion.descripcion}" >
                                 <h:outputText value="#{llamada.idSubtipificacion.descripcion}" />
                             </p:column>
-                            <p:column id="idResultadoBG" headerText="Resultado Gestión" filterBy="#{llamada.idResultadogestion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadogestion.descripcion}" >
+                            <p:column headerText="Resultado Gestión" filterBy="#{llamada.idResultadogestion.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadogestion.descripcion}" >
                                 <h:outputText value="#{llamada.idResultadogestion.descripcion}" />
                             </p:column>
-                            <p:column id="idTRespuestaBG" headerText="Respuesta" filterBy="#{llamada.idResultadotercero.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadotercero.descripcion}" >
+                            <p:column headerText="Respuesta" filterBy="#{llamada.idResultadotercero.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idResultadotercero.descripcion}" >
                                 <h:outputText value="#{llamada.idResultadotercero.descripcion}" />
                             </p:column>
-                            <p:column id="idRazonMoraBG" headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
+                            <p:column headerText="Razón Mora" filterBy="#{llamada.idrazonmora.descripcion}" filterMatchMode="contains" sortBy="#{llamada.idrazonmora.descripcion}" >
                                 <h:outputText value="#{llamada.idrazonmora.descripcion}" />
                             </p:column>
-                            <p:column id="idUPBG" headerText="Última Promesa" filterBy="#{llamada.ultimaPromesa.mtopago}" filterMatchMode="contains" sortBy="#{llamada.ultimaPromesa.mtopago}" >
+                            <p:column headerText="Última Promesa" filterBy="#{llamada.ultimaPromesa.mtopago}" filterMatchMode="contains" sortBy="#{llamada.ultimaPromesa.mtopago}" >
                                 <h:outputText value="#{llamada.ultimaPromesa.mtopago}" >
                                     <f:convertNumber type="currency" currencySymbol="#{llamada.ultimaPromesa.idMoneda.simbolo}" maxFractionDigits="2" locale="en-US" groupingUsed="true" />
                                 </h:outputText>
                             </p:column>
-                            <p:column id="idMPBG" headerText="Moneda Promesa" filterBy="#{llamada.ultimaPromesa.idMoneda.codigo}" sortBy="#{llamada.ultimaPromesa.idMoneda.codigo}" >
+                            <p:column headerText="Moneda Promesa" filterBy="#{llamada.ultimaPromesa.idMoneda.codigo}" sortBy="#{llamada.ultimaPromesa.idMoneda.codigo}" >
                                 <h:outputText value="#{llamada.ultimaPromesa.idMoneda.codigo}" />
                             </p:column>
-                            <p:column id="idFUPBG" headerText="Fecha Última Promesa" filterBy="#{llamada.ultimaPromesa.fechaPago}" sortBy="#{llamada.ultimaPromesa.fechaPago}" >
+                            <p:column headerText="Fecha Última Promesa" filterBy="#{llamada.ultimaPromesa.fechaPago}" sortBy="#{llamada.ultimaPromesa.fechaPago}" >
                                 <h:outputText value="#{llamada.ultimaPromesa.fechaPago}" >
                                     <f:convertDateTime dateStyle="full" pattern="dd/MM/yyyy" />
                                 </h:outputText>
                             </p:column>
-                            <p:column id="idCarteraBG" headerText="Gestor" filterBy="#{llamada.idGestion.codigoGestor}" filterMatchMode="contains" sortBy="#{llamada.idGestion.codigoGestor}" >
+                            <p:column headerText="Gestor" filterBy="#{llamada.idGestion.codigoGestor}" filterMatchMode="contains" sortBy="#{llamada.idGestion.codigoGestor}" >
                                 <h:outputText value="#{llamada.idGestion.codigoGestor}" />
                             </p:column>
                         </p:dataTable>

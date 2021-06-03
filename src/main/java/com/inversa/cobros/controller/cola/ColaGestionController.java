@@ -199,7 +199,7 @@ public class ColaGestionController implements Serializable {
         this.selectedLlamada = new TblLlamada();
         this.operacionSelected = new TblCartera();
 
-        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(ConstanteComun.USUARIO);
         this.fechaHoy = Calendar.getInstance();
 
         this.setCarteraTOGestion(this.carteraController.getCartera());

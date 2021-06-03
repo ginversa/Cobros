@@ -100,7 +100,9 @@ public class FiltrocolaServiceImpl implements FiltrocolaService, FiltrocolaServi
         TblCartera cartera = new TblCartera();
         cartera.setCodigoCartera(filtrocola.getCodigoCartera());
         cartera.setCodigoGestor(null);
-
+        
+        filtrocola = this.findByIdFiltrocola(filtrocola);
+        
         // Filtrar segun gestion.
         List<TblCola> carteraFiltrada = findByCodigoGestorANDCodigoCarteraANDFiltro(filtrocola);
 
@@ -108,37 +110,39 @@ public class FiltrocolaServiceImpl implements FiltrocolaService, FiltrocolaServi
         carteraFiltrada = this.filtrarCarteraSegunFindme(filtrocola, carteraFiltrada);
 
         if (carteraFiltrada != null) {
-            List<TblCola> colaList = new ArrayList<>();
-            this.deleteCola(filtrocola);            
+            List<TblCola> colaList = new ArrayList<>();            
             for (TblCola tblCola : carteraFiltrada) {
-                TblCola cola = new TblCola();
-                cola.setIdFiltrocola(filtrocola);
-                cola.setIdCola(null);
-                cola.setCodigoCartera(filtrocola.getCodigoCartera());
+                TblCola cola = new TblCola();                
+                cola.setIdFiltrocola(filtrocola);                
+                cola.setCodigoCartera(tblCola.getCodigoCartera());
                 cola.setCodigoGestor(null);
                 cola.setIdentificacion(tblCola.getIdentificacion());
                 cola.setSaldoColones(tblCola.getSaldoColones());
                 cola.setSaldoDolares(tblCola.getSaldoDolares());
-                cola.setEstado(tblCola.getEstado());
-                //cola.setIdGestion(null);
+                cola.setEstado(tblCola.getEstado());                
                 cola.setUsuarioingreso(usuarioIngreso);
                 cola.setFechaingreso(fechaIngreso);
                 cola.setUsuariomodifico(usuarioIngreso);
                 cola.setFechamodifico(fechaIngreso);
-                //this.ejbColaLocal.insert(cola);
                 colaList.add(cola);
             }
             
-            if (!colaList.isEmpty() && colaList.size() > 0) {
-                filtrocola.setTblColaList(colaList);
-                this.update(filtrocola);
-            }                        
+            try {
+                if (!colaList.isEmpty() && colaList.size() > 0) {                    
+                    filtrocola.setTblColaList(colaList);
+                    this.update(filtrocola);
+                }
+                
+            } catch (Exception e) {
+                contexto.setRollbackOnly();// hace rollback...
+                e.printStackTrace(System.out);// imprime en consola el error
+            }
         }
     }
 
     @Override
-    public List<TblCola> findByCodigoGestorANDCodigoCarteraANDFiltro(TblFiltrocola obj) {
-        String codigo_cartera = obj.getCodigoCartera();
+    public List<TblCola> findByCodigoGestorANDCodigoCarteraANDFiltro(TblFiltrocola filtro) {
+        String codigo_cartera = filtro.getCodigoCartera();
         String codigo_gestor = null;
         String codigoTipificacion = null;
         String codigoSubTipificacion = null;
@@ -148,59 +152,59 @@ public class FiltrocolaServiceImpl implements FiltrocolaService, FiltrocolaServi
         Long mesUP = null;
         Long mesPP = null;
 
-        TblFiltrocola filtro = new TblFiltrocola();
+        //TblFiltrocola filtro = new TblFiltrocola();
         filtro.setCodigoCartera(codigo_cartera);
-        List<TblFiltrocola> filtroList = this.findByCodigoCartera(filtro);
-        if (filtroList != null && !filtroList.isEmpty() && filtroList.size() > 0) {
-            filtro = filtroList.get(0);
-            if (filtro.getIdTipificacion() != null) {
-                codigoTipificacion = filtro.getIdTipificacion().getCodigo();
-            }
+        //List<TblFiltrocola> filtroList = this.findByCodigoCartera(filtro);
+        //if (filtroList != null && !filtroList.isEmpty() && filtroList.size() > 0) {
+        //filtro = filtroList.get(0);
+        if (filtro.getIdTipificacion() != null) {
+            codigoTipificacion = filtro.getIdTipificacion().getCodigo();
+        }
 
-            if (filtro.getIdSubtipificacion() != null) {
-                codigoSubTipificacion = filtro.getIdSubtipificacion().getCodigo();
-            }
+        if (filtro.getIdSubtipificacion() != null) {
+            codigoSubTipificacion = filtro.getIdSubtipificacion().getCodigo();
+        }
 
-            if (filtro.getIdrazonmora() != null) {
-                codigoRazonMora = filtro.getIdrazonmora().getCodigo();
-            }
+        if (filtro.getIdrazonmora() != null) {
+            codigoRazonMora = filtro.getIdrazonmora().getCodigo();
+        }
 
-            String dias_singestion = filtro.getDiasSingestion();
-            if (dias_singestion != null && !dias_singestion.trim().equals("")) {
-                String[] dias_Array = dias_singestion.split("a");
-                if (dias_Array.length > 1) {
-                    uno = Long.valueOf(dias_Array[0]);
-                    dos = Long.valueOf(dias_Array[1]);
-                } else {
-                    uno = Long.valueOf(dias_Array[0]);
-                    dos = Long.valueOf("0");
+        String dias_singestion = filtro.getDiasSingestion();
+        if (dias_singestion != null && !dias_singestion.trim().equals("")) {
+            String[] dias_Array = dias_singestion.split("a");
+            if (dias_Array.length > 1) {
+                uno = Long.valueOf(dias_Array[0]);
+                dos = Long.valueOf(dias_Array[1]);
+            } else {
+                if (dias_Array[0].trim().equals("15+")) {
+                    String quince = dias_Array[0].substring(0, dias_Array[0].length() - 1);
+                    if (quince != null && !quince.trim().equals("")) {
+                        uno = Long.valueOf(quince);
+                        dos = null;
+                    }
                 }
-            }
-
-            String ultimo_mes = filtro.getUltimopagoMes();
-            if (ultimo_mes != null && !ultimo_mes.trim().equals("")) {
-                mesUP = Long.valueOf(ultimo_mes);
-            }
-
-            String ultimaPromesa_mes = filtro.getUltimapromesaMes();
-            if (ultimaPromesa_mes != null && !ultimaPromesa_mes.trim().equals("")) {
-                mesPP = Long.valueOf(ultimaPromesa_mes);
             }
         }
 
-        return dao.findByCodigoGestorANDCodigoCarteraANDFiltro(obj.getIdFiltrocola(), codigo_cartera, codigo_gestor, codigoTipificacion, codigoSubTipificacion, codigoRazonMora, uno, dos, mesUP, mesPP);
+        String ultimo_mes = filtro.getUltimopagoMes();
+        if (ultimo_mes != null && !ultimo_mes.trim().equals("")) {
+            mesUP = Long.valueOf(ultimo_mes);
+        }
+
+        String ultimaPromesa_mes = filtro.getUltimapromesaMes();
+        if (ultimaPromesa_mes != null && !ultimaPromesa_mes.trim().equals("")) {
+            mesPP = Long.valueOf(ultimaPromesa_mes);
+        }
+        //}
+
+        return dao.findByCodigoGestorANDCodigoCarteraANDFiltro(filtro.getIdFiltrocola(), codigo_cartera, codigo_gestor, codigoTipificacion, codigoSubTipificacion, codigoRazonMora, uno, dos, mesUP, mesPP);
     }
 
     @Override
     public void deleteCola(TblFiltrocola filtrocola) {
         TblCola cola = new TblCola();
         cola.setIdFiltrocola(filtrocola);
-        List<TblCola> colaList = this.ejbColaLocal.findByIdFiltro(cola);
-        if (colaList != null && !colaList.isEmpty() && colaList.size() > 0) {
-            for (TblCola tblCola : colaList) {
-                this.ejbColaLocal.delete(tblCola);
-            }
-        }
+        this.ejbColaLocal.deleteByIdFiltro(cola);
     }
 
     /**
@@ -231,11 +235,11 @@ public class FiltrocolaServiceImpl implements FiltrocolaService, FiltrocolaServi
                 if (poseeTrabajo != null && si_Poseetrabajo == 1) {
                     addPoseetrabajo = true;
                 }
-                
+
                 if (poseeTrabajo == null && si_Poseetrabajo == 0) {
                     addPoseetrabajo = true;
                 }
-                
+
             } else {
                 addPoseetrabajo = true;
             }

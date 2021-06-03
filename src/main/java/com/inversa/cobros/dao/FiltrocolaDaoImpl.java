@@ -94,7 +94,7 @@ public class FiltrocolaDaoImpl implements FiltrocolaDao {
             if(dos != null && dos > 0){
                 sql = sql + " and (select (CURRENT_DATE::date - tl.fechaingreso::date) Dias from tbl_gestion tg inner join tbl_llamada tl on tl.id_gestion = tg.id_gestion where tg.identificacion = cartera.identificacion order by tl.id_llamada desc limit 1) between "+uno+" and "+dos;
             }else{
-                sql = sql + " and (select (CURRENT_DATE::date - tl.fechaingreso::date) Dias from tbl_gestion tg inner join tbl_llamada tl on tl.id_gestion = tg.id_gestion where tg.identificacion = cartera.identificacion order by tl.id_llamada desc limit 1) > 15";
+                sql = sql + " and (case when ((select count(tl.id_llamada) from tbl_gestion tg inner join tbl_llamada tl on tl.id_gestion = tg.id_gestion where tg.identificacion = cartera.identificacion) > 0) then (select (CURRENT_DATE::date - tl.fechaingreso::date) Dias from tbl_gestion tg inner join tbl_llamada tl on tl.id_gestion = tg.id_gestion where tg.identificacion = cartera.identificacion order by tl.id_llamada desc limit 1) else 16 end)>15";
             }
         }
 

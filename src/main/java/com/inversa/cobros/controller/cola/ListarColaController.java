@@ -14,6 +14,7 @@ import com.inversa.cobros.model.TblCola;
 import com.inversa.cobros.model.TblFiltrocola;
 import com.inversa.cobros.model.TblUsuario;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -35,7 +37,7 @@ public class ListarColaController implements Serializable {
 
     @Inject
     private ColaService ejbColaLocal;
-    
+
     @Inject
     private CarteraController carteraController;
 
@@ -44,9 +46,9 @@ public class ListarColaController implements Serializable {
     private List<TblCola> colaList;
 
     private TblFiltrocola filtroSelected;
-    
+
     private TblCola colaSelected;
-    
+
     private Calendar fechaHoy;
     private TblUsuario usuario;
 
@@ -54,14 +56,14 @@ public class ListarColaController implements Serializable {
     public void init() {
         this.usuario = (TblUsuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
         this.fechaHoy = Calendar.getInstance();
-        
+
         String codigoCartera = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(ConstanteComun.COD_CARTERA);
         TblFiltrocola filtro = new TblFiltrocola();
         filtro.setCodigoCartera(codigoCartera);
         this.filtrocolaList = this.ejbFiltrocolaLocal.findByCodigoCartera(filtro);
-        if(this.filtrocolaList != null && !this.filtrocolaList.isEmpty() && this.filtrocolaList.size()>0){
+        if (this.filtrocolaList != null && !this.filtrocolaList.isEmpty() && this.filtrocolaList.size() > 0) {
             this.filtroSelected = this.filtrocolaList.get(0);
-            this.onFiltroChange();
+            //this.onFiltroChange();
         }
     }
 
@@ -69,12 +71,34 @@ public class ListarColaController implements Serializable {
      *
      */
     public void onFiltroChange() {
+        /*
+        if (this.filtroSelected != null) {
+            TblCola obj = new TblCola();
+            obj.setIdFiltrocola(this.filtroSelected);
+            obj.setCodigoCartera(this.filtroSelected.getCodigoCartera());
+            //this.colaList = this.ejbColaLocal.findByCodigoGestorAndIdFiltro(obj);
+
+            if (this.colaList != null && !this.colaList.isEmpty() && this.colaList.size() > 0) {
+                this.colaList.clear();
+            }
+
+            if (this.filtroSelected.getTblColaList() != null && !this.filtroSelected.getTblColaList().isEmpty() && this.filtroSelected.getTblColaList().size() > 0) {
+                for (TblCola tblCola : this.filtroSelected.getTblColaList()) {
+                    this.colaList.add(tblCola);
+                }
+            }// if            
+        }// if
+         */
+
         if (this.filtroSelected != null) {
             TblCola obj = new TblCola();
             obj.setIdFiltrocola(this.filtroSelected);
             obj.setCodigoCartera(this.filtroSelected.getCodigoCartera());
             this.colaList = this.ejbColaLocal.findByCodigoGestorAndIdFiltro(obj);
+        } else {
+            this.colaList = new ArrayList<>();
         }
+        PrimeFaces.current().ajax().update("form", "dtColaList", "messages");
     }
 
     public List<TblCola> getColaList() {
@@ -107,18 +131,18 @@ public class ListarColaController implements Serializable {
 
     public void setColaSelected(TblCola colaSelected) {
         this.colaSelected = colaSelected;
-    }   
-    
+    }
+
     /**
-     * 
-     * @param cola 
+     *
+     * @param cola
      */
     public void setColaTOGestion(TblCola cola) {
         if (cola != null) {
             String identificacion = cola.getIdentificacion();
             this.setColaSelected(cola);
             List<TblCartera> operacionList = this.carteraController.searchCarteraByIdentificacion(identificacion);
-            if(operacionList != null && !operacionList.isEmpty() && operacionList.size()>0){
+            if (operacionList != null && !operacionList.isEmpty() && operacionList.size() > 0) {
                 TblCartera operacion_cartera = operacionList.get(0);
                 this.carteraController.setCartera(operacion_cartera);
                 this.colaSelected.setEstado(ConstanteComun.EN_GESTION);// ENG = En Gestion
@@ -127,7 +151,7 @@ public class ListarColaController implements Serializable {
                 this.colaSelected.setFechamodifico(this.fechaHoy.getTime());
                 /*
                 this.ejbColaLocal.update(this.colaSelected);
-                */
+                 */
             }
         }
     }

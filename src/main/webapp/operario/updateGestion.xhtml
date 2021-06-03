@@ -126,7 +126,7 @@
                                                 </p:selectOneMenu>
                                                 <p:commandButton value="Agregar Teléfono" update="idFormGestion:manage-Telefono-content" oncomplete="PF('manageTelefonoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
                                                 <p:commandButton value="Agregar Correo" update="idFormGestion:manage-Correo-content" oncomplete="PF('manageCorreoDialog').show()" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                                <p:commandButton value="Finalizar" actionListener="#{updateGestionController.finalizarGestion()}" process="@this idFormGestion:idTabView:idPGDeudor formGestion:idTabView:idPGDescripcion" update="idFormGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
+                                                <p:commandButton value="Finalizar" actionListener="#{updateGestionController.finalizarGestion()}" process="@this idFormGestion:idTabView:idPGDeudor idFormGestion:idTabView:idPGDescripcion" update="idFormGestion:messages" styleClass="success-button p-mr-2 p-mb-2" />
                                             </h:panelGrid>
                                         </f:facet>
                                     </p:toolbar>

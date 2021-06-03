@@ -6,14 +6,8 @@
 package com.inversa.cobros.controller;
 
 import com.inversa.cobros.constante.comun.ConstanteComun;
-import com.inversa.cobros.controller.CarteraController;
-import com.inversa.cobros.controller.GestionController;
-import com.inversa.cobros.controller.LlamarController;
-import com.inversa.cobros.controller.PagosHistorialController;
-import com.inversa.cobros.controller.TipificacionController;
 import com.inversa.cobros.ejb.ArreglopagoService;
 import com.inversa.cobros.ejb.CarteraService;
-import com.inversa.cobros.ejb.ColaService;
 import com.inversa.cobros.ejb.ContactoService;
 import com.inversa.cobros.ejb.CorreoService;
 import com.inversa.cobros.ejb.EstadopromesaService;
@@ -33,7 +27,6 @@ import com.inversa.cobros.model.Subtipificacion;
 import com.inversa.cobros.model.TblCartera;
 import com.inversa.cobros.model.TblCentral;
 import com.inversa.cobros.model.TblCliente;
-import com.inversa.cobros.model.TblCola;
 import com.inversa.cobros.model.TblContacto;
 import com.inversa.cobros.model.TblCorreo;
 import com.inversa.cobros.model.TblGestion;
@@ -51,7 +44,6 @@ import com.inversa.cobros.model.Tipodescuento;
 import com.inversa.cobros.model.Tipotelefono;
 import com.inversa.cobros.util.FechaOperacion;
 import com.inversa.findme.controller.FindmeController;
-import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -62,7 +54,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -85,7 +78,7 @@ import org.primefaces.shaded.json.JSONObject;
  * @author Z420WK
  */
 @Named
-@SessionScoped
+@RequestScoped
 public class UpdateGestionController implements Serializable {
 
     private static String ip_publica = null; //"192.168.7.201";
@@ -145,9 +138,6 @@ public class UpdateGestionController implements Serializable {
 
     @Inject
     private MonedaService ejbMonedaService;
-
-    @Inject
-    private ColaService ejbColaLocal;
 
     @Inject
     private LlamarController llamarController;

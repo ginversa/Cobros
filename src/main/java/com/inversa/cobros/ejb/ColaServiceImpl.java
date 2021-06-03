@@ -88,7 +88,7 @@ public class ColaServiceImpl implements ColaService, ColaServiceRemote {
     public List<TblCola> findByCodigoGestorAndIdFiltro(TblCola obj) {
         return dao.findByCodigoGestorAndIdFiltro(obj);
     }
-    
+
     @Override
     public List<TblCola> findByIdFiltro(TblCola obj) {
         return dao.findByIdFiltro(obj);
@@ -109,4 +109,8 @@ public class ColaServiceImpl implements ColaService, ColaServiceRemote {
         dao.updateIdGestion(id_gestion, id_filtrocola, id_cola, identificacion);
     }
 
+    @Override
+    public void deleteByIdFiltro(TblCola obj) {
+        dao.deleteByIdFiltro(obj);
+    }
 }

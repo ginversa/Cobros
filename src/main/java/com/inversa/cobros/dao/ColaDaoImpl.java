@@ -129,5 +129,18 @@ public class ColaDaoImpl implements ColaDao {
             System.out.println(e.getMessage());
         }
     }
+    
+    @Override
+    public void deleteByIdFiltro(TblCola obj) {
+        try {
+
+            int countUpdated = em.createNativeQuery("delete from tbl_cola cola where id_filtrocola = ?1")
+                    .setParameter(1, obj.getIdFiltrocola().getIdFiltrocola())
+                    .executeUpdate();
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 }

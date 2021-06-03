@@ -41,15 +41,15 @@
                         </p:panelGrid>
 
                         <p:dataTable id="dtColaList" widgetVar="dtColaList" var="cola" value="#{listarColaController.colaList}"
-                                     paginator="true" rows="20" paginatorPosition="top"
+                                     paginator="true" rows="30" paginatorPosition="top"
                                      reflow="true" scrollable="true" scrollHeight="1050"
                                      styleClass="ui-datatable-striped ui-datatable-sm ui-datatable-gridlines"
                                      emptyMessage="No se encontraron registros." >
 
                             <p:column headerText="Identificación" filterBy="#{cola.identificacion}" filterMatchMode="contains" sortBy="#{cola.identificacion}" >                                
-                                <p:commandLink action="/operario/colaGestion" actionListener="#{listarColaController.setColaTOGestion(cola)}">
+                                
                                     <h:outputText value="#{cola.identificacion}" />
-                                </p:commandLink>
+
                             </p:column>                            
                             <p:column headerText="Saldo Colones" filterBy="#{cola.saldoColones}" filterMatchMode="contains" sortBy="#{cola.saldoColones}" >
                                 <h:outputText value="#{cola.saldoColones}">

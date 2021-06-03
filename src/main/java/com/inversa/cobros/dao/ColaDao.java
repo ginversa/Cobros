@@ -39,5 +39,7 @@ public interface ColaDao {
     public List<TblCola> findByCodigoGestorAndIdFiltroLimit_ONE(TblCola obj);
     
     public void updateIdGestion(Long id_gestion,Long id_filtrocola, Long id_cola, String identificacion);
+    
+    public void deleteByIdFiltro(TblCola obj);
 
 }
