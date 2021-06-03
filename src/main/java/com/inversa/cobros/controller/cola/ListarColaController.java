@@ -71,25 +71,6 @@ public class ListarColaController implements Serializable {
      *
      */
     public void onFiltroChange() {
-        /*
-        if (this.filtroSelected != null) {
-            TblCola obj = new TblCola();
-            obj.setIdFiltrocola(this.filtroSelected);
-            obj.setCodigoCartera(this.filtroSelected.getCodigoCartera());
-            //this.colaList = this.ejbColaLocal.findByCodigoGestorAndIdFiltro(obj);
-
-            if (this.colaList != null && !this.colaList.isEmpty() && this.colaList.size() > 0) {
-                this.colaList.clear();
-            }
-
-            if (this.filtroSelected.getTblColaList() != null && !this.filtroSelected.getTblColaList().isEmpty() && this.filtroSelected.getTblColaList().size() > 0) {
-                for (TblCola tblCola : this.filtroSelected.getTblColaList()) {
-                    this.colaList.add(tblCola);
-                }
-            }// if            
-        }// if
-         */
-
         if (this.filtroSelected != null) {
             TblCola obj = new TblCola();
             obj.setIdFiltrocola(this.filtroSelected);
