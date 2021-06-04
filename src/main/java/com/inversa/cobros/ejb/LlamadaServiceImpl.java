@@ -142,7 +142,10 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
         List<TblLlamada> llamadas = dao.findByIdentificacionCartera(identificacion, codigoCartera);
         if (llamadas != null && !llamadas.isEmpty()) {
             for (int i = 0; i < llamadas.size(); i++) {
-                TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
+                Long idGestion = llamadas.get(i).getIdGestion().getIdGestion();
+                String operacion = llamadas.get(i).getOperacion();
+                
+                TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(idGestion,operacion);
                 llamadas.get(i).setUltimaPromesa(promesaUltimoPago);
             }
         }
@@ -155,7 +158,7 @@ public class LlamadaServiceImpl implements LlamadaService, LlamadaServiceRemote 
         List<TblLlamada> llamadas = dao.buscarPorTelefono(telefono, codigoCartera);
 
         for (int i = 0; i < llamadas.size(); i++) {
-            TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getIdLlamada());
+            TblPromesa promesaUltimoPago = this.ejbPromesaServiceLocal.findPromesaUltimoPago(llamadas.get(i).getIdGestion().getIdGestion(), llamadas.get(i).getOperacion());
             llamadas.get(i).setUltimaPromesa(promesaUltimoPago);
         }
 

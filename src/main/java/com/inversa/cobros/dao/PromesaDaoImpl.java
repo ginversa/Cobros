@@ -122,14 +122,20 @@ public class PromesaDaoImpl implements PromesaDao {
     }
 
     @Override
-    public TblPromesa findPromesaUltimoPago(Long idGestion, Long idLlamada) {
+    public TblPromesa findPromesaUltimoPago(Long idGestion, String operacion) {
 
         try {
-            Query query = em.createNativeQuery("select tp.* from tbl_promesa tp where tp.id_gestion = ?1 and tp.id_llamada = ?2 and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?3 and tp.id_llamada = ?4) order by tp.id_promesa desc", TblPromesa.class);
+            Query query = em.createNativeQuery("select tp.*\n"
+                    + "  from tbl_promesa tp\n"
+                    + " where tp.id_gestion = ?1\n"
+                    + "   and tp.operacion = ?2\n"
+                    + "   and tp.idestadopromesa not in(select estado.idestadopromesa from estadopromesa estado where estado.codigo in('INC','EFE','DEL'))\n"
+                    + "   and tp.fecha_pago = (select max(tp.fecha_pago) from tbl_promesa tp where tp.id_gestion = ?3 and tp.operacion = ?4 and tp.idestadopromesa not in(select estado.idestadopromesa from estadopromesa estado where estado.codigo in('INC','EFE','DEL')))\n"
+                    + "order by tp.id_promesa desc", TblPromesa.class);
             query.setParameter(1, idGestion);
-            query.setParameter(2, idLlamada);
+            query.setParameter(2, operacion);
             query.setParameter(3, idGestion);
-            query.setParameter(4, idLlamada);
+            query.setParameter(4, operacion);
             List<TblPromesa> found = query.getResultList();
 
             if (found.isEmpty()) {

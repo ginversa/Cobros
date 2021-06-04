@@ -44,7 +44,7 @@ public interface PromesaServiceRemote {
 
     public void delete(TblPromesa obj);
 
-    public TblPromesa findPromesaUltimoPago(Long idGestion,Long idLlamada);
+    public TblPromesa findPromesaUltimoPago(Long idGestion,String operacion);
     
     public TblPromesa findPromesaUltimoPago(Long idGestion);
     
