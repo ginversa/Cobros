@@ -188,12 +188,18 @@ public class FiltrocolaServiceImpl implements FiltrocolaService, FiltrocolaServi
 
         String ultimo_mes = filtro.getUltimopagoMes();
         if (ultimo_mes != null && !ultimo_mes.trim().equals("")) {
-            mesUP = Long.valueOf(ultimo_mes);
+            if(ultimo_mes.trim().equals("04+")){
+                String cuatro = ultimo_mes.substring(0, ultimo_mes.length() - 1);
+                mesUP = Long.valueOf(cuatro);
+            }
         }
 
         String ultimaPromesa_mes = filtro.getUltimapromesaMes();
         if (ultimaPromesa_mes != null && !ultimaPromesa_mes.trim().equals("")) {
-            mesPP = Long.valueOf(ultimaPromesa_mes);
+            if(ultimaPromesa_mes.trim().equals("04+")){
+                String cuatro = ultimaPromesa_mes.substring(0, ultimaPromesa_mes.length() - 1);
+                mesPP = Long.valueOf(cuatro);
+            }            
         }
         //}
 

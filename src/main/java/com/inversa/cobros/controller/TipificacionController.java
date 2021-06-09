@@ -184,7 +184,8 @@ public class TipificacionController implements Serializable {
                     }
                 }
 
-                if (selectedTipificacion.getCodigo().equals("PRP")) {
+                String codigo = selectedTipificacion.getCodigo();
+                if (codigo != null && !codigo.trim().equals("") && selectedTipificacion.getCodigo().equals("PRP")) {
                     this.setIsDisabledPromesa(false);
                 } else {
                     this.setIsDisabledPromesa(true);

@@ -46,20 +46,20 @@
                                 <p:panelGrid id="idCriterio" columns="2" layout="grid">
                                     <p:outputLabel for="txtTipificacion" value="Tipificación" />
                                     <p:selectOneMenu id="txtTipificacion" value="#{actualizarFiltroController.filtrocola.idTipificacion}" converter="tipificacionConverter">
-                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="false" />
                                         <f:selectItems value="#{actualizarFiltroController.tipificacionList}" var="tipificacion" itemLabel="#{tipificacion.descripcion}" itemValue="#{tipificacion}" />
                                         <p:ajax listener="#{actualizarFiltroController.onTipificacionChange()}" event="change" update="txtSubTipificacion" process="@this" />
                                     </p:selectOneMenu>
 
                                     <p:outputLabel for="txtSubTipificacion" value="Sub-Tipificación" />
                                     <p:selectOneMenu id="txtSubTipificacion" value="#{actualizarFiltroController.filtrocola.idSubtipificacion}" converter="subtipificacionConverter">
-                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="false" />
                                         <f:selectItems value="#{actualizarFiltroController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
                                     </p:selectOneMenu>
 
                                     <p:outputLabel for="txtRazonMora" value="Razon Mora" />
                                     <p:selectOneMenu id="txtRazonMora" value="#{actualizarFiltroController.filtrocola.idrazonmora}" converter="razonmoraConverter">
-                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="false" />
                                         <f:selectItems value="#{razonmoraController.razonmoraList}" var="razonMora" itemLabel="#{razonMora.descripcion}" itemValue="#{razonMora}" />
                                     </p:selectOneMenu>
                                 </p:panelGrid>
@@ -69,7 +69,7 @@
                                 <p:panelGrid columns="2" layout="grid">
                                     <p:outputLabel for="txtPoseeTrabajo" value="Posee Trabajo" />
                                     <p:selectOneMenu id="txtPoseeTrabajo" value="#{actualizarFiltroController.filtrocola.poseetrabajo}">
-                                        <f:selectItem itemLabel="----" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="----" itemValue="" noSelectionOption="false" />
                                         <f:selectItem itemLabel="Si" itemValue="01" />
                                         <f:selectItem itemLabel="No" itemValue="00" />
                                     </p:selectOneMenu>
@@ -77,7 +77,7 @@
                                     <p:fieldset legend="Rango Balance" class="ui-fluid">
                                         <p:panelGrid columns="3" layout="grid">
                                             <p:selectOneMenu id="idRangoBalance" value="#{actualizarFiltroController.filtrocola.rangobalance}">
-                                                <f:selectItem itemLabel="*** Rango Balance ***" itemValue="" noSelectionOption="true" />
+                                                <f:selectItem itemLabel="*** Rango Balance ***" itemValue="" noSelectionOption="false" />
                                                 <f:selectItem itemLabel="menor que" itemValue="-1" />
                                                 <f:selectItem itemLabel="igual" itemValue="0" />
                                                 <f:selectItem itemLabel="mayor que" itemValue="1" />
@@ -90,7 +90,7 @@
 
                                     <p:outputLabel for="idTipoSalario" value="Tipo de Salario" />
                                     <p:selectOneMenu id="idTipoSalario" value="#{actualizarFiltroController.filtrocola.tiposalario}">
-                                        <f:selectItem itemLabel="Tipo Salario" itemValue="" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="Ninguno" itemValue="" noSelectionOption="false" />
                                         <f:selectItem itemLabel="Bajo" itemValue="Bajo" />
                                         <f:selectItem itemLabel="Medio" itemValue="Medio" />
                                         <f:selectItem itemLabel="Alto" itemValue="Alto" />
@@ -113,6 +113,7 @@
                                     <f:selectItem itemLabel="2" itemValue="02"/>
                                     <f:selectItem itemLabel="3" itemValue="03"/>
                                     <f:selectItem itemLabel="4+" itemValue="04+"/>
+                                    <f:selectItem itemLabel="Ninguno" itemValue=""/>
                                 </p:selectOneRadio>
                             </p:fieldset>
 
@@ -122,6 +123,7 @@
                                     <f:selectItem itemLabel="2" itemValue="02"/>
                                     <f:selectItem itemLabel="3" itemValue="03"/>
                                     <f:selectItem itemLabel="4+" itemValue="04+"/>
+                                    <f:selectItem itemLabel="Ninguno" itemValue=""/>
                                 </p:selectOneRadio>
                             </p:fieldset>
 

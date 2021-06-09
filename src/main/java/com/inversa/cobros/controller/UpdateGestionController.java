@@ -54,10 +54,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
@@ -78,7 +77,7 @@ import org.primefaces.shaded.json.JSONObject;
  * @author Z420WK
  */
 @Named
-@RequestScoped
+@ViewScoped
 public class UpdateGestionController implements Serializable {
 
     private static String ip_publica = null; //"192.168.7.201";

@@ -181,7 +181,7 @@
                                                         <h:selectOneMenu id="txtSubTipificacion" value="#{llamada.idSubtipificacion}" converter="subtipificacionConverter" required="true" requiredMessage="Sub-Tipificación requerido!" >
                                                             <f:selectItem itemLabel="----------------------------------------" itemValue="" noSelectionOption="true" />
                                                             <f:selectItems value="#{tipificacionController.subtipificacionList}" var="subtipificacion" itemLabel="#{subtipificacion.descripcion}" itemValue="#{subtipificacion}" />
-                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange_cola(llamada)}" event="change" update="idOutputTextSubtipificacion,idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa idOutputTextSubtipificacion" />
+                                                            <p:ajax listener="#{tipificacionController.onSub_TipificacionChange_cola(llamada)}" event="change" update="idOutputTextSubtipificacion,idOutputTextResultadogestion,idOutputTextResultadotercero,txtSubTipificacion, txtResultadogestion, txtidResultadotercero, btnPromesa" process="@this btnPromesa idOutputTextSubtipificacion idTipificacion" />
                                                         </h:selectOneMenu>
                                                     </f:facet>
                                                 </p:cellEditor>
@@ -221,11 +221,7 @@
                                                 </p:cellEditor>
                                             </p:column>
                                             <p:column headerText="Promesa" >
-                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" actionListener="#{updateGestionController.calcArregloPago(llamada)}" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :idFormGestion:idTabView:idPGDeudor" update="idFormGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" >
-                                                    <!--
-                                                    <f:setPropertyActionListener value="#{llamada}" target="#{updateGestionController.selectedLlamada}"  />
-                                                    -->
-                                                </p:commandButton>
+                                                <p:commandButton id="btnPromesa" title="Agregar Promesa" icon="pi pi-user" actionListener="#{updateGestionController.calcArregloPago(llamada)}" styleClass="warning-button rounded-button p-mr-2 p-mb-2" oncomplete="PF('manageLlamarPromesaArregloPagoDialog').show()" process="@this :idFormGestion:idTabView:idPGDeudor" update="idFormGestion:manage-llamarPromesaArregloPago-content" disabled="#{tipificacionController.isDisabledPromesa}" />
                                             </p:column>
                                             <p:column headerText="Guardar" >
                                                 <p:commandButton actionListener="#{updateGestionController.finalizarGestion()}" title="Guardar Gestión" icon="pi pi-check" styleClass="success-button rounded-button p-mr-2 p-mb-2" process="@this idFormGestion:idTabView:idPGDeudor" update="idFormGestion:messages" />

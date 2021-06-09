@@ -108,7 +108,7 @@ public class FiltrocolaDaoImpl implements FiltrocolaDao {
 
         if (mesPP != null && mesPP > 0) {
             if(mesPP == 4){
-                sql = sql + " and exists (select tp.id_promesa from tbl_promesa tp where tp.operacion = cartera.numero_cuenta and tp.idestadopromesa = (select e.idestadopromesa from estadopromesa e where e.codigo = 'SEG') and tp.fecha_pago >= CURRENT_DATE + INTERVAL '4 months' order by tp.id_promesa desc);";
+                sql = sql + " and exists (select tp.id_promesa from tbl_promesa tp where tp.operacion = cartera.numero_cuenta and tp.idestadopromesa = (select e.idestadopromesa from estadopromesa e where e.codigo = 'SEG') and tp.fecha_pago >= CURRENT_DATE + INTERVAL '4 months' order by tp.id_promesa desc)";
                 
             }else{
                 sql = sql + " and exists (select tp.id_promesa from tbl_promesa tp where tp.operacion = cartera.numero_cuenta and tp.idestadopromesa = (select e.idestadopromesa from estadopromesa e where e.codigo = 'SEG') and tp.fecha_pago between CURRENT_DATE and CURRENT_DATE + INTERVAL '"+mesPP+" months' order by tp.id_promesa desc)";
