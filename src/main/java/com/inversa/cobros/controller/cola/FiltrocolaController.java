@@ -47,6 +47,9 @@ public class FiltrocolaController implements Serializable {
 
     private Calendar fechaHoy;
     private TblUsuario usuario;
+    
+    @Inject
+    private ListarFiltroController listarFiltroController;
 
     @PostConstruct
     public void init() {
@@ -112,9 +115,10 @@ public class FiltrocolaController implements Serializable {
                     this.filtrocola.setUsuarioingreso(this.usuario.getUsuario());
                     this.filtrocola.setCodigoCartera(codigoCartera);
                     this.ejbFiltrocolaLocal.insert(this.filtrocola);
-                    PrimeFaces.current().ajax().update("formCola");
+                    //PrimeFaces.current().ajax().update("formCola");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Filtros guardados. Correcto!"));
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("listarFiltro.xhtml");
+                    //FacesContext.getCurrentInstance().getExternalContext().redirect("listarFiltro.xhtml");
+                    this.listarFiltroController.init();
 
                 } else if (this.filtrocola.getIdFiltrocola() != null){
                     this.filtrocola.setEstado("ACT");
@@ -122,9 +126,10 @@ public class FiltrocolaController implements Serializable {
                     this.filtrocola.setUsuariomodifico(this.usuario.getUsuario());
                     this.filtrocola.setCodigoCartera(codigoCartera);
                     this.ejbFiltrocolaLocal.update(this.filtrocola);
-                    PrimeFaces.current().ajax().update("formCola");
+                    //PrimeFaces.current().ajax().update("formCola");
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso!", "Filtros actualizado. Correcto!"));
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("listarFiltro.xhtml");
+                    //FacesContext.getCurrentInstance().getExternalContext().redirect("listarFiltro.xhtml");
+                    this.listarFiltroController.init();
                 }
 
             }

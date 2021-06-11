@@ -30,7 +30,7 @@
                             <f:facet name="right">
                                 <h:panelGrid columns="4">
                                     <p:commandButton value="Listar" actionListener="#{filtrocolaController.listarCola()}" process="@this" styleClass="p-mr-2 p-mb-2"/>
-                                    <p:commandButton value="Guardar" actionListener="#{filtrocolaController.guardar()}" process="@this formCola" update="formCola:messages" styleClass="p-mr-2 p-mb-2"/>
+                                    <p:commandButton value="Guardar" action="listarFiltro" actionListener="#{filtrocolaController.guardar()}" process="formCola @this" update="formCola:messages" styleClass="p-mr-2 p-mb-2"/>
                                 </h:panelGrid>
                             </f:facet>
                         </p:toolbar>
