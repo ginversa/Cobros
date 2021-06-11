@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TblFiltrocola.findByDiasSingestion", query = "SELECT t FROM TblFiltrocola t WHERE t.diasSingestion = :diasSingestion"),
     @NamedQuery(name = "TblFiltrocola.findByUltimopagoMes", query = "SELECT t FROM TblFiltrocola t WHERE t.ultimopagoMes = :ultimopagoMes"),
     @NamedQuery(name = "TblFiltrocola.findByUltimapromesaMes", query = "SELECT t FROM TblFiltrocola t WHERE t.ultimapromesaMes = :ultimapromesaMes"),
-    @NamedQuery(name = "TblFiltrocola.findByCodigoCartera", query = "SELECT t FROM TblFiltrocola t WHERE t.codigoCartera = :codigoCartera"),
+    @NamedQuery(name = "TblFiltrocola.findByCodigoCartera", query = "SELECT t FROM TblFiltrocola t WHERE t.codigoCartera = :codigoCartera AND t.estado != 'INA'"),
     @NamedQuery(name = "TblFiltrocola.findByEstado", query = "SELECT t FROM TblFiltrocola t WHERE t.estado = :estado"),
     @NamedQuery(name = "TblFiltrocola.findByFechaaplicainicial", query = "SELECT t FROM TblFiltrocola t WHERE t.fechaaplicainicial = :fechaaplicainicial"),
     @NamedQuery(name = "TblFiltrocola.findByFechaaplicafinal", query = "SELECT t FROM TblFiltrocola t WHERE t.fechaaplicafinal = :fechaaplicafinal"),

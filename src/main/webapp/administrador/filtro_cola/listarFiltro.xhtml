@@ -90,7 +90,7 @@
                     </div>
 
                     <p:confirmDialog widgetVar="deleteCriterioDialog" showEffect="fade" width="300" message="Eliminar Criterio?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{listarFiltroController.eliminar()}" process="@this" update="dtfiltrocolaList" oncomplete="PF('deleteCriterioDialog').hide()" />
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{listarFiltroController.eliminar()}" process="@this dtfiltrocolaList" update="dtfiltrocolaList" oncomplete="PF('deleteCriterioDialog').hide()" />
                         <p:commandButton value="No" type="button" styleClass="secondary-button" icon="pi pi-times" onclick="PF('deleteCriterioDialog').hide()" process="@this" />
                     </p:confirmDialog>
 
